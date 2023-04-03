@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatoria a trabajos en Ancash"}>
          <Box mt={15}>
-          <Typography variant='h1' component='h1'>Recursos Humanos</Typography>
+          <Typography variant='h1' component='h1'>Docentes</Typography>
         </Box> 
         <Divider variant="middle" /> 
     </JobsLayout>
