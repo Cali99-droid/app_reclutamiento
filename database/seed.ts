@@ -4,6 +4,7 @@ import { IJob } from "@/interfaces";
 export const jobs:IJob[] = [
 
     {
+      id:'1',
        titulo: 'Docente Primaria', descripcion:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla efficitur orci non dignissim imperdiet. ',
        requisito:'Bachiller',
        vacantes:6,
@@ -12,6 +13,7 @@ export const jobs:IJob[] = [
        especialidad: 'Inglés'
     },
     {
+      id:'2',
         titulo: 'Docente Secundaria', descripcion:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla efficitur orci non dignissim imperdiet. ',
         requisito:'Titulado',
         vacantes:4,
@@ -20,6 +22,7 @@ export const jobs:IJob[] = [
         especialidad:'Matematica'
      },
      {
+      id:'3',
         titulo: 'Auxiliar', descripcion:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla efficitur orci non dignissim imperdiet. ',
         requisito:'Todos',
         vacantes:2,
@@ -28,6 +31,7 @@ export const jobs:IJob[] = [
         especialidad:'Todos'
      },
      {
+      id:'4',
         titulo: 'Personal de servicio', descripcion:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla efficitur orci non dignissim imperdiet. ',
         requisito:'Primaria',
         vacantes:1,
@@ -36,6 +40,7 @@ export const jobs:IJob[] = [
         especialidad:'Todos'
      },
      {
+      id:'5',
         titulo: 'Docente  Primaria', descripcion:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla efficitur orci non dignissim imperdiet. ',
         requisito:'Todos',
         vacantes:2,
@@ -44,6 +49,7 @@ export const jobs:IJob[] = [
         especialidad:'Comunicacion'
      },
      {
+      id:'6',
         titulo: 'Auxiliar', descripcion:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla efficitur orci non dignissim imperdiet. ',
         requisito:'Bachiller',
         vacantes:1,

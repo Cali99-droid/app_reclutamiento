@@ -1,5 +1,5 @@
 export interface IJob {
-   // _id: string;
+    id: string;
     titulo: string;
     descripcion: string;
     requisito: string;

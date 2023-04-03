@@ -1,153 +1,174 @@
-import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
+import { useContext, useState } from 'react';
 
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import { NavBar } from './NavBar';
+import { Box,  Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, } from "@mui/material"
+import { EscalatorWarningOutlined, FemaleOutlined,  MaleOutlined, SearchOutlined } from "@mui/icons-material"
 
-const drawerWidth = 240;
+ import { UiContext } from '../../context';
+import { useRouter } from 'next/router';
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(3),
-  transition: theme.transitions.create('margin', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: `-${drawerWidth}px`,
-  ...(open && {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  }),
-}));
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
+export const SideMenu = () => {
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme, open }) => ({
-  transition: theme.transitions.create(['margin', 'width'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
+    const router = useRouter();
+     const { isMenuOpen, toggleSideMenu } = useContext( UiContext );
+    // const { user, isLoggedIn, logout } = useContext(  AuthContext );
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-  justifyContent: 'flex-end',
-}));
+    const [searchTerm, setSearchTerm] = useState('');
 
-export default function SideMenu() {
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+    const onSearchTerm = () => {
+        if( searchTerm.trim().length === 0 ) return;
+        navigateTo(`/search/${ searchTerm }`);
+    }
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+    
+    const navigateTo = ( url: string ) => {
+         toggleSideMenu();
+        router.push(url);
+    }
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-         {/* { /**REVISAR} */}
-          <NavBar />
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        onClose={handleDrawerClose}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      
-    </Box>
-  );
+    <Drawer
+        open={ isMenuOpen }
+        anchor='right'
+        sx={{ backdropFilter: 'blur(4px)', transition: 'all 0.5s ease-out' }}
+        onClose={ toggleSideMenu }
+    >
+        <Box sx={{ width: 250, paddingTop: 5 }}>
+            
+            <List>
+
+                <ListItem>
+                    <Input
+                        autoFocus
+                        value={ searchTerm }
+                        onChange={ (e) => setSearchTerm( e.target.value ) }
+                        onKeyPress={ (e) => e.key === 'Enter' ? onSearchTerm() : null }
+                        type='text'
+                        placeholder="Buscar..."
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    onClick={ onSearchTerm }
+                                >
+                                 <SearchOutlined />
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                    />
+                </ListItem>
+
+                {/* {
+                    isLoggedIn && (
+                        <>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <AccountCircleOutlined/>
+                                </ListItemIcon>
+                                <ListItemText primary={'Perfil'} />
+                            </ListItem>
+
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <ConfirmationNumberOutlined/>
+                                </ListItemIcon>
+                                <ListItemText primary={'Mis Ordenes'} />
+                            </ListItem>
+                        </>
+                    )
+                } */}
+
+
+                <ListItem 
+                    button 
+                    sx={{ display: { xs: '', sm: 'none' } }} 
+                    onClick={ () => navigateTo('/category/men') }
+                >
+                    <ListItemIcon>
+                        <MaleOutlined/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Hombres'} />
+                </ListItem>
+
+                <ListItem 
+                    button 
+                    sx={{ display: { xs: '', sm: 'none' } }}
+                    onClick={ () => navigateTo('/category/women') }
+                >
+                    <ListItemIcon>
+                        <FemaleOutlined/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Mujeres'} />
+                </ListItem>
+
+                <ListItem 
+                    button 
+                    sx={{ display: { xs: '', sm: 'none' } }}
+                    onClick={ () => navigateTo('/category/kid') }
+                >
+                    <ListItemIcon>
+                        <EscalatorWarningOutlined/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Niños'} />
+                </ListItem>
+
+
+                {
+                    // isLoggedIn 
+                    // ? (
+                    //     <ListItem button onClick={ logout }>
+                    //         <ListItemIcon>
+                    //             <LoginOutlined/>
+                    //         </ListItemIcon>
+                    //         <ListItemText primary={'Salir'} />
+                    //     </ListItem>
+                    // )
+                    // : (
+                    //     <ListItem 
+                    //         button
+                    //         onClick={ () => navigateTo(`/auth/login?p=${ router.asPath }`) }
+                    //     >
+                    //         <ListItemIcon>
+                    //             <VpnKeyOutlined/>
+                    //         </ListItemIcon>
+                    //         <ListItemText primary={'Ingresar'} />
+                    //     </ListItem>
+                    // )
+                }
+
+
+
+                {/* Admin */}
+                {
+                    // user?.role === 'admin' && (
+                    //     <>
+                    //         <Divider />
+                    //         <ListSubheader>Admin Panel</ListSubheader>
+
+                    //         <ListItem button>
+                    //             <ListItemIcon>
+                    //                 <CategoryOutlined/>
+                    //             </ListItemIcon>
+                    //             <ListItemText primary={'Productos'} />
+                    //         </ListItem>
+                    //         <ListItem button>
+                    //             <ListItemIcon>
+                    //                 <ConfirmationNumberOutlined/>
+                    //             </ListItemIcon>
+                    //             <ListItemText primary={'Ordenes'} />
+                    //         </ListItem>
+
+                    //         <ListItem button>
+                    //             <ListItemIcon>
+                    //                 <AdminPanelSettings/>
+                    //             </ListItemIcon>
+                    //             <ListItemText primary={'Usuarios'} />
+                    //         </ListItem>                        
+                    //     </>
+                    // )
+                }
+            </List>
+        </Box>
+    </Drawer>
+  )
 }

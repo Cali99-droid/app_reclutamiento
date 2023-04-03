@@ -6,6 +6,7 @@ import { AppBar,  Box, Button, IconButton, Input, InputAdornment, Link, Toolbar,
 import { ClearOutlined, SearchOutlined } from '@mui/icons-material';
 
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
+import { UiContext } from '@/context';
 
 
 
@@ -13,8 +14,9 @@ export const NavBar = () => {
 
     const { asPath, push } = useRouter();
 
-
+    const { toggleSideMenu } = useContext( UiContext );
     const [searchTerm, setSearchTerm] = useState('');
+
     const [isSearchVisible, setIsSearchVisible] = useState(false);
 
     const onSearchTerm = () => {
@@ -39,7 +41,7 @@ export const NavBar = () => {
                 <Box flex={ 1 } />
 
                 <Box  sx={{ display: isSearchVisible ? 'none' : { xs: 'none', sm: 'block' } }}
-                   gap={'2rem'} >
+                     gap={'2rem'} >
                           <NextLink href='/' passHref legacyBehavior>
                         <Link 
                         color={ asPath === '/' ?'#008C93' : 'secondary'} 
@@ -117,6 +119,9 @@ export const NavBar = () => {
                
 
 
+                <Button onClick={ toggleSideMenu }>
+                    Menú
+                </Button>
 
             </Toolbar>
         </AppBar>

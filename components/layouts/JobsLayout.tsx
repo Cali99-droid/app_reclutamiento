@@ -2,7 +2,7 @@ import { FC, PropsWithChildren } from 'react';
 import Head from 'next/head';
 
 import { NavBar } from '../ui';
-import SideMenu from '../ui/SideMenu';
+import {SideMenu} from '../ui/SideMenu';
 
 
 interface Props extends PropsWithChildren{
@@ -33,8 +33,9 @@ export const JobsLayout:FC<Props> = ({ children , title, pageDescription, imageF
         </Head> 
 
         <SideMenu />
-    
-    
+        <nav>
+            <NavBar />
+        </nav>
 
 
         <main style={{
