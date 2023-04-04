@@ -3,10 +3,11 @@ export const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#F3F3F3',
+      main: '#43655A',
+      
     },
     secondary: {
-      main: '#43655A',
+      main: '#005A34 ', /**#005A34  #43655A */
     },
     info: {
       main: '#60807F'
@@ -70,7 +71,7 @@ export const lightTheme = createTheme({
         variant: 'contained',
         size: 'small',
         disableElevation: true,
-        color: 'info'
+        color: 'secondary'
       },
       styleOverrides: {
         root: {
@@ -78,7 +79,7 @@ export const lightTheme = createTheme({
           boxShadow: 'none',
           borderRadius: 10,
           ":hover": {
-            backgroundColor: 'rgba(96,128,127,0.6)',
+            backgroundColor: 'rgb(67,101,90)',
             transition: 'all 0.3s ease-in-out',
         
           }

@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 
-import { Box,  Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, } from "@mui/material"
-import { EscalatorWarningOutlined, FemaleOutlined,  MaleOutlined, SearchOutlined } from "@mui/icons-material"
+import { Box,  Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemButton, ListItemIcon, ListItemText, } from "@mui/material"
+import { EscalatorWarningOutlined, FemaleOutlined,  LoginOutlined,  MaleOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
 
  import { UiContext } from '../../context';
 import { useRouter } from 'next/router';
@@ -79,8 +79,7 @@ export const SideMenu = () => {
                 } */}
 
 
-                <ListItem 
-                    button 
+                <ListItemButton 
                     sx={{ display: { xs: '', sm: 'none' } }} 
                     onClick={ () => navigateTo('/category/men') }
                 >
@@ -88,7 +87,7 @@ export const SideMenu = () => {
                         <MaleOutlined/>
                     </ListItemIcon>
                     <ListItemText primary={'Hombres'} />
-                </ListItem>
+                </ListItemButton>
 
                 <ListItem 
                     button 
@@ -101,8 +100,7 @@ export const SideMenu = () => {
                     <ListItemText primary={'Mujeres'} />
                 </ListItem>
 
-                <ListItem 
-                    button 
+                <ListItemButton
                     sx={{ display: { xs: '', sm: 'none' } }}
                     onClick={ () => navigateTo('/category/kid') }
                 >
@@ -110,9 +108,14 @@ export const SideMenu = () => {
                         <EscalatorWarningOutlined/>
                     </ListItemIcon>
                     <ListItemText primary={'Niños'} />
-                </ListItem>
-
-
+                </ListItemButton>
+                <ListItemButton >
+                            <ListItemIcon>
+                            <VpnKeyOutlined/>
+                            </ListItemIcon>
+                             <ListItemText primary={'Ingresar'} />
+                </ListItemButton>
+               
                 {
                     // isLoggedIn 
                     // ? (

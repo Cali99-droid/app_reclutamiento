@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 
-import { AppBar,  Box, Button, IconButton, Input, InputAdornment, Link, Toolbar, Typography } from '@mui/material';
+import { AppBar,  Box, Button, Divider, IconButton, Input, InputAdornment, Link, Toolbar, Typography } from '@mui/material';
 import { ClearOutlined, SearchOutlined } from '@mui/icons-material';
 
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
@@ -30,11 +30,9 @@ export const NavBar = () => {
         <AppBar>
             <Toolbar  >
                 <NextLink href='/' passHref legacyBehavior>
-                    <Link color={'secondary'} display='flex' alignItems='end'>
-                       
-                        <Typography variant='h5' >AE | </Typography>
-                        <Typography variant='h6' sx={{ ml:0.5 }} >Empleos</Typography>
-                       
+                    <Link color={'secondary'} display='flex' alignItems='end'>                      
+                        <Typography variant='h5' fontWeight={'bold'} >AE  </Typography>
+                        <Typography variant='h6' sx={{ ml:0.5 }} >| Empleos</Typography>
                     </Link>  
                 </NextLink>
 
@@ -44,30 +42,41 @@ export const NavBar = () => {
                      gap={'2rem'} >
                           <NextLink href='/' passHref legacyBehavior>
                         <Link 
-                        color={ asPath === '/' ?'#008C93' : 'secondary'} 
-                      
-                        sx={{ padding:'1.5rem',fontWeight:'bold'}}>
+                                color={ asPath === '/' ? '#005A34':'secondary'} 
+                                sx={{ padding:'1.5rem'}}
+                                fontWeight={asPath === '/' ? 600:500}
+                        
+                        >
                             Inicio
                         </Link>
                     </NextLink>
                     <NextLink href='/convocatorias' passHref legacyBehavior>
                         <Link 
-                          color={ asPath === '/convocatorias' ? '#008C93':'secondary'} 
-                        sx={{ padding:'1.5rem',fontWeight:'bold'}}>
-                            Convocatorias
+                          color={ asPath === '/convocatorias' ? '#005A34':'secondary'} 
+                          sx={{ padding:'1.5rem'}}
+                          fontWeight={asPath === '/convocatorias' ? 600:500}
+                          >
+                            Convocatorias 
                         </Link>
+                       
                     </NextLink>
+                   
                     <NextLink href='/docentes' passHref legacyBehavior>
                         <Link 
-                          color={ asPath === '/docentes' ?'#008C93' :'secondary'} 
-                        sx={{ padding:'1.5rem', fontWeight:'bold'}}>
+                          color={ asPath === '/docentes' ? '#005A34':'secondary'} 
+                          sx={{ padding:'1.5rem'}}
+                          fontWeight={asPath === '/docentes' ? 600:500}
+                        >
                            Docentes
                         </Link>
                     </NextLink>
                     <NextLink href='/beneficios' passHref legacyBehavior>
                         <Link 
-                          color={ asPath === '/beneficios' ? '#008C93':'secondary'} 
-                        sx={{ padding:'1.5rem', fontWeight:'bold'}}>
+                          color={ asPath === '/beneficios' ? '#005A34':'secondary'} 
+                          sx={{ padding:'1.5rem'}}
+                          fontWeight={asPath === '/beneficios' ? 600:500}
+                        
+                        >
                            Beneficios
                         </Link>
                     </NextLink>
