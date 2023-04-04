@@ -9,7 +9,7 @@ import Divider from '@mui/material/Divider';
 
 export default function Home() {
   return (
-    <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatoria a trabajos en Ancash"}>
+    <JobsLayout title={"AE | Beneficios "} pageDescription={"Beneficios que ofrecemos"}>
          <Box mt={15}>
           <Typography variant='h1' component='h1'>Beneficios que ofrecemos</Typography>
         </Box> 
