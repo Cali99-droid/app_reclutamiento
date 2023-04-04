@@ -20,33 +20,33 @@ const ConvocatoriaPage:NextPage<Props>=({job}) =>{
   return (
     <JobsLayout title={`AE | ${job.titulo} `} pageDescription={job.descripcion}>
 
-             <Grid className="fadeIn" container spacing={1} sx={{mt:15,padding:5}} alignItems={'start'}>
+             <Grid className="fadeIn"  container spacing={1} sx={{mt:15,padding:5}} alignItems={'start'}>
 
                 <Grid item xs={12} sm={ 7 }>
                     <Image className="fadeIn" src={`/jobs/${job.img}.jpg`} alt={job.descripcion} width={650} height={650}/>    
                 </Grid>
                 <Grid item xs={ 12 } sm={ 5 } >
-                    <Box >
+                    <Box width={600}>
                         <Typography variant='h1' component='h1'> 
                           {job.titulo} 
                           <IconButton aria-label="share" >
                                   <ShareIcon />
                           </IconButton>
                         </Typography>
-                        <Typography component='p' sx={{mt:2}}>{job.descripcion}</Typography>
+                        <Typography  component='p' sx={{mt:2, width:'100%'}}>{job.descripcion}</Typography>
                     </Box>    
                     <Divider variant="middle" />
-                    <Box sx={{mt:4}}>
+                    <Box sx={{mt:4}} width={600}>
                    
                       <Typography variant='h5' component='h5'> Requisitos</Typography> 
                       <Divider variant="middle" />
                       <ReqList job={job} />
-                      <Typography variant='h5' component='h5'> # Vacantes: {job.vacantes}</Typography>     
+                      <Typography variant='h5' component='h5'> # Vacantes: {job.vacantes}</Typography>  <Button fullWidth sx={{mt:3}} size="large">
+                      Postular
+                    </Button>    
                     </Box>
 
-                    <Button fullWidth sx={{mt:3}} size="large">
-                      Postular
-                    </Button>
+                   
                 </Grid>
              </Grid>
 

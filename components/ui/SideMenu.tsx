@@ -1,12 +1,17 @@
 import { useContext, useState } from 'react';
 
 import { Box,  Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemButton, ListItemIcon, ListItemText, } from "@mui/material"
-import { EscalatorWarningOutlined, FemaleOutlined,  LoginOutlined,  MaleOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
+import { EscalatorWarningOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
 
  import { UiContext } from '../../context';
 import { useRouter } from 'next/router';
 
 
+
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import KeyIcon from '@mui/icons-material/Key';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 export const SideMenu = () => {
 
     const router = useRouter();
@@ -78,43 +83,51 @@ export const SideMenu = () => {
                     )
                 } */}
 
-
+                <ListItemButton onClick={ () => navigateTo('/auth/login') }>
+                            <ListItemIcon>
+                            <KeyIcon/>
+                            </ListItemIcon>
+                             <ListItemText primary={'Ingresar'} />
+                </ListItemButton>
                 <ListItemButton 
                     sx={{ display: { xs: '', sm: 'none' } }} 
-                    onClick={ () => navigateTo('/category/men') }
+                    onClick={ () => navigateTo('/') }
                 >
                     <ListItemIcon>
-                        <MaleOutlined/>
+                        <HomeOutlinedIcon/>
                     </ListItemIcon>
-                    <ListItemText primary={'Hombres'} />
+                    <ListItemText primary={'Inicio'} />
                 </ListItemButton>
 
-                <ListItem 
-                    button 
+                <ListItemButton 
                     sx={{ display: { xs: '', sm: 'none' } }}
-                    onClick={ () => navigateTo('/category/women') }
+                    onClick={ () => navigateTo('/convocatorias') }
                 >
                     <ListItemIcon>
-                        <FemaleOutlined/>
+                        <DashboardOutlinedIcon/>
                     </ListItemIcon>
-                    <ListItemText primary={'Mujeres'} />
-                </ListItem>
+                    <ListItemText primary={'Convocatorias'} />
+                </ListItemButton>
 
                 <ListItemButton
                     sx={{ display: { xs: '', sm: 'none' } }}
-                    onClick={ () => navigateTo('/category/kid') }
+                    onClick={ () => navigateTo('/docentes') }
+                >
+                    <ListItemIcon>
+                        <AssignmentIndOutlinedIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={'Docentes'} />
+                </ListItemButton>
+                <ListItemButton
+                    sx={{ display: { xs: '', sm: 'none' } }}
+                    onClick={ () => navigateTo('/beneficios') }
                 >
                     <ListItemIcon>
                         <EscalatorWarningOutlined/>
                     </ListItemIcon>
-                    <ListItemText primary={'Niños'} />
+                    <ListItemText primary={'Beneficios'} />
                 </ListItemButton>
-                <ListItemButton >
-                            <ListItemIcon>
-                            <VpnKeyOutlined/>
-                            </ListItemIcon>
-                             <ListItemText primary={'Ingresar'} />
-                </ListItemButton>
+              
                
                 {
                     // isLoggedIn 
