@@ -1,9 +1,9 @@
 import { JobsLayout } from "@/components/layouts";
 import { Box } from "@mui/material";
 import Typography from '@mui/material/Typography';
-import { jobs } from '../../database/seed';
+import { jobs } from '../../../database/seed';
 import Divider from '@mui/material/Divider';
-import { AnnouncementList } from '../../components/jobs';
+import { AnnouncementList } from '../../../components/jobs';
 
 
 export default function ConvocatoriasPage() {

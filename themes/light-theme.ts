@@ -3,14 +3,14 @@ export const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#43655A',
+      main: '#eeca73',
       
     },
     secondary: {
-      main: '#005A34 ', /**#005A34  #43655A */
+      main: '#0045aa ', /**#005A34  #43655A  dorado: #EECA73  rojo:#ED1C24 Blanco:#DEDEDE Axul: 0045aa*/
     },
     info: {
-      main: '#60807F'
+      main: '#ed1c24'
     }
   },
 
@@ -79,7 +79,7 @@ export const lightTheme = createTheme({
           boxShadow: 'none',
           borderRadius: 10,
           ":hover": {
-            backgroundColor: 'rgb(67,101,90)',
+            backgroundColor: 'rgb(0,69,170)',
             transition: 'all 0.3s ease-in-out',
         
           }

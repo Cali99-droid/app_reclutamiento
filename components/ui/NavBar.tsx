@@ -42,7 +42,7 @@ export const NavBar = () => {
                      gap={'2rem'} >
                           <NextLink href='/' passHref legacyBehavior>
                         <Link 
-                                color={ asPath === '/' ? '#005A34':'secondary'} 
+                                color={ asPath === '/' ? '#0045aa':'secondary'} 
                                 sx={{ padding:'1.5rem'}}
                                 fontWeight={asPath === '/' ? 600:500}
                         
@@ -52,7 +52,7 @@ export const NavBar = () => {
                     </NextLink>
                     <NextLink href='/convocatorias' passHref legacyBehavior>
                         <Link 
-                          color={ asPath === '/convocatorias' ? '#005A34':'secondary'} 
+                          color={ asPath === '/convocatorias' ? '#0045aa':'secondary'} 
                           sx={{ padding:'1.5rem'}}
                           fontWeight={asPath === '/convocatorias' ? 600:500}
                           >
@@ -63,7 +63,7 @@ export const NavBar = () => {
                    
                     <NextLink href='/docentes' passHref legacyBehavior>
                         <Link 
-                          color={ asPath === '/docentes' ? '#005A34':'secondary'} 
+                          color={ asPath === '/docentes' ? '#0045aa':'secondary'} 
                           sx={{ padding:'1.5rem'}}
                           fontWeight={asPath === '/docentes' ? 600:500}
                         >
@@ -72,7 +72,7 @@ export const NavBar = () => {
                     </NextLink>
                     <NextLink href='/beneficios' passHref legacyBehavior>
                         <Link 
-                          color={ asPath === '/beneficios' ? '#005A34':'secondary'} 
+                          color={ asPath === '/beneficios' ? '#0045aa':'secondary'} 
                           sx={{ padding:'1.5rem'}}
                           fontWeight={asPath === '/beneficios' ? 600:500}
                         

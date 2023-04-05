@@ -18,7 +18,10 @@ export default function ConvocatoriasPage() {
         <Divider variant="middle" />
         <JobList  jobs={jobs} />
       </Box>
+
+      
        
     </JobsLayout>
+    
   )
 }
