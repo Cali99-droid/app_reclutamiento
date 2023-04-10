@@ -21,8 +21,8 @@ export const PostulantsList :FC<Props>= ({postulants}) => {
           <Box padding={5} width={'100%'}  textAlign={'center'}>
               <Typography >No hay postulantes en esta fase</Typography>
           </Box>
-          :postulantsSort.map(postulant=>(
-                <PostulantCard key={postulant.id}  postulant={postulant}/>
+          :postulantsSort.map((postulant, index)=>(
+                <PostulantCard key={postulant.id} postulant={postulant} index={index}/>
             ))
         }    
     </Grid>

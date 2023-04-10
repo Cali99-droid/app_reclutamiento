@@ -14,10 +14,11 @@ import { PostContext, UiContext } from '@/context';
 
 interface Props {
     postulant: IPostulant;
+    index:number;
 }
 
 
-export const PostulantCard: FC<Props> = ({ postulant }) => {
+export const PostulantCard: FC<Props> = ({ postulant,index }) => {
 
     const [open, setOpen] = useState(false);
 
@@ -31,7 +32,7 @@ export const PostulantCard: FC<Props> = ({ postulant }) => {
 
 
 
-    const{advancePhase,backPhase} = useContext(PostContext)
+    const{advancePhase,backPhase, activeStep} = useContext(PostContext)
 
     return (
         <Grid item   
@@ -39,7 +40,7 @@ export const PostulantCard: FC<Props> = ({ postulant }) => {
         sm={3}
         > 
             <Card sx={{ maxWidth: 345 }}>      
-            <NextLink   href={`/`} passHref prefetch={ false } legacyBehavior>
+            <NextLink   href={`#`} passHref prefetch={ false } legacyBehavior>
 
                 <Link>
                     <CardActionArea>
@@ -49,6 +50,7 @@ export const PostulantCard: FC<Props> = ({ postulant }) => {
                         // title={job.titulo}
                     />
                     <CardContent>
+                        <Typography fontWeight={'bold'}># {index+1}</Typography>
                         <Typography gutterBottom variant="h5" component="div">
                         {postulant.nombres + ' ' + postulant.apellido_paterno + ' '+postulant.apellido_materno}
                         </Typography>
@@ -68,29 +70,42 @@ export const PostulantCard: FC<Props> = ({ postulant }) => {
                 </Link>
                 </NextLink>
                 <CardActions sx={{display:'flex', justifyContent:'flex-end'}}>
-                    <IconButton 
-                    aria-label="remove to favorites"
-                    onClick={()=>{
-                       
-                            backPhase(postulant) 
-                       
-                    }}
+                    {activeStep !== 0
+                    ?( <IconButton 
+                        aria-label="remove to favorites"
+                        onClick={()=>{                      
+                                backPhase(postulant) 
+                        }}                   
+                        >
+                            <RemoveCircleIcon fontSize="large" />
+                    </IconButton>)
+                    :''
+                    }
+                   
+                   {
+                    activeStep === 4
+                    ?
+                        ''
                     
-                    >
-                        <RemoveCircleIcon fontSize="large" />
-                    </IconButton>
-                    <IconButton aria-label="add to favorites" onClick={()=>{
+                    :(  <IconButton aria-label="add to favorites" onClick={()=>{
                        handleClickOpen()
                        
                         
                         }}>
                         <AddCircleIcon fontSize="large" color="secondary"/>
-                    </IconButton>
+                    </IconButton>)
+
+                   }
+                  
                     
                     </CardActions>
                 
                 
             </Card>
+
+
+
+
             <div>
               
                 <Dialog
