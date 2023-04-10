@@ -18,7 +18,7 @@ interface Props {
 
 export const PostulantCard: FC<Props> = ({ postulant }) => {
 
-    const{updatePhase} = useContext(PostContext)
+    const{advancePhase,backPhase} = useContext(PostContext)
     return (
         <Grid item   
         xs={12} 
@@ -54,10 +54,14 @@ export const PostulantCard: FC<Props> = ({ postulant }) => {
                 </Link>
                 </NextLink>
                 <CardActions sx={{display:'flex', justifyContent:'flex-end'}}>
-                    <IconButton aria-label="remove to favorites">
+                    <IconButton 
+                    aria-label="remove to favorites"
+                    onClick={()=>backPhase(postulant)}
+                    
+                    >
                         <RemoveCircleIcon fontSize="large" />
                     </IconButton>
-                    <IconButton aria-label="add to favorites" onClick={()=>updatePhase(postulant)}>
+                    <IconButton aria-label="add to favorites" onClick={()=>advancePhase(postulant)}>
                         <AddCircleIcon fontSize="large" color="secondary"/>
                     </IconButton>
                     

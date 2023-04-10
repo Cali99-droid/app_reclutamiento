@@ -35,7 +35,7 @@ export const PostProvider:FC<Props> = ({children}) => {
             }
       }, [])
 
-      const updatePhase =(postulant:IPostulant)=>{
+      const advancePhase =(postulant:IPostulant)=>{
 
             const newList = postulants.map((post)=>{
                   if(post.id === postulant.id && postulant.fase<4){
@@ -47,6 +47,18 @@ export const PostProvider:FC<Props> = ({children}) => {
             console.log(newList)
            dispatch({ type: 'Post - Load', payload: newList });
       }
+
+      const backPhase =(postulant:IPostulant)=>{
+
+            const newList = postulants.map((post)=>{
+                  if(post.id === postulant.id && postulant.fase>1){
+                       post.fase = post.fase -1  
+                  }
+                  return post;
+            })
+         
+           dispatch({ type: 'Post - Load', payload: newList });
+      }
       
       return (
           <PostContext.Provider value={{
@@ -54,7 +66,8 @@ export const PostProvider:FC<Props> = ({children}) => {
 
 
             //methods
-            updatePhase,
+            advancePhase,
+            backPhase
            }}>
                  {children}
 

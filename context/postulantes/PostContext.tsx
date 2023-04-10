@@ -8,6 +8,7 @@ interface ContextProps{
 
 
 
-     updatePhase: (postulant: IPostulant) => void
+      advancePhase: (postulant: IPostulant) => void,
+      backPhase:(postulant: IPostulant) => void
 }
 export const PostContext  = createContext({}as ContextProps);
