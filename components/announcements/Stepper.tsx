@@ -8,6 +8,8 @@ import Typography from '@mui/material/Typography';
 import { PostulantsList } from '../postulants/PostulantsList';
 
 import { PostContext } from "@/context/postulantes";
+import confetti from "canvas-confetti";
+
 
 
 
@@ -23,22 +25,22 @@ const {postulants} = useContext(PostContext);
  const [filter, setFilter] = useState(1);
 
  const filteredData = postulants.filter((item) => {
-  if (filter === 0) {
-    return true;
-  } else {
-    return item.fase === filter;
-  }
-});
- 
-
-
-
-
+    if (filter === 0) {
+      return true;
+    } else {
+      return item.fase === filter;
+    }
+  });
+  
 
   const [activeStep, setActiveStep] = useState(0);
+
+  
   const [completed, setCompleted] = useState<{
     [k: number]: boolean;
-  }>({});
+  }>({});  //0:true,1:true
+  
+
 
   const totalSteps = () => {
     return steps.length;
@@ -66,7 +68,17 @@ const {postulants} = useContext(PostContext);
         : activeStep + 1;
     setActiveStep(newActiveStep);
     if ((activeStep+2) > 4) {
-      setFilter(1);
+      setFilter(4);
+      confetti({
+        zIndex:999,
+        particleCount:100,
+        spread:160,
+        angle:-100,
+        origin:{
+         x:.5,
+         y:0,
+        }
+     });
       return;
     }
     setFilter(activeStep+2);
@@ -144,7 +156,7 @@ const {postulants} = useContext(PostContext);
                 ) : (
                   <Button onClick={handleComplete}>
                     {completedSteps() === totalSteps() - 1
-                      ? 'Proceso de elección finalizado'
+                      ? 'Finalizar proceso de elección'
                       : 'Finalizar Fase'}
                   </Button>
                 ))}

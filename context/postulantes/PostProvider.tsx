@@ -44,7 +44,8 @@ export const PostProvider:FC<Props> = ({children}) => {
                   return post;
             })
          
-            console.log(newList)
+            // console.log(newList)
+          
            dispatch({ type: 'Post - Load', payload: newList });
       }
 

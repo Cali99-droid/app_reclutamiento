@@ -7,4 +7,5 @@ export interface IJob {
     categoria: string;
     especialidad: string;
     img: string;
+    fase:number;
 }

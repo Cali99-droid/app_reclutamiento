@@ -56,12 +56,20 @@ export const PostulantCard: FC<Props> = ({ postulant }) => {
                 <CardActions sx={{display:'flex', justifyContent:'flex-end'}}>
                     <IconButton 
                     aria-label="remove to favorites"
-                    onClick={()=>backPhase(postulant)}
+                    onClick={()=>{
+                        backPhase(postulant)
+                       
+                    }}
                     
                     >
                         <RemoveCircleIcon fontSize="large" />
                     </IconButton>
-                    <IconButton aria-label="add to favorites" onClick={()=>advancePhase(postulant)}>
+                    <IconButton aria-label="add to favorites" onClick={()=>{
+                        
+                        advancePhase(postulant)
+                      
+                        
+                        }}>
                         <AddCircleIcon fontSize="large" color="secondary"/>
                     </IconButton>
                     

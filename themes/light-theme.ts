@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles';
+import { esES } from '@mui/x-data-grid';
 export const lightTheme = createTheme({
   palette: {
     mode: 'light',
@@ -13,6 +14,7 @@ export const lightTheme = createTheme({
       main: '#ed1c24'
     }
   },
+ 
 
   components: {
     MuiLink: {
@@ -101,4 +103,6 @@ export const lightTheme = createTheme({
     }
     
   }
-});
+
+  
+},esES);

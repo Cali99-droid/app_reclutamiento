@@ -10,7 +10,8 @@ export const jobs:IJob[] = [
        vacantes:6,
        img: 'img-1',
        categoria:'Docentes',
-       especialidad: 'Inglés'
+       especialidad: 'Inglés',
+       fase:2
     },
     {
       id:'2',
@@ -19,7 +20,8 @@ export const jobs:IJob[] = [
         vacantes:4,
         img: 'img-2',
         categoria:'Docentes',
-        especialidad:'Matematica'
+        especialidad:'Matematica',
+        fase:1
      },
      {
       id:'3',
@@ -28,7 +30,8 @@ export const jobs:IJob[] = [
         vacantes:2,
         img: 'img-3',
         categoria:'Administrativo',
-        especialidad:'Todos'
+        especialidad:'Todos',
+        fase:4
      },
      {
       id:'4',
@@ -37,7 +40,8 @@ export const jobs:IJob[] = [
         vacantes:1,
         img: 'img-4',
         categoria:'Administrativo',
-        especialidad:'Todos'
+        especialidad:'Todos',
+        fase:3
      },
      {
       id:'5',
@@ -46,7 +50,8 @@ export const jobs:IJob[] = [
         vacantes:2,
         img: 'img-5',
         categoria:'Docentes',
-        especialidad:'Comunicacion'
+        especialidad:'Comunicacion',
+        fase:4
      },
      {
       id:'6',
@@ -55,7 +60,8 @@ export const jobs:IJob[] = [
         vacantes:1,
         img: 'img-6',
         categoria:'Administrativo',
-        especialidad:'Todos'
+        especialidad:'Todos',
+        fase:4
      }
 ]
 

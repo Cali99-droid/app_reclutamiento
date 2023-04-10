@@ -4,13 +4,9 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AnnouncementsStepper from '../../../components/announcements/Stepper';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
-import { postulants } from "@/database/seedPost";
-import { PostulantsList } from "@/components/postulants/PostulantsList";
 
 
-
-
- const AnnouncementPage = () => {
+const AnnouncementPage = () => {
 
   return (
     <JobsLayout title={"AE | Administrar convocatorias "} pageDescription={"Convocatorias a trabajos en Ancash"}>
