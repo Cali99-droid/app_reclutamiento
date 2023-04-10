@@ -1,14 +1,15 @@
 
-import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, CardActionArea, IconButton } from '@mui/material'
+import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, CardActionArea, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material'
 
 import { IPostulant } from '@/interfaces';
 
 
 import NextLink from 'next/link';
-import { FC, useContext } from 'react';
+import { FC, useContext, useState } from 'react';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { PostContext } from '@/context';
+import { PostContext, UiContext } from '@/context';
+
 
 
 interface Props {
@@ -18,7 +19,20 @@ interface Props {
 
 export const PostulantCard: FC<Props> = ({ postulant }) => {
 
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+
+
     const{advancePhase,backPhase} = useContext(PostContext)
+
     return (
         <Grid item   
         xs={12} 
@@ -57,7 +71,8 @@ export const PostulantCard: FC<Props> = ({ postulant }) => {
                     <IconButton 
                     aria-label="remove to favorites"
                     onClick={()=>{
-                        backPhase(postulant)
+                       
+                            backPhase(postulant) 
                        
                     }}
                     
@@ -65,9 +80,8 @@ export const PostulantCard: FC<Props> = ({ postulant }) => {
                         <RemoveCircleIcon fontSize="large" />
                     </IconButton>
                     <IconButton aria-label="add to favorites" onClick={()=>{
-                        
-                        advancePhase(postulant)
-                      
+                       handleClickOpen()
+                       
                         
                         }}>
                         <AddCircleIcon fontSize="large" color="secondary"/>
@@ -77,6 +91,30 @@ export const PostulantCard: FC<Props> = ({ postulant }) => {
                 
                 
             </Card>
+            <div>
+              
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                    {"¿Esta seguro de seleccionar al postulante para la siguiente fase?"}
+                    </DialogTitle>
+                    <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {`El postulante ${postulant.nombres} sera agregado a la fase siguiente`}
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={()=>{advancePhase(postulant)}}>Si</Button>
+                    <Button onClick={handleClose} autoFocus>
+                        No
+                    </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
         </Grid>
     )
 }

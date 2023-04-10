@@ -10,9 +10,13 @@ import { PostContext } from "@/context";
 import confetti from "canvas-confetti";
 
 
+
 const steps = ['Preselección', 'Entrevista', 'Evaluación', 'Negociación','Contrato'];
 
-export default function LinearStepper() {
+export const LinearStepper=()=> {
+
+
+
 
     const {postulants} = useContext(PostContext);
 
@@ -41,7 +45,9 @@ export default function LinearStepper() {
     return skipped.has(step);
   };
 
+  
   const handleNext = () => {
+ 
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -144,6 +150,7 @@ export default function LinearStepper() {
         </>
       )}
         <PostulantsList postulants={filteredData}/>
+       
     </Box>
   );
 }

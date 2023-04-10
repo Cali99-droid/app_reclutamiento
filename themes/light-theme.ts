@@ -29,7 +29,7 @@ export const lightTheme = createTheme({
      
       defaultProps: {
         elevation:1,
-        position: 'fixed',
+        position: 'absolute',
       },
       styleOverrides: {
         root: {
