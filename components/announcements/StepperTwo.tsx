@@ -2,148 +2,170 @@ import { useContext, useState } from "react";
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
+import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { PostulantsList } from '../postulants/PostulantsList';
-import { PostContext } from "@/context";
+
+import { PostContext } from "@/context/postulantes";
 import confetti from "canvas-confetti";
 
 
-const steps = ['Preselección', 'Entrevista', 'Evaluación', 'Negociación','Contrato'];
-
-export default function LinearStepper() {
-
-    const {postulants} = useContext(PostContext);
 
 
+const steps = ['Preselección', 'Entrevista', 'Evaluación', 'Negociación'];
 
-    const [filter, setFilter] = useState(1);
-
-    const filteredData = postulants.filter((item) => {
-        if (filter === 0) {
-        return true;
-        } else {
-        return item.fase === filter;
-        }
-    });
+export default function AnnouncementsStepper() {
 
 
+const {postulants} = useContext(PostContext);
+
+
+
+ const [filter, setFilter] = useState(1);
+
+ const filteredData = postulants.filter((item) => {
+    if (filter === 0) {
+      return true;
+    } else {
+      return item.fase === filter;
+    }
+  });
+  
 
   const [activeStep, setActiveStep] = useState(0);
-  const [skipped, setSkipped] = useState(new Set<number>());
 
-  const isStepOptional = (step: number) => {
-    return step === 1;
+  
+  const [completed, setCompleted] = useState<{
+    [k: number]: boolean;
+  }>({});  //0:true,1:true
+  
+
+
+  const totalSteps = () => {
+    return steps.length;
   };
 
-  const isStepSkipped = (step: number) => {
-    return skipped.has(step);
+  const completedSteps = () => {
+    return Object.keys(completed).length;
+  };
+
+  const isLastStep = () => {
+    return activeStep === totalSteps() - 1;
+  };
+
+  const allStepsCompleted = () => {
+    return completedSteps() === totalSteps();
   };
 
   const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
+    
+    const newActiveStep =
+      isLastStep() && !allStepsCompleted()
+        ? // It's the last step, but not all steps have been completed,
+          // find the first step that has been completed
+          steps.findIndex((step, i) => !(i in completed))
+        : activeStep + 1;
+    setActiveStep(newActiveStep);
+    if ((activeStep+2) > 4) {
+      setFilter(4);
+      confetti({
+        zIndex:999,
+        particleCount:100,
+        spread:160,
+        angle:-100,
+        origin:{
+         x:.5,
+         y:0,
+        }
+     });
+      return;
     }
- 
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-
     setFilter(activeStep+2);
-    if(activeStep===4){
-        setFilter(5)
-        confetti(  {particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 }})
-    }
-
+  
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    setFilter(activeStep);
+    setFilter(activeStep)
   };
 
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
+  const handleStep = (step: number) => () => {
+    setFilter(step+1)
+    setActiveStep(step);
+    
+  };
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
+  const handleComplete = () => {
+    const newCompleted = completed;
+    newCompleted[activeStep] = true;
+    setCompleted(newCompleted);
+    handleNext();
   };
 
   const handleReset = () => {
     setActiveStep(0);
+    setCompleted({});
   };
 
   return (
-    <Box sx={{ width: '100%', mt:5 }}>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-          const stepProps: { completed?: boolean } = {};
-          const labelProps: {
-            optional?: React.ReactNode;
-          } = {};
-          if (isStepOptional(index)) {
-            labelProps.optional = (
-              <Typography variant="caption">Optional</Typography>
-            );
-          }
-          if (isStepSkipped(index)) {
-            stepProps.completed = false;
-          }
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps} >{label}</StepLabel>
-            </Step>
-          );
-        })}
+    <Box sx={{ width: '100%', mt:5 }} >
+      <Stepper nonLinear activeStep={activeStep} >
+        {steps.map((label, index) => (
+          <Step key={label} completed={completed[index]}>
+            <StepButton color="inherit" onClick={handleStep(index)}>
+              {label}
+            </StepButton>
+          </Step>
+        ))}
       </Stepper>
-      {activeStep === steps.length ? (
-        <>
-          <Typography fontWeight={'bold'} fontSize={20} sx={{ mt: 2, mb: 1 }}>
-           Ha finalizado el proceso, los nuevos contratados son:
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Volver</Button>
-          </Box>
-        </>
-      ) : (
-        <>
-          <Typography fontSize={20} fontWeight={'bold'} sx={{ mt: 2, mb: 1 }}> Fase {activeStep + 1}: {steps[activeStep]}</Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Volver
-            </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-            {isStepOptional(activeStep) && (
-              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                Skip
+      <div style={{}}>
+        {allStepsCompleted() ? (
+          <>
+            <Typography sx={{ mt: 2, mb: 1 }}>
+              Finalizó la Selección, tenemos un nuevo contratado
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              <Box sx={{ flex: '1 1 auto' }} />
+              <Button onClick={handleReset}>Finalizar</Button>
+            </Box>
+          </>
+        ) : (
+          <>
+            <Typography sx={{ mt: 2, mb: 1, py: 1 }}>
+              Fase {activeStep + 1}: {steps[activeStep]}
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              <Button
+                color="inherit"
+                disabled={activeStep === 0} //condicion para evitar pasar a la siguiente fase si no termino la anteriro
+                onClick={handleBack}
+                sx={{ mr: 1 }}
+              >
+                Volver
               </Button>
-            )}
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Terminar Proceso' : 'Finalizar Fase'}
-            </Button>
-          </Box>
-        </>
-      )}
-        <PostulantsList postulants={filteredData}/>
+              <Box sx={{ flex: '1 1 auto' }}/>
+              <Button  onClick={handleNext} sx={{ mr: 1 }}>
+                Siguiente
+              </Button>
+              {activeStep !== steps.length &&
+                (completed[activeStep] ? (
+                  <Typography variant="caption" sx={{ display: 'inline-block' }}>
+                    Fase {activeStep + 1} completada
+                  </Typography>
+                ) : (
+                  <Button onClick={handleComplete}>
+                    {completedSteps() === totalSteps() - 1
+                      ? 'Finalizar proceso de elección'
+                      : 'Finalizar Fase'}
+                  </Button>
+                ))}
+            </Box>
+          </>
+        )}
+      </div>
+      <PostulantsList postulants={filteredData}/>
     </Box>
+      
   );
 }
