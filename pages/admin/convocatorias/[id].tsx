@@ -3,6 +3,7 @@ import { Box,  Divider,IconButton, Typography,  } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AnnouncementsStepper from '../../../components/announcements/Stepper';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import LinearStepper from "@/components/announcements/StepperTwo";
 
 
 
@@ -38,7 +39,7 @@ const AnnouncementPage = () => {
                 </IconButton>
             </Box> 
             <Divider/>
-            <AnnouncementsStepper/> 
+            <LinearStepper/> 
         </Box>
 
        

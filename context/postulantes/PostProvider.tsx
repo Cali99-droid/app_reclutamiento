@@ -38,7 +38,7 @@ export const PostProvider:FC<Props> = ({children}) => {
       const advancePhase =(postulant:IPostulant)=>{
 
             const newList = postulants.map((post)=>{
-                  if(post.id === postulant.id && postulant.fase<4){
+                  if(post.id === postulant.id && postulant.fase<5){
                        post.fase = post.fase +1  
                   }
                   return post;
