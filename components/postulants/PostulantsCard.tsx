@@ -1,28 +1,30 @@
 
-import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, Chip, CardContent, Button, CardActionArea, IconButton } from '@mui/material'
-
+import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, CardActionArea, IconButton } from '@mui/material'
 
 import { IPostulant } from '@/interfaces';
-import ShareIcon from '@mui/icons-material/Share';
+
 
 import NextLink from 'next/link';
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { PostContext } from '@/context';
 
 
 interface Props {
     postulant: IPostulant;
 }
 
+
 export const PostulantCard: FC<Props> = ({ postulant }) => {
+
+    const{updatePhase} = useContext(PostContext)
     return (
         <Grid item   
         xs={12} 
         sm={3}
         > 
-            <Card sx={{ maxWidth: 345 }}>
-        
+            <Card sx={{ maxWidth: 345 }}>      
             <NextLink   href={`/`} passHref prefetch={ false } legacyBehavior>
 
                 <Link>
@@ -48,18 +50,20 @@ export const PostulantCard: FC<Props> = ({ postulant }) => {
                         </Box> */}
                     </CardContent>  
                     </CardActionArea>
-                    <CardActions sx={{display:'flex', justifyContent:'flex-end'}}>
-                    <IconButton aria-label="add to favorites">
+                    
+                </Link>
+                </NextLink>
+                <CardActions sx={{display:'flex', justifyContent:'flex-end'}}>
+                    <IconButton aria-label="remove to favorites">
                         <RemoveCircleIcon fontSize="large" />
                     </IconButton>
-                    <IconButton aria-label="add to favorites">
+                    <IconButton aria-label="add to favorites" onClick={()=>updatePhase(postulant)}>
                         <AddCircleIcon fontSize="large" color="secondary"/>
                     </IconButton>
                     
                     </CardActions>
-                </Link>
                 
-                </NextLink>
+                
             </Card>
         </Grid>
     )

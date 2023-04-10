@@ -1,14 +1,18 @@
-import { FC, useReducer } from 'react';
+import { FC, useEffect, useReducer } from 'react';
 import { PostContext,postReducer } from './'
-import { postulants } from '../../database/seedPost';
+import { postulants as listPost, postulants } from '../../database/seedPost';
+import { IPostulant } from '@/interfaces';
 
 
 export interface PostState{
-     postulants: [];
+     postulants: IPostulant[];
+     isLoaded: boolean;
 }
 
 const POST_INITIAL_STATE: PostState={
       postulants:[],
+      isLoaded: false,
+      
 }
 
  interface Props{
@@ -19,9 +23,38 @@ export const PostProvider:FC<Props> = ({children}) => {
 
       const [state, dispatch] = useReducer(postReducer, POST_INITIAL_STATE)
 
+
+      useEffect(() => {
+        
+            try {
+                
+                  dispatch({ type: 'Post - Load', payload: listPost })
+                  
+            } catch (error) {
+                  dispatch({ type: 'Post - Load', payload: [] })
+            }
+      }, [])
+
+      const updatePhase =(postulant:IPostulant)=>{
+
+            const newList = postulants.map((post)=>{
+                  if(post.id === postulant.id && postulant.fase<4){
+                       post.fase = post.fase +1  
+                  }
+                  return post;
+            })
+         
+            console.log(newList)
+           dispatch({ type: 'Post - Load', payload: newList });
+      }
+      
       return (
           <PostContext.Provider value={{
-              postulants:[] 
+            ...state,
+
+
+            //methods
+            updatePhase,
            }}>
                  {children}
 

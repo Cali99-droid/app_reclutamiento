@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material'
 import { IPostulant } from '@/interfaces';
 import { PostulantCard } from './PostulantsCard';
-import { postulants } from '../../database/seedPost';
+
 
 
 interface Props {
@@ -19,15 +19,12 @@ export const PostulantsList :FC<Props>= ({postulants}) => {
           postulantsSort.length < 1
           ?
           <Box padding={5} width={'100%'}  textAlign={'center'}>
-              <Typography >Ningun postulante aun no ha sido seleccionado</Typography>
+              <Typography >No hay postulantes en esta fase</Typography>
           </Box>
-        
-
           :postulantsSort.map(postulant=>(
                 <PostulantCard key={postulant.id}  postulant={postulant}/>
             ))
-        }
-    
+        }    
     </Grid>
   )
 }
