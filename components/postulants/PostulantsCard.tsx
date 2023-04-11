@@ -10,7 +10,6 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { PostContext, UiContext } from '@/context';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { ModalConfirmAdvance } from '../modal/ModalConfirmAdvance';
 import Modal from '../modal/Modal';
 
 const steps = ['Preselección', 'Entrevista', 'Evaluación', 'Negociación','Contrato'];

@@ -80,7 +80,7 @@ export const PostProvider:FC<Props> = ({children}) => {
       const [contrato, setContrato] = useState(false)
       const handleNext = () => {
 
-            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+           
          
             setFilter(activeStep+2);
             if(activeStep===4){
@@ -90,7 +90,7 @@ export const PostProvider:FC<Props> = ({children}) => {
                     spread: 70,
                     origin: { y: 0.6 }})
             }
-        
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
           };
 
       const handleBack = () => {

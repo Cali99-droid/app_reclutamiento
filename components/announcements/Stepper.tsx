@@ -26,6 +26,7 @@ export const LinearStepper=()=> {
     };
 
     const handleClose = () => {
+ 
           setOpen(false);
     };
     const handleConfirm = () => {
@@ -73,7 +74,7 @@ export const LinearStepper=()=> {
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Volver</Button>
+            <Button onClick={handleReset}>Ver resumen</Button>
           </Box>
          
         </>
@@ -111,7 +112,10 @@ export const LinearStepper=()=> {
           mt:2
           }}>
               <Box display={'flex'} justifyContent={'space-between'} >
-                  <Typography variant="h2" fontWeight={'bold'}>Aptos para esta fase:        {cantidadFase(activeStep+1)} postulantes</Typography>
+                {activeStep === steps.length 
+                ?(<Typography variant="h2" fontWeight={'bold'}>Lista de Contratados</Typography>)
+                :(<Typography variant="h2" fontWeight={'bold'}>Aptos para esta fase:        {cantidadFase(activeStep+1)} postulantes</Typography>)}
+                  
                   <IconButton aria-label="Mostrar Ocultos">
                   <VisibilityOffIcon/>
                   </IconButton>
@@ -122,10 +126,10 @@ export const LinearStepper=()=> {
         
     </Box>
         <Modal
-            title={cantidadFase(activeStep+2)<1?'No puede continuar a la siguiente fase porque aún no seleccionó a ningun postulante':'¿Esta seguro de continuar?'}   
+            title={cantidadFase(activeStep+2)<1 && activeStep+2<=5 ?'No puede continuar a la siguiente fase porque aún no seleccionó a ningun postulante':'¿Esta seguro de continuar?'}   
             open={open}
             handleClose={handleClose}
-            handleConfirm={cantidadFase(activeStep+2)<1?handleClose:handleConfirm}
+            handleConfirm={cantidadFase(activeStep+2)<1&&activeStep+2<=5?handleClose:handleConfirm}
           >
          
              {activeStep === steps.length - 1 
