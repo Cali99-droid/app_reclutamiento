@@ -7,14 +7,14 @@ import confetti from "canvas-confetti";
 export interface PostState{
      postulants: IPostulant[];
      isLoaded: boolean;
-     fases:string[]
-     activeStep:number
+    
+     activeStep:number;
 }
 
 const POST_INITIAL_STATE: PostState={
       postulants:[],
       isLoaded: false,
-      fases:['Preselección', 'Entrevista', 'Evaluación', 'Negociación','Contrato'],
+    
       activeStep:0,
 }
 
@@ -77,6 +77,7 @@ export const PostProvider:FC<Props> = ({children}) => {
   
       /**Gestiona los pasos entre fases */
       const [activeStep, setActiveStep] = useState(0);
+      const [contrato, setContrato] = useState(false)
       const handleNext = () => {
 
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -84,6 +85,7 @@ export const PostProvider:FC<Props> = ({children}) => {
             setFilter(activeStep+2);
             if(activeStep===4){
                 setFilter(5)
+                setContrato(true)
                 confetti(  {particleCount: 100,
                     spread: 70,
                     origin: { y: 0.6 }})
@@ -98,20 +100,38 @@ export const PostProvider:FC<Props> = ({children}) => {
       const handleReset = () => {
              setActiveStep(0);
       };
+
+
+
+      /**Modales */
+      const [openAdvance, setOpenAdvance] = useState(false);
+
+      const handleClickOpenAdvance = () => {
+            setOpenAdvance(true);
+      };
+
+      const handleCloseAdvance = () => {
+            setOpenAdvance(false);
+      };
       
       return (
           <PostContext.Provider value={{
             ...state,
             activeStep,
             filteredData,
-
-
+            contrato,
+            openAdvance,
+            postulants,
+        
             //methods
             advancePhase,
             backPhase,
             handleNext,
             handleBack,
             handleReset,
+            handleClickOpenAdvance,
+            handleCloseAdvance
+
 
            }}>
                  {children}

@@ -13,7 +13,7 @@ export const PostulantsList :FC<Props>= ({postulants}) => {
 
     let postulantsSort = postulants.sort((x, y) => x.puntaje_in - y.puntaje_in).reverse();
   return (
-    <Grid container spacing={4} marginTop={'.1rem'}>
+    <Grid container spacing={4} marginTop={'.1rem'} >
         {
           
           postulantsSort.length < 1

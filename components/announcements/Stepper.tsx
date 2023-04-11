@@ -7,18 +7,50 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { PostulantsList } from '../postulants/PostulantsList';
 import { PostContext } from "@/context";
-import confetti from "canvas-confetti";
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Divider, IconButton } from "@mui/material";
+import Modal from '../modal/Modal';
 
-
-
+/**Cabiar segun bd */
 const steps = ['Preselección', 'Entrevista', 'Evaluación', 'Negociación','Contrato'];
 
 export const LinearStepper=()=> {
 
-    const {handleNext,activeStep,filteredData,handleBack,handleReset} = useContext(PostContext);
+    const {handleNext,activeStep,filteredData,handleBack,handleReset,postulants} = useContext(PostContext);
+
+    /**Modal de confirmacion para finalizar fase */
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+          setOpen(true);
+    };
+
+    const handleClose = () => {
+          setOpen(false);
+    };
+    const handleConfirm = () => {
+      // aquí puedes ejecutar cualquier acción que necesites cuando el usuario confirma la ventana modal
+      handleNext();
+      handleClose();
+    };
+
+    const cantidadFase = (fase:number)=>{
+        const data =  postulants.filter((item) => {
+            return item.fase === fase; 
+            }
+        );
+
+      return data.length;
+    }
    
   return (
-    <Box sx={{ width: '100%', mt:5 }}>
+    <Box className="fadeIn">
+      <Box sx={{ width: '100%', mt:5,bgcolor:'#F3F3F3', 
+      padding:3,
+      borderRadius:5,
+       }}>
+      <Typography fontSize={30} fontWeight={'bold'} sx={{  mb: 2 }}>Fases</Typography>
+  
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
@@ -36,17 +68,21 @@ export const LinearStepper=()=> {
       </Stepper>
       {activeStep === steps.length ? (
         <>
-          <Typography fontWeight={'bold'} fontSize={20} sx={{ mt: 2, mb: 1 }}>
-           Ha finalizado el proceso, los nuevos contratados son:
+         <Typography textAlign={'center'} fontWeight={'bold'} color={'#EC508B'} fontSize={20} sx={{ mt: 5 }}>
+           ! Ha finalizado el proceso, tenemos nuevo personal ! 
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
             <Button onClick={handleReset}>Volver</Button>
           </Box>
+         
         </>
       ) : (
         <>
-          <Typography fontSize={20} fontWeight={'bold'} sx={{ mt: 2, mb: 1 }}> Fase {activeStep + 1}: {steps[activeStep]}</Typography>
+          <Box display={'flex'} alignItems={'center'} gap={1} mt={3}>
+            <Typography variant="body1" color={'#000'}> Se encuentra en  fase de: </Typography>
+            <Typography  variant="subtitle1" color={'info'} >{steps[activeStep]}</Typography> 
+          </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
               color="inherit"
@@ -58,14 +94,46 @@ export const LinearStepper=()=> {
             </Button>
             <Box sx={{ flex: '1 1 auto' }} />
            
-            <Button onClick={handleNext}>
+            <Button onClick={handleClickOpen}>
               {activeStep === steps.length - 1 ? 'Terminar Proceso' : 'Finalizar Fase'}
             </Button>
           </Box>
         </>
       )}
-        <PostulantsList postulants={filteredData}/>
+       
        
     </Box>
+    <Box>
+      <Box sx={{
+          bgcolor:'#F3F3F3', 
+          padding:3,
+          borderRadius:5,
+          mt:2
+          }}>
+              <Box display={'flex'} justifyContent={'space-between'} >
+                  <Typography variant="h2" fontWeight={'bold'}>Aptos para esta fase:        {cantidadFase(activeStep+1)} postulantes</Typography>
+                  <IconButton aria-label="Mostrar Ocultos">
+                  <VisibilityOffIcon/>
+                  </IconButton>
+              </Box> 
+              <Divider/>
+              <PostulantsList postulants={filteredData}/>
+          </Box>
+        
+    </Box>
+        <Modal
+            title={cantidadFase(activeStep+2)<1?'No puede continuar a la siguiente fase porque aún no seleccionó a ningun postulante':'¿Esta seguro de continuar?'}   
+            open={open}
+            handleClose={handleClose}
+            handleConfirm={cantidadFase(activeStep+2)<1?handleClose:handleConfirm}
+          >
+         
+             {activeStep === steps.length - 1 
+             ? <p>El proceso de selección finalizará y no podrá evaluar nuevamente</p> 
+             : <p>Continuará a la fase de <strong>{`${steps[activeStep+1]}`}</strong>, esta fase cuenta con: <strong>{cantidadFase(activeStep+2)} postulantes</strong></p>}
+               
+        </Modal>
+  </Box>
+    
   );
 }

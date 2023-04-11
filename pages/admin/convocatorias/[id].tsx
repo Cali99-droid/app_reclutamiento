@@ -26,23 +26,9 @@ const AnnouncementPage = () => {
             </Box>   
            
         </Box> 
-       
-      <Box sx={{
-        bgcolor:'#F3F3F3', 
-        padding:3,
-        borderRadius:5,
-        mt:5
-        }}>
-            <Box display={'flex'} justifyContent={'space-between'}>
-                <Typography variant="h2">Listado de Postulantes</Typography>
-                <IconButton aria-label="Mostrar Ocultos">
-                <VisibilityOffIcon/>
-                </IconButton>
-            </Box> 
-            <Divider/>
-            <LinearStepper/> 
-        </Box>
-
+        <LinearStepper/> 
+     
+        
        
       
   </JobsLayout>
