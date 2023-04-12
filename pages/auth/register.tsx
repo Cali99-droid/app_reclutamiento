@@ -1,10 +1,13 @@
 
-import { Box, Button, Grid, TextField, Link } from '@mui/material';
+import { Box, Button, Grid, TextField, Link, Chip } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { AuthLayout } from "@/components/layouts/AuthLayout";
 import NextLink from 'next/link';
 import { useForm } from 'react-hook-form';
 import { validations } from '@/helpers';
+import { useContext, useState } from 'react';
+import { AuthContext } from '@/context/';
+import { ErrorOutline } from '@mui/icons-material';
 
 
 type FormData = {
@@ -17,16 +20,40 @@ type FormData = {
 
 
 export default function RegisterPage() {
+    const { registerUser } = useContext( AuthContext );
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
+ 
+
+    const [ showError, setShowError ] = useState(false);
+    const [ errorMessage, setErrorMessage ] = useState('');
+
     const onRegisterForm = async( {  nombre, apellidoPat, apellidoMat, email, password }: FormData ) => {
-        console.log('registrando',nombre, apellidoMat,apellidoPat, email, password)
+        setShowError(false);
+        const { hasError, message } = await registerUser( nombre, apellidoPat, apellidoMat, email, password );
+
+        if ( hasError ) {
+          setShowError(true);
+          setErrorMessage( message! );
+          setTimeout(() => setShowError(false), 3000);
+          return;
+      }
+      /**Inicar session */
+        // console.log('registrando',nombre, apellidoMat,apellidoPat, email, password)
 
     }
   return (
     <AuthLayout title={"Registrate y Postula "} >
         <Box sx={{ width: 350, }} >
         <form onSubmit={ handleSubmit(onRegisterForm) } noValidate>
+            <Chip 
+                    label={errorMessage}
+                    color="error"
+                    icon={ <ErrorOutline /> }
+                    className="fadeIn"
+                    sx={{ display: showError ? 'flex': 'none' ,mb:4}}
+                    
+                />
             <Grid container spacing={2}>
                             <Grid item xs={12}>
                               <TextField

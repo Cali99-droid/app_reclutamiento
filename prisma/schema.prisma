@@ -8,16 +8,15 @@ datasource db {
 }
 
 model rol {
-  id   Int    @id
+  id   Int    @id @default(autoincrement())
   name String @db.VarChar(255)
   user user[]
 }
 
 model user {
   id          Int       @id @default(autoincrement())
-  username    String    @db.VarChar(16)
-  email       String?   @db.VarChar(255)
-  password    String    @db.VarChar(32)
+  email       String?   @unique @db.VarChar(255)
+  password    String    @db.VarChar(255)
   create_time DateTime? @default(now()) @db.Timestamp(0)
   rol_id      Int
   persona_id  Int

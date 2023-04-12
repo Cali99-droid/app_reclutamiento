@@ -1,4 +1,4 @@
-import { UiProvider } from '@/context'
+import { AuthProvider, UiProvider } from '@/context'
 import '@/styles/globals.css'
 import { lightTheme } from '@/themes'
 
@@ -9,7 +9,7 @@ import { PostProvider } from '../context';
 export default function App({ Component, pageProps }: AppProps) {
   return(
 
-   
+    <AuthProvider>
       <PostProvider> 
         <UiProvider>
           <ThemeProvider theme={lightTheme} >
@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
           </ThemeProvider> 
         </UiProvider>
       </PostProvider>
-        
+    </AuthProvider>  
    
     
     

@@ -1,0 +1,11 @@
+/*
+  Warnings:
+
+  - You are about to drop the column `username` on the `user` table. All the data in the column will be lost.
+
+*/
+-- AlterTable
+ALTER TABLE `rol` MODIFY `id` INTEGER NOT NULL AUTO_INCREMENT;
+
+-- AlterTable
+ALTER TABLE `user` DROP COLUMN `username`;
