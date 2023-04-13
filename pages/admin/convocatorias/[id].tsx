@@ -1,4 +1,4 @@
-import { JobsLayout } from "@/components/layouts";
+import { AdminLayout, JobsLayout } from "@/components/layouts";
 import { Box,  Divider,IconButton, Typography,  } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,27 +13,14 @@ import 'react-toastify/dist/ReactToastify.css';
 const AnnouncementPage = () => {
 
   return (
-    <JobsLayout title={"AE | Administrar convocatorias "} pageDescription={"Convocatorias a trabajos en Ancash"}>
-        <Box className="fadeIn" mt={15} mb={5} display={'flex'} gap={2}>
-                <IconButton
-                aria-label="regresar" 
-                size="medium"
-                onClick={()=>{window.history.back()}}
-                >
-                    <ArrowBackIcon fontSize="inherit" />
-                </IconButton>
-            <Box  >
-                <Typography variant='h1' component='h1'>Convocatoria: Docente Primaria</Typography>
-                <Divider variant="middle" />
-            </Box>   
-           
-        </Box> 
+    <AdminLayout title={"Administrar convocatoria "} subTitle={"Listado de postulantes"}>
+        
         <LinearStepper/> 
      
     <ToastContainer      />
        
       
-  </JobsLayout>
+  </AdminLayout>
   )
 }
 

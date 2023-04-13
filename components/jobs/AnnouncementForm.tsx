@@ -1,10 +1,21 @@
 import { Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import React from 'react'
-import PublishIcon from '@mui/icons-material/Publish';
+import SaveIcon from '@mui/icons-material/Save';
 
 const inputProps = {
     accept:"image/png,image/jpeg"
   };
+
+
+type FormData = {
+    titulo    : string;
+    grado    : string;
+    descripcion    : string;
+    modalidad   : string;
+    vacantes: number;
+    jornada: string;
+    img: string;
+};
 export const AnnouncementForm = () => {
   return (
     <>
@@ -17,10 +28,11 @@ export const AnnouncementForm = () => {
                                     fullWidth  
                                     required  
                                 />
+                                <FormHelperText>Ejem: Docente primaria, Docente Secundaria, etc</FormHelperText>
             </Grid>
             <Grid item xs={12} md={6}>
                     <FormControl fullWidth required>
-                                    <InputLabel id="demo-simple-select-helper-label">Requisito</InputLabel>
+                                    <InputLabel id="demo-simple-select-helper-label">Grado</InputLabel>
                                     <Select
                                     labelId="demo-simple-select-helper-label"
                                     id="demo-simple-select-helper"
@@ -28,14 +40,17 @@ export const AnnouncementForm = () => {
                                     label="Requisito"
                                     
                                     >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    <MenuItem value={10}>Bachiller</MenuItem>
-                                    <MenuItem value={20}>Titulado</MenuItem>
-                                    <MenuItem value={30}>Doctor</MenuItem>
+                                        <MenuItem value="">
+                                            <em>Ninguno</em>
+                                        </MenuItem>
+                                        <MenuItem value={1}>Todos</MenuItem>
+                                        <MenuItem value={1}>Estudiante</MenuItem>
+                                        <MenuItem value={2}>Practicante</MenuItem>
+                                        <MenuItem value={3}>Bachiller</MenuItem>
+                                        <MenuItem value={4}>Titulado</MenuItem>
+                                        <MenuItem value={5}>Doctor</MenuItem>
                                     </Select>
-                                    <FormHelperText>Requisito minimo para postular</FormHelperText>
+                                    <FormHelperText>Grado mínimo para postular</FormHelperText>
                     </FormControl>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -44,10 +59,32 @@ export const AnnouncementForm = () => {
                                     label="Descripcion"
                                     multiline
                                     fullWidth
-                                    required
-                                    
-                                />
-                                
+                                    required   
+                            />
+                                 <FormHelperText>Ejem: Docente de matemática con 2 años de experiencia...</FormHelperText> 
+            </Grid>
+          
+            <Grid item xs={12} md={3}>
+                    <FormControl fullWidth required>
+                            <InputLabel id="demo-simple-select-helper-label">Modalidad</InputLabel>
+                            <Select
+                            labelId="demo-s"
+                            id="demo-simplr"
+                    
+                            label="Modalidad"
+                            
+                            >
+                                <MenuItem value="">
+                                    <em>Ninguno</em>
+                                </MenuItem>
+                                <MenuItem value={1}>Presencial</MenuItem>
+                                <MenuItem value={2}>Remoto</MenuItem>
+                                <MenuItem value={3}>Híbrido</MenuItem>
+                            
+                            </Select>
+                          
+                    </FormControl>
+                       
             </Grid>
             <Grid item xs={12} md={3}>
                                 <TextField
@@ -58,30 +95,28 @@ export const AnnouncementForm = () => {
                                     defaultValue={1} 
                                 />
             </Grid>
-            <Grid item xs={12} md={3}>
-                        <FormControl fullWidth required>
-                                    <InputLabel id="demo-simple-select-helper-label">Especialidad</InputLabel>
+            <Grid item xs={12} md={6}>
+                    <FormControl fullWidth required>
+                                    <InputLabel id="demo-simple-select-helper-label">Jornada</InputLabel>
                                     <Select
-                                    labelId="demo-simple-select-helper-label"
-                                    id="demo-simple-select-helper"
+                                    labelId="demo-s"
+                                    id="demo-simplr"
                             
-                                    label="Especialidad"
+                                    label="Jornada"
                                     
                                     >
                                         <MenuItem value="">
-                                            <em>None</em>
+                                            <em>Ninguno</em>
                                         </MenuItem>
-                                        <MenuItem value={10}>Biologia</MenuItem>
-                                        <MenuItem value={20}>Ingenieria Civil</MenuItem>
-                                        <MenuItem value={30}>Matemática</MenuItem>
-                                    </Select>
-                                    <FormHelperText>Especialidad para postular</FormHelperText>
+                                        <MenuItem value={1}>Completa</MenuItem>
+                                        <MenuItem value={2}>Parcial</MenuItem>
+                                       
+                                    </Select>    
                     </FormControl>
             </Grid>
 
-
-            <Grid item xs={12} md={12} mt={3}>
-            <Typography>Imagen</Typography>
+            <Grid item xs={12} md={6} >
+          
                         <TextField
                             label="Imagen"
                             margin="dense"
@@ -96,7 +131,7 @@ export const AnnouncementForm = () => {
 
         </Grid>
         <Box sx={{display:'flex',  justifyContent:'center'}}>
-                <Button  size="large" sx={{marginTop:3, width:'40%', textAlign:'end'}}startIcon={<PublishIcon/>}>Publicar</Button>
+                <Button  size="large" sx={{marginTop:3, width:'40%', textAlign:'end'}}startIcon={<SaveIcon/>}>Publicar</Button>
         </Box>
     
     
