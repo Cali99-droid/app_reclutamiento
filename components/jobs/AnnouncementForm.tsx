@@ -2,6 +2,7 @@ import { Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, S
 import React from 'react'
 import SaveIcon from '@mui/icons-material/Save';
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
+import { useRouter } from 'next/router';
 const inputProps = {
     accept:"image/png,image/jpeg"
   };
@@ -17,6 +18,10 @@ type FormData = {
     img: string;
 };
 export const AnnouncementForm = () => {
+    const router = useRouter();
+  const navigateTo = ( url: string ) => {
+    router.push(url);
+   }
   return (
     <>
         <Grid container spacing={4} marginTop={'.1rem'} justifyContent={'end'}>
@@ -132,7 +137,13 @@ export const AnnouncementForm = () => {
         </Grid>
         <Box sx={{display:'flex',  justifyContent:'flex-end', mt:2}}>
                 <Box width={'50%'} sx={{display:'flex',  justifyContent:'flex-end',gap:5}}>
-                    <Button size="large" sx={{marginTop:3,  textAlign:'end',bgcolor:'#9E002B',}}startIcon={<DoNotDisturbIcon/>}>Cancelar</Button> 
+                    <Button 
+                    size="large" 
+                    sx={{marginTop:3,  textAlign:'end',bgcolor:'#9E002B',}}
+                    startIcon={<DoNotDisturbIcon/>}
+                    onClick={ () => navigateTo('/admin/convocatorias/')}
+                    >Cancelar
+                    </Button> 
                     <Button  size="large" sx={{marginTop:3,  textAlign:'end'}}startIcon={<SaveIcon/>}>Publicar</Button>
                 </Box>
         </Box>
