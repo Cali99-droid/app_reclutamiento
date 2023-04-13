@@ -1,7 +1,7 @@
 import { Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import React from 'react'
 import SaveIcon from '@mui/icons-material/Save';
-
+import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 const inputProps = {
     accept:"image/png,image/jpeg"
   };
@@ -130,9 +130,13 @@ export const AnnouncementForm = () => {
 
 
         </Grid>
-        <Box sx={{display:'flex',  justifyContent:'center'}}>
-                <Button  size="large" sx={{marginTop:3, width:'40%', textAlign:'end'}}startIcon={<SaveIcon/>}>Publicar</Button>
+        <Box sx={{display:'flex',  justifyContent:'flex-end', mt:2}}>
+                <Box width={'50%'} sx={{display:'flex',  justifyContent:'flex-end',gap:5}}>
+                    <Button size="large" sx={{marginTop:3,  textAlign:'end',bgcolor:'#9E002B',}}startIcon={<DoNotDisturbIcon/>}>Cancelar</Button> 
+                    <Button  size="large" sx={{marginTop:3,  textAlign:'end'}}startIcon={<SaveIcon/>}>Publicar</Button>
+                </Box>
         </Box>
+      
     
     
     
