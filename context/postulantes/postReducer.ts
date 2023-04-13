@@ -1,10 +1,11 @@
-import { postulants } from '@/database/seedPost';
+
 import { PostState } from './PostProvider';
 import { IPostulant } from '@/interfaces';
+import App from '../../pages/_app';
 
    type PostType = 
    |{type:'Post - Load',payload:IPostulant[]}
-   |{type:'Post - update phase postulant', payload:IPostulant[]}
+   |{type:'Post - favorite', payload:boolean}
    
     export const postReducer =(state:PostState,action:PostType):PostState=>{
 
@@ -12,10 +13,17 @@ import { IPostulant } from '@/interfaces';
            case 'Post - Load':
                    return{
                          ...state,
-                         isLoaded:true,
+                         
                          postulants:[...action.payload],
-                        
+                       
                          }
+            case 'Post - favorite':
+            return{
+                    ...state,
+                    isLoaded:true,
+                    
+                    
+                    }
             // case 'Post - update phase postulant':
             //     return{
             //         ...state,

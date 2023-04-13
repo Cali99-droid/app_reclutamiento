@@ -1,27 +1,29 @@
 import { FC, useEffect, useReducer, useState } from 'react';
 import { PostContext,postReducer } from './'
-import { postulants as listPost, postulants } from '../../database/seedPost';
+import { postulants } from '../../database/seedPost';
 import { IPostulant } from '@/interfaces';
 import confetti from "canvas-confetti";
+
 
 export interface PostState{
      postulants: IPostulant[];
      isLoaded: boolean;
-    
+   
      activeStep:number;
+    
 }
 
 const POST_INITIAL_STATE: PostState={
-      postulants:[],
+      postulants: [],
       isLoaded: false,
-    
-      activeStep:0,
+      activeStep: 0,
+      
 }
 
  interface Props{
    children: JSX.Element | JSX.Element[]
   }
-
+//TODO Validar Vacantes
 export const PostProvider:FC<Props> = ({children}) => {
 
       const [state, dispatch] = useReducer(postReducer, POST_INITIAL_STATE)
@@ -31,26 +33,32 @@ export const PostProvider:FC<Props> = ({children}) => {
         
             try {
                 
-                  dispatch({ type: 'Post - Load', payload: listPost })
+                  dispatch({ type: 'Post - Load', payload: postulants })
                   
             } catch (error) {
                   dispatch({ type: 'Post - Load', payload: [] })
             }
       }, [])
 
-      const advancePhase =(postulant:IPostulant)=>{
+   
 
-            const newList = postulants.map((post)=>{
-                  if(post.id === postulant.id && postulant.fase<5){
-                       post.fase = post.fase +1  
-                  }
-                  return post;
-            })
-         
-            // console.log(newList)
-          
-           dispatch({ type: 'Post - Load', payload: newList });
+     
+
+      const marcarApto = (postulant:IPostulant)=>{
+            
+            postulant.apto=true; 
+         verificarVacio()
       }
+
+      const quitarApto = (postulant:IPostulant)=>{
+            
+
+            postulant.apto=false; 
+            verificarVacio()
+      }
+
+
+     
 
       const backPhase =(postulant:IPostulant)=>{
 
@@ -66,31 +74,74 @@ export const PostProvider:FC<Props> = ({children}) => {
 
       /**Filtra los datos segun la fase */
       const [filter, setFilter] = useState(1);
+      const [empty, setEmpty] = useState(true);
+    
 
-      const filteredData = postulants.filter((item) => {
-          if (filter === 0) {
+      const filteredData = postulants.filter((post) => {
+          
+          if (filter === 0) { 
           return true;
-          } else {
-          return item.fase === filter;
+          } else {  
+         
+          return post.fase === filter;
+        
           }
+
       });
+
+      const verificarVacio = ()=>{
+            const data = postulants.filter((post) => {
+                  return post.apto === true;
+
+            })
+console.log(data)
+            if(data.length > 0){
+                  setEmpty(false)
+            }else{
+                  setEmpty(true)
+            }
+      }
+
+
+      
+
+      const finalizarFase = ()=>{
+        
+            const newList =  postulants.map((post)=>{
+                  if(post.apto){
+                        post.fase = post.fase +1  
+                        post.apto = false
+                   }
+                   return post;
+            })
+  
+            dispatch({ type: 'Post - Load', payload: newList });
+      }
+  
   
       /**Gestiona los pasos entre fases */
       const [activeStep, setActiveStep] = useState(0);
       const [contrato, setContrato] = useState(false)
-      const handleNext = () => {
-
-           
-         
-            setFilter(activeStep+2);
-            if(activeStep===4){
-                setFilter(5)
-                setContrato(true)
-                confetti(  {particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }})
-            }
-            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      const handleNext = () => {  
+     
+            
+            if(activeStep===4 && filteredData.length !==0 ){
+            finalizarFase()
+            verificarVacio()
+            setFilter(6)
+            setContrato(true)
+            confetti(  {particleCount: 100,
+                  spread: 70,
+                  origin: { y: 0.6 }})
+                 
+            }  
+              finalizarFase()
+              verificarVacio()
+                  setFilter(activeStep+2);
+                  setActiveStep((prevActiveStep) => prevActiveStep + 1);  
+        
+                
+        
           };
 
       const handleBack = () => {
@@ -101,7 +152,7 @@ export const PostProvider:FC<Props> = ({children}) => {
              setActiveStep(0);
       };
 
-
+   
 
       /**Modales */
       const [openAdvance, setOpenAdvance] = useState(false);
@@ -113,18 +164,29 @@ export const PostProvider:FC<Props> = ({children}) => {
       const handleCloseAdvance = () => {
             setOpenAdvance(false);
       };
+
+
+
+
+  
+
+    
       
       return (
           <PostContext.Provider value={{
             ...state,
             activeStep,
-            filteredData,
+             filteredData,
             contrato,
             openAdvance,
             postulants,
+            empty,
         
+           
             //methods
-            advancePhase,
+            marcarApto,
+            quitarApto,
+            verificarVacio,
             backPhase,
             handleNext,
             handleBack,

@@ -2,6 +2,7 @@ import { IPostulant } from '@/interfaces';
 import { createContext } from 'react';
 
 
+
 interface ContextProps{
       postulants:IPostulant[];
       isLoaded: boolean;
@@ -9,15 +10,18 @@ interface ContextProps{
       filteredData: IPostulant[];
       contrato: boolean;
       openAdvance: boolean;
+      empty:boolean;
     
 
 
-      advancePhase: (postulant: IPostulant) => void,
+      verificarVacio: () => void,
       backPhase:(postulant: IPostulant) => void,
       handleNext: () => void,
       handleBack: () => void,
       handleReset: () => void,
       handleClickOpenAdvance: () => void,
-      handleCloseAdvance: () => void
+      handleCloseAdvance: () => void,
+      marcarApto:(postulant: IPostulant) => void,
+      quitarApto: (postulant: IPostulant) => void
 }
 export const PostContext  = createContext({}as ContextProps);

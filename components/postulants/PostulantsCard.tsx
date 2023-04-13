@@ -1,19 +1,23 @@
 
-import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, CardActionArea, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material'
+import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, CardActionArea, IconButton } from '@mui/material'
+
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
 
 import { IPostulant } from '@/interfaces';
 
 
 import NextLink from 'next/link';
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useState, useEffect } from 'react';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+
 import { PostContext, UiContext } from '@/context';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Modal from '../modal/Modal';
 
 
-import {  ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 
 
 const steps = ['Preselección', 'Entrevista', 'Evaluación', 'Negociación','Contrato'];
@@ -27,11 +31,24 @@ interface Props {
 export const PostulantCard: FC<Props> = ({ postulant,index }) => {
 
 
-
-    const{backPhase, activeStep,contrato,advancePhase} = useContext(PostContext)
-
+   
+   
+    const{backPhase, activeStep,contrato,marcarApto,quitarApto,verificarVacio } = useContext(PostContext)
+  
     const [open, setOpen] = useState(false);
 
+   
+
+    const [fav, setFav] = useState(false);
+
+    const handleFav = ()=>{
+ 
+        //toast.info(`Actualizando seleccion ${postulant.nombres}`);
+        
+        setFav(!fav)
+       
+    }
+ 
     const handleClickOpen = () => {
           setOpen(true);
     };
@@ -52,8 +69,8 @@ export const PostulantCard: FC<Props> = ({ postulant,index }) => {
         progress: undefined,
         theme: "light",
         });
-    advancePhase(postulant);
   };
+
 
 
     return (
@@ -91,47 +108,62 @@ export const PostulantCard: FC<Props> = ({ postulant,index }) => {
                     
                 </Link>
                 </NextLink>
-                <CardActions sx={{display:'flex', justifyContent:'space-between'}}>
-                    {
-                        !contrato
-                        ?(
-                            <Box>
-                            {activeStep !== 0
-                            ?( <IconButton 
-                                aria-label="remove to favorites"
-                                onClick={()=>{                      
-                                        backPhase(postulant) 
-                                }}                   
-                                >
-                                    <RemoveCircleIcon fontSize="large" />
-                            </IconButton>)
-                            :''
-                            }                       
+                {
+                    !contrato &&(
+                        <CardActions sx={{display:'flex', justifyContent:'space-between'}}>
                         {
-                            activeStep === 4
+                            postulant.apto 
                             ?
-                                ''                           
-                            :(  <IconButton aria-label="add to favorites" onClick={handleClickOpen}>
-                                <AddCircleIcon fontSize="large" color="secondary"/>
-                            </IconButton>)
+                            <IconButton color='primary'  onClick={()=>{                      
+                                handleFav()
+                                quitarApto(postulant)
+                        
+    
+                                 }}  >
+                            <FavoriteIcon/>
+                            </IconButton>
+                        :
+                              <IconButton color='primary' onClick={()=>{
+                               handleFav()
+                                marcarApto(postulant);
+                                
+                              
+                                
+                                }} >
+                                <FavoriteBorderIcon/>
+                             </IconButton>
+                       
                         }
-
-                    </Box>
-
-                        )
-                        :(
-                            ''
-                        )
-                    }
-                  
+                      
                     
-                        <IconButton>
-                            <ExpandMoreIcon />
-                        </IconButton>
+                       
+                                <Box>
+                                {activeStep !== 0
+                                ?( <IconButton 
+                                    aria-label="remove to favorites"
+                                    onClick={()=>{                      
+                                            backPhase(postulant) 
+                                    }}                   
+                                    >
+                                        <ThumbDownAltOutlinedIcon  />
+                                </IconButton>)
+                                :''
+                                }                       
+                                </Box>
+    
+                      
+                            <IconButton>
+                                <ExpandMoreIcon />
+                            </IconButton>
+                        
+                     
                     
-                 
-                
-                    </CardActions>
+                        </CardActions>
+                    )
+                       
+
+                }
+             
                 
                
             </Card>

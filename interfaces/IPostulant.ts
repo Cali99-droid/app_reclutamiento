@@ -7,4 +7,5 @@ export interface IPostulant {
     img: string;
     fase: number;
     puntaje_in: number;
+    apto:boolean
 }

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -7,8 +7,11 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { PostulantsList } from '../postulants/PostulantsList';
 import { PostContext } from "@/context";
+
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Divider, IconButton } from "@mui/material";
+
+
 import Modal from '../modal/Modal';
 
 /**Cabiar segun bd */
@@ -16,13 +19,15 @@ const steps = ['Preselección', 'Entrevista', 'Evaluación', 'Negociación','Con
 
 export const LinearStepper=()=> {
 
-    const {handleNext,activeStep,filteredData,handleBack,handleReset,postulants} = useContext(PostContext);
-
+    const {handleNext,activeStep,filteredData,handleBack,handleReset,postulants,empty} = useContext(PostContext);
+console.log(activeStep)
     /**Modal de confirmacion para finalizar fase */
     const [open, setOpen] = useState(false);
 
+
     const handleClickOpen = () => {
-          setOpen(true);
+     
+      setOpen(true);   
     };
 
     const handleClose = () => {
@@ -30,14 +35,15 @@ export const LinearStepper=()=> {
           setOpen(false);
     };
     const handleConfirm = () => {
+     
       // aquí puedes ejecutar cualquier acción que necesites cuando el usuario confirma la ventana modal
       handleNext();
       handleClose();
     };
 
-    const cantidadFase = (fase:number)=>{
+    const cantidadFase = ()=>{
         const data =  postulants.filter((item) => {
-            return item.fase === fase; 
+            return item.apto === true; 
             }
         );
 
@@ -95,8 +101,8 @@ export const LinearStepper=()=> {
             </Button>
             <Box sx={{ flex: '1 1 auto' }} />
            
-            <Button onClick={handleClickOpen}>
-              {activeStep === steps.length - 1 ? 'Terminar Proceso' : 'Finalizar Fase'}
+            <Button onClick={handleClickOpen}  disabled={empty}>
+              {activeStep === steps.length - 1  ? 'Contratar y Terminar Proceso' : 'Finalizar Fase'}
             </Button>
           </Box>
         </>
@@ -114,27 +120,36 @@ export const LinearStepper=()=> {
               <Box display={'flex'} justifyContent={'space-between'} >
                 {activeStep === steps.length 
                 ?(<Typography variant="h2" fontWeight={'bold'}>Lista de Contratados</Typography>)
-                :(<Typography variant="h2" fontWeight={'bold'}>Aptos para esta fase:        {cantidadFase(activeStep+1)} postulantes</Typography>)}
+                :(<Typography variant="h2" fontWeight={'bold'}>Postulantes aptos para esta fase :   {filteredData.length}     </Typography>)}
                   
                   <IconButton aria-label="Mostrar Ocultos">
                   <VisibilityOffIcon/>
                   </IconButton>
               </Box> 
               <Divider/>
-              <PostulantsList postulants={filteredData}/>
+              <PostulantsList postulants={filteredData} />
           </Box>
         
     </Box>
         <Modal
-            title={cantidadFase(activeStep+2)<1 && activeStep+2<=5 ?'No puede continuar a la siguiente fase porque aún no seleccionó a ningun postulante':'¿Esta seguro de continuar?'}   
+            title={cantidadFase() >= 0 ?'¿Esta seguro de continuar?':'¡Debe seleccionar un postulante!'}  
             open={open}
             handleClose={handleClose}
-            handleConfirm={cantidadFase(activeStep+2)<1&&activeStep+2<=5?handleClose:handleConfirm}
+            handleConfirm={ cantidadFase() >= 0?handleConfirm:handleClose}
           >
+            {
+              cantidadFase() >= 0?(
+                activeStep === steps.length - 1 
+                  ? <p>El proceso de selección finalizará y no podrá evaluar nuevamente</p> 
+                  : <p>Continuará a la fase de <strong>{`${steps[activeStep+1]}`} </strong>con <strong>{cantidadFase()}</strong> postulantes selecionados</p>
+              )
+              :
+              (
+                <p>Debe seleccionar por lo menos un postulante</p>
+              )
+            }
          
-             {activeStep === steps.length - 1 
-             ? <p>El proceso de selección finalizará y no podrá evaluar nuevamente</p> 
-             : <p>Continuará a la fase de <strong>{`${steps[activeStep+1]}`}</strong>, esta fase cuenta con: <strong>{cantidadFase(activeStep+2)} postulantes</strong></p>}
+            
                
         </Modal>
   </Box>

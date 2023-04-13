@@ -11,7 +11,9 @@ export const postulants:IPostulant[] = [
       grado: 'Bachiller',
       img: 'p1',
       fase:1,
-      puntaje_in:34
+      apto:false,
+      puntaje_in:34,
+    
     },
     {
         id:'2',
@@ -21,6 +23,7 @@ export const postulants:IPostulant[] = [
         grado: 'Titulado',
         img: 'p2',
         fase:1,
+        apto:false,
         puntaje_in:41
       },
       {
@@ -31,6 +34,7 @@ export const postulants:IPostulant[] = [
         grado: 'Bachiller',
         img: 'p3',
         fase:1,
+        apto:false,
         puntaje_in:55
       },
       {
@@ -41,6 +45,7 @@ export const postulants:IPostulant[] = [
         grado: 'Doctor',
         img: 'p4',
         fase:1,
+        apto:false,
         puntaje_in:66
       },
 ]
