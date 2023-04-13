@@ -12,6 +12,10 @@ import { PostContext, UiContext } from '@/context';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Modal from '../modal/Modal';
 
+
+import {  ToastContainer, toast } from 'react-toastify';
+
+
 const steps = ['Preselección', 'Entrevista', 'Evaluación', 'Negociación','Contrato'];
 
 interface Props {
@@ -38,6 +42,16 @@ export const PostulantCard: FC<Props> = ({ postulant,index }) => {
     
   const handleConfirm = () => {
     // aquí puedes ejecutar cualquier acción que necesites cuando el usuario confirma la ventana modal
+    toast.success(`Promoviendo al postulante ${postulant.nombres}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
     advancePhase(postulant);
   };
 
@@ -130,6 +144,7 @@ export const PostulantCard: FC<Props> = ({ postulant,index }) => {
             >
                 <p>El postulante <strong>{postulant.nombres}</strong> sera agregado a la fase de <strong>{`${steps[activeStep+1]}`}</strong></p>
             </Modal>
+       
         </Grid>
     )
 }

@@ -1,4 +1,5 @@
 import { AuthProvider, UiProvider } from '@/context'
+import { SessionProvider } from "next-auth/react"
 import '@/styles/globals.css'
 import { lightTheme } from '@/themes'
 
@@ -8,18 +9,18 @@ import { PostProvider } from '../context';
 
 export default function App({ Component, pageProps }: AppProps) {
   return(
-
-    <AuthProvider>
-      <PostProvider> 
-        <UiProvider>
-          <ThemeProvider theme={lightTheme} >
-          <CssBaseline />
-          <Component {...pageProps} />
-          </ThemeProvider> 
-        </UiProvider>
-      </PostProvider>
-    </AuthProvider>  
-   
+    <SessionProvider >
+      <AuthProvider>
+        <PostProvider> 
+          <UiProvider>
+            <ThemeProvider theme={lightTheme} >
+            <CssBaseline />
+            <Component {...pageProps} />
+            </ThemeProvider> 
+          </UiProvider>
+        </PostProvider>
+      </AuthProvider>  
+    </SessionProvider>
     
     
 

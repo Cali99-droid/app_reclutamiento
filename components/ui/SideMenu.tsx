@@ -1,22 +1,24 @@
 import { useContext, useState } from 'react';
 
-import { Box,  Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemButton, ListItemIcon, ListItemText, } from "@mui/material"
-import { EscalatorWarningOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
+import { Box,  Divider,  Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, } from "@mui/material"
+import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, LoginOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
 
- import { UiContext } from '../../context';
+import { AuthContext, UiContext } from '../../context';
 import { useRouter } from 'next/router';
 
-
-
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
-import KeyIcon from '@mui/icons-material/Key';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
+
+
+
+
 export const SideMenu = () => {
 
     const router = useRouter();
-     const { isMenuOpen, toggleSideMenu } = useContext( UiContext );
-    // const { user, isLoggedIn, logout } = useContext(  AuthContext );
+    const { isMenuOpen, toggleSideMenu } = useContext( UiContext );
+    
+    const { isLoggedIn,logout,user } = useContext(  AuthContext );
 
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -27,7 +29,7 @@ export const SideMenu = () => {
 
     
     const navigateTo = ( url: string ) => {
-         toggleSideMenu();
+        toggleSideMenu();
         router.push(url);
     }
 
@@ -63,32 +65,27 @@ export const SideMenu = () => {
                     />
                 </ListItem>
 
-                {/* {
+                 {
                     isLoggedIn && (
                         <>
-                            <ListItem button>
+                            <ListItemButton>
                                 <ListItemIcon>
                                     <AccountCircleOutlined/>
                                 </ListItemIcon>
                                 <ListItemText primary={'Perfil'} />
-                            </ListItem>
+                            </ListItemButton>
 
-                            <ListItem button>
+                            <ListItemButton>
                                 <ListItemIcon>
                                     <ConfirmationNumberOutlined/>
                                 </ListItemIcon>
-                                <ListItemText primary={'Mis Ordenes'} />
-                            </ListItem>
+                                <ListItemText primary={'Mis Postulaciones'} />
+                            </ListItemButton>
                         </>
                     )
-                } */}
+                } 
 
-                <ListItemButton onClick={ () => navigateTo('/auth/login') }>
-                            <ListItemIcon>
-                            <KeyIcon/>
-                            </ListItemIcon>
-                             <ListItemText primary={'Ingresar'} />
-                </ListItemButton>
+               
                 <ListItemButton 
                     sx={{ display: { xs: '', sm: 'none' } }} 
                     onClick={ () => navigateTo('/') }
@@ -130,58 +127,59 @@ export const SideMenu = () => {
               
                
                 {
-                    // isLoggedIn 
-                    // ? (
-                    //     <ListItem button onClick={ logout }>
-                    //         <ListItemIcon>
-                    //             <LoginOutlined/>
-                    //         </ListItemIcon>
-                    //         <ListItemText primary={'Salir'} />
-                    //     </ListItem>
-                    // )
-                    // : (
-                    //     <ListItem 
-                    //         button
-                    //         onClick={ () => navigateTo(`/auth/login?p=${ router.asPath }`) }
-                    //     >
-                    //         <ListItemIcon>
-                    //             <VpnKeyOutlined/>
-                    //         </ListItemIcon>
-                    //         <ListItemText primary={'Ingresar'} />
-                    //     </ListItem>
-                    // )
+                    isLoggedIn 
+                    ? (
+                        <ListItemButton onClick={ logout }>
+                            <ListItemIcon>
+                                <LoginOutlined/>
+                            </ListItemIcon>
+                            <ListItemText primary={'Salir'} />
+                        </ListItemButton>
+                    )
+                    : (
+                        <ListItemButton                             
+                            onClick={ () => navigateTo(`/auth/login?p=${ router.asPath }`) }
+                        >
+                            <ListItemIcon>
+                                <VpnKeyOutlined/>
+                            </ListItemIcon>
+                            <ListItemText primary={'Ingresar'} />
+                        </ListItemButton>
+                    )
                 }
 
 
 
                 {/* Admin */}
                 {
-                    // user?.role === 'admin' && (
-                    //     <>
-                    //         <Divider />
-                    //         <ListSubheader>Admin Panel</ListSubheader>
+                    user?.rol.name === 'admin' && (
+                        <>
+                            <Divider />
+                            <ListSubheader>Admin Panel</ListSubheader>
 
-                    //         <ListItem button>
-                    //             <ListItemIcon>
-                    //                 <CategoryOutlined/>
-                    //             </ListItemIcon>
-                    //             <ListItemText primary={'Productos'} />
-                    //         </ListItem>
-                    //         <ListItem button>
-                    //             <ListItemIcon>
-                    //                 <ConfirmationNumberOutlined/>
-                    //             </ListItemIcon>
-                    //             <ListItemText primary={'Ordenes'} />
-                    //         </ListItem>
+                            <ListItemButton 
+                             onClick={ () => navigateTo(`/admin/convocatorias?p=${ router.asPath }`)}
+                            >
+                                <ListItemIcon>
+                                    <CategoryOutlined/>
+                                </ListItemIcon>
+                                <ListItemText primary={'Convocatorias'} />
+                            </ListItemButton>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <ConfirmationNumberOutlined/>
+                                </ListItemIcon>
+                                <ListItemText primary={'Ordenes'} />
+                            </ListItemButton>
 
-                    //         <ListItem button>
-                    //             <ListItemIcon>
-                    //                 <AdminPanelSettings/>
-                    //             </ListItemIcon>
-                    //             <ListItemText primary={'Usuarios'} />
-                    //         </ListItem>                        
-                    //     </>
-                    // )
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <AdminPanelSettings/>
+                                </ListItemIcon>
+                                <ListItemText primary={'Usuarios'} />
+                            </ListItemButton>                        
+                        </>
+                    )
                 }
             </List>
         </Box>

@@ -28,9 +28,10 @@ model user {
 }
 
 model persona {
-  id           Int    @id @default(autoincrement())
-  nombres      String @db.VarChar(150)
-  apellido_pat String @db.VarChar(100)
-  apellido_mat String @db.VarChar(100)
+  id           Int     @id @default(autoincrement())
+  nombres      String  @db.VarChar(150)
+  apellido_pat String  @db.VarChar(100)
+  apellido_mat String  @db.VarChar(100)
+  img          String? @db.VarChar(200)
   user         user[]
 }

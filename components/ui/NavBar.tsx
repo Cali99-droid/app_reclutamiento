@@ -2,11 +2,11 @@ import { useContext, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 
-import { AppBar,  Box, Button, Divider, IconButton, Input, InputAdornment, Link, Toolbar, Typography } from '@mui/material';
+import { AppBar,  Avatar,  Box, Button, Divider, IconButton, Input, InputAdornment, Link, Toolbar, Tooltip, Typography } from '@mui/material';
 import { ClearOutlined, SearchOutlined } from '@mui/icons-material';
-
-import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
-import { UiContext } from '@/context';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import { AuthContext, UiContext } from '@/context';
+import { useSession } from 'next-auth/react';
 
 
 
@@ -24,7 +24,7 @@ export const NavBar = () => {
         push(`/search/${ searchTerm }`);
     }
 
-    
+    const { isLoggedIn,user } = useContext(  AuthContext );
 
     return (
         <AppBar>
@@ -124,13 +124,31 @@ export const NavBar = () => {
                 }
 
 
-                {/* Pantallas pequeñas */}
-               
+                {
 
+                    isLoggedIn&&(
+                        
+                          <Box sx={{padding:1}}>
+                            <Tooltip title={`${user?.persona?.nombres}`}>
+                         
+                                <Avatar sx={{ bgcolor: '#0045AA' }}/>
+                          
+                            </Tooltip>
+                          
+                         </Box>
+                         
+                    )
+                }
+               
+             
 
                 <Button onClick={ toggleSideMenu }>
                     Menú
                 </Button>
+
+             
+
+
 
             </Toolbar>
         </AppBar>

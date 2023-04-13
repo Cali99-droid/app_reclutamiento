@@ -1,3 +1,5 @@
+import { IPersona } from "./IPersona";
+import { IRol } from "./IRol";
 
 export interface IUser {
     id         : number;
@@ -6,5 +8,8 @@ export interface IUser {
     // rol        : string;
     rol_id     :number
     persona_id :number
- 
+    persona    :IPersona
+    oAuthImg?   :string
+    rol        :IRol
+      
 }

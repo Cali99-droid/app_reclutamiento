@@ -103,12 +103,12 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
             user: true, // Include all posts in the returned object
           },
       })
-
-  const newUser = persona.user[0];
+    await prisma.$disconnect()
+    const newUser = persona.user[0];
     const{id,rol_id} = newUser ;
 
    
-    const token = jwt.signToken( id.toString(), email );
+    const token = jwt.signToken( id.toString(), email )
 
     return res.status(200).json({
         token, //jwt

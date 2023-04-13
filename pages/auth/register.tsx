@@ -8,6 +8,7 @@ import { validations } from '@/helpers';
 import { useContext, useState } from 'react';
 import { AuthContext } from '@/context/';
 import { ErrorOutline } from '@mui/icons-material';
+import { signIn } from 'next-auth/react';
 
 
 type FormData = {
@@ -37,9 +38,11 @@ export default function RegisterPage() {
           setErrorMessage( message! );
           setTimeout(() => setShowError(false), 3000);
           return;
-      }
-      /**Inicar session */
-        // console.log('registrando',nombre, apellidoMat,apellidoPat, email, password)
+        }
+
+
+      //  Inicar session */
+      await signIn('credentials', {email,password});
 
     }
   return (
