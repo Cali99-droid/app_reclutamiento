@@ -1,11 +1,11 @@
 export interface IJob {
-    id: string;
-    titulo: string;
-    descripcion: string;
-    requisito: string;
-    vacantes: number;
-    categoria: string;
-    especialidad: string;
-    img: string;
-    fase:number;
+    id           :number;
+    titulo       : string;
+    descripcion  : string;
+    grado        : string;
+    experiencia   : number;
+    vacantes     : number;
+    sueldoOfertado : number;
+    gradoId : number;
+    estadoId: number;
 }

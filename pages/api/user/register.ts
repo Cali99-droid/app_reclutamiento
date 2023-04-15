@@ -75,7 +75,7 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
       })
 
  
-
+  
     if ( usuario ) {
         return res.status(400).json({
             message:'Este correo ya esta registrado'

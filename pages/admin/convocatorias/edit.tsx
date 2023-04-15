@@ -1,27 +1,29 @@
+import { apiCon, reclutApi } from "@/api";
 import { Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 
 import SaveIcon from '@mui/icons-material/Save';
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
-import { IEstado, IGrado, IJob } from '@/interfaces';
-import { prisma } from '@/lib/prisma';
-import { reclutApi } from '@/api';
-import { useState } from 'react';
-// import prisma from '@/lib/prisma';
-import Modal from '../modal/Modal';
-import { ModalAlert } from '../modal/ModalAlert';
+import { AdminLayout } from "@/components/layouts";
+import { dbJob } from "@/database";
+import { getConvocatoriaById } from "@/database/dbJob";
+import { IGrado, IJob } from "@/interfaces";
+
+import { convocatoria } from "@prisma/client";
+import { GetServerSideProps, GetStaticProps, NextPage } from "next";
+import ModalAlert from "@/components/modal/ModalAlert";
+import { useState } from "react";
 
 
 
 interface Props{
-    grados:IGrado[]
+  grados:IGrado[]
+  job:IJob
+  
+  }
 
-   
-    }
-
-type FormData = {
+  type FormData = {
     titulo       : string;
     descripcion  : string;
     experiencia   : number;
@@ -32,10 +34,11 @@ type FormData = {
 };
 
 
- const AnnouncementForm: NextPage<Props> = ({grados}) => {
+ const ConvocatoriaEdit: NextPage<Props> = ({grados,job}) => {
 
 
-    const { register, handleSubmit, formState:{ errors }} = useForm<FormData>()
+    const {gradoId} = job; 
+    const { register, handleSubmit, formState:{ errors }} = useForm<FormData>({ defaultValues: job})
     const router = useRouter();
     const navigateTo = ( url: string ) => {
     router.push(url);
@@ -45,21 +48,22 @@ type FormData = {
 
 
 
-  const handleClose = () => {
+    const handleClose = () => {
+  
+          setOpen(false);
+    };
+    const handleConfirm = () => {
+      navigateTo('/admin/convocatorias')
+    };
 
-        setOpen(false);
-  };
-  const handleConfirm = () => {
-    navigateTo('/admin/convocatorias')
-  };
-
+    
    const onRegisterForm = async( form: FormData  )=>{
   
 
     try {
         const { data } = await reclutApi({
             url: '/admin/convocatorias',
-            method: 'POST',  // si tenemos un _id, entonces actualizar, si no crear
+            method: 'PUT',  // si tenemos un _id, entonces actualizar, si no crear
             data: form
         });
        
@@ -72,9 +76,13 @@ type FormData = {
        
     }
    }
-
   return (
-    <>
+    <AdminLayout title={"Crear convocatoria "} subTitle={"Publica una nueva concocatoria"}>
+      <Box className="fadeIn" display={'flex'} gap={2}>
+         
+         
+     </Box> 
+     <>
     <form onSubmit={ handleSubmit(onRegisterForm)} noValidate> 
         <Grid container spacing={4} marginTop={'.1rem'} justifyContent={'end'}>
         
@@ -99,9 +107,10 @@ type FormData = {
                                     <InputLabel id="gradoId">Grado</InputLabel>
                                     <Select
                                     labelId="gradoId"
-                                    id="gradoId"
+                                    id="grado"
                                     label="Requisito"
                                     required
+                                    defaultValue={gradoId} 
                                     { ...register('gradoId', {
                                         required: 'Este campo es requerido',
                                        
@@ -110,7 +119,7 @@ type FormData = {
                                 
 
                                     >
-                                        <MenuItem  value={''}></MenuItem>
+                                       
                            
                                     {
                                         grados.map(grado=>(
@@ -207,24 +216,51 @@ type FormData = {
                     onClick={ () => navigateTo('/admin/convocatorias/')}
                     >Cancelar
                     </Button> 
-                    <Button type='submit'  size="large" sx={{marginTop:3,  textAlign:'end'}}startIcon={<SaveIcon/>}>Publicar</Button>
+                    <Button type='submit'  size="large" sx={{marginTop:3,  textAlign:'end'}}startIcon={<SaveIcon/>}>Guardar Cambios</Button>
                 </Box>
         </Box>
       
         </form>  
 
         <ModalAlert title={'¡ Creado Correctamente !'} open={open} handleClose={ handleClose} handleConfirm={ handleConfirm}>
-            <Typography >La Convocatoria se creó correctamente y esta publicada</Typography>
+            <Typography >La Convocatoria se actualizó correctamente y esta publicada</Typography>
 
         </ModalAlert>
     
     
     
     </>
+        
+    </AdminLayout>
   )
 }
 
 
+export const getServerSideProps: GetServerSideProps  = async ({ query }) => {
 
-export default AnnouncementForm
+  const { id = ''} = query;
+ 
+  const grados = await apiCon('/grados')
 
+   const  job = await getConvocatoriaById(id.toString()) ;
+    if ( !job ) {
+          return {
+              redirect: {
+                  destination: '/admin/convocatorias/',
+                  permanent: false,
+              }
+          }
+    }
+    
+
+   return {
+       props: {
+          grados,
+          job,
+        
+         
+       }
+   }
+
+}
+export default ConvocatoriaEdit

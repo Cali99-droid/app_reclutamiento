@@ -56,7 +56,7 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
           apellido_pat:'',
           apellido_mat: '',
           nombres: oAuthName,
-          img: oAuthImg,
+  
           user:{
             create:{
                 email:oAuthEmail.toLocaleLowerCase() ,

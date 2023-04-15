@@ -4,9 +4,9 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { green, orange, red } from '@mui/material/colors';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useRouter } from 'next/router';
-
-
-import { jobs } from '@/database';
+;
+import { IJob } from '@/interfaces';
+import { NextPage } from 'next';
   
 
 
@@ -14,8 +14,10 @@ import { jobs } from '@/database';
     { field: 'id', headerName: 'ID', width: 50 },
     { field: 'titulo', headerName: 'Convocatoria', width: 200 },
     { field: 'vacantes', headerName: 'Vacantes disponibles', width: 180 },
+    { field: 'sueldo', headerName: 'Sueldo Ofertado', width: 180 },
+    { field: 'experiencia', headerName: 'Experiencia Mínima', width: 180 },
     // { field: 'col3', headerName: 'Numero de Postulantes', width: 180 },
-    { field: 'fase', headerName: 'Fase', width: 180 },
+    { field: 'estado', headerName: 'Fase', width: 180 },
     { field: 'actions', headerName: 'Acciones', width: 180,
     sortable: false, 
     renderCell:(params)  => {
@@ -27,7 +29,7 @@ import { jobs } from '@/database';
                     </Link>
                 
             </NextLink>
-            <NextLink href={'/edit'} passHref legacyBehavior>
+            <NextLink href={`/admin/convocatorias/edit?id=${params.row.jobId}`} passHref legacyBehavior>
             <Link underline='always'ml={2} color={orange[700]}>
                   Editar 
             </Link>
@@ -51,16 +53,21 @@ import { jobs } from '@/database';
 //     { id: 2, col1: 'Docente Secundaria', col2: 5,col3:20, col4:'En preselección' },
 //     { id: 3, col1: 'Auxiliar', col2: 1,col3:10, col4:'Finalizado' },
 //   ];
-  
+interface Props{
+  convocatorias:IJob[]
+ 
+  }
 
  
-export const AnnouncementList = () => {
+export const AnnouncementList : NextPage<Props> = ({convocatorias}) => {
 
-  const rows = jobs.map(job=>({
+  const rows = convocatorias.map(job=>({
     id:job.id,
     titulo:job.titulo,
     vacantes:job.vacantes,
-    fase: job.fase,
+    fase: job.estadoId,
+    sueldo:'S/'+job.sueldoOfertado, 
+    experiencia:job.experiencia.toString() + ' '+ 'Años',
     jobId: job.id
   }))
  
