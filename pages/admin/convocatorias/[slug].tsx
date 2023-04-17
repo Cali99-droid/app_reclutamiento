@@ -36,6 +36,7 @@ interface Props{
 export const getServerSideProps: GetServerSideProps  = async ({ query }) => {
   let job : convocatoria | null
   const { slug=''} = query;
+  
 
     const id = parseInt(slug.toString())
     
@@ -93,5 +94,6 @@ export const getServerSideProps: GetServerSideProps  = async ({ query }) => {
        }
    }
 }
+
 
 export default ConvocatoriasPage

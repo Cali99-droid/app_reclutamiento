@@ -30,7 +30,7 @@ interface Props{
 }
 
 export const  getStaticProps: GetStaticProps = async () => {
-console.log('render--')
+
 
   // const convocatorias = await apiCon('/admin/convocatorias')
   const convocatorias = await prisma.convocatoria.findMany({

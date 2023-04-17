@@ -27,7 +27,7 @@ export  const  ReqList: React.FC<Props> = ({job})=> {
             <SchoolIcon />
         </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={job.requisito} />
+        <ListItemText primary={job.grado.nombre} />
       </ListItem>
       <ListItem>
         <ListItemAvatar>
@@ -35,7 +35,7 @@ export  const  ReqList: React.FC<Props> = ({job})=> {
             <WorkIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={job.especialidad}  />
+        <ListItemText primary={`S/ ${job.sueldoOfertado}`}  />
       </ListItem>
       <ListItem>
         <ListItemAvatar>
@@ -43,7 +43,7 @@ export  const  ReqList: React.FC<Props> = ({job})=> {
             <AssignmentIcon />
         </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={job.categoria} />
+        <ListItemText  primary={`+ ${job.experiencia} Años de experiencia`} />
       </ListItem>
      
     </List>

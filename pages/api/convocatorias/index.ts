@@ -26,7 +26,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const getConvocatorias = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
-    const convocatorias =await prisma.convocatoria.findMany();
+    const convocatorias =await prisma.convocatoria.findMany({
+        include: {
+            estado:{
+              select: {  nombre: true},  
+            },
+            grado:{
+              select: {  nombre: true},  
+            }
+        }
+    });
     await prisma.$disconnect()
      return  res.status(200).json( convocatorias );
  
