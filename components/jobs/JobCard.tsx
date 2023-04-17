@@ -31,11 +31,7 @@ export const JobCard: FC<Props> = ({ job }) => {
 
                 <Link>
                     <CardActionArea>
-                    <CardMedia
-                        sx={{ height: 180 }}
-                        image={`/jobs/${job.img}.jpg`}
-                        title={job.titulo}
-                    />
+                   
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
                         {job.titulo}

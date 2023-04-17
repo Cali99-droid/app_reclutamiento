@@ -6,22 +6,24 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
 import { IEstado, IGrado, IJob } from '@/interfaces';
-import { prisma } from '@/lib/prisma';
+
 import { reclutApi } from '@/api';
 import { useState } from 'react';
 // import prisma from '@/lib/prisma';
 import Modal from '../modal/Modal';
 import { ModalAlert } from '../modal/ModalAlert';
-
+import { jobs } from '../../database/seed';
+import { convocatoria } from '@prisma/client';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 interface Props{
     grados:IGrado[]
-
-   
+    job: convocatoria
     }
 
 type FormData = {
+    id             :number
     titulo       : string;
     descripcion  : string;
     experiencia   : number;
@@ -32,10 +34,12 @@ type FormData = {
 };
 
 
- const AnnouncementForm: NextPage<Props> = ({grados}) => {
+ const AnnouncementForm: NextPage<Props> = ({grados,job}) => {
 
 
-    const { register, handleSubmit, formState:{ errors }} = useForm<FormData>()
+    const { register, handleSubmit, formState:{ errors }} = useForm<FormData>({
+        defaultValues: job
+    })
     const router = useRouter();
     const navigateTo = ( url: string ) => {
     router.push(url);
@@ -46,24 +50,23 @@ type FormData = {
 
 
   const handleClose = () => {
-
         setOpen(false);
   };
+
   const handleConfirm = () => {
     navigateTo('/admin/convocatorias')
   };
 
    const onRegisterForm = async( form: FormData  )=>{
-  
+   
+   
 
     try {
         const { data } = await reclutApi({
             url: '/admin/convocatorias',
-            method: 'POST',  // si tenemos un _id, entonces actualizar, si no crear
+            method: form.id > 0 ? 'PUT': 'POST',  // si tenemos un _id, entonces actualizar, si no crear
             data: form
-        });
-       
-
+        });   
         setOpen(true);
 
 
@@ -203,18 +206,18 @@ type FormData = {
                     <Button 
                     size="large" 
                     sx={{marginTop:3,  textAlign:'end',bgcolor:'#9E002B',}}
-                    startIcon={<DoNotDisturbIcon/>}
+                    startIcon={<ArrowBackIcon/>}
                     onClick={ () => navigateTo('/admin/convocatorias/')}
-                    >Cancelar
+                    >Volver
                     </Button> 
-                    <Button type='submit'  size="large" sx={{marginTop:3,  textAlign:'end'}}startIcon={<SaveIcon/>}>Publicar</Button>
+                    <Button type='submit'  size="large" sx={{marginTop:3,  textAlign:'end'}}startIcon={<SaveIcon/>}>Guardar</Button>
                 </Box>
         </Box>
       
         </form>  
 
         <ModalAlert title={'¡ Creado Correctamente !'} open={open} handleClose={ handleClose} handleConfirm={ handleConfirm}>
-            <Typography >La Convocatoria se creó correctamente y esta publicada</Typography>
+            <Typography >La Convocatoria se guardó correctamente y esta publicada</Typography>
 
         </ModalAlert>
     

@@ -1,6 +1,6 @@
 import { IJob } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/server/db/client';
 
 
 
@@ -10,7 +10,7 @@ type Data =
 | IJob[]
 | IJob
 | any;
-const prisma = new PrismaClient()
+
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
     
     switch (req.method) {
@@ -21,7 +21,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
             return updateConvocatoria( req, res );
 
         case 'POST':
-            return createConvocatoria( req, res )
+            return createConvocatoria( req, res );
+
+        case 'DELETE':
+            return deleteConvocatoria( req, res );
             
         default:
             return res.status(400).json({ message: 'Bad requestr' });
@@ -30,11 +33,24 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
  
 }
 
+const deleteConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
+    const id = parseInt(req.body)
+ 
+    const deleteJob = await prisma.convocatoria.delete({
+        where:{
+            id
+        }
+      })
+      await prisma.$disconnect()
+      res.status(201).json( deleteJob );
+ 
+ }
+
 const getConvocatorias = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
    const convocatorias =await prisma.convocatoria.findMany();
-   await prisma.$disconnect()
-   res.status(200).json( convocatorias );
+     await prisma.$disconnect()
+    return res.status(200).json( convocatorias );
 
 }
 
@@ -74,9 +90,6 @@ const createConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
     
     const convo = req.body as IJob;
 
-    
-    
-    
     try {
         const  convocatoria = await prisma.convocatoria.create({
             data: {

@@ -1,19 +1,19 @@
+import { prisma } from '@/server/db/client';
+
+
 import { AdminLayout, JobsLayout } from "@/components/layouts";
 import { Box } from "@mui/material";
-import Typography from '@mui/material/Typography';
-import { jobs } from '../../../database/seed';
-import Divider from '@mui/material/Divider';
+
 import { AnnouncementList } from '../../../components/jobs';
 import { GetStaticProps, NextPage } from "next";
-import { apiCon } from "@/api";
-import { IJob } from "@/interfaces";
+
+
+import { IJob } from '@/interfaces';
 
 
 interface Props{
   convocatorias:IJob[]
-
-  
-  }
+}
 
  const ConvocatoriasPage: NextPage<Props> =({convocatorias})=> {
   return (
@@ -30,10 +30,21 @@ interface Props{
 }
 
 export const  getStaticProps: GetStaticProps = async () => {
+console.log('render--')
 
+  // const convocatorias = await apiCon('/admin/convocatorias')
+  const convocatorias = await prisma.convocatoria.findMany({
+    include: {
+        estado:{
+          select: {  nombre: true},  
+        },
+        grado:{
+          select: {  nombre: true},  
+        }
+    },
+  });
 
-  const convocatorias = await apiCon('/admin/convocatorias')
-
+  await prisma.$disconnect()
 
    return {
        props: {

@@ -5,9 +5,10 @@ import { ToastContainer, toast } from 'react-toastify';
 
 
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import {LinearStepper} from "../../../components/announcements";
+
 
 import 'react-toastify/dist/ReactToastify.css';
+
 
 
 const AnnouncementPage = () => {
@@ -15,7 +16,7 @@ const AnnouncementPage = () => {
   return (
     <AdminLayout title={"Administrar convocatoria "} subTitle={"Listado de postulantes"}>
         
-        <LinearStepper/> 
+    <h1>con</h1>
      
     <ToastContainer      />
        

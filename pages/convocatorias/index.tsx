@@ -2,11 +2,12 @@ import { JobList } from "@/components/jobs/JobList";
 import { JobsLayout } from "@/components/layouts";
 import { Box } from "@mui/material";
 import Typography from '@mui/material/Typography';
-import { jobs } from '../../database/seed';
+
 import Divider from '@mui/material/Divider';
 
-
+import { useJobs } from '../../hooks';
 export default function ConvocatoriasPage() {
+  const {jobs} = useJobs('/convocatorias')
   return (
     <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatorias a trabajos en Ancash"}>
       <Box className="fadeIn">

@@ -15,7 +15,7 @@ export const JobList :FC<Props>= ({jobs}) => {
     <Grid container spacing={4} marginTop={'.1rem'}>
         {
             jobs.map(job=>(
-                <JobCard key={job.img}  job={job}/>
+                <JobCard key={job.id}  job={job}/>
             ))
         }
     
