@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
+import FilePresentIcon from '@mui/icons-material/FilePresent';
 
 
 
@@ -74,8 +75,14 @@ export const SideMenu = () => {
                                 </ListItemIcon>
                                 <ListItemText primary={'Perfil'} />
                             </ListItemButton>
+                            <ListItemButton onClick={ () => navigateTo('/postulant') }>
+                                <ListItemIcon>
+                                    <FilePresentIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary={'Mis Datos'} />
+                            </ListItemButton>
 
-                            <ListItemButton>
+                            <ListItemButton  >
                                 <ListItemIcon>
                                     <ConfirmationNumberOutlined/>
                                 </ListItemIcon>
