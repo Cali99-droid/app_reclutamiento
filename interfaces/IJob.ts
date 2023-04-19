@@ -13,4 +13,5 @@ export interface IJob {
     grado:{
         nombre:string
     }
+    _count:{ postulante_x_convocatoria: number }
 }

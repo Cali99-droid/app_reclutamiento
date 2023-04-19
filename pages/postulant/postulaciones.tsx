@@ -84,6 +84,15 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
         }
     })
+    if (persona?.postulante[0] === undefined) {
+        //TODO redirigir a pantalla cuando no llenó sus datos
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            }
+        }
+    }
 
     // const convocatorias = await apiCon('/admin/convocatorias')
     const convocatorias = await prisma.postulante_x_convocatoria.findMany({

@@ -41,10 +41,13 @@ export const getStaticProps: GetStaticProps = async () => {
       },
       grado: {
         select: { nombre: true },
+      },
+      _count: {
+        select: { postulante_x_convocatoria: true }
       }
     },
   });
-  console.log(convocatorias)
+
   await prisma.$disconnect()
 
   return {

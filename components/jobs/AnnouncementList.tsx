@@ -74,7 +74,7 @@ export const AnnouncementList: NextPage<Props> = ({ convocatorias }) => {
       field: 'titulo', headerName: 'Convocatoria', width: 200,
       renderCell: ({ row }) => {
         return (
-          <NextLink href={`/admin/convocatorias/${row.id}`} passHref legacyBehavior>
+          <NextLink href={`/admin/convocatorias/convocatoria/${row.id}`} passHref legacyBehavior>
             <Link underline='always'>
               {row.titulo}
             </Link>
@@ -84,6 +84,7 @@ export const AnnouncementList: NextPage<Props> = ({ convocatorias }) => {
 
     },
     { field: 'vacantes', headerName: 'Vacantes disponibles', width: 160 },
+    { field: 'postulantes', headerName: 'Postulantes', width: 160 },
     { field: 'sueldo', headerName: 'Sueldo Ofertado', width: 180 },
     { field: 'experiencia', headerName: 'Experiencia Mínima', width: 180 },
     { field: 'grado', headerName: 'Grado Mínimo', width: 180 },
@@ -95,7 +96,7 @@ export const AnnouncementList: NextPage<Props> = ({ convocatorias }) => {
       renderCell: (params) => {
         return (
           <>
-            <IconButton aria-label="evaluar"  >
+            <IconButton aria-label="evaluar" onClick={() => { router.push(`/admin/convocatorias/${params.row.id}`) }}  >
               < GradingOutlinedIcon sx={{ color: '#0045aa' }} />
             </IconButton>
 
@@ -119,7 +120,8 @@ export const AnnouncementList: NextPage<Props> = ({ convocatorias }) => {
     sueldo: 'S/' + job.sueldoOfertado,
     experiencia: job.experiencia.toString() + ' ' + 'Años',
     grado: job.grado.nombre.toLocaleUpperCase(),
-    jobId: job.id
+    jobId: job.id,
+    postulantes: job._count.postulante_x_convocatoria,
   }))
 
 
