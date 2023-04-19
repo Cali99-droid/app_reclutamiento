@@ -15,11 +15,12 @@ import { getSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { validations } from '@/helpers';
 import { apiCon, reclutApi } from '@/api';
-import { postulants } from '../../database/seedPost';
+
 import { postulante } from '@prisma/client';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useState } from 'react';
+import Modal from '@/components/modal/Modal';
 
 interface Props{
   user:IUser,
@@ -92,7 +93,7 @@ const PostulantPage: NextPage<Props>= ({persona,grados, postulante})=> {
           
           if ( !(form.idPostulante > 0) ) {
               router.replace(`/postulant`);
-              console.log('mayor')
+             
             } else {
                 setIsSaving(false)
             }
@@ -105,6 +106,9 @@ const PostulantPage: NextPage<Props>= ({persona,grados, postulante})=> {
       
     
     }
+
+
+   
   return (
     <JobsLayout title={"AE | Postulante "} pageDescription={"Postular a un empleo"}>
       <ToastContainer />
@@ -368,7 +372,7 @@ const PostulantPage: NextPage<Props>= ({persona,grados, postulante})=> {
                     size="large" 
                     sx={{marginTop:3,  textAlign:'end',bgcolor:'#9E002B',}}
                     startIcon={<ArrowBackIcon/>}
-                    onClick={ () => navigateTo('/admin/convocatorias/')}
+                    onClick={ () => {history.go(-1); return false;}}
                     >Volver
                     </Button> 
                     <Button disabled={isSaving} type='submit'  size="large" sx={{marginTop:3,  textAlign:'end'}}startIcon={<SaveIcon/>}>Guardar</Button>
@@ -376,7 +380,7 @@ const PostulantPage: NextPage<Props>= ({persona,grados, postulante})=> {
         </Box>
 
       </form>
-       
+     
     </JobsLayout>
   )
 }
@@ -429,7 +433,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     
     postulante  = JSON.parse( JSON.stringify(person.postulante[0] ) ) 
   }
-console.log(postulante)
+
 
 
   // const convocatorias = await apiCon('/admin/convocatorias')

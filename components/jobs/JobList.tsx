@@ -3,6 +3,7 @@ import { Button, Card, CardActions, CardContent, CardMedia, Grid } from '@mui/ma
 import Typography from '@mui/material/Typography';
 import { JobCard } from './JobCard';
 import { IJob } from '@/interfaces';
+import { grey, pink } from '@mui/material/colors';
 
 
 interface Props {
@@ -12,7 +13,8 @@ interface Props {
 export const JobList :FC<Props>= ({jobs}) => {
 
   return (
-    <Grid container spacing={4} marginTop={'.1rem'}>
+    <Grid container  columns={{ xs: 4, md: 12 }}  
+     spacing={2}  marginTop={2} bgcolor={grey[200]} padding={2} borderRadius={4}> 
         {
             jobs.map(job=>(
                 <JobCard key={job.id}  job={job}/>

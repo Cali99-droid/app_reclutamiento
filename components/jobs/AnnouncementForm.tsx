@@ -56,9 +56,6 @@ type FormData = {
   };
 
    const onRegisterForm = async( form: FormData  )=>{
-   
-   
-
     try {
         const { data } = await reclutApi({
             url: '/admin/convocatorias',

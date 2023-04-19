@@ -1,3 +1,4 @@
+import { green, pink } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 import { esES } from '@mui/x-data-grid';
 export const lightTheme = createTheme({
@@ -8,11 +9,23 @@ export const lightTheme = createTheme({
       
     },
     secondary: {
-      main: '#0045aa ', /**#005A34  #43655A  dorado: #EECA73  rojo:#ED1C24 Blanco:#DEDEDE Axul: 0045aa*/
+      main: '#0045aa  ', /**#005A34  #43655A  dorado: #EECA73  rojo:#ED1C24 Blanco:#DEDEDE Axul: 0045aa*/
     },
     info: {
-      main: '#ed1c24',
+      main: '#0045aa',
     },
+    neutral:{
+      main:'#DEDEDE'
+    },
+    dorado:{
+      main:'#EECA73'
+    },
+    exito:{
+      main:green[500]
+    },
+    cancel:{
+      main:pink[500]
+    }
 
   },
  
@@ -21,7 +34,8 @@ export const lightTheme = createTheme({
     MuiLink: {
       defaultProps: {
         underline: 'none',
-        color:'secondary',
+        color:'primary'
+      
         
        
       },
@@ -69,8 +83,9 @@ export const lightTheme = createTheme({
     },
 
 
-    MuiButton: {
+    MuiButton: { 
       defaultProps: {
+       
         variant: 'contained',
         size: 'small',
         disableElevation: true,
@@ -79,14 +94,9 @@ export const lightTheme = createTheme({
       styleOverrides: {
         root: {
           textTransform: 'none',
-          boxShadow: 'none',
+         fontFamily:'Raleway',
           borderRadius: 10,
-          ":hover": {
-            backgroundColor: '#4565D0',
-            color:'#FFF',
-            transition: 'all 0.3s ease-in-out',
-        
-          }
+         
         }
       }
     },
@@ -108,3 +118,28 @@ export const lightTheme = createTheme({
 
   
 },esES);
+
+declare module '@mui/material/styles' {
+ 
+
+  interface Palette {
+    neutral: Palette['primary'];
+  }
+
+  interface PaletteOptions {
+    neutral: PaletteOptions['primary'];
+    dorado: PaletteOptions['secondary'];
+    exito: PaletteOptions['success'];
+    cancel: PaletteOptions['error'];
+  }
+
+  interface PaletteColor {
+    darker?: string;
+  }
+
+  interface SimplePaletteColorOptions {
+    darker?: string;
+  }
+
+
+}

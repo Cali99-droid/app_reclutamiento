@@ -17,15 +17,14 @@ interface Props {
 
 export const JobCard: FC<Props> = ({ job }) => {
 
-
-
     
     return (
         <Grid item   
         xs={12} 
         sm={3}
+
         >
-            <Card sx={{ maxWidth: 345 }}>
+            <Card>
            
                <NextLink   href={`/convocatorias/${job.id}`} passHref prefetch={ false } legacyBehavior>
 

@@ -4,9 +4,9 @@ import { useRouter } from 'next/router';
 
 import { AppBar,  Avatar,  Box, Button, Divider, IconButton, Input, InputAdornment, Link, Toolbar, Tooltip, Typography } from '@mui/material';
 import { ClearOutlined, SearchOutlined } from '@mui/icons-material';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+
 import { AuthContext, UiContext } from '@/context';
-import { useSession } from 'next-auth/react';
+
 
 
 
