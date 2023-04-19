@@ -1,13 +1,14 @@
 import { AdminLayout } from "@/components/layouts";
 import { prisma } from '@/server/db/client';
-import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { GetServerSideProps, NextPage } from "next";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Box, Typography } from '@mui/material';
+import { Link, Box, Typography } from '@mui/material';
 import { convocatoria } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
+import NextLink from 'next/link';
+
 
 interface Props {
   postulantes: any[]
@@ -23,7 +24,15 @@ const AnnouncementPage: NextPage<Props> = ({ postulantes, convocatoria }) => {
       field: 'postulante',
       headerName: 'Postulante',
       width: 250,
-
+      renderCell: ({ row }) => {
+        return (
+          <NextLink href={`/postulant/${row.id}`} passHref legacyBehavior>
+            <Link underline='always'>
+              {row.postulante}
+            </Link>
+          </NextLink>
+        )
+      }
     },
 
     {
