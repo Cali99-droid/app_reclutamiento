@@ -9,6 +9,7 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '@/context/';
 import { ErrorOutline } from '@mui/icons-material';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 
 type FormData = {
@@ -21,6 +22,7 @@ type FormData = {
 
 
 export default function RegisterPage() {
+  const router = useRouter();
     const { registerUser } = useContext( AuthContext );
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
@@ -43,7 +45,8 @@ export default function RegisterPage() {
 
       //  Inicar session */
       await signIn('credentials', {email,password});
-
+      const destination = router.query.p?.toString() || '/';
+        router.replace(destination);
     }
   return (
     <AuthLayout title={"Registrate y Postula "} >
@@ -151,7 +154,8 @@ export default function RegisterPage() {
                                 <Typography> ¿Ya tienes una cuenta? <NextLink passHref legacyBehavior
                                     type="submit"
                                     color="secondary" 
-                                    href={"/auth/login"}                               
+                                    href={ router.query.p ? `/auth/login?p=${ router.query.p }`: '/auth/login' } 
+                                                           
                                   
                                     >
                                    <Link> Iniciar Sesion</Link>

@@ -11,6 +11,6 @@ export interface IUser {
     persona    :IPersona
     oAuthImg?   :string
     rol        :IRol
-   
+
       
 }

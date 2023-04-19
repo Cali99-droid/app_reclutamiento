@@ -11,8 +11,9 @@ export const lightTheme = createTheme({
       main: '#0045aa ', /**#005A34  #43655A  dorado: #EECA73  rojo:#ED1C24 Blanco:#DEDEDE Axul: 0045aa*/
     },
     info: {
-      main: '#ed1c24'
-    }
+      main: '#ed1c24',
+    },
+
   },
  
 

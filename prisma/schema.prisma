@@ -25,7 +25,7 @@ model user {
   rol                 rol                   @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_rol")
 
   @@index([rol_id], map: "fk_user_rol_idx")
-  @@index([persona_id], map: "fk_user_persona1_idx1")
+  @@index([persona_id], map: "fk_user_persona1_idx")
 }
 
 model persona {
@@ -129,26 +129,24 @@ model postulante {
   direccion                 String                      @db.VarChar(45)
   experiencia               Int
   especialidad              String                      @db.VarChar(200)
-  fecha_nacimiento          DateTime                    @db.Date
-  numero_documento          String                      @db.VarChar(45)
-  sueldo                    String                      @db.VarChar(45)
-  tipo_documento_id         Int
+  nacimiento                DateTime                    @map("fecha_nacimiento") @db.Date
+  numeroDocumento           String                      @map("numero_documento") @db.VarChar(45)
+  sueldo                    Float
+  tipoId                    Int                         @map("tipo_documento_id")
   estado_postulante_id      Int
+  gradoId                   Int                         @map("grado_id")
   persona_id                Int
-  grado_id                  Int
-  persona_id1               Int
   evaluacion_x_postulante   evaluacion_x_postulante[]
   estado_postulante         estado_postulante           @relation(fields: [estado_postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_estado_postulante1")
-  grado                     grado                       @relation(fields: [grado_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_grado1")
-  persona                   persona                     @relation(fields: [persona_id1], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_persona1")
-  tipo_documento            tipo_documento              @relation(fields: [tipo_documento_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_tipo_documento1")
+  grado                     grado                       @relation(fields: [gradoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_grado1")
+  persona                   persona                     @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_persona1")
+  tipo_documento            tipo_documento              @relation(fields: [tipoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_tipo_documento1")
   postulante_x_convocatoria postulante_x_convocatoria[]
 
   @@index([estado_postulante_id], map: "fk_postulante_estado_postulante1_idx")
-  @@index([grado_id], map: "fk_postulante_grado1_idx")
-  @@index([persona_id], map: "fk_postulante_persona1_idx")
-  @@index([tipo_documento_id], map: "fk_postulante_tipo_documento1_idx")
-  @@index([persona_id1], map: "fk_postulante_persona1_idx1")
+  @@index([gradoId], map: "fk_postulante_grado1_idx")
+  @@index([tipoId], map: "fk_postulante_tipo_documento1_idx")
+  @@index([persona_id], map: "fk_postulante_persona1_idx1")
 }
 
 model postulante_x_convocatoria {

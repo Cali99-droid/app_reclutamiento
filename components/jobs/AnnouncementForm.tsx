@@ -1,15 +1,14 @@
 import { Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 
 import SaveIcon from '@mui/icons-material/Save';
-import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import {  NextPage } from 'next';
-import { IGrado, IJob } from '@/interfaces';
+import { IGrado} from '@/interfaces';
 
 import { reclutApi } from '@/api';
 import { useState } from 'react';
 
-import Modal from '../modal/Modal';
 import { ModalAlert } from '../modal/ModalAlert';
 
 import { convocatoria } from '@prisma/client';

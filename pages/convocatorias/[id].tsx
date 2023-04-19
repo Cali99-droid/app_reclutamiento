@@ -57,7 +57,7 @@ const ConvocatoriaPage:NextPage<Props>=({convocatoria}) =>{
                 </Grid>
 
                 <Grid item xs={ 12 } sm={ 6 } >
-                    <Button  sx={{mt:3, width:'80%'}} size="large" >
+                    <Button  sx={{mt:3, width:'80%'}} size="large"  href={`/postulant/postular/${convocatoria.id}`}>
                           Postular
                     </Button> 
                 </Grid>
@@ -104,7 +104,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     },
   });
   await prisma.$disconnect()
-  console.log(convocatoria)
+
   return {
     props:{ convocatoria},
   };

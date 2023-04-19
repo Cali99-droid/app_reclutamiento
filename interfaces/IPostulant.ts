@@ -1,10 +1,12 @@
 export interface IPostulant {
-    id: string;
-    nombres: string;
-    apellido_paterno: string;
-    apellido_materno: string;
-    grado: string;
-    img: string;
-    fase: number;
-    puntaje_in: number;
+    telefono:string,
+    direccion:string,
+    nacimiento:Date,
+    tipoId        : number,
+    numeroDocumento   : string,
+    experiencia     : number,
+    sueldo: number,
+    especialidad: string,
+    gradoId : number ,
+    
 }

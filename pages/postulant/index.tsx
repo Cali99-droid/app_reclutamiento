@@ -1,36 +1,43 @@
 import { prisma } from '@/server/db/client';
-
+import moment from 'moment';
 import { useRouter } from "next/router";
 import { JobsLayout } from "@/components/layouts";
 
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SaveIcon from '@mui/icons-material/Save';
 import { GetServerSideProps,  NextPage } from "next";
-import { IGrado, IUser } from "@/interfaces";
+import { IGrado, IPersona, IPostulant, IUser } from "@/interfaces";
 import { getSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { validations } from '@/helpers';
 import { apiCon, reclutApi } from '@/api';
-
+import { postulants } from '../../database/seedPost';
+import { postulante } from '@prisma/client';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { useState } from 'react';
 
 interface Props{
   user:IUser,
   grados:IGrado[]
+  persona:IPersona;
+  postulante: postulante
 }
 
 type FormData = {
-  id            :number
-  nombre       : string;
+  idPersona            :number
+  idPostulante            :number
+  nombre        : string;
   apellidoPat   : string;
   apellidoMat   : string;
   email         : string;
-  telefono      : string;
+  telefono     : string;
   direccion     : string;
-  nacimiento    : Date;
+  nacimiento    : string;
   tipoId        : number;
   numeroDocumento   : string;
   experiencia     : number;
@@ -42,55 +49,74 @@ type FormData = {
 
 
 
-const PostulantPage: NextPage<Props>= ({user,grados})=> {
-  console.log(user)
+const PostulantPage: NextPage<Props>= ({persona,grados, postulante})=> {
+
   const { register, handleSubmit, formState:{ errors }} = useForm<FormData>({
+    
     defaultValues: {
-      id            :user.id,
-      nombre       : user.persona.nombres,
-      apellidoPat   : user.persona.apellido_pat,
-      apellidoMat   : user.persona.apellido_mat,
-      email         : user.email,
-      telefono      : '9',
-      direccion     : '',
-      nacimiento    :  undefined,
-      tipoId        : 1,
-      numeroDocumento   : '',
-      experiencia     : 2,
-      sueldoPretendido: 2000,
-      especialidad: 'Ingenieria',
-      gradoId : 1,
+      idPersona            :persona.id,
+      idPostulante         :postulante.id,
+      nombre       : persona.nombres,
+      apellidoPat   : persona.apellido_pat,
+      apellidoMat   : persona.apellido_mat,
+      email         : persona.user[0].email ,
+      telefono     : postulante.telefono === null ? '':postulante.telefono,
+      direccion     : postulante.direccion,
+      nacimiento    : moment( postulante.nacimiento).toDate().toISOString().substring(0, 10),
+      tipoId        : postulante.tipoId,
+      numeroDocumento   : postulante.numeroDocumento,
+      experiencia     : postulante.experiencia,
+      sueldoPretendido: postulante.sueldo,
+      especialidad: postulante.especialidad,
+      gradoId :postulante.gradoId,
     }
 })
-  const router = useRouter();
-  const navigateTo = ( url: string ) => {
-    router.push(url);
-    }
+      const router = useRouter();
+      const navigateTo = ( url: string ) => {
+        router.push(url);
+        }
+
+        const [isSaving, setIsSaving] = useState(false);
 
 
     const onRegisterForm = async( form: FormData  )=>{
+
+    setIsSaving(true);
       try {
         const { data } = await reclutApi({
-            url: '/postulants/',
-            method: 'POST',  // si tenemos un _id, entonces actualizar, si no crear
+            url: '/postulants',
+            method: form.idPostulante > 0 ? 'PUT': 'POST',  // si tenemos un _id, entonces actualizar, si no crear
             data: form
         });   
- 
-    console.log(data)
 
+          
+          if ( !(form.idPostulante > 0) ) {
+              router.replace(`/postulant`);
+              console.log('mayor')
+            } else {
+                setIsSaving(false)
+            }
     } catch (error) {
         console.log(error);
        
     }
+
+    toast.success("Datos actualizados correctamente!");
       
     
     }
   return (
     <JobsLayout title={"AE | Postulante "} pageDescription={"Postular a un empleo"}>
+      <ToastContainer />
       <form onSubmit={ handleSubmit(onRegisterForm)} noValidate>
+        {/* <input type="hidden" { ...register('idPersona')} />
+        <input type="hidden" { ...register('idPostulante')} /> */}
+        
       <Box mt={15} mb={5}>
           <Typography variant='h1' component='h1'>Mis datos</Typography>
         </Box> 
+        
+
         <Accordion > 
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -134,7 +160,7 @@ const PostulantPage: NextPage<Props>= ({user,grados})=> {
                                             label="Apellido Materno"
                                             variant="outlined"
                                             fullWidth  
-                                            { ...register('apellidoPat', {
+                                            { ...register('apellidoMat', {
                                               required: 'Este campo es requerido',
                                               minLength: { value: 2, message: 'Mínimo 2 caracteres' }
                                           })}
@@ -190,9 +216,10 @@ const PostulantPage: NextPage<Props>= ({user,grados})=> {
                     <label htmlFor="">Fecha de nacimiento</label>
                                         <TextField
                                             type="date"
-                                          
+                                       
                                             variant="standard"
                                             fullWidth
+                                            
                                             { ...register('nacimiento', {
                                               required: 'Este campo es requerido',
                                              
@@ -203,23 +230,24 @@ const PostulantPage: NextPage<Props>= ({user,grados})=> {
                   </Grid>
                   <Grid item xs={12} md={4}>
                       <FormControl fullWidth >
-                                  <InputLabel id="tipoId">Tipo de Documento</InputLabel>
+                                  <InputLabel id="tipoId">Tipo </InputLabel>
                                   <Select
                                   labelId="tipoId"
                                   id="tipoId"
                                   label="tipo"
                                   required
+                                  defaultValue={postulante.tipoId || 0}
                                     { ...register('tipoId', {
                                         required: 'Este campo es requerido',
                                        
                                     })}
                                     error={ !!errors.tipoId }
                                   >
-                                      <MenuItem  value={''}></MenuItem>  
+                                       <MenuItem  value={''}></MenuItem> 
                                       <MenuItem  value={1}>DNI</MenuItem>  
-                                      <MenuItem  value={2}>Cartne</MenuItem>  
+                                      <MenuItem  value={2}>Carnet</MenuItem>  
                                   </Select>
-                                  <FormHelperText>DNI, Carné, etc</FormHelperText>
+                                  <FormHelperText>Tipo de documento: DNI, Carné, etc</FormHelperText>
                         </FormControl>       
                   </Grid>
                   <Grid item xs={12} md={4}>
@@ -305,7 +333,7 @@ const PostulantPage: NextPage<Props>= ({user,grados})=> {
                                             labelId="gradoId"
                                             id="gradoId"
                                             label="Requisito"
-                                            required
+                                            defaultValue={postulante.gradoId ||''}
                                             { ...register('gradoId', {
                                                 required: 'Este campo es requerido',
                                                
@@ -343,7 +371,7 @@ const PostulantPage: NextPage<Props>= ({user,grados})=> {
                     onClick={ () => navigateTo('/admin/convocatorias/')}
                     >Volver
                     </Button> 
-                    <Button type='submit'  size="large" sx={{marginTop:3,  textAlign:'end'}}startIcon={<SaveIcon/>}>Guardar</Button>
+                    <Button disabled={isSaving} type='submit'  size="large" sx={{marginTop:3,  textAlign:'end'}}startIcon={<SaveIcon/>}>Guardar</Button>
                 </Box>
         </Box>
 
@@ -355,19 +383,61 @@ const PostulantPage: NextPage<Props>= ({user,grados})=> {
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
+  let postulante
   const session: any = await getSession({req});
   const grados = await apiCon('/grados')
 
 
   const {user} = session;
 
+  const person = await prisma.persona.findUnique({
+    where: {
+      id: user.persona.id,
+    },
+    include:{
+      postulante:true,
+      user:{
+        select:{
+          email:true
+        }
+      }
+    }  
+  })
+  
+  const persona = JSON.parse( JSON.stringify( person ) )
+  if(person?.postulante[0]===undefined){
+     const post= {
+      postulanteId:0,
+      id:0,
+      telefono:'9',
+      direccion:'',
+      nacimiento: '1999-02-14',
+      tipoId        : null,
+      numeroDocumento   : '',
+      experiencia     : null,
+      sueldo: null,
+      especialidad: null,
+      gradoId : 0 ,
+      estado_postulante_id: null,
+      persona_id: persona.id,
+
+     }
+
+     postulante = post;
+  }else{
+ 
+    
+    postulante  = JSON.parse( JSON.stringify(person.postulante[0] ) ) 
+  }
+console.log(postulante)
+
+
   // const convocatorias = await apiCon('/admin/convocatorias')
   
-
-
    return {
        props: {
-        user,
+        persona,
+        postulante,
         grados,
          
        }

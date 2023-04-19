@@ -97,7 +97,7 @@ const LoginPage =()=> {
                                     <Typography> ¿No tienes una cuenta? <NextLink passHref legacyBehavior
                                         type="submit"
                                         color="secondary" 
-                                        href={"/auth/register"}                               
+                                        href={ router.query.p ? `/auth/register?p=${ router.query.p }`: '/auth/register' }                                
                                     
                                         >
                                     <Link> Registrate</Link>
