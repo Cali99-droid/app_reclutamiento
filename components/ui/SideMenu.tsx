@@ -172,11 +172,11 @@ export const SideMenu = () => {
                                     </ListItemIcon>
                                     <ListItemText primary={'Convocatorias'} />
                                 </ListItemButton>
-                                <ListItemButton>
+                                <ListItemButton onClick={() => navigateTo(`/admin/evaluaciones`)}>
                                     <ListItemIcon>
                                         <ConfirmationNumberOutlined />
                                     </ListItemIcon>
-                                    <ListItemText primary={'Ordenes'} />
+                                    <ListItemText primary={'Evaluaciones'} />
                                 </ListItemButton>
 
                                 <ListItemButton>

@@ -1,8 +1,8 @@
 
 
 import NextLink from 'next/link';
-import { Grid, Link, Box, Button, IconButton, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Grid, Link, Box, Button, IconButton, Typography, Select, MenuItem } from '@mui/material';
+import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { red } from '@mui/material/colors';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useRouter } from 'next/router';
@@ -89,7 +89,28 @@ export const AnnouncementList: NextPage<Props> = ({ convocatorias }) => {
     { field: 'experiencia', headerName: 'Experiencia Mínima', width: 180 },
     { field: 'grado', headerName: 'Grado Mínimo', width: 180 },
     // { field: 'col3', headerName: 'Numero de Postulantes', width: 180 },
-    { field: 'estado', headerName: 'Estado', width: 100 },
+    {
+      field: 'role',
+      headerName: 'Estado',
+      width: 300,
+      renderCell: (params) => {
+
+        return (
+
+          <Select
+            value={parseInt(params.row.estado)}
+            label="Rol"
+            onChange={() => { console.log('canbio') }} //({ target }) => onRoleUpdated( row.id, target.value )
+            sx={{ width: '300px' }}
+          >
+            <MenuItem value={1}> Abierta </MenuItem>
+            <MenuItem value={2}>En evaluación</MenuItem>
+            <MenuItem value={3}> Cerrada</MenuItem>
+
+          </Select>
+        )
+      }
+    },
     {
       field: 'actions', headerName: 'Acciones', width: 200,
       sortable: false,
@@ -116,7 +137,7 @@ export const AnnouncementList: NextPage<Props> = ({ convocatorias }) => {
     id: job.id,
     titulo: job.titulo,
     vacantes: job.vacantes,
-    estado: job.estado.nombre.toLocaleUpperCase(),
+    estado: job.estado.id,
     sueldo: 'S/' + job.sueldoOfertado,
     experiencia: job.experiencia.toString() + ' ' + 'Años',
     grado: job.grado.nombre.toLocaleUpperCase(),

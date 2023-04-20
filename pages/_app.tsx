@@ -9,31 +9,31 @@ import { PostProvider } from '../context';
 import { SWRConfig } from 'swr'
 
 export default function App({ Component, pageProps }: AppProps) {
-  return(
+  return (
     <SessionProvider >
-       <SWRConfig 
-          value={{
-           
-            fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
-          }}
-        >
+      <SWRConfig
+        value={{
+          refreshInterval: 1000,
+          fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
+        }}
+      >
         <AuthProvider>
-          <PostProvider> 
+          <PostProvider>
             <UiProvider>
               <ThemeProvider theme={lightTheme} >
-              <CssBaseline />
-              <Component {...pageProps} />
-              </ThemeProvider> 
+                <CssBaseline />
+                <Component {...pageProps} />
+              </ThemeProvider>
             </UiProvider>
           </PostProvider>
-        </AuthProvider>  
+        </AuthProvider>
       </SWRConfig>
     </SessionProvider>
-    
-    
+
+
 
   )
-  
-  
- 
+
+
+
 }

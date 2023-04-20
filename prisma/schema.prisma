@@ -68,14 +68,10 @@ model convocatoria_x_user {
 }
 
 model criterio {
-  id                      Int                       @id @default(autoincrement())
-  nombre                  String                    @db.VarChar(45)
-  puntaje_max             Int
-  evaluacion_id           Int
-  evaluacion              evaluacion                @relation(fields: [evaluacion_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_criterio_evaluacion1")
-  evaluacion_x_postulante evaluacion_x_postulante[]
-
-  @@index([evaluacion_id], map: "fk_criterio_evaluacion1_idx")
+  id                   Int                    @id @default(autoincrement())
+  nombre               String                 @db.VarChar(45)
+  puntaje_max          Int
+  evaluacion_criterios evaluacion_criterios[]
 }
 
 model estado {
@@ -93,7 +89,8 @@ model estado_postulante {
 model evaluacion {
   id                      Int                       @id @default(autoincrement())
   nombre                  String                    @db.VarChar(45)
-  criterio                criterio[]
+  fecha_creacion          DateTime?                 @db.Date
+  evaluacion_criterios    evaluacion_criterios[]
   evaluacion_x_postulante evaluacion_x_postulante[]
 }
 
@@ -103,15 +100,12 @@ model evaluacion_x_postulante {
   puntaje_max     Int
   postulante_id   Int
   convocatoria_id Int
-  criterio_id     Int
   evaluacion_id   Int
   convocatoria    convocatoria @relation(fields: [convocatoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evaluacion_x_postulante_convocatoria1")
-  criterio        criterio     @relation(fields: [criterio_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evaluacion_x_postulante_criterio1")
   evaluacion      evaluacion   @relation(fields: [evaluacion_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evaluacion_x_postulante_evaluacion1")
   postulante      postulante   @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evaluacion_x_postulante_postulante1")
 
   @@index([convocatoria_id], map: "fk_evaluacion_x_postulante_convocatoria1_idx")
-  @@index([criterio_id], map: "fk_evaluacion_x_postulante_criterio1_idx")
   @@index([evaluacion_id], map: "fk_evaluacion_x_postulante_evaluacion1_idx")
   @@index([postulante_id], map: "fk_evaluacion_x_postulante_postulante1_idx")
 }
@@ -130,7 +124,7 @@ model postulante {
   experiencia               Int
   especialidad              String                      @db.VarChar(200)
   nacimiento                DateTime                    @map("fecha_nacimiento") @db.Date
-  numeroDocumento           String                      @map("numero_documento") @db.VarChar(45)
+  numeroDocumento           String                      @unique(map: "numero_documento_UNIQUE") @map("numero_documento") @db.VarChar(45)
   sueldo                    Float
   tipoId                    Int                         @map("tipo_documento_id")
   estado_postulante_id      Int
@@ -164,4 +158,17 @@ model tipo_documento {
   id         Int          @id @default(autoincrement())
   nombre     String?      @db.VarChar(45)
   postulante postulante[]
+}
+
+model evaluacion_criterios {
+  id            Int        @id @default(autoincrement())
+  orden         Int?
+  peso          Int
+  evaluacion_id Int
+  criterio_id   Int
+  criterio      criterio   @relation(fields: [criterio_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evaluacion_criterios_criterio1")
+  evaluacion    evaluacion @relation(fields: [evaluacion_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evaluacion_criterios_evaluacion1")
+
+  @@index([criterio_id], map: "fk_evaluacion_criterios_criterio1_idx")
+  @@index([evaluacion_id], map: "fk_evaluacion_criterios_evaluacion1_idx")
 }

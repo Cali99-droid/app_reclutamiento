@@ -8,6 +8,7 @@ export interface IJob {
     gradoId : number;
     estadoId: number;
     estado:{
+        id:number
         nombre:string
     }
     grado:{
