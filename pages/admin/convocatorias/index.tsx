@@ -136,7 +136,7 @@ const ConvocatoriasPage = () => {
     { field: 'grado', headerName: 'Grado Mínimo', width: 180 },
     // { field: 'col3', headerName: 'Numero de Postulantes', width: 180 },
     {
-      field: 'role',
+      field: 'estado',
       headerName: 'Estado',
       width: 200,
       renderCell: (params) => {

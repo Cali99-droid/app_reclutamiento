@@ -10,18 +10,41 @@ import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import { cyan } from '@mui/material/colors';
 import Modal from '@/components/modal/Modal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
+import { IJob } from '@/interfaces';
+import { reclutApi } from '@/api';
 
 
 interface Props {
   postulantes: any[]
-  convocatoria: convocatoria
+  convocatoria: IJob
   evaluaciones: evaluacion[]
 
 }
 
-const AnnouncementPage: NextPage<Props> = ({ postulantes, convocatoria, evaluaciones }) => {
+const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
+  const router = useRouter();
+  const { id } = router.query
+  const { data, error } = useSWR<any[]>(`/api/admin/postulantes/${id}`);
+  const [postulantes, setPostulantes] = useState<any[]>([]);
+  const [status, setStatus] = useState(true)
+
+
+
+  useEffect(() => {
+    if (data) {
+      setPostulantes(data);
+    }
+
+  }, [data])
+
+
+
+
+
+
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 50 },
@@ -77,16 +100,53 @@ const AnnouncementPage: NextPage<Props> = ({ postulantes, convocatoria, evaluaci
 
     },
     {
+      field: 'estado',
+      headerName: 'Estado',
+      width: 200,
+      renderCell: (params) => {
+
+        return (
+
+          <Select
+            value={parseInt(params.row.estado)}
+            label="Rol"
+            onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
+            sx={{ width: '200px' }}
+            disabled={!(convocatoria.estadoId > 1)}
+          >
+            <MenuItem value={1}> Inscrito </MenuItem>
+            <MenuItem value={2}>Apto a Entrevista</MenuItem>
+            <MenuItem value={3}> Apto a Evaluación</MenuItem>
+            <MenuItem value={4}> Selecionado</MenuItem>
+
+          </Select>
+        )
+      }
+    },
+    {
       field: 'actions', headerName: 'Acciones', width: 90,
       sortable: false,
       renderCell: (params) => {
         return (
           <>
-            <Tooltip title="Evaluar" placement="right-start">
-              <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => { handleOpen(params.row.id) }}    >
-                < FactCheckIcon sx={{ color: cyan[600] }} />
-              </IconButton>
-            </Tooltip>
+            {
+              (convocatoria.estado.id > 1 && params.row.estado > 1) ?
+                (
+
+
+
+
+                  <>
+                    <Tooltip title="Entrevista" placement="right-start">
+                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => { handleOpen(params.row.id) }}    >
+                        < FactCheckIcon sx={{ color: cyan[600] }} />
+                      </IconButton>
+                    </Tooltip>
+                  </>
+
+                ) : ('cambea')
+            }
+
 
           </>
         )
@@ -99,16 +159,16 @@ const AnnouncementPage: NextPage<Props> = ({ postulantes, convocatoria, evaluaci
 
 
   const rows = postulantes.map((p) => ({
-    id: p.id,
+    id: p.postulante.id,
     postulante: p.postulante.persona.nombres + ' ' + p.postulante.persona.apellido_pat + ' ' + p.postulante.persona.apellido_mat,
-
+    estado: p.postulante.estado_postulante.id,
     edad: calcularEdad(p.postulante.nacimiento) + ' años',
     especialidad: p.postulante.especialidad,
     experiencia: p.postulante.experiencia + ' años',
     sueldo: 'S/ ' + p.postulante.sueldo,
 
   }))
-  const router = useRouter();
+
   const [idEv, setIdEv] = useState<string | number>('');
   const [idPos, setIdPos] = useState<string | number>('');
   const [open, setOpen] = useState(false)
@@ -137,7 +197,28 @@ const AnnouncementPage: NextPage<Props> = ({ postulantes, convocatoria, evaluaci
 
   };
 
+  const onStatusUpdated = async (id: number, newStatus: string) => {
 
+    const previosPostulantes = postulantes.map(p => ({ ...p }));
+    const updatedPostulantes = postulantes.map(p => ({
+      ...p,
+      estado_postulante_id: id === p.id ? parseInt(newStatus) : p.id
+    }));
+
+
+    setPostulantes(updatedPostulantes);
+
+    try {
+
+      await reclutApi.put('/admin/postulantes/1', { id, status: newStatus });
+
+    } catch (error) {
+      setPostulantes(previosPostulantes);
+      console.log(error);
+      alert('No se pudo actualizar el role del usuario');
+    }
+
+  }
 
 
 
@@ -146,8 +227,11 @@ const AnnouncementPage: NextPage<Props> = ({ postulantes, convocatoria, evaluaci
       <Box>
         <Typography variant="subtitle1">Vacantes: {convocatoria.vacantes}</Typography>
         <Typography variant="subtitle1">Postulantes: {postulantes.length}</Typography>
+        <Typography variant="subtitle1">Estado: {convocatoria.estado.nombre}</Typography>
+        <Typography variant="subtitle1">Estado: {convocatoria.estado.id}</Typography>
+        <Typography variant="subtitle1">Postulantes: {postulantes.length}</Typography>
       </Box>
-      <Box sx={{ height: 300, width: '100%' }}>
+      <Box sx={{ height: 500, width: '100%' }}>
         <DataGrid
           rows={rows}
           columns={columns}
@@ -186,26 +270,26 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const convocatoria = await prisma.convocatoria.findUnique({
     where: {
       id: parseInt(id.toString())
-    }
-  })
-  const listaPostulantes = await prisma.postulante_x_convocatoria.findMany({
-    where: {
-      convocatoria_id: parseInt(id.toString())
     },
     include: {
-      postulante: {
-        include: {
-          persona: true
-        }
+      estado: {
+        select: { id: true, nombre: true },
+      },
+      grado: {
+        select: { nombre: true },
+      },
+      _count: {
+        select: { postulante_x_convocatoria: true }
       }
     },
-  });
-  const postulantes = JSON.parse(JSON.stringify(listaPostulantes))
+  })
+
+
   const evaluaciones = await prisma.evaluacion.findMany();
   await prisma.$disconnect()
-  console.log(evaluaciones)
+
   return {
-    props: { postulantes, convocatoria, evaluaciones }
+    props: { convocatoria, evaluaciones }
   }
 }
 

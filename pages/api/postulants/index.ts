@@ -20,7 +20,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
           return updatePostulante( req, res );
     
         default:
-            return res.status(400).json({ message: 'Bad requestr' });
+            return res.status(400).json({ message: 'Bad request' });
     }
     
  

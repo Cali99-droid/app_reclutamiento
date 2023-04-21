@@ -53,32 +53,3 @@ const updateConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
    
 }
 
-const createConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
-    
-    const convo = req.body as IJob;
-
-    try {
-        const  convocatoria = await prisma.convocatoria.create({
-            data: {
-                titulo:           convo.titulo,
-                descripcion:      convo.descripcion,
-                experiencia:      parseInt(convo.experiencia.toString()),
-                vacantes:         parseInt(convo.vacantes.toString()),
-                sueldoOfertado:  parseFloat(convo.sueldoOfertado.toString()) ,
-                estadoId:        1,
-                gradoId:         parseInt(convo.gradoId.toString()),
-
-            },
-        })
-
-
-
-        await prisma.$disconnect()
-        res.status(201).json({convocatoria});
-    } catch (error) {
-        console.log(error);
-        await prisma.$disconnect()
-        return res.status(400).json({ message: 'Revisar logs del servidor' });
-     }
-
-}
