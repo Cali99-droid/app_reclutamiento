@@ -1,24 +1,32 @@
 import NextLink from 'next/link';
 import { AdminLayout } from "@/components/layouts";
 import { prisma } from '@/server/db/client';
+import { PostContext } from '@/context';
+
 
 import { GetServerSideProps, NextPage } from "next";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Link, Box, Typography, IconButton, Tooltip, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
-import { convocatoria, evaluacion } from '@prisma/client';
+import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip } from '@mui/material';
+import { evaluacion, postulante } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
+import TaskTwoToneIcon from '@mui/icons-material/TaskTwoTone';
 import { cyan } from '@mui/material/colors';
-import Modal from '@/components/modal/Modal';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { IJob } from '@/interfaces';
 import { reclutApi } from '@/api';
+import { ModalEntrevista } from '@/components/modal';
+import RatingFrom from '@/components/modal/RatingForm';
+
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 
 interface Props {
-  postulantes: any[]
+  postulantes: postulante[]
   convocatoria: IJob
   evaluaciones: evaluacion[]
 
@@ -30,16 +38,17 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
   const { data, error } = useSWR<any[]>(`/api/admin/postulantes/${id}`);
   const [postulantes, setPostulantes] = useState<any[]>([]);
   const [status, setStatus] = useState(true)
-
+  const { criterios, calcularTotal } = useContext(PostContext)
 
 
   useEffect(() => {
     if (data) {
-      setPostulantes(data);
+      const newPost = data?.sort((x, y) => x.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje) - y.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)).reverse()
+      setPostulantes(newPost);
+
     }
 
   }, [data])
-
 
 
 
@@ -109,7 +118,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
           <Select
             value={parseInt(params.row.estado)}
-            label="Rol"
+            label="Estado"
             onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
             sx={{ width: '200px' }}
             disabled={!(convocatoria.estadoId > 1)}
@@ -124,28 +133,40 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
       }
     },
     {
-      field: 'actions', headerName: 'Acciones', width: 90,
+      field: 'actions', headerName: 'Evaluar', width: 150,
       sortable: false,
       renderCell: (params) => {
         return (
           <>
             {
-              (convocatoria.estado.id > 1 && params.row.estado > 1) ?
+              (convocatoria.estado.id > 1 && params.row.estado === 2) ?
                 (
 
 
 
 
                   <>
-                    <Tooltip title="Entrevista" placement="right-start">
-                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => { handleOpen(params.row.id) }}    >
+                    <Tooltip title="Evaluar Entrevista" placement="right-start">
+                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => { handleOpen(params.row.id,) }}    >
                         < FactCheckIcon sx={{ color: cyan[600] }} />
                       </IconButton>
                     </Tooltip>
                   </>
 
-                ) : ('cambea')
+                ) : (convocatoria.estado.id > 1 && params.row.estado === 3 && params.row.puntajeEntr > 0) ? (
+                  <Tooltip title="Evaluar Desempeño" placement="right-start">
+                    <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar"    >
+                      < TaskTwoToneIcon sx={{ color: cyan[600] }} />
+                    </IconButton>
+                  </Tooltip>
+
+                ) :
+                  (
+                    <Chip label="No disponible" color="warning" variant='outlined' />
+
+                  )
             }
+
 
 
           </>
@@ -166,6 +187,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
     especialidad: p.postulante.especialidad,
     experiencia: p.postulante.experiencia + ' años',
     sueldo: 'S/ ' + p.postulante.sueldo,
+    puntajeEntr: p.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)
 
   }))
 
@@ -182,54 +204,116 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
     setOpen(false);
   };
 
+
+
   const handleConfirm = async () => {
-    if (idEv === 1) {
-      router.push(`/admin/evaluaciones/entrevista/${idPos}`)
-    } else {
-      router.push(`/admin/evaluaciones/jurado/${idPos}`)
-    }
+    //TODO validar actualizacion o creacion  */
 
 
-
-  };
-  const handleChange = (event: SelectChangeEvent<typeof idEv>) => {
-    setIdEv(event.target.value);
-
-  };
-
-  const onStatusUpdated = async (id: number, newStatus: string) => {
-
-    const previosPostulantes = postulantes.map(p => ({ ...p }));
-    const updatedPostulantes = postulantes.map(p => ({
-      ...p,
-      estado_postulante_id: id === p.id ? parseInt(newStatus) : p.id
-    }));
-
-
-    setPostulantes(updatedPostulantes);
+    const puntaje = calcularTotal();
 
     try {
 
-      await reclutApi.put('/admin/postulantes/1', { id, status: newStatus });
-
+      const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos });
+      console.log(resp)
     } catch (error) {
-      setPostulantes(previosPostulantes);
+
+      console.log(error);
+      alert('El postulante ya tiene puntaje');
+    }
+    toast.success('🦄 Puntaje asignado correctamente!'),
+      handleClose()
+
+
+
+
+  };
+
+  const handleChange = (event: SelectChangeEvent<typeof idEv>) => {
+
+    setIdEv(event.target.value);
+
+  };
+  const puntajeEntrevistaValido = (id: number) => {
+
+    const result = postulantes.filter(p => id === p.postulante.id);
+    // console.log(result[0].postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje).length)
+    if (result[0].postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje).length <= 0 && result[0].postulante.estado_postulante.id > 1) {
+      return true;
+    }
+    return false;
+
+  }
+
+  const onStatusUpdated = async (id: number, newStatus: string) => {
+    //TODO validar puntaje en entrevista */
+
+    if (!puntajeEntrevistaValido(id)) {
+      const previosPostulantes = postulantes.map(p => ({ ...p }));
+      const updatedPostulantes = postulantes.map(p => ({
+        ...p,
+        estado_postulante_id: id === p.id ? parseInt(newStatus) : p.id
+      }));
+
+
+      setPostulantes(updatedPostulantes);
+
+      try {
+
+        await reclutApi.put('/admin/postulantes/1', { id, status: newStatus });
+
+      } catch (error) {
+        setPostulantes(previosPostulantes);
+        console.log(error);
+        alert('No se pudo actualizar el estado del postulante');
+      }
+
+
+    } else {
+      alert('no se puede promover al postulante, no tiene puntaje en la fase anterior')
+    }
+
+  }
+  const onStatusJobUpdated = async (id: number, newStatus: string) => {
+    try {
+
+      await reclutApi.put('/admin/job', { id, status: newStatus });
+      refreshData()
+    } catch (error) {
+
       console.log(error);
       alert('No se pudo actualizar el role del usuario');
     }
 
+  }
+  const refreshData = () => {
+    router.replace(router.asPath)
   }
 
 
 
   return (
     <AdminLayout title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
+
       <Box>
+
         <Typography variant="subtitle1">Vacantes: {convocatoria.vacantes}</Typography>
         <Typography variant="subtitle1">Postulantes: {postulantes.length}</Typography>
         <Typography variant="subtitle1">Estado: {convocatoria.estado.nombre}</Typography>
         <Typography variant="subtitle1">Estado: {convocatoria.estado.id}</Typography>
         <Typography variant="subtitle1">Postulantes: {postulantes.length}</Typography>
+
+        <Select
+          value={convocatoria.estado.id}
+          label="Rol"
+          onChange={(e: SelectChangeEvent<number>) => onStatusJobUpdated(convocatoria.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
+          sx={{ width: '200px' }}
+        >
+          <MenuItem value={1}> Abierta </MenuItem>
+          <MenuItem value={2}>En evaluación</MenuItem>
+          <MenuItem value={3}> Cerrada</MenuItem>
+
+        </Select>
       </Box>
       <Box sx={{ height: 500, width: '100%' }}>
         <DataGrid
@@ -239,28 +323,23 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
         />
       </Box>
 
-      <Modal title={'Seleccione el tipo de evaluación'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
-        <Box mt={3} mb={3}>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Tipo</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={idEv}
-              label="Evaluacion"
-              onChange={handleChange}
-            >
+      <ModalEntrevista title={'Calificar Entrevista'} open={open} handleClose={handleClose} >
+        <form onSubmit={handleConfirm}>
+          <DialogContent>
+            <RatingFrom />
 
-              {
-                evaluaciones.map(ev => (
-                  <MenuItem key={ev.id} value={ev.id}>{ev.nombre.toLocaleUpperCase()}</MenuItem>
-                ))
-              }
-            </Select>
-          </FormControl>
-        </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color='error' sx={{ textTransform: 'uppercase', mt: 1, mr: 1 }} variant="outlined">
+              Cancelar
+            </Button>
 
-      </Modal>
+            <Button onClick={handleConfirm} sx={{ mt: 1, mr: 1, textTransform: 'uppercase' }} variant="outlined">
+              Finalizar
+            </Button>
+          </DialogActions>
+        </form>
+      </ModalEntrevista>
     </AdminLayout>
   )
 }
@@ -285,7 +364,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   })
 
 
-  const evaluaciones = await prisma.evaluacion.findMany();
+  const evaluaciones = JSON.parse(JSON.stringify(await prisma.evaluacion.findMany()))
   await prisma.$disconnect()
 
   return {

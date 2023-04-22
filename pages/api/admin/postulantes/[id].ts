@@ -1,7 +1,7 @@
 import { IJob } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
-import { convocatoria } from '@prisma/client';
+import { convocatoria, postulante } from '@prisma/client';
 
 
 
@@ -10,7 +10,7 @@ type Data =
 | { message: string }
 | IJob[]
 | IJob
-| any;
+| postulante;
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
     
@@ -37,11 +37,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
     const { id=''  } = req.query;
-    const convocatoria = await prisma.convocatoria.findUnique({
-        where: {
-          id: parseInt(id.toString())
-        }
-      })
+    // const convocatoria = await prisma.convocatoria.findUnique({
+    //     where: {
+    //       id: parseInt(id.toString())
+    //     }
+    //   })
       const listaPostulantes = await prisma.postulante_x_convocatoria.findMany({
         where: {
           convocatoria_id: parseInt(id.toString())
@@ -50,14 +50,28 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
           postulante: {
             include: {
               persona: true,
-              estado_postulante:true
+              estado_postulante:true,
+              evaluacion_x_postulante:{
+                where:{
+                  convocatoria_id:parseInt(id.toString()),
+                  AND:{
+                    evaluacion_id:1
+                  }
+
+                },
+                select:{puntaje:true},
+                orderBy:{
+                  puntaje:'asc'
+                }
+              }
               
             }
+            
           }
         },
       });
       const postulantes = JSON.parse(JSON.stringify(listaPostulantes))
-  
+
       await prisma.$disconnect()
       res.status(201).json( postulantes );
  
@@ -65,7 +79,7 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
 
 async function updatePostulante(req: NextApiRequest, res: NextApiResponse<any>) {
   const { id , status } = req.body;
-console.log(req.body)
+
   try {
     const  p = await prisma.postulante.update({
       where: {
