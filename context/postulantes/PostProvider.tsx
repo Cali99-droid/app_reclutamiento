@@ -37,12 +37,17 @@ export const PostProvider: FC<Props> = ({ children }) => {
             return total
       }
 
+      const limpiarCriterios = () => {
+            criterios.clear()
+      }
+
 
       return (
             <PostContext.Provider value={{
                   ...state,
                   criterios,
                   calcularTotal,
+                  limpiarCriterios
 
 
 

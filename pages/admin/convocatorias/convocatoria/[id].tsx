@@ -7,7 +7,7 @@ import { PostContext } from '@/context';
 import { GetServerSideProps, NextPage } from "next";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip } from '@mui/material';
-import { evaluacion, postulante } from '@prisma/client';
+import { evaluacion, evaluacion_x_postulante, postulante } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import TaskTwoToneIcon from '@mui/icons-material/TaskTwoTone';
@@ -23,6 +23,7 @@ import RatingFrom from '@/components/modal/RatingForm';
 import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
+import ModalClase from '../../../../components/modal/ModalClase';
 
 
 interface Props {
@@ -39,7 +40,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
   const [postulantes, setPostulantes] = useState<any[]>([]);
   const [status, setStatus] = useState(true)
-  const { criterios, calcularTotal } = useContext(PostContext);
+  const { criterios, calcularTotal, limpiarCriterios } = useContext(PostContext);
   const [total, setTotal] = useState(0)
 
 
@@ -144,10 +145,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
         return (
           <>
             {
-              (convocatoria.estado.id > 1 && params.row.estado === 2) ?
+              (convocatoria.estado.id > 1) ?
                 (
-
-
 
 
                   <>
@@ -156,14 +155,26 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
                         < FactCheckIcon sx={{ color: cyan[600] }} />
                       </IconButton>
                     </Tooltip>
+                    <Tooltip title="Evaluar Clase" placement="right-start">
+                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => { handleOpenClase(params.row.id,) }}  >
+                        < TaskTwoToneIcon sx={{ color: cyan[600] }} />
+                      </IconButton>
+                    </Tooltip>
                   </>
 
                 ) : (convocatoria.estado.id > 1 && params.row.estado === 3 && params.row.puntajeEntr > 0) ? (
-                  <Tooltip title="Evaluar Desempeño" placement="right-start">
-                    <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar"    >
-                      < TaskTwoToneIcon sx={{ color: cyan[600] }} />
-                    </IconButton>
-                  </Tooltip>
+                  <>
+                    <Tooltip title="Evaluar Entrevista" placement="right-start">
+                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => { handleOpen(params.row.id,) }}    >
+                        < FactCheckIcon sx={{ color: cyan[600] }} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Evaluar Desempeño" placement="right-start">
+                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar"    >
+                        < TaskTwoToneIcon sx={{ color: cyan[600] }} />
+                      </IconButton>
+                    </Tooltip>
+                  </>
 
                 ) :
                   (
@@ -182,6 +193,37 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
 
   ];
+  const devolverPuntajeEntrevista = (puntajes: evaluacion_x_postulante[]) => {
+    let formato = '';
+
+    puntajes.forEach(p => {
+      formato += p.puntaje + ','
+
+    });
+
+
+    return formato.split(',')[0]
+  }
+  const devolverPuntajeJurado = (puntajes: evaluacion_x_postulante[]) => {
+    let formato = '';
+    puntajes.forEach(p => {
+      formato += p.puntaje + ','
+
+    });
+
+
+    return formato.split(',')[1]
+  }
+
+  const tot = (puntajes: evaluacion_x_postulante[]) => {
+    let suma = 0;
+    puntajes.forEach(p => {
+      suma += p.puntaje
+    });
+
+    return suma;
+
+  }
 
 
   const rows = postulantes.map((p) => ({
@@ -192,11 +234,14 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
     especialidad: p.postulante.especialidad,
     experiencia: p.postulante.experiencia + ' años',
     sueldo: 'S/ ' + p.postulante.sueldo,
-    puntajeEntr: p.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje),
-    total: total,
+    puntajeEntr: devolverPuntajeEntrevista(p.postulante.evaluacion_x_postulante),
+    puntajeJur: devolverPuntajeJurado(p.postulante.evaluacion_x_postulante),
+    total: tot(p.postulante.evaluacion_x_postulante),
     idCp: p.id
 
   }))
+
+
 
   const [idEv, setIdEv] = useState<string | number>('');
   const [idPos, setIdPos] = useState<string | number>('');
@@ -204,7 +249,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
   const handleOpen = (id: number) => {
     setOpen(true);
     setIdPos(id)
-
+    setIdEv(1)
   };
 
   const handleClose = () => {
@@ -214,22 +259,25 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
 
   const handleConfirm = async () => {
-    //TODO validar actualizacion o creacion  */
+
 
 
     const puntaje = calcularTotal();
+    setIdEv(1)
 
     try {
 
-      const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos });
+      const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 50 });
       console.log(resp)
+      toast.success('🦄 Puntaje asignado correctamente!'),
+        limpiarCriterios()
+      handleClose()
     } catch (error) {
 
       console.log(error);
       alert('El postulante ya tiene puntaje');
     }
-    toast.success('🦄 Puntaje asignado correctamente!'),
-      handleClose()
+
 
 
 
@@ -296,7 +344,46 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
   const refreshData = () => {
     router.replace(router.asPath)
   }
+  //-----------------------------------------------------------------------------------------
+  const [openClase, setOpenClase] = useState(false)
+  const handleOpenClase = (id: number) => {
+    setOpenClase(true);
+    setIdPos(id)
+    setIdEv(2)
+  };
 
+  const handleCloseClase = () => {
+    setOpenClase(false);
+  };
+
+
+
+  const handleConfirmClase = async () => {
+    //TODO validar actualizacion o creacion  */
+
+
+    const puntaje = calcularTotal();
+
+
+    try {
+
+      const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 100 });
+      console.log(resp)
+      toast.success('🦄 Puntaje asignado correctamente!'),
+        handleCloseClase()
+      limpiarCriterios()
+
+    } catch (error) {
+
+      console.log(error);
+      alert('El postulante ya tiene puntaje');
+    }
+
+
+
+
+
+  };
 
 
   return (
@@ -348,6 +435,9 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
           </DialogActions>
         </form>
       </ModalEntrevista>
+      <ModalClase title={'Evaluar Clase Modelo'} open={openClase} handleClose={handleCloseClase} handleConfirm={handleConfirmClase}>
+
+      </ModalClase>
     </AdminLayout>
   )
 }

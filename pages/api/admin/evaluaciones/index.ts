@@ -23,14 +23,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
-     const {id, puntaje, idPos} = req.body
+     const {id, puntaje, idPos,idEv,max} = req.body
 
     const existeEv = await prisma.evaluacion_x_postulante.findMany({
         where:{
             convocatoria_id:parseInt(id),
             AND:{
                 postulante_id:idPos,
-                evaluacion_id:1
+                evaluacion_id:idEv
             }
             
         },
@@ -46,10 +46,10 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
         const  ev = await prisma.evaluacion_x_postulante.create({
             data: {
                puntaje,
-               puntaje_max:50,
+               puntaje_max:max,
                postulante_id:idPos,
                convocatoria_id:parseInt(id) ,
-               evaluacion_id:1
+               evaluacion_id:idEv
 
             },
         })

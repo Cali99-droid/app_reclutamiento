@@ -55,9 +55,7 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
               evaluacion_x_postulante:{
                 where:{
                   convocatoria_id:parseInt(id.toString()),
-                  AND:{
-                    evaluacion_id:1
-                  }
+                 
 
                 },
                 select:{puntaje:true},
