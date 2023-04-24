@@ -30,6 +30,7 @@ import { useState } from 'react';
 import { reclutApi } from '@/api';
 import NextLink from 'next/link';
 import Modal from '@/components/modal/Modal';
+import axios from 'axios';
 
 
 
@@ -66,7 +67,8 @@ const ConvocatoriasPage = () => {
   };
 
   const handleConfirm = async () => {
-    deleteJob();
+    const datos = await deleteJob();
+    console.log(datos)
 
   };
   const refreshData = () => {
@@ -85,6 +87,17 @@ const ConvocatoriasPage = () => {
 
     } catch (error) {
       console.log(error);
+      if (axios.isAxiosError(error)) {
+        return {
+          hasError: true,
+          message: error.response?.data.message
+        }
+      }
+
+      return {
+        hasError: true,
+        message: 'No se pudo crear el usuario - intente de nuevo'
+      }
     }
     handleClose()
 

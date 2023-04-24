@@ -1,6 +1,7 @@
 import { IJob } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
+import { convocatoria } from '@prisma/client';
 
 
 
@@ -35,7 +36,24 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const deleteConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     const id = parseInt(req.body)
- 
+
+    const postulantes = await prisma.postulante_x_convocatoria.findMany({
+      where:{
+        convocatoria_id :id
+      },
+    })
+console.log(postulantes)
+     
+    if ( postulantes.length > 0 ) {
+      return res.status(400).json({
+          message: 'No se puede eliminar'
+      });
+  }
+
+
+
+
+
     const deleteJob = await prisma.convocatoria.delete({
         where:{
             id
