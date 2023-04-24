@@ -46,11 +46,12 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
         where: {
           convocatoria_id: parseInt(id.toString())
         },
+        
         include: {
           postulante: {
             include: {
               persona: true,
-              estado_postulante:true,
+            
               evaluacion_x_postulante:{
                 where:{
                   convocatoria_id:parseInt(id.toString()),
@@ -81,7 +82,7 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<any>) 
   const { id , status } = req.body;
 
   try {
-    const  p = await prisma.postulante.update({
+    const  p = await prisma.postulante_x_convocatoria.update({
       where: {
         id
       },

@@ -36,9 +36,12 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
   const router = useRouter();
   const { id } = router.query
   const { data, error } = useSWR<any[]>(`/api/admin/postulantes/${id}`);
+
   const [postulantes, setPostulantes] = useState<any[]>([]);
   const [status, setStatus] = useState(true)
-  const { criterios, calcularTotal } = useContext(PostContext)
+  const { criterios, calcularTotal } = useContext(PostContext);
+  const [total, setTotal] = useState(0)
+
 
 
   useEffect(() => {
@@ -98,7 +101,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
     },
     {
       field: 'puntajeJur',
-      headerName: 'Puntaje Jurado',
+      headerName: convocatoria.categoria_id === 1 ? 'Puntaje Jurado' : 'Puntaje Clase Modelo',
       width: 150,
 
     },
@@ -119,14 +122,16 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
           <Select
             value={parseInt(params.row.estado)}
             label="Estado"
-            onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
+            onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.idCp, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
             sx={{ width: '200px' }}
             disabled={!(convocatoria.estadoId > 1)}
           >
             <MenuItem value={1}> Inscrito </MenuItem>
-            <MenuItem value={2}>Apto a Entrevista</MenuItem>
-            <MenuItem value={3}> Apto a Evaluación</MenuItem>
-            <MenuItem value={4}> Selecionado</MenuItem>
+            <MenuItem value={2}> No Interesa </MenuItem>
+            <MenuItem value={3}> Apto a Entrevista</MenuItem>
+            <MenuItem value={4}> Apto a Evaluación</MenuItem>
+            <MenuItem value={5}> Interesante </MenuItem>
+            <MenuItem value={6}> Selecionado</MenuItem>
 
           </Select>
         )
@@ -182,12 +187,14 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
   const rows = postulantes.map((p) => ({
     id: p.postulante.id,
     postulante: p.postulante.persona.nombres + ' ' + p.postulante.persona.apellido_pat + ' ' + p.postulante.persona.apellido_mat,
-    estado: p.postulante.estado_postulante.id,
+    estado: parseInt(p.estado_postulante_id),
     edad: calcularEdad(p.postulante.nacimiento) + ' años',
     especialidad: p.postulante.especialidad,
     experiencia: p.postulante.experiencia + ' años',
     sueldo: 'S/ ' + p.postulante.sueldo,
-    puntajeEntr: p.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)
+    puntajeEntr: p.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje),
+    total: total,
+    idCp: p.id
 
   }))
 
@@ -248,30 +255,30 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
   const onStatusUpdated = async (id: number, newStatus: string) => {
     //TODO validar puntaje en entrevista */
 
-    if (!puntajeEntrevistaValido(id)) {
-      const previosPostulantes = postulantes.map(p => ({ ...p }));
-      const updatedPostulantes = postulantes.map(p => ({
-        ...p,
-        estado_postulante_id: id === p.id ? parseInt(newStatus) : p.id
-      }));
+    // if (!puntajeEntrevistaValido(id)) {
+    const previosPostulantes = postulantes.map(p => ({ ...p }));
+    const updatedPostulantes = postulantes.map(p => ({
+      ...p,
+      estado_postulante_id: id === p.id ? parseInt(newStatus) : p.id
+    }));
 
 
-      setPostulantes(updatedPostulantes);
+    setPostulantes(updatedPostulantes);
 
-      try {
+    try {
 
-        await reclutApi.put('/admin/postulantes/1', { id, status: newStatus });
+      await reclutApi.put('/admin/postulantes/1', { id, status: newStatus });
 
-      } catch (error) {
-        setPostulantes(previosPostulantes);
-        console.log(error);
-        alert('No se pudo actualizar el estado del postulante');
-      }
-
-
-    } else {
-      alert('no se puede promover al postulante, no tiene puntaje en la fase anterior')
+    } catch (error) {
+      setPostulantes(previosPostulantes);
+      console.log(error);
+      alert('No se pudo actualizar el estado del postulante');
     }
+
+
+    // } else {
+    //   alert('no se puede promover al postulante, no tiene puntaje en la fase anterior')
+    // }
 
   }
   const onStatusJobUpdated = async (id: number, newStatus: string) => {
@@ -301,6 +308,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
         <Typography variant="subtitle1">Postulantes: {postulantes.length}</Typography>
         <Typography variant="subtitle1">Estado: {convocatoria.estado.nombre}</Typography>
         <Typography variant="subtitle1">Estado: {convocatoria.estado.id}</Typography>
+        <Typography variant="subtitle1">categoria: {convocatoria.categoria_id}</Typography>
         <Typography variant="subtitle1">Postulantes: {postulantes.length}</Typography>
 
         <Select

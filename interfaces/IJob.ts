@@ -15,4 +15,6 @@ export interface IJob {
         nombre:string
     }
     _count:{ postulante_x_convocatoria: number }
+    categoria_id:number;
+    categoria:categoria;
 }
