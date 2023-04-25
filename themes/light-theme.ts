@@ -12,7 +12,7 @@ export const lightTheme = createTheme({
       main: '#0045aa  ', /**#005A34  #43655A  dorado: #EECA73  rojo:#ED1C24 Blanco:#DEDEDE Axul: 0045aa*/
     },
     info: {
-      main: '#0045aa',
+      main: '#001C75',
     },
     neutral:{
       main:'#DEDEDE'
@@ -43,13 +43,13 @@ export const lightTheme = createTheme({
     MuiAppBar: {
      
       defaultProps: {
-        elevation:1,
-        position: 'absolute',
+    elevation:0
+      
       },
       styleOverrides: {
         root: {
-          backgroundColor: '#F3F3F3',
-          height: 80,
+          background:'#FFF' ,
+          height: 90,
           justifyContent:'center'        
         },
       }
@@ -58,7 +58,7 @@ export const lightTheme = createTheme({
     MuiTypography: {
       defaultProps: {
         fontFamily:'Raleway',
-         color:'secondary'
+         color:'#001C75'
       },
       styleOverrides: {
         h1: {

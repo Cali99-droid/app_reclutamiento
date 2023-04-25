@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 
-import { AppBar,  Avatar,  Box, Button, Divider, IconButton, Input, InputAdornment, Link, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Avatar, Box, Button, Divider, IconButton, Input, InputAdornment, Link, Toolbar, Tooltip, Typography } from '@mui/material';
 import { ClearOutlined, SearchOutlined } from '@mui/icons-material';
 
 import { AuthContext, UiContext } from '@/context';
@@ -14,96 +14,96 @@ export const NavBar = () => {
 
     const { asPath, push } = useRouter();
 
-    const { toggleSideMenu } = useContext( UiContext );
+    const { toggleSideMenu } = useContext(UiContext);
     const [searchTerm, setSearchTerm] = useState('');
 
     const [isSearchVisible, setIsSearchVisible] = useState(false);
 
     const onSearchTerm = () => {
-        if( searchTerm.trim().length === 0 ) return;
-        push(`/search/${ searchTerm }`);
+        if (searchTerm.trim().length === 0) return;
+        push(`/search/${searchTerm}`);
     }
 
-    const { isLoggedIn,user } = useContext(  AuthContext );
+    const { isLoggedIn, user } = useContext(AuthContext);
 
     return (
-        <AppBar>
-            <Toolbar  >
+        <AppBar >
+            <Toolbar >
                 <NextLink href='/' passHref legacyBehavior>
-                    <Link color={'secondary'} display='flex' alignItems='end'>                      
+                    <Link color={'secondary'} display='flex' alignItems='end'>
                         <Typography variant='h5' fontWeight={'bold'} >AE  </Typography>
-                        <Typography variant='h6' sx={{ ml:0.5 }} >| Empleos</Typography>
-                    </Link>  
+                        <Typography variant='h6' sx={{ ml: 0.5 }} >| Empleos</Typography>
+                    </Link>
                 </NextLink>
 
-                <Box flex={ 1 } />
+                <Box flex={1} />
 
-                <Box  sx={{ display: isSearchVisible ? 'none' : { xs: 'none', sm: 'block' } }}
-                     gap={'2rem'} >
-                          <NextLink href='/' passHref legacyBehavior>
-                        <Link 
-                                color={ asPath === '/' ? '#0045aa':'secondary'} 
-                                sx={{ padding:'1.5rem'}}
-                                fontWeight={asPath === '/' ? 600:500}
-                        
+                <Box sx={{ display: isSearchVisible ? 'none' : { xs: 'none', sm: 'block' } }}
+                    gap={'2rem'} >
+                    <NextLink href='/' passHref legacyBehavior>
+                        <Link
+                            color={asPath === '/' ? '#0045aa' : 'secondary'}
+                            sx={{ padding: '1.5rem' }}
+                            fontWeight={asPath === '/' ? 600 : 500}
+
                         >
                             Inicio
                         </Link>
                     </NextLink>
                     <NextLink href='/convocatorias' passHref legacyBehavior>
-                        <Link 
-                          color={ asPath === '/convocatorias' ? '#0045aa':'secondary'} 
-                          sx={{ padding:'1.5rem'}}
-                          fontWeight={asPath === '/convocatorias' ? 600:500}
-                          >
-                            Convocatorias 
-                        </Link>
-                       
-                    </NextLink>
-                   
-                    <NextLink href='/docentes' passHref legacyBehavior>
-                        <Link 
-                          color={ asPath === '/docentes' ? '#0045aa':'secondary'} 
-                          sx={{ padding:'1.5rem'}}
-                          fontWeight={asPath === '/docentes' ? 600:500}
+                        <Link
+                            color={asPath === '/convocatorias' ? '#0045aa' : 'secondary'}
+                            sx={{ padding: '1.5rem' }}
+                            fontWeight={asPath === '/convocatorias' ? 600 : 500}
                         >
-                           Docentes
+                            Convocatorias
+                        </Link>
+
+                    </NextLink>
+
+                    <NextLink href='/docentes' passHref legacyBehavior>
+                        <Link
+                            color={asPath === '/docentes' ? '#0045aa' : 'secondary'}
+                            sx={{ padding: '1.5rem' }}
+                            fontWeight={asPath === '/docentes' ? 600 : 500}
+                        >
+                            Docentes
                         </Link>
                     </NextLink>
                     <NextLink href='/beneficios' passHref legacyBehavior>
-                        <Link 
-                          color={ asPath === '/beneficios' ? '#0045aa':'secondary'} 
-                          sx={{ padding:'1.5rem'}}
-                          fontWeight={asPath === '/beneficios' ? 600:500}
-                        
+                        <Link
+                            color={asPath === '/beneficios' ? '#0045aa' : 'secondary'}
+                            sx={{ padding: '1.5rem' }}
+                            fontWeight={asPath === '/beneficios' ? 600 : 500}
+
                         >
-                           Beneficios
+                            Beneficios
                         </Link>
                     </NextLink>
                 </Box>
 
 
-                <Box flex={ 1 } />
-                
-                
+                <Box flex={1} />
+
+
 
                 {/* Pantallas pantallas grandes */}
                 {
-                    isSearchVisible 
+                    isSearchVisible
                         ? (
                             <Input
                                 sx={{ display: { xs: 'none', sm: 'flex' } }}
                                 className='fadeIn'
                                 autoFocus
-                                value={ searchTerm }
-                                onChange={ (e) => setSearchTerm( e.target.value ) }
-                                onKeyPress={ (e) => e.key === 'Enter' ? onSearchTerm() : null }
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' ? onSearchTerm() : null}
                                 type='text'
                                 placeholder="Buscar..."
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
-                                            onClick={ () => setIsSearchVisible(false) }
+                                            onClick={() => setIsSearchVisible(false)}
                                         >
                                             <ClearOutlined />
                                         </IconButton>
@@ -111,42 +111,42 @@ export const NavBar = () => {
                                 }
                             />
                         )
-                    : 
-                    (
-                        <IconButton 
-                            onClick={ () => setIsSearchVisible(true) }
-                            className="fadeIn"
-                            sx={{ display: { xs: 'none', sm: 'flex' } }}
-                        >
-                            <SearchOutlined />
-                        </IconButton>
-                    )
+                        :
+                        (
+                            <IconButton
+                                onClick={() => setIsSearchVisible(true)}
+                                className="fadeIn"
+                                sx={{ display: { xs: 'none', sm: 'flex' } }}
+                            >
+                                <SearchOutlined />
+                            </IconButton>
+                        )
                 }
 
 
                 {
 
-                    isLoggedIn&&(
-                        
-                          <Box sx={{padding:1}}>
+                    isLoggedIn && (
+
+                        <Box sx={{ padding: 1 }}>
                             <Tooltip title={`${user?.persona?.nombres}`}>
-                         
-                                <Avatar sx={{ bgcolor: '#0045AA' }}/>
-                          
+
+                                <Avatar sx={{ bgcolor: '#0045AA' }} />
+
                             </Tooltip>
-                          
-                         </Box>
-                         
+
+                        </Box>
+
                     )
                 }
-               
-             
 
-                <Button onClick={ toggleSideMenu }>
+
+
+                <Button onClick={toggleSideMenu}>
                     Menú
                 </Button>
 
-             
+
 
 
 
