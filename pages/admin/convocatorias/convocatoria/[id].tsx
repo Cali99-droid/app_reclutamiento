@@ -5,7 +5,7 @@ import { PostContext } from '@/context';
 
 
 import { GetServerSideProps, NextPage } from "next";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
 import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip } from '@mui/material';
 import { evaluacion, evaluacion_x_postulante, postulante } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { IJob } from '@/interfaces';
 import { reclutApi } from '@/api';
-import { ModalEntrevista } from '@/components/modal';
+import { ModalAptitud, ModalEntrevista } from '@/components/modal';
 import RatingFrom from '@/components/modal/RatingForm';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -47,8 +47,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
   useEffect(() => {
     if (data) {
-      const newPost = data?.sort((x, y) => x.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje) - y.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)).reverse()
-      setPostulantes(newPost);
+      // const newPost = data?.sort((x, y) => x.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje) - y.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)).reverse()
+      setPostulantes(data);
 
     }
 
@@ -128,9 +128,9 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
             disabled={!(convocatoria.estadoId > 1)}
           >
             <MenuItem value={1}> Inscrito </MenuItem>
-            <MenuItem value={2}> No Interesa </MenuItem>
-            <MenuItem value={3}> Apto a Entrevista</MenuItem>
-            <MenuItem value={4}> Apto a Evaluación</MenuItem>
+            <MenuItem value={2}> Apto a Entrevista</MenuItem>
+            <MenuItem value={3}> Apto a Evaluación</MenuItem>
+            <MenuItem value={4}> No Interesa </MenuItem>
             <MenuItem value={5}> Interesante </MenuItem>
             <MenuItem value={6}> Selecionado</MenuItem>
 
@@ -145,33 +145,46 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
         return (
           <>
             {
-              (convocatoria.estado.id > 1) ?
+              (convocatoria.estado.id > 1 && convocatoria.categoria_id == 2) ?
                 (
 
 
                   <>
                     <Tooltip title="Evaluar Entrevista" placement="right-start">
-                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => { handleOpen(params.row.id,) }}    >
-                        < FactCheckIcon sx={{ color: cyan[600] }} />
+                      <IconButton
+                        sx={{ color: cyan[600] }}
+                        aria-label="evaluar"
+                        onClick={() => { handleOpen(params.row.id,) }}
+                        disabled={params.row.estado !== 2 || params.row.puntajeEntr > 0}
+                      >
+                        < FactCheckIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Evaluar Clase" placement="right-start">
-                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => { handleOpenClase(params.row.id,) }}  >
-                        < TaskTwoToneIcon sx={{ color: cyan[600] }} />
+                    <Tooltip title="Evaluar Clase" placement="right-start" >
+                      <IconButton
+                        sx={{ color: cyan[600] }}
+                        aria-label="evaluar"
+                        onClick={() => { handleOpenClase(params.row.id,) }}
+                        disabled={params.row.estado !== 3 || params.row.puntajeJur > 0}
+
+                      >
+                        < TaskTwoToneIcon />
                       </IconButton>
                     </Tooltip>
                   </>
 
-                ) : (convocatoria.estado.id > 1 && params.row.estado === 3 && params.row.puntajeEntr > 0) ? (
+                ) : (convocatoria.estado.id > 1 && convocatoria.categoria_id == 1) ? (
                   <>
                     <Tooltip title="Evaluar Entrevista" placement="right-start">
-                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => { handleOpen(params.row.id,) }}    >
+                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => { handleOpen(params.row.id) }}    >
                         < FactCheckIcon sx={{ color: cyan[600] }} />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Evaluar Desempeño" placement="right-start">
-                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar"    >
-                        < TaskTwoToneIcon sx={{ color: cyan[600] }} />
+                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => {
+                        handleOpenAptitud(params.row.id)
+                      }}   >
+                        <TaskTwoToneIcon sx={{ color: cyan[600] }} />
                       </IconButton>
                     </Tooltip>
                   </>
@@ -385,6 +398,44 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
   };
 
+  //-------------------------------------------------------------------
+  const [openAptitud, setOpenAptitud] = useState(false)
+  const handleOpenAptitud = (id: number) => {
+    setOpenAptitud(true);
+    setIdPos(id)
+    setIdEv(2)
+  };
+
+  const handleCloseAptitud = () => {
+    setOpenAptitud(false);
+  };
+  const handleConfirmAptitud = async () => {
+    //TODO validar actualizacion o creacion  */
+
+
+    const puntaje = calcularTotal();
+
+
+    try {
+
+      const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 100 });
+      console.log(resp)
+      toast.success('🦄 Puntaje asignado correctamente!'),
+        handleCloseAptitud()
+      limpiarCriterios()
+
+    } catch (error) {
+
+      console.log(error);
+      alert('El postulante ya tiene puntaje');
+    }
+
+
+
+
+
+  };
+
 
   return (
     <AdminLayout title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
@@ -410,11 +461,32 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
         </Select>
       </Box>
-      <Box sx={{ height: 500, width: '100%' }}>
+      <Box
+        sx={{
+          height: 500,
+          width: '100%',
+          '& .mal': {
+            backgroundColor: '#ff5722',
+            color: '#FFF',
+          },
+          '& .medio': {
+            backgroundColor: '#ff943975',
+            color: '#FFF',
+          },
+          '& .bien': {
+            backgroundColor: '#4caf50',
+            color: '#FFF',
+          },
+        }}>
         <DataGrid
           rows={rows}
           columns={columns}
-
+          getCellClassName={(params: GridCellParams<any, any, number>) => {
+            if (params.field !== 'total' || params.value == null) {
+              return '';
+            }
+            return params.value >= 75 ? 'bien' : 'mal';
+          }}
         />
       </Box>
 
@@ -435,9 +507,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
           </DialogActions>
         </form>
       </ModalEntrevista>
-      <ModalClase title={'Evaluar Clase Modelo'} open={openClase} handleClose={handleCloseClase} handleConfirm={handleConfirmClase}>
-
-      </ModalClase>
+      <ModalClase title={'Evaluar Clase Modelo'} open={openClase} handleClose={handleCloseClase} handleConfirm={handleConfirmClase} />
+      <ModalAptitud title={'Evaluar aptitudes'} open={openAptitud} handleClose={handleCloseAptitud} handleConfirm={handleConfirmAptitud} />
     </AdminLayout>
   )
 }
