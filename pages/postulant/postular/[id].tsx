@@ -13,7 +13,8 @@ import { useRouter } from 'next/router';
 import Modal from '@/components/modal/Modal';
 import { reclutApi } from '@/api';
 import { getSession } from 'next-auth/react';
-
+import FilePresentIcon from '@mui/icons-material/FilePresent';
+import CheckIcon from '@mui/icons-material/Check';
 interface Props {
 
   convocatoria: IJob,
@@ -77,15 +78,15 @@ const PostularPage: NextPage<Props> = ({ convocatoria, persona, postulo }) => {
 
               )
                 : (
-                  <Button size='medium' color='success' onClick={() => handleConfirm()} >Confirmar</Button>
+                  <Button startIcon={<CheckIcon />} size='medium' color='success' variant='outlined' onClick={() => handleConfirm()} >Confirmar</Button>
                 )
             }
 
 
-            <Button size='medium' color='info' onClick={() => {
+            <Button startIcon={<FilePresentIcon />} size='medium' color='info' variant='outlined' onClick={() => {
               router.push('/postulant')
             }}>Revisar mi ficha</Button>
-            <Button size='medium' color='error' onClick={() => { history.go(-1); return false; }}>Volver</Button>
+            <Button size='medium' color='error' variant='outlined' onClick={() => { history.go(-1); return false; }}>Volver</Button>
           </Box>
         </Box>
 

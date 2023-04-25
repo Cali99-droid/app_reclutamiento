@@ -38,10 +38,10 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 
 
 
-    const registerUser = async (nombre: string, apellidoPat: string, apellidoMat: string, email: string, password: string): Promise<{ hasError: boolean; message?: string }> => {
+    const registerUser = async (nombre: string, apellidoPat: string, apellidoMat: string, email: string, password: string, fechaNac: Date): Promise<{ hasError: boolean; message?: string }> => {
 
         try {
-            const { data } = await reclutApi.post('/user/register', { nombre, apellidoPat, apellidoMat, email, password });
+            const { data } = await reclutApi.post('/user/register', { nombre, apellidoPat, apellidoMat, email, password, fechaNac });
             console.log(data)
             const { token, user } = data;
             Cookies.set('token', token);

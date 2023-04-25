@@ -35,7 +35,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
    
-    const { email = '', password = '', nombre = '',apellidoPat, apellidoMat } = req.body as { email: string, password: string, nombre: string, apellidoPat: string, apellidoMat: string };
+    const { email = '', password = '', nombre = '',apellidoPat, apellidoMat,fechaNac } = req.body as { email: string, password: string, nombre: string, apellidoPat: string, apellidoMat: string,fechaNac:Date };
      
     if ( password.length < 6 ) {
         return res.status(400).json({
@@ -98,6 +98,20 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
                 }
             }
           } ,
+          postulante:{
+            create:{
+                direccion:'',
+                especialidad:'',
+                experiencia:0 ,
+                nacimiento:new Date(fechaNac),
+                numeroDocumento:'',
+                sueldo:0 ,
+                gradoId:1,
+                tipoId:1,
+                telefono:'',
+                
+              }
+          }
         },
         include: {
             user: true, // Include all posts in the returned object
