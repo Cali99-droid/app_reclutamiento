@@ -24,13 +24,14 @@ import { NextPage } from 'next';
 
 
 import DeleteIcon from '@mui/icons-material/Delete';
-import GradingOutlinedIcon from '@mui/icons-material/GradingOutlined';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { useState } from 'react';
 import { reclutApi } from '@/api';
 import NextLink from 'next/link';
 import Modal from '@/components/modal/Modal';
 import axios from 'axios';
+import { postulante } from '@prisma/client';
 
 
 
@@ -75,10 +76,12 @@ const ConvocatoriasPage = () => {
     router.replace(router.asPath)
   }
   const deleteJob = async () => {
+
+
     try {
       reclutApi({
         url: '/admin/convocatorias',
-        method: 'DELETE',  // si tenemos un _id, entonces actualizar, si no crear
+        method: 'DELETE',
         data: id
       }).then(() => {
         refreshData()
@@ -176,13 +179,13 @@ const ConvocatoriasPage = () => {
       renderCell: (params) => {
         return (
           <>
-            <IconButton aria-label="evaluar" onClick={() => { router.push(`/admin/convocatorias/${params.row.id}`) }}  >
-              < GradingOutlinedIcon sx={{ color: '#0045aa' }} />
+            <IconButton disabled={params.row.estado > 1} aria-label="evaluar" color='info' onClick={() => { router.push(`/admin/convocatorias/${params.row.id}`) }}  >
+              <EditIcon />
             </IconButton>
 
 
-            <IconButton aria-label="delete" onClick={() => { handleOpen(params.row.id) }}  >
-              <DeleteIcon sx={{ color: red[800] }} />
+            <IconButton disabled={params.row.postulantes > 0} color='error' aria-label="delete" onClick={() => { handleOpen(params.row.id) }}  >
+              <DeleteIcon />
             </IconButton>
           </>
         )

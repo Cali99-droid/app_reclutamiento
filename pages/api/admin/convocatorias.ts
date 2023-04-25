@@ -42,7 +42,7 @@ const deleteConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
         convocatoria_id :id
       },
     })
-console.log(postulantes)
+    console.log(postulantes)
      
     if ( postulantes.length > 0 ) {
       return res.status(400).json({
