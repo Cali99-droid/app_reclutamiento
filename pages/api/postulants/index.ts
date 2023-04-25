@@ -28,6 +28,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const createPostulant = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
+  
+
     const { 
     nombre ,
     apellidoPat, 
@@ -60,6 +62,20 @@ const createPostulant = async(req: NextApiRequest, res: NextApiResponse<Data>) =
         gradoId : number ,
         idPersona:number
     };
+    const post = await prisma.postulante.findFirst({
+      where:{
+        numeroDocumento
+      }
+    })
+
+
+    if(post){
+      return res.status(400).json({
+        message:'Ya existe el numero de documento'
+      })
+    }
+
+    
     const persona = await prisma.persona.update({
           where: {
             id:idPersona
@@ -76,7 +92,6 @@ const createPostulant = async(req: NextApiRequest, res: NextApiResponse<Data>) =
                 nacimiento:new Date(nacimiento),
                 numeroDocumento,
                 sueldo:parseFloat(sueldoPretendido.toString()) ,
-                estado_postulante_id:1,
                 gradoId,
                 tipoId,
                 telefono:telefono.toString(),
@@ -165,7 +180,6 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
                 nacimiento:new Date(nacimiento),
                 numeroDocumento,
                 sueldo:parseFloat(sueldoPretendido.toString()) ,
-                estado_postulante_id:1,
                 gradoId,
                 tipoId,
                 telefono:telefono.toString(),

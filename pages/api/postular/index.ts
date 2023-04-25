@@ -1,6 +1,7 @@
 import { IJob } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
+import { convocatoria } from '@prisma/client';
 
 
 
@@ -29,10 +30,24 @@ async function createPostulancion(req: NextApiRequest, res: NextApiResponse<Data
 
     const{id, idPostulante} = req.body;
 
+    const convocatorias = await prisma.postulante_x_convocatoria.findMany({
+        where:{
+            convocatoria_id:id,
+            postulante_id:idPostulante
+        }
+
+    })
+
+    if(convocatorias.length >0){
+        return res.status(400).json({
+            message: 'No puede postular dos veces'
+        });
+    }
     const convocatoriaPostulante = await prisma.postulante_x_convocatoria.create({
         data:{
             convocatoria_id: id,
-            postulante_id:idPostulante
+            postulante_id:idPostulante,
+            estado_postulante_id:1
         }
     })
     await prisma.$disconnect()

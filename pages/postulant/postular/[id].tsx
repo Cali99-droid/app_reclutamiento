@@ -4,7 +4,7 @@ import { JobsLayout } from '@/components/layouts'
 import { GetServerSideProps, NextPage } from 'next'
 import React, { useState } from 'react'
 
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Chip, Typography } from '@mui/material';
 
 import { green, grey, } from '@mui/material/colors';
 import { ReqList } from '@/components/jobs';
@@ -17,22 +17,15 @@ import { getSession } from 'next-auth/react';
 interface Props {
 
   convocatoria: IJob,
-  persona: any
+  persona: any,
+  postulo: boolean
 
 }
-const PostularPage: NextPage<Props> = ({ convocatoria, persona }) => {
+const PostularPage: NextPage<Props> = ({ convocatoria, persona, postulo }) => {
   const router = useRouter();
 
-  const [open, setOpen] = useState(false)
 
-  const handleOpen = () => {
-    setOpen(true);
 
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleConfirm = async () => {
     postular();
@@ -78,8 +71,17 @@ const PostularPage: NextPage<Props> = ({ convocatoria, persona }) => {
             <ReqList job={convocatoria} />
           </Box>
           <Box sx={{ bgcolor: grey[100], padding: 2, borderRadius: 4 }} display={'flex'} flexDirection={'column'} justifyContent={'center'} gap={3}>
+            {
+              postulo ? (
+                <Chip label="Ya se encuentra inscrito" color='warning' variant='outlined' />
 
-            <Button size='medium' color='success' onClick={() => handleOpen()} >Confirmar</Button>
+              )
+                : (
+                  <Button size='medium' color='success' onClick={() => handleConfirm()} >Confirmar</Button>
+                )
+            }
+
+
             <Button size='medium' color='info' onClick={() => {
               router.push('/postulant')
             }}>Revisar mi ficha</Button>
@@ -88,10 +90,7 @@ const PostularPage: NextPage<Props> = ({ convocatoria, persona }) => {
         </Box>
 
       </Box>
-      <Modal title={'¿ Esta seguro de eliminar la convocatoria ?'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
-        <Typography >La Convocatoria se eliminará definitivamente</Typography>
 
-      </Modal>
 
     </JobsLayout>
   )
@@ -136,13 +135,27 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
 
   })
 
+  const convocatorias = await prisma.postulante_x_convocatoria.findMany({
+    where: {
+      convocatoria_id: idConvocatoria,
+      postulante_id: persona!.postulante[0].id
+    }
+
+  })
+
+  let postulo = false;
+  if (convocatorias.length > 0) {
+    postulo = true
+  }
+
 
 
 
   return {
     props: {
       convocatoria,
-      persona
+      persona,
+      postulo
     }
   }
 }
