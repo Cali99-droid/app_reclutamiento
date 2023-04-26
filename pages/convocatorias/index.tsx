@@ -1,31 +1,29 @@
 import { JobList } from "@/components/jobs/JobList";
 import { JobsLayout } from "@/components/layouts";
-import { Box } from "@mui/material";
+import { Box, Divider } from '@mui/material';
 import Typography from '@mui/material/Typography';
-
-import Divider from '@mui/material/Divider';
 
 import { useJobs } from '../../hooks';
 import { grey } from "@mui/material/colors";
 export default function ConvocatoriasPage() {
-  const {jobs} = useJobs('/convocatorias')
+  const { jobs } = useJobs('/convocatorias')
   return (
     <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatorias a trabajos en Ancash"}>
-      <Box className="fadeIn" >
-            <Box mt={15} bgcolor={grey[200]} padding={3} borderRadius={2} >
-              <Typography variant='h1' component='h1' color={grey[700]}>Convocatoria 2023</Typography>
+      <Box className="fadeIn" padding={8}>
+        <Box bgcolor={grey[200]} padding={3} borderRadius={2} width={'100%'} >
+          <Typography fontSize={50} variant='h1' component='h1' >Convocatoria {new Date().getFullYear()}</Typography>
 
-              <Typography variant='h2' sx={{ mt: 4 }}>Trabaja con nosotros, encuentra tu perfil y postula </Typography>
-            </Box>    
-       
-          <Box >
-            <JobList  jobs={jobs} />
-          </Box>
+          <Typography color={grey[700]} variant='h2' sx={{ mt: 2 }}>Trabaja con nosotros, encuentra tu perfil y postula </Typography>
+        </Box>
+        <Divider />
+        <Box >
+          <JobList jobs={jobs} />
+        </Box>
       </Box>
-   
-      
-       
+
+
+
     </JobsLayout>
-    
+
   )
 }

@@ -45,18 +45,16 @@ export default function Home() {
               </Box>
 
             </Box>
-
-
           </Grid>
           <Grid item xs={12} sm={6} >
             <Box sx={{ height: '70vh' }} >
               <ImageSlideshow images={images} />
             </Box>
           </Grid>
-
-
         </Grid>
 
+      </Box>
+      <Box>
 
       </Box>
 

@@ -17,69 +17,69 @@ interface Props {
   convocatoria: IJob;
 }
 
-const ConvocatoriaPage:NextPage<Props>=({convocatoria}) =>{
-   
+const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
+
   return (
     <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion}>
 
-             <Grid className="fadeIn"  container spacing={4} sx={{mt:15,padding:5}} alignItems={'start'}>
+      <Grid className="fadeIn" container sx={{ mt: 10, padding: 5 }} direction="column"
+        justifyContent="center"
+        alignItems="center">
 
-                <Grid item xs={ 12 } sm={ 6 } >
-                  <Box bgcolor={'#F8F8F8'} padding={3} borderRadius={10}>
-                    <Box>
-                        <Box display={'flex'}>
-                          <Typography variant='h1' component='h1'> 
-                            {convocatoria.titulo} 
-                            <IconButton aria-label="share" >
-                                    <ShareIcon />
-                            </IconButton>
-                          </Typography> 
-                          
-                        </Box>
-                          
-                          
-                          <Typography variant='subtitle1' component='p' sx={{mt:2, width:'100%'}} color={grey}>{convocatoria.descripcion}</Typography>
-                          
-                      </Box>    
-                      <Divider variant="middle" />
-                      <Box sx={{mt:4}} >
-                    
-                        <Typography variant='h5' component='h5'> Requisitos</Typography> 
-                        <Divider variant="middle" />
-                        <ReqList job={convocatoria} /> 
-                        <Typography variant='h5' component='h5'> # Vacantes: {convocatoria.vacantes}</Typography>  
-                      </Box>
+        <Grid item xs={12} sm={12} >
+          <Box bgcolor={'#F8F8F8'} padding={3} borderRadius={10}>
+            <Box>
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Typography variant='h1' fontSize={50} component='h1'>
+                  {convocatoria.titulo}
+
+                </Typography>
+                <IconButton aria-label="share" >
+                  <ShareIcon />
+                </IconButton>
+
+              </Box>
 
 
-                  </Box>
-                   
-                   
-                </Grid>
+              <Typography variant='subtitle1' component='p' sx={{ mt: 2, width: '100%' }} color={grey}>{convocatoria.descripcion}</Typography>
 
-                <Grid item xs={ 12 } sm={ 6 } >
-                    <Button  sx={{mt:3, width:'80%'}} size="large"  href={`/postulant/postular/${convocatoria.id}`}>
-                          Postular
-                    </Button> 
-                </Grid>
-             </Grid>
+            </Box>
+            <Divider variant="middle" />
+            <Box sx={{ mt: 4 }} >
+
+              <Typography variant='h5' component='h5'> Requisitos</Typography>
+              <Divider variant="middle" />
+              <ReqList job={convocatoria} />
+
+            </Box>
+            <Button sx={{ mt: 3, width: '50%' }} size="large" href={`/postulant/postular/${convocatoria.id}`}>
+              Postular
+            </Button>
+          </Box>
 
 
-       
-      
+        </Grid>
+
+
+      </Grid>
+
+
+
+
     </JobsLayout>
   )
 }
 
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
-  
-  const productSlugs = await  prisma.convocatoria.findMany();
 
-  
+  const productSlugs = await prisma.convocatoria.findMany();
+
+
   return {
-    paths: productSlugs.map( ({ id }) => ({
+    paths: productSlugs.map(({ id }) => ({
       params: {
-        id:id.toString()
+        id: id.toString()
       }
     })),
     fallback: 'blocking'
@@ -89,25 +89,25 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
 
-   const convocatoria = await prisma.convocatoria.findUnique({
+  const convocatoria = await prisma.convocatoria.findUnique({
     where: {
       id: Number(params?.id),
     },
-      include: {
-        estado:{
-          select: {  nombre: true},  
-        },
-        grado:{
-          select: {  nombre: true},  
-        }
+    include: {
+      estado: {
+        select: { nombre: true },
+      },
+      grado: {
+        select: { nombre: true },
+      }
 
     },
   });
   await prisma.$disconnect()
 
   return {
-    props:{ convocatoria},
+    props: { convocatoria },
   };
 };
-  
+
 export default ConvocatoriaPage;

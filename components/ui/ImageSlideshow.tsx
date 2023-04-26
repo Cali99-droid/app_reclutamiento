@@ -22,7 +22,7 @@ export const ImageSlideshow: FC<Props> = ({ images }) => {
                             <div style={{
                                 backgroundImage: `url(${image.url})`,
                                 backgroundSize: 'contain',
-                                backgroundRepeat: 'no-repeat;'
+                                backgroundRepeat: 'no-repeat'
                             }}>
                             </div>
                         </div>

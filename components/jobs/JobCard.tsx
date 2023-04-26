@@ -1,13 +1,14 @@
 import { FC } from 'react';
 
-import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, Chip, CardContent, Button, CardActionArea, IconButton ,ListItemAvatar, ListItemText,ListItem} from '@mui/material'
+import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, Chip, CardContent, Button, CardActionArea, IconButton, ListItemAvatar, ListItemText, ListItem } from '@mui/material'
 
 
 
 
 import { IJob } from '@/interfaces';
 import ShareIcon from '@mui/icons-material/Share';
-import {ReqList} from './ReqList';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import { ReqList } from './ReqList';
 import NextLink from 'next/link';
 
 
@@ -17,46 +18,47 @@ interface Props {
 
 export const JobCard: FC<Props> = ({ job }) => {
 
-    
+
     return (
-        <Grid item   
-        xs={12} 
-        sm={3}
+        <Grid item
+            xs={12}
+            sm={3}
 
         >
             <Card>
-           
-               <NextLink   href={`/convocatorias/${job.id}`} passHref prefetch={ false } legacyBehavior>
 
-                <Link>
-                    <CardActionArea>
-                   
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                        {job.titulo}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                        {job.descripcion}
-                        </Typography>
-                        
-                        <ReqList job={job} />
-                                        
-                    
-                        {/* <Box mt={1}>
+                <NextLink href={`/convocatorias/${job.id}`} passHref prefetch={false} legacyBehavior>
+
+                    <Link>
+                        <CardActionArea>
+
+                            <CardContent>
+                                <Typography fontWeight={800} gutterBottom variant="h5" >
+                                    {job.titulo}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    {job.descripcion}
+                                </Typography>
+
+                                <ReqList job={job} />
+
+                                {/* <Box mt={1}>
                             <Chip label={`${job.categoria}`} color="success" variant="outlined" />
                         </Box> */}
-                    </CardContent>  
-                    </CardActionArea>
-                    <CardActions sx={{display:'flex', justifyContent:'flex-end'}}>
-                        
-                        <IconButton aria-label="share" >
-                                <ShareIcon />
-                        </IconButton>
-                    </CardActions>
-                </Link>
-                
+                            </CardContent>
+                        </CardActionArea>
+
+                    </Link>
+
                 </NextLink>
-             </Card>
+                <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button color='info' startIcon={<PostAddIcon />} sx={{ mt: 3, width: '100%' }} size="large" href={`/postulant/postular/${job.id}`}>
+                        Postular
+                    </Button>
+
+
+                </CardActions>
+            </Card>
 
         </Grid>
     )
