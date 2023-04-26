@@ -1,15 +1,28 @@
 import { JobsLayout } from "@/components/layouts";
 
 
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Container, Grid } from '@mui/material';
+import { Box, Button, Card, CardMedia, Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import { grey } from "@mui/material/colors";
-import Image from "next/image";
+
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 import AccessibleIcon from '@mui/icons-material/Accessible';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import { ImageSlideshow } from '../components/ui/ImageSlideshow';
+
+const images = [
+  {
+    url: '/jobs/img-1.jpg'
+  },
+  {
+    url: '/jobs/img-2.jpg'
+
+  },
+  {
+    url: '/jobs/img-3.jpg'
+  },
+];
+
 export default function Home() {
   return (
     <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatoria a trabajos en Ancash"} >
@@ -35,34 +48,7 @@ export default function Home() {
           <Grid item xs={6} >
 
             <Box sx={{ height: '70vh' }} >
-              <Card
-                sx={{ height: '70vh', width: '100%' }}
-
-              >
-
-
-                <CardMedia
-                  component="img"
-                  height="600"
-                  image="/img/fondo.jpg"
-                  alt="green oth"
-                />
-
-
-
-
-
-                {/* <Box mt={1}>
-                        <Chip label={`${job.categoria}`} color="success" variant="outlined" />
-                    </Box> */}
-
-
-                {/* <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-
-
-                </CardActions> */}
-
-              </Card>
+              <ImageSlideshow images={images} />
             </Box>
 
 
