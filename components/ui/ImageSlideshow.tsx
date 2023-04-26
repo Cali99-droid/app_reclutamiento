@@ -12,7 +12,7 @@ export const ImageSlideshow: FC<Props> = ({ images }) => {
     return (
         <Slide
             easing="ease"
-            duration={7000}
+            duration={5000}
 
         >
             {
