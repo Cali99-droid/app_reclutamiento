@@ -1,4 +1,4 @@
-import { postulants } from '@/database/seedPost';
+
 import { PostState } from './PostProvider';
 import { IPostulant } from '@/interfaces';
 
