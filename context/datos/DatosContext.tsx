@@ -1,4 +1,4 @@
-import { ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento } from '@/interfaces';
+import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics } from '@/interfaces';
 import { createContext } from 'react';
 
 
@@ -9,6 +9,8 @@ interface ContextProps {
     cargos: ICargo[];
     capacitaciones: ICapacitacion[];
     reconocimientos: IReconocimiento[];
+    tecnologias: ITics[]
+    aficiones: IAficion[];
     activeStep: number
     steps: {
         label: string;
@@ -28,5 +30,9 @@ interface ContextProps {
     quitarCapacitacion: (id: number) => void
     agregarReconocimiento: (reconocimento: string, year: string, institucion: string, descripcion: string) => void
     quitarReconocimiento: (id: number) => void
+    agregarAficion: (actividad: string, year: string, nivel: string, logro: string) => void
+    quitarAficion: (id: number) => void
+    agregarTic: (tecnologia: string, nivel: string) => void
+    quitarTic: (id: number) => void
 }
 export const DatosContext = createContext({} as ContextProps);

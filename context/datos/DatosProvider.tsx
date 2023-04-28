@@ -5,7 +5,7 @@ import Step3 from '@/components/pasos/Step3';
 import Step4 from '@/components/pasos/Step4';
 import Step5 from '@/components/pasos/Step5';
 import Step2 from '@/components/pasos/Step2';
-import { ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento } from '@/interfaces';
+import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics } from '@/interfaces';
 
 
 
@@ -16,6 +16,8 @@ export interface DatosState {
     cargos: ICargo[]
     capacitaciones: ICapacitacion[]
     reconocimientos: IReconocimiento[]
+    aficiones: IAficion[]
+    tecnologias: ITics[]
 }
 
 const DATOS_INITIAL_STATE: DatosState = {
@@ -111,6 +113,35 @@ const DATOS_INITIAL_STATE: DatosState = {
             descripcion: 'En el desaarolo de aps',
         }
     ],
+    aficiones: [
+        {
+            id: 1,
+            actividad: 'Ajedrez',
+            nivel: 'Intermedio',
+            logro: 'Campeon regional',
+            year: '2013'
+
+        },
+        {
+            id: 2,
+            actividad: 'Futbol',
+            nivel: 'Intermedio',
+            logro: 'ninguno',
+            year: '2018'
+        }
+    ],
+    tecnologias: [
+        {
+            id: 1,
+            tecnologia: 'Word',
+            nivel: 'Basico',
+        },
+        {
+            id: 2,
+            tecnologia: 'Excel',
+            nivel: 'Basico',
+        }
+    ]
 }
 
 interface Props {
@@ -229,6 +260,41 @@ export const DatosProvider: FC<Props> = ({ children }) => {
 
     }
 
+    //-------------------Aficiones---------------------
+    const agregarAficion = (actividad: string, year: string, nivel: string, logro: string) => {
+        const nuevaAficion: IAficion = {
+            id: 12,
+            actividad,
+            nivel,
+            year,
+            logro,
+
+        }
+        dispatch({ type: 'Add-Aficion', payload: nuevaAficion });
+
+    }
+    const quitarAficion = (id: number) => {
+        dispatch({ type: 'Delete-Aficion', payload: id });
+
+    }
+
+    //-------------------Tics---------------------
+    const agregarTic = (tecnologia: string, nivel: string) => {
+        const nuevaTic: ITics = {
+            id: 12,
+            tecnologia,
+            nivel,
+
+        }
+        dispatch({ type: 'Add-Tic', payload: nuevaTic });
+
+    }
+    const quitarTic = (id: number) => {
+        dispatch({ type: 'Delete-Tic', payload: id });
+
+    }
+
+
 
 
 
@@ -251,9 +317,11 @@ export const DatosProvider: FC<Props> = ({ children }) => {
             agregarCapacitacion,
             quitarCapacitacion,
             agregarReconocimiento,
-            quitarReconocimiento
-
-
+            quitarReconocimiento,
+            agregarAficion,
+            quitarAficion,
+            agregarTic,
+            quitarTic
         }}>
             {children}
 

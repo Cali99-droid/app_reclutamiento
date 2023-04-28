@@ -1,6 +1,6 @@
 
 import { DatosState } from './DatosProvider';
-import { ICapacitacion, ICargo, IEstudio, IInvestigacion, IPostulant, IReconocimiento } from '@/interfaces';
+import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IPostulant, IReconocimiento, ITics } from '@/interfaces';
 
 type DatosType =
     | { type: 'Post - Load', payload: IPostulant[] }
@@ -14,6 +14,10 @@ type DatosType =
     | { type: 'Delete-Capacitacion', payload: number }
     | { type: 'Add-Reconocimiento', payload: IReconocimiento }
     | { type: 'Delete-Reconocimiento', payload: number }
+    | { type: 'Add-Aficion', payload: IAficion }
+    | { type: 'Delete-Aficion', payload: number }
+    | { type: 'Add-Tic', payload: ITics }
+    | { type: 'Delete-Tic', payload: number }
 
 export const datosReducer = (state: DatosState, action: DatosType): DatosState => {
 
@@ -78,8 +82,31 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
                 ...state,
                 reconocimientos: state.reconocimientos.filter(c=>c.id !== action.payload)
             }
+        case 'Add-Aficion':
+            return{
+                ...state,
+                aficiones:[...state.aficiones,action.payload]
+            }
+
+        case 'Delete-Aficion':
+            return{
+                ...state,
+                aficiones: state.aficiones.filter(c=>c.id !== action.payload)
+            }
+        case 'Add-Tic':
+            return{
+                ...state,
+                tecnologias:[...state.tecnologias,action.payload]
+            }
+
+        case 'Delete-Tic':
+            return{
+                ...state,
+                tecnologias: state.tecnologias.filter(c=>c.id !== action.payload)
+            }
         
         default:
             return state;
+        
     }
 }    
