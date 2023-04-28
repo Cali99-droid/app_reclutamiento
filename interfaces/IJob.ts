@@ -1,3 +1,5 @@
+import { categoria } from "@prisma/client";
+
 export interface IJob {
     id           :number;
     titulo       : string;

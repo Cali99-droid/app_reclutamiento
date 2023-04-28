@@ -2,7 +2,7 @@
 import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useRouter } from 'next/router';
 import { validations } from '@/helpers';
 import { ErrorOutline } from '@mui/icons-material';
@@ -10,6 +10,8 @@ import { reclutApi } from '@/api';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import SaveIcon from '@mui/icons-material/Save';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { DatosContext } from '@/context';
 
 type FormData = {
     idPersona: number
@@ -30,7 +32,11 @@ type FormData = {
 };
 
 const Step1 = () => {
-    const [isSaving, setIsSaving] = useState(false);
+
+    const { activeStep, handleBack, handleNext, steps } = useContext(DatosContext)
+
+
+    const [isSaving, setIsSaving] = useState(true);
     const [showError, setShowError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -41,19 +47,19 @@ const Step1 = () => {
     const onRegisterForm = async (form: FormData) => {
         setIsSaving(true);
         try {
-            const { data } = await reclutApi({
-                url: '/postulants',
-                method: form.idPostulante > 0 ? 'PUT' : 'POST',  // si tenemos un _id, entonces actualizar, si no crear
-                data: form
-            });
+            // const { data } = await reclutApi({
+            //     url: '/postulants',
+            //     method: form.idPostulante > 0 ? 'PUT' : 'POST',  // si tenemos un _id, entonces actualizar, si no crear
+            //     data: form
+            // });
+            handleNext()
 
+            // if (!(form.idPostulante > 0)) {
+            //     router.replace(`/postulant`);
 
-            if (!(form.idPostulante > 0)) {
-                router.replace(`/postulant`);
-
-            } else {
-                setIsSaving(false)
-            }
+            // } else {
+            //     setIsSaving(false)
+            // }
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 setShowError(true);
@@ -127,7 +133,7 @@ const Step1 = () => {
                             variant="outlined"
                             fullWidth
                             required
-                            disabled
+
                             {...register('email', {
                                 required: 'Este campo es requerido',
                                 validate: validations.isEmail
@@ -357,9 +363,22 @@ const Step1 = () => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12} md={4}>
-                        <Box width={'100%'} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 5 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
 
-                            <Button disabled={isSaving} type='submit' size="large" sx={{ marginTop: 3, textAlign: 'end' }} startIcon={<SaveIcon />}>Guardar</Button>
+
+
+                            {activeStep !== steps.length - 1 && (
+                                <Button
+                                    endIcon={<NavigateNextIcon />}
+                                    // disabled={isSaving}
+                                    type='submit'
+                                    size='large'
+                                    color="info"
+
+                                >
+                                    Siguiente
+                                </Button>
+                            )}
                         </Box>
                     </Grid>
 

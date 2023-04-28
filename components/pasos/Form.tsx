@@ -22,7 +22,7 @@ const Form = () => {
 
     return (
         <div>
-            <FormStepper steps={steps} onSubmit={handleSubmit} />
+            <FormStepper onSubmit={handleSubmit} />
         </div>
     );
 };

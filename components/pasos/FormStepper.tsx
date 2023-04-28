@@ -4,18 +4,19 @@ import { useContext } from 'react';
 import { DatosContext } from '@/context/datos';
 
 type FormStepperProps = {
-    steps: { label: string; content: JSX.Element }[];
+    //  steps: { label: string; content: JSX.Element }[];
     onSubmit: () => void;
 };
 
-const FormStepper = ({ steps, onSubmit }: FormStepperProps) => {
-    const { activeStep, handleBack, handleNext } = useContext(DatosContext)
+const FormStepper = ({ onSubmit }: FormStepperProps) => {
+
+    const { activeStep, handleBack, handleNext, steps } = useContext(DatosContext)
 
     const isLastStep = activeStep === steps.length - 1;
 
     return (
         <>
-            <Stepper activeStep={activeStep}>
+            <Stepper activeStep={activeStep} >
                 {steps.map(({ label }) => (
                     <Step key={label}>
                         <StepLabel>{label}</StepLabel>
