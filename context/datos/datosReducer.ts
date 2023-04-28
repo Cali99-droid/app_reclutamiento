@@ -1,9 +1,11 @@
 
+import { postulante } from '@prisma/client';
 import { DatosState } from './DatosProvider';
-import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IPostulant, IReconocimiento, ITics } from '@/interfaces';
+import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IPostulant, IReconocimiento, ITics, IUser } from '@/interfaces';
 
 type DatosType =
-    | { type: 'Post - Load', payload: IPostulant[] }
+    
+    | { type: 'Post - Load', payload: postulante }
     | { type: 'Add-Estudio', payload: IEstudio }
     | { type: 'Delete-Estudio', payload: number }
     | { type: 'Add-Investigacion', payload: IInvestigacion }
@@ -16,6 +18,7 @@ type DatosType =
     | { type: 'Delete-Reconocimiento', payload: number }
     | { type: 'Add-Aficion', payload: IAficion }
     | { type: 'Delete-Aficion', payload: number }
+    | { type: 'Tic-Load', payload: ITics[] }
     | { type: 'Add-Tic', payload: ITics }
     | { type: 'Delete-Tic', payload: number }
 
@@ -25,6 +28,12 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
         case 'Post - Load':
             return {
                 ...state,
+                pos:action.payload
+            }
+        case 'Tic-Load':
+            return {
+                ...state,
+                tecnologias:action.payload
             }
         case 'Add-Estudio':
             return{
@@ -104,7 +113,7 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
                 ...state,
                 tecnologias: state.tecnologias.filter(c=>c.id !== action.payload)
             }
-        
+          
         default:
             return state;
         

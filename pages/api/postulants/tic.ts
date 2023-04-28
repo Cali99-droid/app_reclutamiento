@@ -12,15 +12,13 @@ type Data =
 | IJob
 | any;
 
+
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
     
     switch (req.method) {
-        case 'POST':
-            return createPostulant( req, res );
-        case 'PUT':
-          return updatePostulante( req, res );
+       
           case 'GET':
-            return getPostulante( req, res );
+            return getTic( req, res );
     
         default:
             return res.status(400).json({ message: 'Bad request' });
@@ -29,25 +27,32 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
  
 }
 
-async function  getPostulante(req: NextApiRequest, res: NextApiResponse<any>) {
+async function  getTic(req: NextApiRequest, res: NextApiResponse<any>) {
   const session: any = await getSession({ req });
   if ( !session ) {
       return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
   }
-  console.log(session.user.persona.id);
-  const id = session.user.persona.id
 
-  const p = await prisma.postulante.findFirst({
-    where: {
-        persona_id: parseInt(id.toString()) 
+  const idPost:any =  await prisma.postulante.findFirst({
+    where:{
+        persona_id:session.user.persona.id
     },
-    include: {
-        persona: true
+    select:{
+        id:true
     }
+  })
+
+
+   const p = await prisma.tics.findMany({
+    where: {
+       postulante_id:idPost.id
+    } 
    
     })
 
-    console.log(p)
+
+console.log(p)
+
     return res.status(200).json(p)
 }
 

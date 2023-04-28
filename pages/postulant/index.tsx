@@ -6,17 +6,18 @@ import Typography from '@mui/material/Typography';
 
 import { GetServerSideProps, NextPage } from "next";
 import { IGrado, IPersona, IPostulant, IUser } from "@/interfaces";
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 
 import { apiCon, reclutApi } from '@/api';
 
 import { postulante } from '@prisma/client';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 
 import { FormDatos } from '../../components/postulants/FormDatos';
 import Form from '@/components/pasos/Form';
+import { AuthContext, DatosContext } from '@/context';
 
 interface Props {
 

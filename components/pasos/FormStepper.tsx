@@ -37,7 +37,7 @@ const FormStepper = ({ onSubmit }: FormStepperProps) => {
                 )}
                 {isLastStep && (
                     <Button variant="contained" color="primary" onClick={onSubmit}>
-                        Enviar
+                        Finalizar
                     </Button>
                 )}
                 {activeStep !== 0 && (

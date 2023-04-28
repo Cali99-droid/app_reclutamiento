@@ -33,9 +33,11 @@ type FormData = {
 
 const Step1 = () => {
 
-    const { activeStep, handleBack, handleNext, steps } = useContext(DatosContext)
 
 
+    const { activeStep, handleBack, handleNext, steps, pos } = useContext(DatosContext)
+
+    console.log(pos)
     const [isSaving, setIsSaving] = useState(true);
     const [showError, setShowError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');

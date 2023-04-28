@@ -1,3 +1,5 @@
+import { persona } from "@prisma/client";
+
 export interface IPostulant {
     telefono:string,
     direccion:string,
@@ -8,5 +10,6 @@ export interface IPostulant {
     sueldo: number,
     especialidad: string,
     gradoId : number ,
+    persona:persona
     
 }

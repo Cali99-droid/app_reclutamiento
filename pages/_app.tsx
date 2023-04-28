@@ -1,5 +1,5 @@
 import { AuthProvider, UiProvider, DatosProvider } from '@/context'
-import { SessionProvider } from "next-auth/react"
+import { SessionProvider, useSession } from "next-auth/react"
 import '@/styles/globals.css'
 import { lightTheme } from '@/themes'
 
@@ -21,7 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <AuthProvider>
 
           <PostProvider>
-            <DatosProvider>
+            <DatosProvider >
               <UiProvider>
 
                 <ThemeProvider theme={lightTheme} >

@@ -1,11 +1,21 @@
-import { FC, useReducer, useState } from 'react';
+import { FC, useReducer, useState, useContext, useEffect } from 'react';
 import { DatosContext, datosReducer } from './';
 import Step1 from '@/components/pasos/Step1';
 import Step3 from '@/components/pasos/Step3';
 import Step4 from '@/components/pasos/Step4';
 import Step5 from '@/components/pasos/Step5';
 import Step2 from '@/components/pasos/Step2';
-import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics } from '@/interfaces';
+import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IPostulant, IReconocimiento, ITics, IUser, } from '@/interfaces';
+
+import { SessionContextValue, getSession, useSession } from 'next-auth/react';
+import { AuthContext } from '../auth';
+import { reclutApi } from '@/api';
+import { postulante, user } from '@prisma/client';
+import { prisma } from '@/server/db/client';
+import { Session } from 'next-auth';
+
+
+
 
 
 
@@ -18,26 +28,44 @@ export interface DatosState {
     reconocimientos: IReconocimiento[]
     aficiones: IAficion[]
     tecnologias: ITics[]
+    pos: postulante
+
+
+
 }
 
 const DATOS_INITIAL_STATE: DatosState = {
     prop: false,
-    estudios: [
-        {
-            id: 1,
-            institucion: 'Universidad Prueba',
-            profesion: 'Docente primaria',
-            grado: 'Bachiller',
-            year: '2013'
 
-        },
-        {
-            id: 2,
-            institucion: 'Universidad Prueba dos',
-            profesion: 'Docente matematica',
-            grado: 'Doctor',
-            year: '2019'
-        }
+    pos: {
+        id: 0,
+        telefono: '',
+        direccion: '',
+        experiencia: 2,
+        especialidad: '',
+        nacimiento: new Date(),
+        numeroDocumento: '',
+        sueldo: 0,
+        tipoId: 0,
+        gradoId: 0,
+        persona_id: 0,
+    },
+    estudios: [
+        // {
+        //     id: 1,
+        //     institucion: 'Universidad Prueba',
+        //     profesion: 'Docente primaria',
+        //     grado: 'Bachiller',
+        //     year: '2013'
+
+        // },
+        // {
+        //     id: 2,
+        //     institucion: 'Universidad Prueba dos',
+        //     profesion: 'Docente matematica',
+        //     grado: 'Doctor',
+        //     year: '2019'
+        // }
     ],
     investigaciones: [
         {
@@ -131,21 +159,22 @@ const DATOS_INITIAL_STATE: DatosState = {
         }
     ],
     tecnologias: [
-        {
-            id: 1,
-            tecnologia: 'Word',
-            nivel: 'Basico',
-        },
-        {
-            id: 2,
-            tecnologia: 'Excel',
-            nivel: 'Basico',
-        }
+        // {
+        //     id: 1,
+        //     tecnologia: 'Word',
+        //     nivel: 'Basico',
+        // },
+        // {
+        //     id: 2,
+        //     tecnologia: 'Excel',
+        //     nivel: 'Basico',
+        // }
     ]
 }
 
 interface Props {
     children: JSX.Element | JSX.Element[]
+
 }
 
 export const DatosProvider: FC<Props> = ({ children }) => {
@@ -159,11 +188,33 @@ export const DatosProvider: FC<Props> = ({ children }) => {
         { label: 'Paso 4', content: <Step4 /> },
         { label: 'Paso 5', content: <Step5 /> },
     ];
+    const setPos = async () => {
+        const { data } = await reclutApi.get<postulante>(`/postulants/`)
+        dispatch({ type: 'Post - Load', payload: data })
+    }
+    const setTic = async () => {
+        const { data } = await reclutApi.get<ITics[]>(`/postulants/tic`)
+        console.log(data)
+        dispatch({ type: 'Tic-Load', payload: data })
+
+    }
+
+
+    useEffect(() => {
+
+        setPos();
+        setTic()
+
+    }, [])
+
+
+
 
 
     const [activeStep, setActiveStep] = useState(0);
 
     const handleNext = () => {
+
         setActiveStep(prevActiveStep => prevActiveStep + 1);
     };
 
@@ -280,13 +331,13 @@ export const DatosProvider: FC<Props> = ({ children }) => {
 
     //-------------------Tics---------------------
     const agregarTic = (tecnologia: string, nivel: string) => {
-        const nuevaTic: ITics = {
-            id: 12,
-            tecnologia,
-            nivel,
+        // const nuevaTic: ITics = {
+        //     id: 12,
+        //     tecnologia,
+        //     nivel,
 
-        }
-        dispatch({ type: 'Add-Tic', payload: nuevaTic });
+        // }
+        // dispatch({ type: 'Add-Tic', payload: nuevaTic });
 
     }
     const quitarTic = (id: number) => {
@@ -304,8 +355,6 @@ export const DatosProvider: FC<Props> = ({ children }) => {
             activeStep,
             steps,
 
-
-
             handleNext,
             handleBack,
             agregarEstudio,
@@ -321,7 +370,8 @@ export const DatosProvider: FC<Props> = ({ children }) => {
             agregarAficion,
             quitarAficion,
             agregarTic,
-            quitarTic
+            quitarTic,
+
         }}>
             {children}
 

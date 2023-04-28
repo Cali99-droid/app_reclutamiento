@@ -137,6 +137,7 @@ model postulante {
   persona                   persona                     @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_persona1")
   tipo_documento            tipo_documento              @relation(fields: [tipoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_tipo_documento1")
   postulante_x_convocatoria postulante_x_convocatoria[]
+  tics                      tics[]
 
   @@index([gradoId], map: "fk_postulante_grado1_idx")
   @@index([tipoId], map: "fk_postulante_tipo_documento1_idx")
@@ -180,4 +181,14 @@ model categoria {
   id           Int            @id @default(autoincrement())
   nombre       String         @db.VarChar(80)
   convocatoria convocatoria[]
+}
+
+model tics {
+  id            Int        @id @default(autoincrement())
+  tecnologia    String     @db.VarChar(45)
+  nivel         String     @db.VarChar(45)
+  postulante_id Int
+  postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tics_postulante1")
+
+  @@index([postulante_id], map: "fk_tics_postulante1_idx")
 }

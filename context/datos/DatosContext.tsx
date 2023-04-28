@@ -1,9 +1,12 @@
-import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics } from '@/interfaces';
+import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics, IUser } from '@/interfaces';
+import { postulante } from '@prisma/client';
 import { createContext } from 'react';
 
 
 interface ContextProps {
     prop: boolean;
+    pos: postulante;
+
     estudios: IEstudio[];
     investigaciones: IInvestigacion[];
     cargos: ICargo[];
