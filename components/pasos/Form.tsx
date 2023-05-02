@@ -6,6 +6,8 @@ import Step3 from './Step3';
 import Step4 from './Step4';
 import Step5 from './Step5';
 import { Router, useRouter } from 'next/router';
+import { DatosContext } from '@/context';
+import { useEffect } from 'react';
 
 
 const steps = [
@@ -17,6 +19,14 @@ const steps = [
 ];
 
 const Form = () => {
+    // const { setPos } = useContext(DatosContext)
+    // useEffect(() => {
+
+    //     setPos();
+
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [])
+
     const router = useRouter();
     const handleSubmit = () => {
         router.push(`/postulant/`)

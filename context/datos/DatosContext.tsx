@@ -1,11 +1,11 @@
-import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics, IUser } from '@/interfaces';
+import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IPostulant, IReconocimiento, ITics, IUser } from '@/interfaces';
 import { postulante } from '@prisma/client';
 import { createContext } from 'react';
 
 
 interface ContextProps {
     prop: boolean;
-    pos: postulante;
+    pos?: IPostulant;
 
     estudios: IEstudio[];
     investigaciones: IInvestigacion[];
@@ -20,7 +20,7 @@ interface ContextProps {
         content: JSX.Element;
     }[]
 
-
+    setPos: () => Promise<void>
     handleNext: () => void,
     handleBack: () => void
     agregarEstudio: (profesion: string, institucion: string, grado: string, year: string) => void

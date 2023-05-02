@@ -19,6 +19,7 @@ import { FormDatos } from '../../components/postulants/FormDatos';
 import Form from '@/components/pasos/Form';
 import { AuthContext, DatosContext } from '@/context';
 
+
 interface Props {
 
   grados: IGrado[]
@@ -26,12 +27,9 @@ interface Props {
   postulante: postulante
 }
 
-const steps = ['Seccion 1', 'Seccion 2', 'Seccion 3', 'Seccion 4', 'Seccion 5'];
-
 
 const PostulantPage: NextPage<Props> = ({ persona, grados, postulante }) => {
-
-
+  const { activeStep, handleBack, handleNext, steps, setPos, pos } = useContext(DatosContext)
 
   return (
     <JobsLayout title={"AE | Postulante "} pageDescription={"Postular a un empleo"}>
@@ -40,6 +38,12 @@ const PostulantPage: NextPage<Props> = ({ persona, grados, postulante }) => {
       <Box mb={2} mt={15} padding={8}>
         <Typography variant='h1' component='h1'>Mis datos</Typography>
         <Form />
+        {
+          activeStep === 0 && (
+            <FormDatos grados={grados} persona={persona} postulante={postulante} />
+          )
+        }
+
       </Box>
 
       {/* <FormDatos grados={grados} persona={persona} postulante={postulante} /> */}

@@ -28,7 +28,7 @@ export interface DatosState {
     reconocimientos: IReconocimiento[]
     aficiones: IAficion[]
     tecnologias: ITics[]
-    pos: postulante
+    pos?: IPostulant
     idPos: number
 
 
@@ -38,19 +38,7 @@ export interface DatosState {
 const DATOS_INITIAL_STATE: DatosState = {
     prop: false,
     idPos: 0,
-    pos: {
-        id: 0,
-        telefono: '',
-        direccion: '',
-        experiencia: 2,
-        especialidad: '',
-        nacimiento: new Date(),
-        numeroDocumento: '',
-        sueldo: 0,
-        tipoId: 0,
-        gradoId: 0,
-        persona_id: 0,
-    },
+    pos: undefined,
     estudios: [],
     investigaciones: [],
     cargos: [],
@@ -77,7 +65,7 @@ export const DatosProvider: FC<Props> = ({ children }) => {
         { label: 'Paso 5', content: <Step5 /> },
     ];
     const setPos = async () => {
-        const { data } = await reclutApi.get<postulante>(`/postulants/`)
+        const { data } = await reclutApi.get<IPostulant>(`/postulants/`)
         dispatch({ type: 'Post - Load', payload: data })
     }
     const setTic = async () => {
@@ -87,14 +75,14 @@ export const DatosProvider: FC<Props> = ({ children }) => {
 
     }
 
-    const { data }: any = useSession();
-    const [IdPos, setIdPos] = useState(data?.user.persona.postulante[0].id)
-    useEffect(() => {
+    // const { data }: any = useSession();
+    // const [IdPos, setIdPos] = useState(data?.user.persona.postulante[0].id)
+    // useEffect(() => {
 
-        //  setPos();
-        // setTic()
+    //     //  setPos();
+    //     // setTic()
 
-    }, [])
+    // }, [])
 
 
 
@@ -247,6 +235,8 @@ export const DatosProvider: FC<Props> = ({ children }) => {
             ...state,
             activeStep,
             steps,
+
+            setPos,
 
             handleNext,
             handleBack,

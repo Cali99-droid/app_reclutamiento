@@ -5,7 +5,7 @@ import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IPostulant, 
 
 type DatosType =
     
-    | { type: 'Post - Load', payload: postulante }
+    | { type: 'Post - Load', payload: IPostulant }
     | { type: 'Add-Estudio', payload: IEstudio }
     | { type: 'Delete-Estudio', payload: number }
     | { type: 'Add-Investigacion', payload: IInvestigacion }
@@ -28,7 +28,7 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
         case 'Post - Load':
             return {
                 ...state,
-                pos:action.payload
+                pos: action.payload
             }
         case 'Tic-Load':
             return {

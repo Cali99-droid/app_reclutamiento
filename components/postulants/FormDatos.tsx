@@ -8,11 +8,13 @@ import axios from 'axios';
 import moment from 'moment';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save';
+import { useContext } from 'react';
+import { DatosContext } from '@/context';
 interface Props {
 
     grados: IGrado[]
@@ -35,6 +37,13 @@ type FormData = {
     sueldoPretendido: number;
     especialidad: string;
     gradoId: number;
+    estadoCivil: string;
+    exalumno: number,
+    egreso?: number,
+    hijos: number,
+    discapacidad: number,
+    nivel: string;
+
 };
 
 export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
@@ -43,8 +52,11 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
     const [showError, setShowError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const router = useRouter();
 
+    const [ex, setEx] = useState(true)
+
+    const router = useRouter();
+    const { activeStep, handleBack, handleNext, steps, setPos, pos } = useContext(DatosContext)
 
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
@@ -61,22 +73,29 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
             nacimiento: moment(postulante.nacimiento).toDate().toISOString().substring(0, 10),
             tipoId: postulante.tipoId,
             numeroDocumento: postulante.numeroDocumento,
-            experiencia: postulante.experiencia,
+            estadoCivil: postulante.estado_civil === null ? '' : postulante.estado_civil,
+            exalumno: postulante.exalumno === null ? 0 : parseInt(postulante.exalumno.toString()),
+            egreso: postulante.egreso === null ? 0 : postulante.egreso,
+            hijos: postulante.hijos === null ? 0 : postulante.hijos,
             sueldoPretendido: postulante.sueldo,
-            especialidad: postulante.especialidad,
+            discapacidad: postulante.discapacidad === null ? 0 : postulante.discapacidad,
+            nivel: postulante.nivel === null ? '' : postulante.nivel,
+
             gradoId: postulante.gradoId,
         }
     })
     const onRegisterForm = async (form: FormData) => {
-        setIsSaving(true);
+        //setIsSaving(true);
+
+
         try {
             const { data } = await reclutApi({
                 url: '/postulants',
                 method: form.idPostulante > 0 ? 'PUT' : 'POST',  // si tenemos un _id, entonces actualizar, si no crear
                 data: form
             });
-
-
+            handleNext()
+            router.replace(`/postulant`);
             if (!(form.idPostulante > 0)) {
                 router.replace(`/postulant`);
 
@@ -89,6 +108,7 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                 setErrorMessage(error.response?.data.message!);
                 setTimeout(() => setShowError(false), 3000);
                 setIsSaving(false)
+                toast.error(error.response?.data.message);
                 return {
                     hasError: true,
                     message: error.response?.data.message
@@ -259,45 +279,47 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                             <Select
                                 variant='outlined'
                                 sx={{ mt: 1 }}
-                                labelId="tipoId"
-                                id="tipoId"
-                                label="tipo"
+                                labelId="estadoCivil"
+                                id="estadoCivil"
+                                label="estadoCivil"
                                 required
-                                defaultValue={postulante.tipoId || 0}
-                                {...register('tipoId', {
+                                defaultValue={postulante.estado_civil || 'Soltero'}
+                                {...register('estadoCivil', {
                                     required: 'Este campo es requerido',
 
                                 })}
-                                error={!!errors.tipoId}
+                                error={!!errors.estadoCivil}
                             >
-                                <MenuItem value={1}>Soltero</MenuItem>
-                                <MenuItem value={2}>Casado</MenuItem>
-                                <MenuItem value={3}>Viudo</MenuItem>
-                                <MenuItem value={4}>Divorciado</MenuItem>
+                                <MenuItem value={'Soltero'}>Soltero</MenuItem>
+                                <MenuItem value={'Casado'}>Casado</MenuItem>
+                                <MenuItem value={'Viudo'}>Viudo</MenuItem>
+                                <MenuItem value={'Divorciado'}>Divorciado</MenuItem>
 
                             </Select>
 
                         </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} md={3}>
+                    <Grid item xs={12} md={4}>
                         <FormControl fullWidth >
                             <InputLabel id="tipoId">¿Es exalumno de la institución? </InputLabel>
                             <Select
                                 variant='outlined'
                                 sx={{ mt: 1 }}
-                                labelId="tipoId"
-                                id="tipoId"
-                                label="tipo"
+                                labelId="exalumno"
+                                id="exalumno"
+                                label="exalumno"
                                 required
-                                defaultValue={postulante.tipoId || 0}
-                                {...register('tipoId', {
+                                defaultValue={postulante.exalumno || 0}
+                                {...register('exalumno', {
                                     required: 'Este campo es requerido',
 
                                 })}
-                                error={!!errors.tipoId}
-                            > <MenuItem value={1}>No</MenuItem>
-                                <MenuItem value={2}>Si</MenuItem>
+                                onChange={(e) => { e.target.value === 1 ? setEx(false) : setEx(true) }}
+                                error={!!errors.exalumno}
+                            >
+                                <MenuItem value={0}>No</MenuItem>
+                                <MenuItem value={1}>Si</MenuItem>
 
 
 
@@ -305,24 +327,24 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                             <FormHelperText>En caso de ser exalumno, llenar año de egreso</FormHelperText>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={1}>
+                    <Grid item xs={12} md={2}>
 
                         <TextField
                             label="Egreso"
-                            disabled
+                            disabled={ex}
                             type="number"
                             variant="outlined"
                             fullWidth
-                            {...register('numeroDocumento', {
+                            {...register('egreso', {
                                 required: 'Este campo es requerido',
-                                minLength: { value: 8, message: 'Mínimo 8 caracteres' },
-                                maxLength: { value: 8, message: 'Mínimo 8 caracteres' }
+                                // minLength: { value: 8, message: 'Mínimo 8 caracteres' },
+                                // maxLength: { value: 8, message: 'Mínimo 8 caracteres' }
                             })}
-                            error={!!errors.numeroDocumento}
-                            helperText={errors.numeroDocumento?.message}
+                            error={!!errors.egreso}
+                            helperText={errors.egreso?.message}
                         />
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={2}>
 
                         <TextField
                             label="Numero de Hijos(as)"
@@ -330,13 +352,27 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                             type="number"
                             variant="outlined"
                             fullWidth
-                            {...register('numeroDocumento', {
+                            {...register('hijos', {
                                 required: 'Este campo es requerido',
-                                minLength: { value: 8, message: 'Mínimo 8 caracteres' },
-                                maxLength: { value: 8, message: 'Mínimo 8 caracteres' }
+
                             })}
-                            error={!!errors.numeroDocumento}
-                            helperText={errors.numeroDocumento?.message}
+                            error={!!errors.hijos}
+                            helperText={errors.hijos?.message}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+
+                        <TextField
+                            label="Sueldo pretendido"
+                            type="number"
+                            variant="outlined"
+                            fullWidth
+                            {...register('sueldoPretendido', {
+                                required: 'Este campo es requerido',
+
+                            })}
+                            error={!!errors.sueldoPretendido}
+                            helperText={errors.sueldoPretendido?.message}
                         />
                     </Grid>
                     <Grid item xs={12} md={4}>
@@ -345,19 +381,19 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                             <Select
                                 variant='outlined'
                                 sx={{ mt: 1 }}
-                                labelId="tipoId"
-                                id="tipoId"
+                                labelId="discapacidad"
+                                id="discapacidad"
                                 label="tipo"
                                 required
-                                defaultValue={postulante.tipoId || 0}
-                                {...register('tipoId', {
+                                defaultValue={postulante.discapacidad || 0}
+                                {...register('discapacidad', {
                                     required: 'Este campo es requerido',
 
                                 })}
-                                error={!!errors.tipoId}
+                                error={!!errors.discapacidad}
                             >
-                                <MenuItem value={1}>No</MenuItem>
-                                <MenuItem value={2}>Si</MenuItem>
+                                <MenuItem value={0}>No</MenuItem>
+                                <MenuItem value={1}>Si</MenuItem>
 
 
 
@@ -371,22 +407,22 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                             <Select sx={{ mt: 1 }}
                                 variant='outlined'
 
-                                labelId="tipoId"
-                                id="tipoId"
+                                labelId="nivel"
+                                id="nivel"
                                 label="tipo"
                                 required
-                                defaultValue={postulante.tipoId || 0}
-                                {...register('tipoId', {
+                                defaultValue={postulante.nivel || 'ninguno'}
+                                {...register('nivel', {
                                     required: 'Este campo es requerido',
 
                                 })}
-                                error={!!errors.tipoId}
+                                error={!!errors.nivel}
                             >
-                                <MenuItem value={''} ></MenuItem>
-                                <MenuItem value={1}>Inicial</MenuItem>
-                                <MenuItem value={2}>Secundaria</MenuItem>
-                                <MenuItem value={3}>Preuniversitario</MenuItem>
-                                <MenuItem value={4}>Universitario</MenuItem>
+                                <MenuItem value={'ninguno'} >Ninguno</MenuItem>
+                                <MenuItem value={'Inicial'}>Inicial</MenuItem>
+                                <MenuItem value={'Secundaria'}>Secundaria</MenuItem>
+                                <MenuItem value={'Preuniversitario'}>Preuniversitario</MenuItem>
+                                <MenuItem value={'Universitario'}>Universitario</MenuItem>
                             </Select>
                             <FormHelperText>*Solo si postula para docente</FormHelperText>
                         </FormControl>

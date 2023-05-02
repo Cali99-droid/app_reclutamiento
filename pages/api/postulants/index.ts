@@ -112,7 +112,7 @@ const createPostulant = async(req: NextApiRequest, res: NextApiResponse<Data>) =
             postulante:{
               create:{
                 direccion,
-                especialidad,
+            
                 experiencia:parseInt(experiencia.toString()) ,
                 nacimiento:new Date(nacimiento),
                 numeroDocumento,
@@ -161,12 +161,20 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
       nacimiento,
       tipoId ,
       numeroDocumento,
-      experiencia,
+      estadoCivil,
+      exalumno,
+      egreso,
+      hijos,
+      discapacidad,
+      nivel,
+
+
+
       sueldoPretendido,
-      especialidad,
       gradoId ,
       idPersona,
       idPostulante
+
     } = req.body as { 
         email: string, 
         password: string, 
@@ -180,8 +188,13 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
         numeroDocumento   : string,
         experiencia     : number,
         sueldoPretendido: number,
-        especialidad: string,
         gradoId : number ,
+        estadoCivil:string,
+        exalumno:number,
+        egreso:number,
+        hijos:number,
+        discapacidad:number,
+        nivel:string,
        idPersona:number
         idPostulante:number
     };
@@ -200,14 +213,21 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
                 },
                 data:{ 
                   direccion,
-                especialidad,
-                experiencia:parseInt(experiencia.toString()) ,
-                nacimiento:new Date(nacimiento),
-                numeroDocumento,
-                sueldo:parseFloat(sueldoPretendido.toString()) ,
-                gradoId,
-                tipoId,
-                telefono:telefono.toString(),
+               
+                  nacimiento:new Date(nacimiento),
+                  numeroDocumento,
+                  sueldo:parseFloat(sueldoPretendido.toString()) ,
+                  gradoId,
+                  tipoId,
+                  telefono:telefono.toString(),
+                  estado_civil:estadoCivil,
+                  exalumno,
+                  egreso,
+                  hijos:parseInt(hijos.toString()),
+
+                  discapacidad,
+                  nivel
+
               }
                
                 

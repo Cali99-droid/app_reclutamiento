@@ -33,6 +33,7 @@ model persona {
   nombres      String       @db.VarChar(150)
   apellido_pat String       @db.VarChar(100)
   apellido_mat String       @db.VarChar(100)
+  nacimiento   DateTime?    @db.Date
   postulante   postulante[]
   user         user[]
 }
@@ -124,14 +125,19 @@ model postulante {
   id                        Int                         @id @default(autoincrement())
   telefono                  String?                     @db.VarChar(45)
   direccion                 String                      @db.VarChar(45)
-  experiencia               Int
-  especialidad              String                      @db.VarChar(200)
+  experiencia               Int?
   nacimiento                DateTime                    @map("fecha_nacimiento") @db.Date
   numeroDocumento           String                      @unique(map: "numero_documento_UNIQUE") @map("numero_documento") @db.VarChar(45)
   sueldo                    Float
-  tipoId                    Int                         @map("tipo_documento_id")
-  gradoId                   Int                         @map("grado_id")
+  estado_civil              String?                     @db.VarChar(45)
+  exalumno                  Int?                        @db.TinyInt
+  egreso                    Int?
+  hijos                     Int?
+  discapacidad              Int?                        @db.TinyInt
+  nivel                     String?                     @db.VarChar(60)
   persona_id                Int
+  gradoId                   Int                         @map("grado_id")
+  tipoId                    Int                         @map("tipo_documento_id")
   evaluacion_x_postulante   evaluacion_x_postulante[]
   grado                     grado                       @relation(fields: [gradoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_grado1")
   persona                   persona                     @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_persona1")
