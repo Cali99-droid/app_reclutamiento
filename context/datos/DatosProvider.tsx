@@ -29,6 +29,7 @@ export interface DatosState {
     aficiones: IAficion[]
     tecnologias: ITics[]
     pos: postulante
+    idPos: number
 
 
 
@@ -36,7 +37,7 @@ export interface DatosState {
 
 const DATOS_INITIAL_STATE: DatosState = {
     prop: false,
-
+    idPos: 0,
     pos: {
         id: 0,
         telefono: '',
@@ -50,126 +51,13 @@ const DATOS_INITIAL_STATE: DatosState = {
         gradoId: 0,
         persona_id: 0,
     },
-    estudios: [
-        // {
-        //     id: 1,
-        //     institucion: 'Universidad Prueba',
-        //     profesion: 'Docente primaria',
-        //     grado: 'Bachiller',
-        //     year: '2013'
-
-        // },
-        // {
-        //     id: 2,
-        //     institucion: 'Universidad Prueba dos',
-        //     profesion: 'Docente matematica',
-        //     grado: 'Doctor',
-        //     year: '2019'
-        // }
-    ],
-    investigaciones: [
-        {
-            id: 1,
-            institucion: 'Universidad Prueba',
-            nombre: 'Investigacion 1',
-            year: '2013'
-
-        },
-        {
-            id: 2,
-            institucion: 'Universidad Prueba dos',
-            nombre: 'Investigacion 2',
-            year: '2019'
-        }
-    ],
-    cargos: [
-        {
-            id: 1,
-            institucion: 'institucion: Universidad Prueba',
-            referencia: '963852741',
-            remuneracion: '2000',
-            nivel: 'Primaria',
-            cantidadCargo: '23',
-
-            year: '2013'
-
-        },
-        {
-            id: 2,
-            institucion: 'Referencia : Universidad Prueba dos',
-            referencia: '963852741',
-            remuneracion: '2000',
-            nivel: 'Secundaria',
-            cantidadCargo: '33',
-
-            year: '2019'
-        }
-    ],
-    capacitaciones: [
-        {
-            id: 1,
-            institucion: 'Universidad Prueba',
-            titulo: 'Curso java',
-            horas: '34',
-            year: '2013',
-            descripcion: 'En el desaarolo de aps',
-
-        },
-        {
-            id: 2,
-            institucion: 'Universidad Prueba 2',
-            titulo: 'Curso php',
-            horas: '34',
-            year: '2013',
-            descripcion: 'En el desaarolo de aps',
-        }
-    ],
-    reconocimientos: [
-        {
-            id: 1,
-            institucion: 'Universidad Prueba 2',
-            reconocimento: 'Al merito',
-            year: '2013',
-            descripcion: 'en el concuros de ejemplos',
-
-        },
-        {
-            id: 2,
-            institucion: 'Universidad Prueba 2',
-            reconocimento: 'Ganador',
-            year: '2013',
-            descripcion: 'En el desaarolo de aps',
-        }
-    ],
-    aficiones: [
-        {
-            id: 1,
-            actividad: 'Ajedrez',
-            nivel: 'Intermedio',
-            logro: 'Campeon regional',
-            year: '2013'
-
-        },
-        {
-            id: 2,
-            actividad: 'Futbol',
-            nivel: 'Intermedio',
-            logro: 'ninguno',
-            year: '2018'
-        }
-    ],
-    tecnologias: [
-        // {
-        //     id: 1,
-        //     tecnologia: 'Word',
-        //     nivel: 'Basico',
-        // },
-        // {
-        //     id: 2,
-        //     tecnologia: 'Excel',
-        //     nivel: 'Basico',
-        // }
-    ]
+    estudios: [],
+    investigaciones: [],
+    cargos: [],
+    capacitaciones: [],
+    reconocimientos: [],
+    aficiones: [],
+    tecnologias: []
 }
 
 interface Props {
@@ -194,16 +82,17 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     }
     const setTic = async () => {
         const { data } = await reclutApi.get<ITics[]>(`/postulants/tic`)
-        console.log(data)
+
         dispatch({ type: 'Tic-Load', payload: data })
 
     }
 
-
+    const { data }: any = useSession();
+    const [IdPos, setIdPos] = useState(data?.user.persona.postulante[0].id)
     useEffect(() => {
 
-        setPos();
-        setTic()
+        //  setPos();
+        // setTic()
 
     }, [])
 
@@ -330,17 +219,21 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     }
 
     //-------------------Tics---------------------
-    const agregarTic = (tecnologia: string, nivel: string) => {
+
+    const agregarTic = async (tecnologia: string, nivel: string, idPos: number) => {
+
+        const { data } = await reclutApi.post<ITics>('/postulants/tic', { tecnologia, nivel, idPos });
         // const nuevaTic: ITics = {
         //     id: 12,
         //     tecnologia,
         //     nivel,
 
         // }
-        // dispatch({ type: 'Add-Tic', payload: nuevaTic });
+        dispatch({ type: 'Add-Tic', payload: data });
 
     }
-    const quitarTic = (id: number) => {
+    const quitarTic = async (id: number) => {
+        const { data } = await reclutApi.delete<ITics>(`/postulants/tic/${id}`);
         dispatch({ type: 'Delete-Tic', payload: id });
 
     }
@@ -369,6 +262,7 @@ export const DatosProvider: FC<Props> = ({ children }) => {
             quitarReconocimiento,
             agregarAficion,
             quitarAficion,
+            setTic,
             agregarTic,
             quitarTic,
 

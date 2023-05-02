@@ -1,12 +1,25 @@
 import { Box, Button, Divider, IconButton, TextField, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Modal } from '../modal';
 import { useState, useContext, ChangeEvent } from 'react';
 import { DatosContext } from '@/context';
+import { useSession } from 'next-auth/react';
+import { persona, postulante } from '@prisma/client';
+
 
 const Step5 = () => {
-    const { aficiones, tecnologias, agregarAficion, quitarAficion, agregarTic, quitarTic } = useContext(DatosContext);
+
+    // ? En caso exista problemas usar 
+    const { data }: any = useSession();
+    // ** console.log(data?.user.persona.postulante[0].id);
+    const IdPos = data?.user.persona.postulante[0].id;
+    const { aficiones, tecnologias, agregarAficion, quitarAficion, agregarTic, quitarTic, setTic } = useContext(DatosContext);
+    useEffect(() => {
+        setTic()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     //--------------Modal Aficiones------------------
 
     const [open, setOpen] = useState(false)
@@ -65,7 +78,7 @@ const Step5 = () => {
     }
     const handleConfirmTics = () => {
         // //TODO validar campos
-        agregarTic(tecnologia, nivel)
+        agregarTic(tecnologia, nivel, IdPos)
         setTecnologia('')
         setNivel('')
 

@@ -9,7 +9,16 @@ export const checkUserEmailPassword = async(email:string, password: string)=>{
         where: {
           email,
         },include:{
-            persona:true,
+            persona:{
+                include:{
+                    postulante:{
+                        select:{
+                            id:true
+                        }
+                    }
+                }
+            },
+        
             rol:true
         }
       })
@@ -24,12 +33,16 @@ export const checkUserEmailPassword = async(email:string, password: string)=>{
     }
 
     const {rol_id, id,persona,rol} = user;
+    // const pos :any = persona.postulante;
+    // const idPos = pos.id;
 
     return{
         id:id.toString(),
         email,
         rol_id,
-        persona,rol
+        persona,
+        rol,
+     
     }
 }
 
@@ -41,7 +54,15 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
         where: {
            email: oAuthEmail,
         },include:{
-            persona:true,
+            persona:{
+                include:{
+                    postulante:{
+                        select:{
+                            id:true
+                        }
+                    }
+                }
+            },
             rol:true
         }
       })
@@ -89,6 +110,7 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
     const{email} = newUser ;
     const id = newUser.id.toString()
     const rol_id = newUser.rol_id.toString()
+    
 
     return {id, rol_id,email,oAuthImg,oAuthName,rol};
 }

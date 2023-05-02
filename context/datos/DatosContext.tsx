@@ -34,8 +34,9 @@ interface ContextProps {
     agregarReconocimiento: (reconocimento: string, year: string, institucion: string, descripcion: string) => void
     quitarReconocimiento: (id: number) => void
     agregarAficion: (actividad: string, year: string, nivel: string, logro: string) => void
-    quitarAficion: (id: number) => void
-    agregarTic: (tecnologia: string, nivel: string) => void
+    quitarAficion: (id: number) => void,
+    setTic: () => Promise<void>
+    agregarTic: (tecnologia: string, nivel: string, idPos: number) => void
     quitarTic: (id: number) => void
 }
 export const DatosContext = createContext({} as ContextProps);
