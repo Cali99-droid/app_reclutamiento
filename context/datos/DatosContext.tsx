@@ -26,9 +26,11 @@ interface ContextProps {
     handleBack: () => void
     setEstudios: () => Promise<void>
     agregarEstudio: (profesion: string, institucion: string, grado: string, year: string, idPos: number) => void
-    quitarEstudio: (id: number) => void
-    agregarInvestigacion: (nombre: string, institucion: string, year: string) => void
+    quitarEstudio: (id: number) => void,
+    setInvestigaciones: () => Promise<void>
+    agregarInvestigacion: (nombre: string, institucion: string, year: string, idPos: number) => void
     quitarInvestigacion: (id: number) => void
+    setCargos: () => Promise<void>
     agregarCargo: (referencia: string, nivel: string, cantidad: string, year: string, institucion: string, remuneracion: string) => void
     quitarCargo: (id: number) => void
     agregarCapacitacion: (titulo: string, horas: string, year: string, institucion: string, descripcion: string) => void

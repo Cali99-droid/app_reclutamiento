@@ -118,7 +118,7 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
 
         }
 
-        toast.success("Datos actualizados correctamente!");
+
 
 
     }

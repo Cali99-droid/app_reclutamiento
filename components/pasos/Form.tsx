@@ -13,8 +13,12 @@ import { Box } from '@mui/material';
 
 
 const Form = () => {
-
-
+    const { setEstudios, setCargos } = useContext(DatosContext)
+    useEffect(() => {
+        setEstudios()
+        setCargos();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     const router = useRouter();
     const handleSubmit = () => {
         router.push(`/postulant/`)

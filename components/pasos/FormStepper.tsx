@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Stepper, Step, StepLabel, Button, Box } from '@mui/material';
+import { Stepper, Step, StepLabel, Button, Box, Divider } from '@mui/material';
 import { useContext } from 'react';
 import { DatosContext } from '@/context/datos';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import LabelIcon from '@mui/icons-material/Label';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import EastIcon from '@mui/icons-material/East';
 type FormStepperProps = {
     // steps: { label: string; content: JSX.Element, icon: any }[];
     onSubmit: () => void;
@@ -18,25 +20,29 @@ const FormStepper = ({ onSubmit }: FormStepperProps) => {
         <>
             <Stepper activeStep={activeStep} >
                 {steps.map(({ label, icon }, index) => (
-                    <Step key={label} >
-                        <Box width={'60px'} height={'60px'} padding={4} bgcolor={activeStep === index ? '#0045AA' : '#FFF'} display={'flex'} justifyContent={'center'} alignItems={'center'} borderRadius={'50%'}>{icon}
+                    <Step key={label} sx={{ color: '#FFF' }}>
+                        <Box display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'}>
+                            <Box width={'50px'} height={'50px'} padding={3} bgcolor={activeStep === index ? '#0045aa' : '#F1F1F1'} display={'flex'} justifyContent={'center'} alignItems={'center'} borderRadius={'50%'}>{icon}
 
+                            </Box>
+                            <StepLabel >{label}</StepLabel>
                         </Box>
-                        <StepLabel StepIconComponent={ArrowDropDownIcon} >{label}</StepLabel>
                     </Step>
                 ))}
             </Stepper >
             {steps[activeStep].content}
-            < Box display={'flex'} justifyContent={'end'} >
+
+            < Box display={'flex'} justifyContent={'space-between'} gap={1} padding={4} mt={2}>
+
                 {activeStep !== 0 && (
-                    <Button variant="contained" color="secondary" onClick={handleBack}>
+                    <Button startIcon={<KeyboardBackspaceIcon />} variant="contained" onClick={handleBack}>
                         Atrás
                     </Button>
                 )
                 }
                 {
                     (activeStep !== steps.length - 1) && (activeStep !== 0) && (
-                        <Button size='large' variant="contained" color="info" onClick={handleNext}>
+                        <Button endIcon={<EastIcon />} variant="contained" onClick={handleNext}>
                             Siguiente
                         </Button>
                     )
@@ -49,11 +55,11 @@ const FormStepper = ({ onSubmit }: FormStepperProps) => {
                     )
                 }
                 {
-                    activeStep !== 0 && (
-                        <Button variant="contained" color="info" >
-                            Reiniciar
-                        </Button>
-                    )
+                    // activeStep !== 0 && (
+                    //     <Button variant="contained" color="info" >
+                    //         Reiniciar
+                    //     </Button>
+                    // )
                 }
             </Box >
         </>

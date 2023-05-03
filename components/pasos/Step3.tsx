@@ -1,12 +1,22 @@
 import { Box, Button, Divider, IconButton, TextField, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useContext, ChangeEvent } from 'react';
 import { DatosContext } from '@/context';
 import { useState } from 'react';
 import Modal from '../modal/Modal';
+import { useSession } from 'next-auth/react';
 const Step3 = () => {
-    const { investigaciones, cargos, agregarInvestigacion, quitarInvestigacion, agregarCargo, quitarCargo } = useContext(DatosContext);
+    const { data }: any = useSession();
+    // ** console.log(data?.user.persona.postulante[0].id);
+    const IdPos = data?.user.persona.postulante[0].id;
+    const { investigaciones, setInvestigaciones, cargos, agregarInvestigacion, quitarInvestigacion, agregarCargo, quitarCargo } = useContext(DatosContext);
+    useEffect(() => {
+
+
+        setInvestigaciones();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     //------------------Modal Investigaciones------------------------------
     const [openInves, setOpenInves] = useState(false)
@@ -18,9 +28,9 @@ const Step3 = () => {
     }
     const handleConfirmInves = () => {
         //TODO validar campos
-        agregarInvestigacion(nombre, institucion, year)
+        agregarInvestigacion(titulo, institucion, year, IdPos)
         setInstitucion('')
-        setNombre('')
+        setTitulo('')
 
         handleCloseInves()
 
@@ -29,12 +39,12 @@ const Step3 = () => {
         quitarInvestigacion(id)
     }
     //-------------------------Investigaciones----------------
-    const [nombre, setNombre] = useState('')
+    const [titulo, setTitulo] = useState('')
     const [institucion, setInstitucion] = useState('')
     const [year, setYear] = useState(new Date().getFullYear().toString())
 
     const onNombreChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setNombre(event.target.value);
+        setTitulo(event.target.value);
 
     }
 
@@ -108,7 +118,7 @@ const Step3 = () => {
                     investigaciones.map(i => (
 
                         <Box key={i.id} display={'flex'} justifyContent={'space-between'} alignItems={'center'} mt={2}>
-                            <Typography >{i.nombre}</Typography>
+                            <Typography >{i.titulo}</Typography>
                             <Typography>{i.institucion}</Typography>
                             <Typography >{i.year}</Typography>
                             <IconButton onClick={() => handleDelete(i.id)} color='error'>
@@ -187,8 +197,8 @@ const Step3 = () => {
                         label="nombre"
                         placeholder='Nombre de la investigación'
                         variant="outlined"
-                        error={nombre.length <= 0}
-                        value={nombre}
+                        error={titulo.length <= 0}
+                        value={titulo}
                         onChange={onNombreChange}
 
                     />

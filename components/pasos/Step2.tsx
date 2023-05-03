@@ -1,13 +1,15 @@
 
 import { DatosContext } from '@/context';
-import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, IconButton } from '@mui/material';
+import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, IconButton, TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody, styled, tableCellClasses, SelectChangeEvent } from '@mui/material';
 import { useContext, ChangeEvent, useEffect } from 'react';
 import Modal from '../modal/Modal';
 import { useState } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
-
+import AddIcon from '@mui/icons-material/Add';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 const Step2 = () => {
 
     const { data }: any = useSession();
@@ -15,10 +17,10 @@ const Step2 = () => {
     const IdPos = data?.user.persona.postulante[0].id;
     const { setEstudios, estudios, agregarEstudio, quitarEstudio } = useContext(DatosContext)
     const [open, setOpen] = useState(false)
-    useEffect(() => {
-        setEstudios()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    // useEffect(() => {
+    //     setEstudios()
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [])
     const [profesion, setProfesion] = useState('')
     const [institucion, setInstitucion] = useState('')
     const [grado, setGrado] = useState('')
@@ -31,7 +33,7 @@ const Step2 = () => {
         setInstitucion(event.target.value);
 
     }
-    const onGradoChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const onGradoChange = (event: SelectChangeEvent<string>) => {
         setGrado(event.target.value);
 
     }
@@ -62,33 +64,64 @@ const Step2 = () => {
         quitarEstudio(id)
     }
 
+    const StyledTableCell = styled(TableCell)(({ theme }) => ({
+        [`&.${tableCellClasses.head}`]: {
+            backgroundColor: '#0045aa',
+            color: theme.palette.common.white,
+        },
+        [`&.${tableCellClasses.body}`]: {
+            fontSize: 14,
+        },
+    }));
+
     return (
         <Box padding={4} mt={3} bgcolor={'#FFF'}>
-            <Box display={'flex'} justifyContent={'space-between'} mb={1}>
-                <Typography>Agregar sus Estudios/Profesiones </Typography>
 
-                <Button onClick={handleOpen}>Agregar</Button>
+            <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} bgcolor={'#F1F1F1'} mb={2} padding={1} borderRadius={2}>
+                <Typography>ESTUDIOS / PROFESIONES </Typography>
+                <IconButton onClick={handleOpen} aria-label="delete" color='secondary'>
+                    <AddCircleIcon fontSize='medium' />
+                </IconButton>
+                {/* <Button startIcon={<AddCircleIcon />}></Button> */}
             </Box>
-            <Divider />
-            {
+            <TableContainer   >
 
-                estudios.map(estudio => (
+                <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableCell>Profesión</StyledTableCell>
+                            <StyledTableCell align="right">Institución</StyledTableCell>
+                            <StyledTableCell align="right">Grado</StyledTableCell>
+                            <StyledTableCell align="right">Año</StyledTableCell>
+                            <StyledTableCell align="right">Acciones</StyledTableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {estudios.map((e) => (
+                            <TableRow
+                                key={e.id}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                                <TableCell component="th" scope="row">
+                                    {e.profesion}
+                                </TableCell>
+                                <TableCell align="right">{e.institucion}</TableCell>
+                                <TableCell align="right">{e.grado}</TableCell>
+                                <TableCell align="right">{e.year}</TableCell>
+                                <TableCell align="right">
+                                    <IconButton onClick={() => handleDelete(e.id)} color='error'>
+                                        <DeleteForeverIcon />
+                                    </IconButton>
 
-                    <Box key={estudio.id} display={'flex'} justifyContent={'space-between'} alignItems={'center'} mt={2}>
-                        <Typography >{estudio.profesion}</Typography>
-                        <Typography>{estudio.institucion}</Typography>
-                        <Typography >{estudio.grado}</Typography>
-                        <Typography >{estudio.year}</Typography>
-                        <IconButton onClick={() => handleDelete(estudio.id)} color='error'>
-                            <DeleteForeverIcon />
-                        </IconButton>
 
-                    </Box>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
 
 
-                ))
-
-            }
             {
                 estudios.length === 0 && (
                     <Typography textAlign={'center'} mt={5}>No hay estudios</Typography>
@@ -99,10 +132,10 @@ const Step2 = () => {
 
 
             <Modal title={'Nueva Profesión'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
-                <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
+                <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
                     component="form"
                     sx={{
-                        '& .MuiTextField-root': { m: 1, width: '25ch' },
+                        '& .MuiTextField-root': { m: 1, },
                     }}
                     noValidate
                     autoComplete="off"
@@ -126,14 +159,24 @@ const Step2 = () => {
                         value={institucion}
                         onChange={onInstitucionChange}
                     />
-                    <TextField
-                        id="outlined-basic"
-                        label="Grado"
-                        variant="outlined"
-                        error={grado.length <= 0}
-                        value={grado}
-                        onChange={onGradoChange}
-                    />
+                    <FormControl >
+                        <InputLabel id="demo-simple-select-label">Grado</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={grado}
+                            label="Grado"
+                            onChange={(e) => onGradoChange(e)}
+                        >
+                            <MenuItem value={'Estudiante'}>Estudiante</MenuItem>
+                            <MenuItem value={'Practicante'}>Practicante</MenuItem>
+                            <MenuItem value={'Bachiller'}>Bachiller</MenuItem>
+                            <MenuItem value={'Titulado'}>Titulado</MenuItem>
+                            <MenuItem value={'Maestria'}>Maestria</MenuItem>
+                            <MenuItem value={'Doctorado'}>Doctorado</MenuItem>
+                        </Select>
+                    </FormControl>
+
                     <TextField
                         type='number'
                         id="outlined-basic"

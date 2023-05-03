@@ -9,8 +9,10 @@ type DatosType =
     | { type: 'Estudios - Load', payload: IEstudio[] }
     | { type: 'Add-Estudio', payload: IEstudio }
     | { type: 'Delete-Estudio', payload: number }
+    | { type: 'Investigaciones - Load', payload: IInvestigacion[] }
     | { type: 'Add-Investigacion', payload: IInvestigacion }
     | { type: 'Delete-Investigacion', payload: number }
+    | { type: 'Cargo - Load', payload: ICargo[] }
     | { type: 'Add-Cargo', payload: ICargo }
     | { type: 'Delete-Cargo', payload: number }
     | { type: 'Add-Capacitacion', payload: ICapacitacion }
@@ -54,6 +56,12 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
 
                 estudios: state.estudios.filter(e =>e.id !== action.payload)
             }
+        case 'Investigaciones - Load':
+            return{
+                ...state,
+    
+                investigaciones: action.payload
+            }
         
         case 'Add-Investigacion':
             return{
@@ -65,6 +73,13 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
                 ...state,
                 investigaciones: state.investigaciones.filter(i=>i.id !== action.payload)
             }
+
+            case 'Cargo - Load':
+                return{
+                    ...state,
+        
+                    cargos: action.payload
+                }
         
         case 'Add-Cargo':
             return{

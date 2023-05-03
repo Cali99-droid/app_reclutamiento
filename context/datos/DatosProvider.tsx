@@ -14,10 +14,10 @@ import { postulante, user } from '@prisma/client';
 import { prisma } from '@/server/db/client';
 import { Session } from 'next-auth';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
-import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
-
-
-
+import SchoolIcon from '@mui/icons-material/School';
+import WorkIcon from '@mui/icons-material/Work';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import NaturePeopleIcon from '@mui/icons-material/NaturePeople';
 
 export interface DatosState {
     prop: boolean,
@@ -58,11 +58,11 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     const [state, dispatch] = useReducer(datosReducer, DATOS_INITIAL_STATE)
 
     const steps = [
-        { label: 'Paso 1', content: <Step1 />, icon: <ContactPageIcon fontSize='large' color="primary" /> },
-        { label: 'Paso 2', content: <Step2 />, icon: <SchoolOutlinedIcon /> },
-        { label: 'Paso 3', content: <Step3 />, icon: <ContactPageIcon /> },
-        { label: 'Paso 4', content: <Step4 />, icon: <SchoolOutlinedIcon /> },
-        { label: 'Paso 5', content: <Step5 />, icon: <ContactPageIcon /> },
+        { label: 'Datos personales', content: <Step1 />, icon: <ContactPageIcon sx={{ color: '#EECA73' }} /> },
+        { label: 'Formación', content: <Step2 />, icon: <SchoolIcon sx={{ color: '#EECA73' }} /> },
+        { label: 'Experiencia', content: <Step3 />, icon: <WorkIcon sx={{ color: '#EECA73' }} /> },
+        { label: 'Cursos / Capacitaciones', content: <Step4 />, icon: <MilitaryTechIcon sx={{ color: '#EECA73' }} /> },
+        { label: 'Otras Actividades', content: <Step5 />, icon: <NaturePeopleIcon sx={{ color: '#EECA73' }} /> },
     ];
     const setPos = async () => {
         const { data } = await reclutApi.get<IPostulant>(`/postulants/`)
@@ -78,6 +78,18 @@ export const DatosProvider: FC<Props> = ({ children }) => {
         const { data } = await reclutApi.get<IEstudio[]>(`/postulants/estudios`)
 
         dispatch({ type: 'Estudios - Load', payload: data })
+
+    }
+    const setInvestigaciones = async () => {
+        const { data } = await reclutApi.get<IInvestigacion[]>(`/postulants/investigacion`)
+
+        dispatch({ type: 'Investigaciones - Load', payload: data })
+
+    }
+    const setCargos = async () => {
+        const { data } = await reclutApi.get<ICargo[]>(`/postulants/cargo`)
+
+        dispatch({ type: 'Cargo - Load', payload: data })
 
     }
 
@@ -122,17 +134,19 @@ export const DatosProvider: FC<Props> = ({ children }) => {
 
     }
     //---------------Investigaciones--------------
-    const agregarInvestigacion = (nombre: string, institucion: string, year: string) => {
-        const nuevaInvestigacion: IInvestigacion = {
-            id: 12,
-            nombre,
-            year,
-            institucion
-        }
-        dispatch({ type: 'Add-Investigacion', payload: nuevaInvestigacion });
+    const agregarInvestigacion = async (titulo: string, institucion: string, year: string, idPos: number) => {
+        const { data } = await reclutApi.post<IInvestigacion>('/postulants/investigacion', { titulo, institucion, year, idPos });
+        // const nuevaInvestigacion: IInvestigacion = {
+        //     id: 12,
+        //     titulo,
+        //     year,
+        //     institucion
+        // }
+        dispatch({ type: 'Add-Investigacion', payload: data });
 
     }
-    const quitarInvestigacion = (id: number) => {
+    const quitarInvestigacion = async (id: number) => {
+        const { data } = await reclutApi.delete<ITics>(`/postulants/investigacion/${id}`);
         dispatch({ type: 'Delete-Investigacion', payload: id });
 
     }
@@ -251,8 +265,10 @@ export const DatosProvider: FC<Props> = ({ children }) => {
             setEstudios,
             agregarEstudio,
             quitarEstudio,
+            setInvestigaciones,
             agregarInvestigacion,
             quitarInvestigacion,
+            setCargos,
             agregarCargo,
             quitarCargo,
             agregarCapacitacion,

@@ -1,7 +1,7 @@
 
 export interface IInvestigacion {
     id: number
-    nombre: string
+    titulo: string
     institucion: string
     year: string
  

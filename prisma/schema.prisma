@@ -138,8 +138,10 @@ model postulante {
   persona_id                Int
   gradoId                   Int                         @map("grado_id")
   tipoId                    Int                         @map("tipo_documento_id")
+  cargo                     cargo[]
   estudios                  estudios[]
   evaluacion_x_postulante   evaluacion_x_postulante[]
+  investigacion             investigacion[]
   grado                     grado                       @relation(fields: [gradoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_grado1")
   persona                   persona                     @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_persona1")
   tipo_documento            tipo_documento              @relation(fields: [tipoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_tipo_documento1")
@@ -210,4 +212,29 @@ model estudios {
   postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_estudios_postulante1")
 
   @@index([postulante_id], map: "fk_estudios_postulante1_idx")
+}
+
+model investigacion {
+  id            Int        @id @default(autoincrement())
+  titulo        String     @db.VarChar(200)
+  institucion   String     @db.VarChar(150)
+  year          Int
+  postulante_id Int
+  postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_investigacion_postulante1")
+
+  @@index([postulante_id], map: "fk_investigacion_postulante1_idx")
+}
+
+model cargo {
+  id             Int        @id @default(autoincrement())
+  institucion    String     @db.VarChar(150)
+  referencia     String     @db.Char(9)
+  remuneracion   Float
+  nivel          String     @db.VarChar(45)
+  cantidad_cargo Int
+  year           Int
+  postulante_id  Int
+  postulante     postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cargo_postulante1")
+
+  @@index([postulante_id], map: "fk_cargo_postulante1_idx")
 }
