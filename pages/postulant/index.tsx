@@ -29,7 +29,7 @@ interface Props {
 
 
 const PostulantPage: NextPage<Props> = ({ persona, grados, postulante }) => {
-  const { activeStep, handleBack, handleNext, steps, setPos, pos } = useContext(DatosContext)
+  const { activeStep } = useContext(DatosContext)
 
   return (
     <JobsLayout title={"AE | Postulante "} pageDescription={"Postular a un empleo"}>

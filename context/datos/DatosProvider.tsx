@@ -13,8 +13,8 @@ import { reclutApi } from '@/api';
 import { postulante, user } from '@prisma/client';
 import { prisma } from '@/server/db/client';
 import { Session } from 'next-auth';
-
-
+import ContactPageIcon from '@mui/icons-material/ContactPage';
+import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 
 
 
@@ -58,11 +58,11 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     const [state, dispatch] = useReducer(datosReducer, DATOS_INITIAL_STATE)
 
     const steps = [
-        { label: 'Paso 1', content: <Step1 /> },
-        { label: 'Paso 2', content: <Step2 /> },
-        { label: 'Paso 3', content: <Step3 /> },
-        { label: 'Paso 4', content: <Step4 /> },
-        { label: 'Paso 5', content: <Step5 /> },
+        { label: 'Paso 1', content: <Step1 />, icon: <ContactPageIcon fontSize='large' color="primary" /> },
+        { label: 'Paso 2', content: <Step2 />, icon: <SchoolOutlinedIcon /> },
+        { label: 'Paso 3', content: <Step3 />, icon: <ContactPageIcon /> },
+        { label: 'Paso 4', content: <Step4 />, icon: <SchoolOutlinedIcon /> },
+        { label: 'Paso 5', content: <Step5 />, icon: <ContactPageIcon /> },
     ];
     const setPos = async () => {
         const { data } = await reclutApi.get<IPostulant>(`/postulants/`)
@@ -72,6 +72,12 @@ export const DatosProvider: FC<Props> = ({ children }) => {
         const { data } = await reclutApi.get<ITics[]>(`/postulants/tic`)
 
         dispatch({ type: 'Tic-Load', payload: data })
+
+    }
+    const setEstudios = async () => {
+        const { data } = await reclutApi.get<IEstudio[]>(`/postulants/estudios`)
+
+        dispatch({ type: 'Estudios - Load', payload: data })
 
     }
 
@@ -99,17 +105,19 @@ export const DatosProvider: FC<Props> = ({ children }) => {
         setActiveStep(prevActiveStep => prevActiveStep - 1);
     };
     //-----------------estudios..................
-    const agregarEstudio = (profesion: string, institucion: string, grado: string, year: string) => {
-        const nuevoEstudio: IEstudio = {
-            id: 0,
-            profesion,
-            institucion,
-            grado,
-            year
-        }
-        dispatch({ type: 'Add-Estudio', payload: nuevoEstudio });
+    const agregarEstudio = async (profesion: string, institucion: string, grado: string, year: string, idPos: number) => {
+        const { data } = await reclutApi.post<IEstudio>('/postulants/estudios', { profesion, institucion, grado, year, idPos });
+        // const nuevoEstudio: IEstudio = {
+        //     id: 0,
+        //     profesion,
+        //     institucion,
+        //     grado,
+        //     year
+        // }
+        dispatch({ type: 'Add-Estudio', payload: data });
     }
-    const quitarEstudio = (id: number) => {
+    const quitarEstudio = async (id: number) => {
+        const { data } = await reclutApi.delete<ITics>(`/postulants/estudios/${id}`);
         dispatch({ type: 'Delete-Estudio', payload: id });
 
     }
@@ -240,6 +248,7 @@ export const DatosProvider: FC<Props> = ({ children }) => {
 
             handleNext,
             handleBack,
+            setEstudios,
             agregarEstudio,
             quitarEstudio,
             agregarInvestigacion,

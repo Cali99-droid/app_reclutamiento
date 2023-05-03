@@ -1,10 +1,11 @@
-import { ITics } from '@/interfaces';
+import { IEstudio, ITics } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
+import { estudios } from '@prisma/client';
 
 type Data = 
 |{message: string}
-|ITics;
+|estudios;
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
     // const {id} = req.query;
@@ -14,7 +15,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
     switch (req.method) {
         case 'DELETE':
-             return deleteTic(req, res);
+             return deleteEstudio(req, res);
             break;
         case 'GET':
             // return getEntry(req, res);
@@ -32,19 +33,19 @@ const getEntry = async(req:NextApiRequest, res:NextApiResponse<Data>)=>{
     // res.status(200).json(entry)
 }
 
-const deleteTic= async(req:NextApiRequest, res:NextApiResponse<Data>)=>{
+const deleteEstudio= async(req:NextApiRequest, res:NextApiResponse<Data>)=>{
     const{id}:any = req.query ;
  
 
 
     try {
-        const delTic = await prisma.tics.delete({
+        const delEstudio = await prisma.estudios.delete({
             where:{
-                id:parseInt(id)  
+                id:parseInt(id)
             }
         })
         
-           res.status(200).json(delTic)
+           res.status(200).json(delEstudio)
     } catch (error) {
         console.log(error)
         await prisma.$disconnect();

@@ -18,12 +18,14 @@ interface ContextProps {
     steps: {
         label: string;
         content: JSX.Element;
+        icon: any
     }[]
 
     setPos: () => Promise<void>
     handleNext: () => void,
     handleBack: () => void
-    agregarEstudio: (profesion: string, institucion: string, grado: string, year: string) => void
+    setEstudios: () => Promise<void>
+    agregarEstudio: (profesion: string, institucion: string, grado: string, year: string, idPos: number) => void
     quitarEstudio: (id: number) => void
     agregarInvestigacion: (nombre: string, institucion: string, year: string) => void
     quitarInvestigacion: (id: number) => void

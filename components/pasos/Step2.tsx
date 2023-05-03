@@ -1,17 +1,24 @@
 
 import { DatosContext } from '@/context';
 import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, IconButton } from '@mui/material';
-import { useContext, ChangeEvent } from 'react';
+import { useContext, ChangeEvent, useEffect } from 'react';
 import Modal from '../modal/Modal';
 import { useState } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { useSession } from 'next-auth/react';
+import { toast } from 'react-toastify';
 
 const Step2 = () => {
 
-
-    const { estudios, agregarEstudio, quitarEstudio } = useContext(DatosContext)
+    const { data }: any = useSession();
+    // ** console.log(data?.user.persona.postulante[0].id);
+    const IdPos = data?.user.persona.postulante[0].id;
+    const { setEstudios, estudios, agregarEstudio, quitarEstudio } = useContext(DatosContext)
     const [open, setOpen] = useState(false)
-
+    useEffect(() => {
+        setEstudios()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     const [profesion, setProfesion] = useState('')
     const [institucion, setInstitucion] = useState('')
     const [grado, setGrado] = useState('')
@@ -40,7 +47,11 @@ const Step2 = () => {
     }
     const handleConfirm = () => {
         //TODO validar campos
-        agregarEstudio(profesion, institucion, grado, year)
+        if (profesion.length === 0 || institucion.length === 0 || grado.length === 0) {
+            toast.warning('Complete los campos marcados en rojo')
+            return
+        };
+        agregarEstudio(profesion, institucion, grado, year, IdPos)
         setProfesion('')
         setInstitucion('')
         setGrado('')

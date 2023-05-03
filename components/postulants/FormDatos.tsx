@@ -2,7 +2,7 @@ import { reclutApi } from '@/api';
 import { validations } from '@/helpers';
 import { IGrado, IPersona, IUser } from '@/interfaces';
 import { ErrorOutline } from '@mui/icons-material';
-import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider } from '@mui/material';
 import { postulante } from '@prisma/client';
 import axios from 'axios';
 import moment from 'moment';
@@ -123,8 +123,11 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
 
     }
     return (
-        <Box padding={6}>
-
+        <Box padding={6} bgcolor={'#FFF'} borderRadius={5}>
+            <Box mb={4}>
+                <Typography variant='h5' fontWeight={'bold'} color={'#OOO'}>Datos Personales</Typography>
+                <Divider />
+            </Box>
             <form onSubmit={handleSubmit(onRegisterForm)} noValidate>
                 <Grid container spacing={4} >
                     <Grid item xs={12} md={4}>

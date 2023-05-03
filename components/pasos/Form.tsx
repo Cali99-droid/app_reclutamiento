@@ -8,24 +8,12 @@ import Step5 from './Step5';
 import { Router, useRouter } from 'next/router';
 import { DatosContext } from '@/context';
 import { useEffect } from 'react';
+import { Box } from '@mui/material';
 
 
-const steps = [
-    { label: 'Paso 1', content: <Step1 /> },
-    { label: 'Paso 2', content: <Step2 /> },
-    { label: 'Paso 3', content: <Step3 /> },
-    { label: 'Paso 4', content: <Step4 /> },
-    { label: 'Paso 5', content: <Step5 /> },
-];
 
 const Form = () => {
-    // const { setPos } = useContext(DatosContext)
-    // useEffect(() => {
 
-    //     setPos();
-
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [])
 
     const router = useRouter();
     const handleSubmit = () => {
@@ -33,9 +21,9 @@ const Form = () => {
     };
 
     return (
-        <div>
+        <Box padding={6} bgcolor={'#FFF'} borderRadius={5} mb={2}>
             <FormStepper onSubmit={handleSubmit} />
-        </div>
+        </Box>
     );
 };
 

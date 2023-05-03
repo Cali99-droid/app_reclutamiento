@@ -138,6 +138,7 @@ model postulante {
   persona_id                Int
   gradoId                   Int                         @map("grado_id")
   tipoId                    Int                         @map("tipo_documento_id")
+  estudios                  estudios[]
   evaluacion_x_postulante   evaluacion_x_postulante[]
   grado                     grado                       @relation(fields: [gradoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_grado1")
   persona                   persona                     @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_persona1")
@@ -197,4 +198,16 @@ model tics {
   postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tics_postulante1")
 
   @@index([postulante_id], map: "fk_tics_postulante1_idx")
+}
+
+model estudios {
+  id            Int        @id @default(autoincrement())
+  profesion     String     @db.VarChar(150)
+  institucion   String     @db.VarChar(200)
+  grado         String     @db.VarChar(200)
+  year          Int
+  postulante_id Int
+  postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_estudios_postulante1")
+
+  @@index([postulante_id], map: "fk_estudios_postulante1_idx")
 }
