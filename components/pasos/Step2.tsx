@@ -21,15 +21,23 @@ const Step2 = () => {
     //     setEstudios()
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [])
+
+    const [error, setError] = useState(false)
     const [profesion, setProfesion] = useState('')
     const [institucion, setInstitucion] = useState('')
     const [grado, setGrado] = useState('')
     const [year, setyear] = useState(new Date().getFullYear().toString())
     const onProfesionChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value.length <= 0) {
+            setError(true)
+        }
         setProfesion(event.target.value);
 
     }
     const onInstitucionChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value.length <= 0) {
+            setError(true)
+        }
         setInstitucion(event.target.value);
 
     }
@@ -38,6 +46,9 @@ const Step2 = () => {
 
     }
     const onYearChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value.length <= 0) {
+            setError(true)
+        }
         setyear(event.target.value);
 
     }
@@ -50,7 +61,7 @@ const Step2 = () => {
     const handleConfirm = () => {
         //TODO validar campos
         if (profesion.length === 0 || institucion.length === 0 || grado.length === 0) {
-            toast.warning('Complete los campos marcados en rojo')
+            toast.warning('Complete todos los campos')
             return
         };
         agregarEstudio(profesion, institucion, grado, year, IdPos)
@@ -68,6 +79,7 @@ const Step2 = () => {
         [`&.${tableCellClasses.head}`]: {
             backgroundColor: '#0045aa',
             color: theme.palette.common.white,
+
         },
         [`&.${tableCellClasses.body}`]: {
             fontSize: 14,
@@ -76,59 +88,59 @@ const Step2 = () => {
 
     return (
         <Box padding={4} mt={3} bgcolor={'#FFF'}>
+            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2}>
+                <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} mb={2} >
+                    <Typography fontWeight={'bold'}>ESTUDIOS / PROFESIONES </Typography>
 
-            <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} bgcolor={'#F1F1F1'} mb={2} padding={1} borderRadius={2}>
-                <Typography>ESTUDIOS / PROFESIONES </Typography>
-                <IconButton onClick={handleOpen} aria-label="delete" color='secondary'>
-                    <AddCircleIcon fontSize='medium' />
-                </IconButton>
-                {/* <Button startIcon={<AddCircleIcon />}></Button> */}
-            </Box>
-            <TableContainer   >
+                    <Button onClick={handleOpen} startIcon={<AddIcon />}>Agregar</Button>
+                </Box>
+                <TableContainer   >
 
-                <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-                    <TableHead>
-                        <TableRow>
-                            <StyledTableCell>Profesión</StyledTableCell>
-                            <StyledTableCell align="right">Institución</StyledTableCell>
-                            <StyledTableCell align="right">Grado</StyledTableCell>
-                            <StyledTableCell align="right">Año</StyledTableCell>
-                            <StyledTableCell align="right">Acciones</StyledTableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {estudios.map((e) => (
-                            <TableRow
-                                key={e.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {e.profesion}
-                                </TableCell>
-                                <TableCell align="right">{e.institucion}</TableCell>
-                                <TableCell align="right">{e.grado}</TableCell>
-                                <TableCell align="right">{e.year}</TableCell>
-                                <TableCell align="right">
-                                    <IconButton onClick={() => handleDelete(e.id)} color='error'>
-                                        <DeleteForeverIcon />
-                                    </IconButton>
-
-
-                                </TableCell>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                        <TableHead>
+                            <TableRow>
+                                <StyledTableCell>Profesión</StyledTableCell>
+                                <StyledTableCell align="right">Institución</StyledTableCell>
+                                <StyledTableCell align="right">Grado</StyledTableCell>
+                                <StyledTableCell align="right">Año</StyledTableCell>
+                                <StyledTableCell align="right">Acciones</StyledTableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {estudios.map((e) => (
+                                <TableRow
+                                    key={e.id}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell component="th" scope="row">
+                                        {e.profesion}
+                                    </TableCell>
+                                    <TableCell align="right">{e.institucion}</TableCell>
+                                    <TableCell align="right">{e.grado}</TableCell>
+                                    <TableCell align="right">{e.year}</TableCell>
+                                    <TableCell align="right">
+                                        <IconButton onClick={() => handleDelete(e.id)} color='error'>
+                                            <DeleteForeverIcon />
+                                        </IconButton>
 
 
-            {
-                estudios.length === 0 && (
-                    <Typography textAlign={'center'} mt={5}>No hay estudios</Typography>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
 
-                )
-            }
 
+                {
+                    estudios.length === 0 && (
+                        <Typography textAlign={'center'} mt={5}>No hay estudios</Typography>
+
+                    )
+                }
+
+
+            </Box>
 
 
             <Modal title={'Nueva Profesión'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
@@ -138,7 +150,8 @@ const Step2 = () => {
                         '& .MuiTextField-root': { m: 1, },
                     }}
                     noValidate
-                    autoComplete="off"
+                    autoComplete="on"
+
                 >
                     <TextField
                         autoFocus
@@ -147,7 +160,7 @@ const Step2 = () => {
                         label="Profesion"
                         placeholder='Nueva profesión'
                         variant="outlined"
-                        error={profesion.length <= 0}
+                        error={error && profesion.length <= 0}
                         value={profesion}
                         onChange={onProfesionChange}
                     />
@@ -155,27 +168,30 @@ const Step2 = () => {
                         id="institucion"
                         label="Institución"
                         variant="outlined"
-                        error={institucion.length <= 0}
+                        error={error && institucion.length <= 0}
                         value={institucion}
                         onChange={onInstitucionChange}
                     />
-                    <FormControl >
-                        <InputLabel id="demo-simple-select-label">Grado</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={grado}
-                            label="Grado"
-                            onChange={(e) => onGradoChange(e)}
-                        >
-                            <MenuItem value={'Estudiante'}>Estudiante</MenuItem>
-                            <MenuItem value={'Practicante'}>Practicante</MenuItem>
-                            <MenuItem value={'Bachiller'}>Bachiller</MenuItem>
-                            <MenuItem value={'Titulado'}>Titulado</MenuItem>
-                            <MenuItem value={'Maestria'}>Maestria</MenuItem>
-                            <MenuItem value={'Doctorado'}>Doctorado</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <Box width={'96%'} marginLeft={1}>
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Grado</InputLabel>
+                            <Select
+
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={grado}
+                                label="Grado"
+                                onChange={(e) => onGradoChange(e)}
+                            >
+                                <MenuItem value={'Estudiante'}>Estudiante</MenuItem>
+                                <MenuItem value={'Practicante'}>Practicante</MenuItem>
+                                <MenuItem value={'Bachiller'}>Bachiller</MenuItem>
+                                <MenuItem value={'Titulado'}>Titulado</MenuItem>
+                                <MenuItem value={'Maestria'}>Maestria</MenuItem>
+                                <MenuItem value={'Doctorado'}>Doctorado</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
 
                     <TextField
                         type='number'
@@ -183,7 +199,7 @@ const Step2 = () => {
                         label="Año"
                         variant="outlined"
                         value={year}
-                        error={year.length <= 0}
+                        error={error && year.length <= 0}
 
                         onChange={onYearChange}
                         helperText='*año en el que se graduo'

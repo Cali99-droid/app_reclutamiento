@@ -31,7 +31,7 @@ interface ContextProps {
     agregarInvestigacion: (nombre: string, institucion: string, year: string, idPos: number) => void
     quitarInvestigacion: (id: number) => void
     setCargos: () => Promise<void>
-    agregarCargo: (referencia: string, nivel: string, cantidad: string, year: string, institucion: string, remuneracion: string) => void
+    agregarCargo: (referencia: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => void
     quitarCargo: (id: number) => void
     agregarCapacitacion: (titulo: string, horas: string, year: string, institucion: string, descripcion: string) => void
     quitarCapacitacion: (id: number) => void

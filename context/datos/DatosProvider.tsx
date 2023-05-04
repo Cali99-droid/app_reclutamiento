@@ -152,22 +152,24 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     }
 
     //-------------------Cargos-----------------------
-    const agregarCargo = (referencia: string, nivel: string, cantidad: string, year: string, institucion: string, remuneracion: string) => {
-        const nuevoCargo: ICargo = {
-            id: 12,
-            referencia,
-            nivel,
-            cantidadCargo: cantidad,
-            year,
-            institucion,
-            remuneracion,
+    const agregarCargo = async (referencia: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => {
+        const { data } = await reclutApi.post<ICargo>('/postulants/cargo', { referencia, institucion, nivel, year, cantidadCargo, remuneracion, descripcion, idPos });
+        // const nuevoCargo: ICargo = {
+        //     id: 12,
+        //     referencia,
+        //     nivel,
+        //     cantidadCargo: cantidad,
+        //     year,
+        //     institucion,
+        //     remuneracion,
 
 
-        }
-        dispatch({ type: 'Add-Cargo', payload: nuevoCargo });
+        // }
+        dispatch({ type: 'Add-Cargo', payload: data });
 
     }
-    const quitarCargo = (id: number) => {
+    const quitarCargo = async (id: number) => {
+        const { data } = await reclutApi.delete<ICargo>(`/postulants/cargo/${id}`);
         dispatch({ type: 'Delete-Cargo', payload: id });
 
     }

@@ -1,11 +1,11 @@
 
 export interface ICargo {
-    id: number
-    institucion:string
-    referencia: string
-    remuneracion:string
-    nivel: string
+    id           : number
+    institucion  : string
+    referencia   : string
+    remuneracion : string
+    nivel        : string
     cantidadCargo: string
-    
-    year:string
+    descripcion  : string
+    year         : string
 }

@@ -21,7 +21,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
           case 'GET':
             return getCargos( req, res );
           case 'POST':
-            return postInv(req, res)
+            return postCargo(req, res)
           default:
               return res.status(400).json({ message: 'Bad request' });
       }
@@ -58,20 +58,25 @@ async function  getCargos(req: NextApiRequest, res: NextApiResponse<any>) {
 
 
 
-async function  postInv(req: NextApiRequest, res: NextApiResponse<any>) {
-  const{titulo='', institucion='',year,idPos}=req.body
+async function  postCargo(req: NextApiRequest, res: NextApiResponse<any>) {
+  const{referencia='', institucion='',remuneracion,nivel='',cantidadCargo='',descripcion,year,idPos}=req.body
 
 
   try {
-     const inv = await prisma.investigacion.create({
+     const cargo = await prisma.cargo.create({
         data:{
-          titulo,
+   
+          referencia,
           institucion,
+          remuneracion:parseFloat(remuneracion),
+          nivel,
+          cantidadCargo:parseInt(cantidadCargo),
+          descripcion,
           year:parseInt(year),
           postulante_id:idPos
         }
       })  
-    return res.status(200).json(inv)
+    return res.status(200).json(cargo)
   } catch (error) {
     await prisma.$disconnect();
     console.log(error);

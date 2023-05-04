@@ -36,7 +36,7 @@ const PostulantPage: NextPage<Props> = ({ persona, grados, postulante }) => {
       <ToastContainer />
 
       <Box mb={2} mt={15} padding={8}>
-        <Typography variant='h1' component='h1'>Mis datos</Typography>
+
         <Form />
         {
           activeStep === 0 && (
