@@ -60,32 +60,46 @@ const createPostulant = async(req: NextApiRequest, res: NextApiResponse<Data>) =
     apellidoPat, 
     apellidoMat,
     email,
-      telefono,
-      direccion,
-      nacimiento,
-      tipoId ,
-      numeroDocumento,
-      experiencia,
-      sueldoPretendido,
-      especialidad,
-      gradoId ,
-      idPersona,
+    telefono,
+    direccion,
+    nacimiento,
+    tipoId ,
+    numeroDocumento,
+    estadoCivil,
+    exalumno,
+    egreso=0,
+    hijos,
+    discapacidad,
+    nivel,
+
+
+
+    sueldoPretendido,
+    gradoId ,
+    idPersona,
+    idPostulante
     } = req.body as { 
-        email: string, 
-        password: string, 
-        nombre: string, 
-        apellidoPat: string, 
-        apellidoMat: string,
-        telefono:number,
-        direccion:string,
-        nacimiento:Date,
-        tipoId        : number,
-        numeroDocumento   : string,
-        experiencia     : number,
-        sueldoPretendido: number,
-        especialidad: string,
-        gradoId : number ,
-        idPersona:number
+      email: string, 
+      password: string, 
+      nombre: string, 
+      apellidoPat: string, 
+      apellidoMat: string,
+      telefono:number,
+      direccion:string,
+      nacimiento:Date,
+      tipoId        : number,
+      numeroDocumento   : string,
+      experiencia     : number,
+      sueldoPretendido: number,
+      gradoId : number ,
+      estadoCivil:string,
+      exalumno:number,
+      egreso:number,
+      hijos:number,
+      discapacidad:number,
+      nivel:string,
+     idPersona:number
+      idPostulante:number
     };
     const post = await prisma.postulante.findFirst({
       where:{
@@ -112,14 +126,20 @@ const createPostulant = async(req: NextApiRequest, res: NextApiResponse<Data>) =
             postulante:{
               create:{
                 direccion,
-            
-                experiencia:parseInt(experiencia.toString()) ,
-                nacimiento:new Date(nacimiento),
-                numeroDocumento,
-                sueldo:parseFloat(sueldoPretendido.toString()) ,
-                gradoId,
-                tipoId,
-                telefono:telefono.toString(),
+               
+                  nacimiento:new Date(nacimiento),
+                  numeroDocumento,
+                  sueldo:parseFloat(sueldoPretendido.toString()) ,
+                  gradoId,
+                  tipoId,
+                  telefono:telefono.toString(),
+                  estado_civil:estadoCivil,
+                  exalumno,
+                  egreso:parseInt(egreso.toString()),
+                  hijos:parseInt(hijos.toString()),
+
+                  discapacidad,
+                  nivel
                 
               }
             }
@@ -163,7 +183,7 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
       numeroDocumento,
       estadoCivil,
       exalumno,
-      egreso,
+      egreso='0',
       hijos,
       discapacidad,
       nivel,
@@ -198,6 +218,8 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
        idPersona:number
         idPostulante:number
     };
+
+    
     const persona = await prisma.persona.update({
           where: {
             id:idPersona
@@ -222,7 +244,7 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
                   telefono:telefono.toString(),
                   estado_civil:estadoCivil,
                   exalumno,
-                  egreso,
+                  egreso: isNaN( parseInt(egreso.toString())) || exalumno===0 ? 0:   parseInt(egreso.toString()),
                   hijos:parseInt(hijos.toString()),
 
                   discapacidad,
