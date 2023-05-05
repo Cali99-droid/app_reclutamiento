@@ -13,10 +13,13 @@ import { Box } from '@mui/material';
 
 
 const Form = () => {
-    const { setEstudios, setCargos } = useContext(DatosContext)
+    const { setEstudios, setCargos, setCapacitacion, setReconocimiento, setAficion } = useContext(DatosContext)
     useEffect(() => {
         setEstudios()
         setCargos();
+        setCapacitacion();
+        setReconocimiento();
+        setAficion();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const router = useRouter();

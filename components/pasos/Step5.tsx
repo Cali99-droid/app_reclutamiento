@@ -1,11 +1,12 @@
-import { Box, Button, Divider, IconButton, TextField, Typography } from '@mui/material';
+import { Box, Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses } from '@mui/material';
 import React, { useEffect } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Modal } from '../modal';
 import { useState, useContext, ChangeEvent } from 'react';
 import { DatosContext } from '@/context';
 import { useSession } from 'next-auth/react';
-import { persona, postulante } from '@prisma/client';
+import AddIcon from '@mui/icons-material/Add';
+import { toast } from 'react-toastify';
 
 
 const Step5 = () => {
@@ -19,6 +20,7 @@ const Step5 = () => {
         setTic()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+    const [error, setError] = useState(false)
 
     //--------------Modal Aficiones------------------
 
@@ -28,12 +30,17 @@ const Step5 = () => {
     }
     const handleClose = () => {
         setOpen(false);
+        setError(false)
     }
     const handleConfirm = () => {
-        // //TODO validar campos
-        agregarAficion(actividad, year, nivel, logro)
+
+        if (actividad.length === 0 || nivel.length === 0 || logro.length === 0 || year.length === 0 || IdPos.length === 0) {
+            toast.warning('¡Complete los campos requeridos!')
+            return
+        };
+        agregarAficion(actividad, year, nivel, logro, IdPos)
         setActividad('')
-        setYear('')
+
         setNivel('')
         setLogro('')
 
@@ -47,22 +54,34 @@ const Step5 = () => {
     const [actividad, setActividad] = useState('')
     const [nivel, setNivel] = useState('')
     const [logro, setLogro] = useState('')
-    const [year, setYear] = useState('')
+    const [year, setYear] = useState(new Date().getFullYear().toString())
 
     const onActividadChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value.length <= 0) {
+            setError(true)
+        }
         setActividad(event.target.value);
 
     }
-    const onNivelChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const onNivelChange = (event: SelectChangeEvent<string>) => {
+        if (event.target.value.length <= 0) {
+            setError(true)
+        }
         setNivel(event.target.value);
 
     }
     const onLogroChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value.length <= 0) {
+            setError(true)
+        }
         setLogro(event.target.value);
 
     }
 
     const onYearChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value.length <= 0) {
+            setError(true)
+        }
         setYear(event.target.value);
 
     }
@@ -75,9 +94,14 @@ const Step5 = () => {
     }
     const handleCloseTics = () => {
         setOpenTics(false);
+        setError(false)
     }
     const handleConfirmTics = () => {
-        // //TODO validar campos
+
+        if (tecnologia.length === 0 || nivel.length === 0 || IdPos.length === 0) {
+            toast.warning('¡Complete los campos requeridos!')
+            return
+        };
         agregarTic(tecnologia, nivel, IdPos)
         setTecnologia('')
         setNivel('')
@@ -93,39 +117,171 @@ const Step5 = () => {
     //-----------------TICS-.----------------
     const [tecnologia, setTecnologia] = useState('')
     const onTecnologiaChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value.length <= 0) {
+            setError(true)
+        }
         setTecnologia(event.target.value);
 
     }
-
+    const StyledTableCell = styled(TableCell)(({ theme }) => ({
+        [`&.${tableCellClasses.head}`]: {
+            backgroundColor: '#0045aa',
+            color: theme.palette.common.white,
+        },
+        [`&.${tableCellClasses.body}`]: {
+            fontSize: 14,
+        },
+    }));
 
     return (
-        <Box padding={4} mt={3} >
-            <Box padding={4} mt={3} bgcolor={'#FFF'}>
+        <Box padding={4} mt={3} className="fadeIn">
+            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2}>
                 <Box display={'flex'} justifyContent={'space-between'} mb={1}>
-                    <Typography>OTRAS ACTIVIDADES, AFICIONES O HABILIDADES APRENDIDAS Y/O ESTUDIADAS </Typography>
+                    <Typography fontWeight={'bold'}> USO DE  TECNOLOGÍAS </Typography>
 
-                    <Button onClick={handleOpen}>Agregar</Button>
+                    <Button onClick={handleOpenTics} startIcon={<AddIcon />}>Agregar</Button>
                 </Box>
                 <Divider />
+                <TableContainer   >
+
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                        <TableHead>
+                            <TableRow>
+
+                                <StyledTableCell >Tecnologia</StyledTableCell>
+                                <StyledTableCell align="right">Nivel</StyledTableCell>
+
+                                <StyledTableCell align="right">Acciones</StyledTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {tecnologias.map((e) => (
+                                <TableRow
+                                    key={e.id}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell component="th" scope="row">
+                                        {e.tecnologia}
+                                    </TableCell>
+                                    <TableCell align="right">{e.nivel}</TableCell>
+
+                                    <TableCell align="right">
+                                        <IconButton onClick={() => handleDeleteTics(e.id)} color='error'>
+                                            <DeleteForeverIcon />
+                                        </IconButton>
+
+
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
                 {
+                    tecnologias.length === 0 && (
+                        <Typography textAlign={'center'} mt={5}>No hay Tecnologias</Typography>
 
-                    aficiones.map(c => (
+                    )
+                }
 
-                        <Box key={c.id} display={'flex'} justifyContent={'space-between'} alignItems={'center'} mt={2}>
-                            <Typography >{c.actividad}</Typography>
-                            <Typography>{c.nivel}</Typography>
-                            <Typography >{c.logro}</Typography>
-                            <Typography >{c.year}</Typography>
-                            <IconButton onClick={() => handleDelete(c.id)} color='error'>
-                                <DeleteForeverIcon />
-                            </IconButton>
 
+
+                <Modal title={'Nuevo uso de Tecnologias'} open={openTics} handleClose={handleCloseTics} handleConfirm={handleConfirmTics}>
+                    <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
+                        component="form"
+                        sx={{
+                            '& .MuiTextField-root': { m: 1, width: 300 },
+                        }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <TextField
+                            autoFocus
+                            multiline
+                            id="tecnologia"
+                            label="Tecnologia"
+                            placeholder='Tecnologia'
+                            variant="outlined"
+                            error={error && tecnologia.length <= 0}
+                            value={tecnologia}
+                            onChange={onTecnologiaChange}
+                        />
+                        <Box width={'96%'} marginLeft={1}>
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">Nivel</InputLabel>
+                                <Select
+
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={nivel}
+                                    label="Nivel"
+                                    onChange={(e) => onNivelChange(e)}
+                                >
+                                    <MenuItem value={'Basico'}>Básico</MenuItem>
+                                    <MenuItem value={'Intermedio'}>Intermedio</MenuItem>
+                                    <MenuItem value={'Avanzado'}>Avanzado</MenuItem>
+
+
+                                </Select>
+                            </FormControl>
                         </Box>
 
 
-                    ))
+                    </Box>
 
-                }
+
+                </Modal>
+
+
+
+            </Box>
+            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2} mt={3}>
+                <Box display={'flex'} justifyContent={'space-between'} mb={1}>
+                    <Typography fontWeight={'bold'} >OTRAS ACTIVIDADES, AFICIONES O HABILIDADES APRENDIDAS Y/O ESTUDIADAS </Typography>
+
+                    <Button onClick={handleOpen} startIcon={<AddIcon />}>Agregar</Button>
+                </Box>
+                <Divider />
+                <TableContainer   >
+
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                        <TableHead>
+                            <TableRow>
+                                <StyledTableCell>actividad</StyledTableCell>
+                                <StyledTableCell align="right">Nivel</StyledTableCell>
+                                <StyledTableCell align="right">Logro</StyledTableCell>
+                                <StyledTableCell align="right">Año</StyledTableCell>
+
+                                <StyledTableCell align="right">Acciones</StyledTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {aficiones.map((e) => (
+                                <TableRow
+                                    key={e.id}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell component="th" scope="row">
+                                        {e.actividad}
+                                    </TableCell>
+                                    <TableCell align="right">{e.nivel}</TableCell>
+                                    <TableCell align="right">{e.logro}</TableCell>
+                                    <TableCell align="right">{e.year}</TableCell>
+
+                                    <TableCell align="right">
+                                        <IconButton onClick={() => handleDelete(e.id)} color='error'>
+                                            <DeleteForeverIcon />
+                                        </IconButton>
+
+
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
                 {
                     aficiones.length === 0 && (
                         <Typography textAlign={'center'} mt={5}>No hay aficiones</Typography>
@@ -152,29 +308,37 @@ const Step5 = () => {
                             label="Actividad"
                             placeholder='Actividad'
                             variant="outlined"
-                            error={actividad.length <= 0}
+                            error={error && actividad.length <= 0}
                             value={actividad}
                             onChange={onActividadChange}
                         />
+                        <Box width={'96%'} marginLeft={1}>
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">Nivel</InputLabel>
+                                <Select
+
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={nivel}
+                                    label="Nivel"
+                                    onChange={(e) => onNivelChange(e)}
+                                >
+                                    <MenuItem value={'Basico'}>Básico</MenuItem>
+                                    <MenuItem value={'Intermedio'}>Intermedio</MenuItem>
+                                    <MenuItem value={'Avanzado'}>Avanzado</MenuItem>
+
+
+                                </Select>
+                            </FormControl>
+                        </Box>
                         <TextField
                             autoFocus
 
-                            id="nivel"
-                            label="nivel"
-                            placeholder='nivel'
+                            id="logro"
+                            label="Logro"
+                            placeholder='Logro'
                             variant="outlined"
-                            error={nivel.length <= 0}
-                            value={nivel}
-                            onChange={onNivelChange}
-                        />
-                        <TextField
-                            autoFocus
-
-                            id="horas"
-                            label="Horas"
-                            placeholder='Horas'
-                            variant="outlined"
-                            error={logro.length <= 0}
+                            error={error && logro.length <= 0}
                             value={logro}
                             onChange={onLogroChange}
                         />
@@ -184,7 +348,7 @@ const Step5 = () => {
                             label="Año"
                             variant="outlined"
                             value={year}
-                            error={year.length <= 0}
+                            error={error && year.length <= 0}
 
                             onChange={onYearChange}
                             helperText='*año en el que culminó el curso'
@@ -198,82 +362,8 @@ const Step5 = () => {
 
 
             </Box>
-            <Box padding={4} mt={3} bgcolor={'#FFF'}>
-                <Box display={'flex'} justifyContent={'space-between'} mb={1}>
-                    <Typography>AGREGAR USO DE LAS TECNOLOGÍAS </Typography>
 
-                    <Button onClick={handleOpenTics}>Agregar</Button>
-                </Box>
-                <Divider />
-                {
-
-                    tecnologias.map(r => (
-
-                        <Box key={r.id} display={'flex'} justifyContent={'space-between'} alignItems={'center'} mt={2}>
-                            <Typography >{r.tecnologia}</Typography>
-                            <Typography>{r.nivel}</Typography>
-
-
-                            <IconButton onClick={() => handleDeleteTics(r.id)} color='error'>
-                                <DeleteForeverIcon />
-                            </IconButton>
-
-                        </Box>
-
-
-                    ))
-
-                }
-                {
-                    tecnologias.length === 0 && (
-                        <Typography textAlign={'center'} mt={5}>No hay Tecnologias</Typography>
-
-                    )
-                }
-
-
-
-                <Modal title={'Nuevo reconocimiento'} open={openTics} handleClose={handleCloseTics} handleConfirm={handleConfirmTics}>
-                    <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
-                        component="form"
-                        sx={{
-                            '& .MuiTextField-root': { m: 1 },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                    >
-                        <TextField
-                            autoFocus
-                            multiline
-                            id="tecnologia"
-                            label="Tecnologia"
-                            placeholder='Tecnologia'
-                            variant="outlined"
-                            error={tecnologia.length <= 0}
-                            value={tecnologia}
-                            onChange={onTecnologiaChange}
-                        />
-                        <TextField
-                            autoFocus
-
-                            id="nivel"
-                            label="Nivel"
-                            placeholder='Nivel de experiencia'
-                            variant="outlined"
-                            error={nivel.length <= 0}
-                            value={nivel}
-                            onChange={onNivelChange}
-                        />
-
-                    </Box>
-
-
-                </Modal>
-
-
-
-            </Box>
-        </Box>
+        </Box >
     );
 };
 

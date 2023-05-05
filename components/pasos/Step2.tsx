@@ -87,7 +87,7 @@ const Step2 = () => {
     }));
 
     return (
-        <Box padding={4} mt={3} bgcolor={'#FFF'}>
+        <Box padding={4} mt={3} bgcolor={'#FFF'} className="fadeIn">
             <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2}>
                 <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} mb={2} >
                     <Typography fontWeight={'bold'}>ESTUDIOS / PROFESIONES </Typography>

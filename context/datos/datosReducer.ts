@@ -15,10 +15,13 @@ type DatosType =
     | { type: 'Cargo - Load', payload: ICargo[] }
     | { type: 'Add-Cargo', payload: ICargo }
     | { type: 'Delete-Cargo', payload: number }
+    | { type: 'Capacitacion - Load', payload: ICapacitacion[] }
     | { type: 'Add-Capacitacion', payload: ICapacitacion }
     | { type: 'Delete-Capacitacion', payload: number }
+    | { type: 'Reconocimiento - Load', payload: IReconocimiento[] }
     | { type: 'Add-Reconocimiento', payload: IReconocimiento }
     | { type: 'Delete-Reconocimiento', payload: number }
+    | { type: 'Aficion - Load', payload: IAficion[] }
     | { type: 'Add-Aficion', payload: IAficion }
     | { type: 'Delete-Aficion', payload: number }
     | { type: 'Tic-Load', payload: ITics[] }
@@ -92,6 +95,12 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
                 ...state,
                 cargos: state.cargos.filter(c=>c.id !== action.payload)
             }
+
+        case 'Capacitacion - Load':
+            return{
+                ...state,
+                capacitaciones:action.payload
+            }
         case 'Add-Capacitacion':
             return{
                 ...state,
@@ -101,6 +110,11 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
             return{
                 ...state,
                 capacitaciones: state.capacitaciones.filter(c=>c.id !== action.payload)
+            }
+        case 'Reconocimiento - Load':
+            return{
+                ...state,
+                reconocimientos:action.payload
             }
         case 'Add-Reconocimiento':
             return{
@@ -112,6 +126,11 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
             return{
                 ...state,
                 reconocimientos: state.reconocimientos.filter(c=>c.id !== action.payload)
+            }
+        case 'Aficion - Load':
+            return{
+                ...state,
+                aficiones:action.payload
             }
         case 'Add-Aficion':
             return{

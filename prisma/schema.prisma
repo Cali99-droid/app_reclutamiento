@@ -41,7 +41,7 @@ model persona {
 model convocatoria {
   id                        Int                         @id @default(autoincrement())
   titulo                    String                      @db.VarChar(45)
-  descripcion               String                      @db.VarChar(45)
+  descripcion               String                      @db.LongText
   experiencia               Int
   gradoId                   Int                         @map("grado_id")
   estadoId                  Int                         @map("estado_id")
@@ -138,6 +138,8 @@ model postulante {
   persona_id                Int
   gradoId                   Int                         @map("grado_id")
   tipoId                    Int                         @map("tipo_documento_id")
+  aficion                   aficion[]
+  capacitacion              capacitacion[]
   cargo                     cargo[]
   estudios                  estudios[]
   evaluacion_x_postulante   evaluacion_x_postulante[]
@@ -146,6 +148,7 @@ model postulante {
   persona                   persona                     @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_persona1")
   tipo_documento            tipo_documento              @relation(fields: [tipoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_tipo_documento1")
   postulante_x_convocatoria postulante_x_convocatoria[]
+  reconocimiento            reconocimiento[]
   tics                      tics[]
 
   @@index([gradoId], map: "fk_postulante_grado1_idx")
@@ -238,4 +241,41 @@ model cargo {
   postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cargo_postulante1")
 
   @@index([postulante_id], map: "fk_cargo_postulante1_idx")
+}
+
+model capacitacion {
+  id            Int        @id @default(autoincrement())
+  titulo        String     @db.VarChar(200)
+  horas         Int
+  year          Int
+  descripcion   String     @db.LongText
+  institucion   String     @db.VarChar(200)
+  postulante_id Int
+  postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_capacitacion_postulante1")
+
+  @@index([postulante_id], map: "fk_capacitacion_postulante1_idx")
+}
+
+model reconocimiento {
+  id            Int        @id @default(autoincrement())
+  reconocimento String     @db.LongText
+  institucion   String     @db.VarChar(45)
+  descripcion   String     @db.VarChar(200)
+  year          Int
+  postulante_id Int
+  postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reconocimiento_postulante1")
+
+  @@index([postulante_id], map: "fk_reconocimiento_postulante1_idx")
+}
+
+model aficion {
+  id            Int        @id @default(autoincrement())
+  actividad     String     @db.VarChar(150)
+  nivel         String     @db.VarChar(100)
+  logro         String     @db.VarChar(200)
+  year          Int
+  postulante_id Int
+  postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_aficion_postulante1")
+
+  @@index([postulante_id], map: "fk_aficion_postulante1_idx")
 }

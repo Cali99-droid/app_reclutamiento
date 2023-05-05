@@ -92,6 +92,24 @@ export const DatosProvider: FC<Props> = ({ children }) => {
         dispatch({ type: 'Cargo - Load', payload: data })
 
     }
+    const setCapacitacion = async () => {
+        const { data } = await reclutApi.get<ICapacitacion[]>(`/postulants/capacitacion`)
+
+        dispatch({ type: 'Capacitacion - Load', payload: data })
+
+    }
+    const setReconocimiento = async () => {
+        const { data } = await reclutApi.get<IReconocimiento[]>(`/postulants/reconocimiento`)
+
+        dispatch({ type: 'Reconocimiento - Load', payload: data })
+
+    }
+    const setAficion = async () => {
+        const { data } = await reclutApi.get<IAficion[]>(`/postulants/aficion`)
+
+        dispatch({ type: 'Aficion - Load', payload: data })
+
+    }
 
     // const { data }: any = useSession();
     // const [IdPos, setIdPos] = useState(data?.user.persona.postulante[0].id)
@@ -175,57 +193,63 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     }
 
     //----------------Capacitaciones---------------------
-    const agregarCapacitacion = (titulo: string, horas: string, year: string, institucion: string, descripcion: string) => {
-        const nuevoCapacitacion: ICapacitacion = {
-            id: 12,
-            titulo,
-            horas,
-            descripcion,
-            year,
-            institucion,
+    const agregarCapacitacion = async (titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number) => {
+        const { data } = await reclutApi.post<ICapacitacion>('/postulants/capacitacion', { titulo, institucion, horas, year, descripcion, idPos });
+        // const nuevoCapacitacion: ICapacitacion = {
+        //     id: 12,
+        //     titulo,
+        //     horas,
+        //     descripcion,
+        //     year,
+        //     institucion,
 
-        }
-        dispatch({ type: 'Add-Capacitacion', payload: nuevoCapacitacion });
+        // }
+        dispatch({ type: 'Add-Capacitacion', payload: data });
 
     }
-    const quitarCapacitacion = (id: number) => {
+    const quitarCapacitacion = async (id: number) => {
+        const { data } = await reclutApi.delete<ICargo>(`/postulants/capacitacion/${id}`);
         dispatch({ type: 'Delete-Capacitacion', payload: id });
 
     }
 
     //-------------------Reconocimientos---------------------
-    const agregarReconocimiento = (reconocimento: string, year: string, institucion: string, descripcion: string) => {
-        const nuevoReconocimiento: IReconocimiento = {
-            id: 12,
-            reconocimento,
+    const agregarReconocimiento = async (reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number) => {
+        const { data } = await reclutApi.post<IReconocimiento>('/postulants/reconocimiento', { reconocimento, institucion, year, descripcion, idPos });
+        // const nuevoReconocimiento: IReconocimiento = {
+        //     id: 12,
+        //     reconocimento,
 
-            descripcion,
-            year,
-            institucion,
+        //     descripcion,
+        //     year,
+        //     institucion,
 
-        }
-        dispatch({ type: 'Add-Reconocimiento', payload: nuevoReconocimiento });
+        // }
+        dispatch({ type: 'Add-Reconocimiento', payload: data });
 
     }
-    const quitarReconocimiento = (id: number) => {
+    const quitarReconocimiento = async (id: number) => {
+        const { data } = await reclutApi.delete<IReconocimiento>(`/postulants/reconocimiento/${id}`);
         dispatch({ type: 'Delete-Reconocimiento', payload: id });
 
     }
 
     //-------------------Aficiones---------------------
-    const agregarAficion = (actividad: string, year: string, nivel: string, logro: string) => {
-        const nuevaAficion: IAficion = {
-            id: 12,
-            actividad,
-            nivel,
-            year,
-            logro,
+    const agregarAficion = async (actividad: string, year: string, nivel: string, logro: string, idPos: number) => {
+        const { data } = await reclutApi.post<IAficion>('/postulants/aficion', { actividad, nivel, year, logro, idPos });
+        // const nuevaAficion: IAficion = {
+        //     id: 12,
+        //     actividad,
+        //     nivel,
+        //     year,
+        //     logro,
 
-        }
-        dispatch({ type: 'Add-Aficion', payload: nuevaAficion });
+        // }
+        dispatch({ type: 'Add-Aficion', payload: data });
 
     }
-    const quitarAficion = (id: number) => {
+    const quitarAficion = async (id: number) => {
+        const { data } = await reclutApi.delete<IAficion>(`/postulants/aficion/${id}`);
         dispatch({ type: 'Delete-Aficion', payload: id });
 
     }
@@ -264,21 +288,31 @@ export const DatosProvider: FC<Props> = ({ children }) => {
 
             handleNext,
             handleBack,
+
             setEstudios,
             agregarEstudio,
             quitarEstudio,
+
             setInvestigaciones,
             agregarInvestigacion,
             quitarInvestigacion,
+
             setCargos,
             agregarCargo,
             quitarCargo,
+
+            setCapacitacion,
             agregarCapacitacion,
             quitarCapacitacion,
+
+            setReconocimiento,
             agregarReconocimiento,
             quitarReconocimiento,
+
+            setAficion,
             agregarAficion,
             quitarAficion,
+
             setTic,
             agregarTic,
             quitarTic,

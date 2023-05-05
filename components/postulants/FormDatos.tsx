@@ -123,7 +123,7 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
 
     }
     return (
-        <Box padding={6} bgcolor={'#FFF'} borderRadius={5}>
+        <Box padding={6} bgcolor={'#FFF'} borderRadius={5} className="fadeIn">
             <Box mb={4}>
                 <Typography variant='h5' fontWeight={'bold'} color={'#OOO'}>Datos Personales</Typography>
                 <Divider />

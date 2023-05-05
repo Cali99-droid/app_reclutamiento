@@ -1,4 +1,4 @@
-import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled } from '@mui/material';
+import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import React, { useEffect } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useContext, ChangeEvent } from 'react';
@@ -8,6 +8,7 @@ import Modal from '../modal/Modal';
 import { useSession } from 'next-auth/react';
 import { investigacion } from '@prisma/client';
 import AddIcon from '@mui/icons-material/Add';
+import { toast } from 'react-toastify';
 const Step3 = () => {
     const { data }: any = useSession();
     // ** console.log(data?.user.persona.postulante[0].id);
@@ -30,7 +31,11 @@ const Step3 = () => {
         setError(false)
     }
     const handleConfirmInves = () => {
-        //TODO validar campos
+
+        if (titulo.length === 0 || year.length === 0 || institucion.length === 0 || IdPos.length === 0) {
+            toast.warning('Complete todos los campos')
+            return
+        };
         agregarInvestigacion(titulo, institucion, year, IdPos)
         setInstitucion('')
         setTitulo('')
@@ -78,8 +83,12 @@ const Step3 = () => {
         setError(false)
     }
     const handleConfirmCargo = () => {
-        //TODO validar campos referencia max 9
+        //TODO  referencia max 9
 
+        if (referencia.length === 0 || nivel.length === 0 || cantidad.length === 0 || year.length === 0 || institucion.length === 0 || remuneracion.length === 0 || descripcion.length === 0 || IdPos.length === 0) {
+            toast.warning('Complete todos los campos')
+            return
+        };
         agregarCargo(referencia, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos)
         setReferencia('')
         setNivel('')
@@ -109,7 +118,7 @@ const Step3 = () => {
         setReferencia(event.target.value);
 
     }
-    const onNivelChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const onNivelChange = (event: SelectChangeEvent<string>) => {
         if (event.target.value.length <= 0) {
             setError(true)
         }
@@ -148,10 +157,10 @@ const Step3 = () => {
         },
     }));
     return (
-        <Box padding={4} mt={3} >
+        <Box padding={4} mt={3} className="fadeIn" >
 
             <Divider />
-            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2} mt={3}>
+            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2} >
                 <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} mb={2}  >
 
                     <Typography fontWeight={'bold'}>CARGOS DE RESPONSABILIDAD O DE CONFIANZA DESEMPEÑADOS </Typography>
@@ -209,7 +218,7 @@ const Step3 = () => {
                     )
                 }
             </Box>
-            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2} mb={3}>
+            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2} mt={3}>
                 <Box display={'flex'} mb={2} justifyContent={'space-between'} alignItems={'center'} >
 
                     <Typography fontWeight={'bold'}> INVESTIGACIONES, PROYECTOS U OTROS TRABAJOS ACADÉMICOS REALIZADOS COMO EXPERIENCIA </Typography>
@@ -370,18 +379,26 @@ const Step3 = () => {
                         onChange={onRefChange}
 
                     />
-                    <TextField
-                        autoFocus
-                        multiline
-                        id="nivel"
-                        label="Nivel"
-                        placeholder='Inicial, Primaria, Secundaria....'
-                        variant="outlined"
-                        error={error && nivel.length <= 0}
-                        value={nivel}
-                        onChange={onNivelChange}
+                    <Box width={'96%'} marginLeft={1}>
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Nivel</InputLabel>
+                            <Select
 
-                    />
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={nivel}
+                                label="Nivel"
+                                onChange={(e) => onNivelChange(e)}
+                            >
+                                <MenuItem value={'Inicial'}>Inicial</MenuItem>
+                                <MenuItem value={'Primaria'}>Primaria</MenuItem>
+                                <MenuItem value={'Secundaria'}>Secundaria</MenuItem>
+                                <MenuItem value={'Superior'}>Superior</MenuItem>
+                                <MenuItem value={'Ninguno'}>Ninguno</MenuItem>
+
+                            </Select>
+                        </FormControl>
+                    </Box>
                     <TextField
                         type='number'
                         id="cantidadCargo"
