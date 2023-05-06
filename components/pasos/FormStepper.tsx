@@ -5,6 +5,7 @@ import { DatosContext } from '@/context/datos';
 import LabelIcon from '@mui/icons-material/Label';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import EastIcon from '@mui/icons-material/East';
+import { useRouter } from 'next/router';
 type FormStepperProps = {
     // steps: { label: string; content: JSX.Element, icon: any }[];
     onSubmit: () => void;
@@ -15,7 +16,7 @@ const FormStepper = ({ onSubmit }: FormStepperProps) => {
     const { activeStep, handleBack, handleNext, steps } = useContext(DatosContext)
 
     const isLastStep = activeStep === steps.length - 1;
-
+    const router = useRouter();
     return (
         <>
             <Stepper activeStep={activeStep} >
@@ -49,7 +50,7 @@ const FormStepper = ({ onSubmit }: FormStepperProps) => {
                 }
                 {
                     isLastStep && (
-                        <Button variant="contained" color="primary" onClick={onSubmit}>
+                        <Button variant="contained" onClick={() => router.push('/postulant/ficha')} color="primary" >
                             Finalizar
                         </Button>
                     )

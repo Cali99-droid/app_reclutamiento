@@ -9,6 +9,13 @@ import { useSession } from 'next-auth/react';
 import { investigacion } from '@prisma/client';
 import AddIcon from '@mui/icons-material/Add';
 import { toast } from 'react-toastify';
+import { validations } from '@/helpers';
+
+const inputProps = {
+    max: '50',
+    min: '0',
+
+};
 const Step3 = () => {
     const { data }: any = useSession();
     // ** console.log(data?.user.persona.postulante[0].id);
@@ -108,19 +115,30 @@ const Step3 = () => {
     const [cantidad, setCantidad] = useState('')
     const [remuneracion, setRemuneracion] = useState('')
     const [descripcion, setDescripcion] = useState('')
-
+    const [mensaje, setMensaje] = useState('')
 
 
     const onRefChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value.length <= 0) {
+
+
+        if (!validations.isValidTelephone(event.target.value.toString())) {
             setError(true)
+            setMensaje('El numero de telefono no parece ser válido')
+        } else {
+            setError(false)
+            setMensaje('')
+
         }
         setReferencia(event.target.value);
+
 
     }
     const onNivelChange = (event: SelectChangeEvent<string>) => {
         if (event.target.value.length <= 0) {
             setError(true)
+        } else {
+            setError(false)
+
         }
         setNivel(event.target.value);
 
@@ -128,13 +146,19 @@ const Step3 = () => {
     const onCantidadChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.length <= 0) {
             setError(true)
-        }
-        setCantidad(event.target.value);
+        } else {
+            setError(false)
 
+        }
+
+        setCantidad(event.target.value);
     }
     const onRemuneracionChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.length <= 0) {
             setError(true)
+        } else {
+            setError(false)
+
         }
         setRemuneracion(event.target.value);
 
@@ -142,6 +166,9 @@ const Step3 = () => {
     const onDescipcionChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.length <= 0) {
             setError(true)
+        } else {
+            setError(false)
+
         }
         setDescripcion(event.target.value);
 
@@ -174,13 +201,14 @@ const Step3 = () => {
                     <Table sx={{ minWidth: 650 }} aria-label="simple table" >
                         <TableHead>
                             <TableRow>
+                                <StyledTableCell align="right">Año</StyledTableCell>
                                 <StyledTableCell>Cargo</StyledTableCell>
                                 <StyledTableCell align="right">Institución</StyledTableCell>
                                 <StyledTableCell align="right">Referencia</StyledTableCell>
-                                <StyledTableCell align="right">Nivel</StyledTableCell>
-                                <StyledTableCell align="right">Personas a cargo</StyledTableCell>
+                                {/* <StyledTableCell align="right">Nivel</StyledTableCell> */}
+                                {/* <StyledTableCell align="right">Personas a cargo</StyledTableCell> */}
                                 <StyledTableCell align="right">Remuneración</StyledTableCell>
-                                <StyledTableCell align="right">Año</StyledTableCell>
+
                                 <StyledTableCell align="right">Acciones</StyledTableCell>
                             </TableRow>
                         </TableHead>
@@ -190,15 +218,16 @@ const Step3 = () => {
                                     key={e.id}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
+                                    <TableCell align="right">{e.year}</TableCell>
                                     <TableCell component="th" scope="row">
                                         {e.descripcion}
                                     </TableCell>
                                     <TableCell align="right">{e.institucion}</TableCell>
                                     <TableCell align="right">{e.referencia}</TableCell>
-                                    <TableCell align="right">{e.nivel}</TableCell>
-                                    <TableCell align="right">{e.cantidadCargo}</TableCell>
+                                    {/* <TableCell align="right">{e.nivel}</TableCell> */}
+                                    {/* <TableCell align="right">{e.cantidadCargo}</TableCell> */}
                                     <TableCell align="right">{e.remuneracion}</TableCell>
-                                    <TableCell align="right">{e.year}</TableCell>
+
                                     <TableCell align="right">
                                         <IconButton onClick={() => handleDeleteCargo(e.id)} color='error'>
                                             <DeleteForeverIcon />
@@ -348,7 +377,8 @@ const Step3 = () => {
                         multiline
                         id="descripcion"
                         label="Descripción del cargo"
-                        placeholder='Descripción del cargo'
+                        placeholder='Dirección, subdirección, coordinaciones, jefaturas, encargaturas, etc.
+                        '
                         variant="outlined"
                         error={error && descripcion.length <= 0}
                         value={descripcion}
@@ -359,7 +389,7 @@ const Step3 = () => {
                         autoFocus
                         multiline
                         id="institucion"
-                        label="institucion"
+                        label="Institución"
                         placeholder='Nombre de la institución'
                         variant="outlined"
                         error={error && institucion.length <= 0}
@@ -374,9 +404,10 @@ const Step3 = () => {
                         placeholder='Referencia institucional'
                         type='number'
                         variant="outlined"
-                        error={error && referencia.length <= 0}
+                        error={mensaje.length > 0}
                         value={referencia}
                         onChange={onRefChange}
+                        helperText={mensaje}
 
                     />
                     <Box width={'96%'} marginLeft={1}>
@@ -394,7 +425,9 @@ const Step3 = () => {
                                 <MenuItem value={'Primaria'}>Primaria</MenuItem>
                                 <MenuItem value={'Secundaria'}>Secundaria</MenuItem>
                                 <MenuItem value={'Superior'}>Superior</MenuItem>
-                                <MenuItem value={'Ninguno'}>Ninguno</MenuItem>
+                                <MenuItem value={'general docente'}>General Docente</MenuItem>
+                                <MenuItem value={'general administrativo'}>General Administrativo</MenuItem>
+                                <MenuItem value={'Otro'}>Otro</MenuItem>
 
                             </Select>
                         </FormControl>
@@ -405,10 +438,10 @@ const Step3 = () => {
                         label="Cantidad de personas a cargo"
                         variant="outlined"
                         value={cantidad}
-                        error={error && cantidad.length <= 0}
-
+                        // error={error && cantidad.length <= 0}
+                        inputProps={inputProps}
                         onChange={onCantidadChange}
-
+                        helperText={'* Opcional'}
                     />
                     <TextField
                         type='number'
@@ -419,7 +452,7 @@ const Step3 = () => {
                         error={error && remuneracion.length <= 0}
 
                         onChange={onRemuneracionChange}
-                        helperText='*cuando ganaste'
+
                     />
 
                     <TextField

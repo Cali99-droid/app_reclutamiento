@@ -157,7 +157,8 @@ const Step2 = () => {
                         autoFocus
                         multiline
                         id="profesion"
-                        label="Profesion"
+                        label="Profesión"
+                        required
                         placeholder='Nueva profesión'
                         variant="outlined"
                         error={error && profesion.length <= 0}
@@ -168,6 +169,7 @@ const Step2 = () => {
                         id="institucion"
                         label="Institución"
                         variant="outlined"
+                        required
                         error={error && institucion.length <= 0}
                         value={institucion}
                         onChange={onInstitucionChange}
@@ -176,14 +178,14 @@ const Step2 = () => {
                         <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-label">Grado</InputLabel>
                             <Select
-
+                                required
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={grado}
                                 label="Grado"
                                 onChange={(e) => onGradoChange(e)}
                             >
-                                <MenuItem value={'Estudiante'}>Estudiante</MenuItem>
+                                <MenuItem selected={true} value={'Estudiante'}>Estudiante</MenuItem>
                                 <MenuItem value={'Practicante'}>Practicante</MenuItem>
                                 <MenuItem value={'Bachiller'}>Bachiller</MenuItem>
                                 <MenuItem value={'Titulado'}>Titulado</MenuItem>
@@ -200,7 +202,7 @@ const Step2 = () => {
                         variant="outlined"
                         value={year}
                         error={error && year.length <= 0}
-
+                        required
                         onChange={onYearChange}
                         helperText='*año en el que se graduo'
                     />

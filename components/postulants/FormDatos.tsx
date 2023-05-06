@@ -44,9 +44,7 @@ type FormData = {
     nivel: string;
 
 };
-const inputProps = {
 
-};
 export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
 
     const [isSaving, setIsSaving] = useState(false);
@@ -204,7 +202,7 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                             label="Telefono"
                             type="number"
                             variant="outlined"
-                            inputProps={inputProps}
+
                             fullWidth
                             required
                             {...register('telefono', {
