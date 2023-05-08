@@ -63,11 +63,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         fontSize: 14,
     },
 }));
-const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves, capa, reco, tecno, aficion }) => {
+const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves, capa, reco, tecno, aficion }) => {
     const router = useRouter();
     return (
-        <JobsLayout title={"Postulante "} pageDescription={'Ficha'} >
-            <Box className="fadeIn" padding={3} mt={15}>
+        <AdminLayout title={"Postulante "} subTitle={'ficha'}  >
+            <Box className="fadeIn" padding={3} >
 
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -499,21 +499,31 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
 
 
 
-        </JobsLayout>
+        </AdminLayout>
     )
 }
 
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
-    const session: any = await getSession({ req });
-    const { user } = session;
+    const { id = '' } = query;
+
     const post = await prisma.postulante.findUnique({
         where: {
-            id: parseInt(user.id)
+            id: parseInt(id.toString())
         },
         include: {
             persona: true
+        }
+    })
+
+    const user = await prisma.user.findFirst({
+
+        where: {
+            persona_id: post?.persona_id
+        },
+        select: {
+            email: true
         }
     })
     const postulante = JSON.parse(JSON.stringify(post))
@@ -566,19 +576,18 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     return {
         props: {
             postulante,
-            user,
             estudios,
             cargos,
             inves,
             capa,
             reco,
             tecno,
-            aficion
-
+            aficion,
+            user
 
         }
     }
 }
 
 
-export default FichaPage
+export default PostulantePage

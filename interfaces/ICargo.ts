@@ -6,6 +6,7 @@ export interface ICargo {
     remuneracion : string
     nivel        : string
     cantidadCargo: string
+    contacto: string
     descripcion  : string
     year         : string
 }

@@ -59,7 +59,7 @@ async function  getCargos(req: NextApiRequest, res: NextApiResponse<any>) {
 
 
 async function  postCargo(req: NextApiRequest, res: NextApiResponse<any>) {
-  const{referencia='', institucion='',remuneracion,nivel='',cantidadCargo='',descripcion,year,idPos}=req.body
+  const{referencia='',  contacto='',institucion='',remuneracion,nivel='',cantidadCargo='',descripcion,year,idPos}=req.body
 
 
   try {
@@ -67,6 +67,7 @@ async function  postCargo(req: NextApiRequest, res: NextApiResponse<any>) {
         data:{
    
           referencia,
+          contacto,
           institucion,
           remuneracion:parseFloat(remuneracion),
           nivel,

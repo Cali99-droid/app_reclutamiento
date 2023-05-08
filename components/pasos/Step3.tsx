@@ -90,13 +90,13 @@ const Step3 = () => {
         setError(false)
     }
     const handleConfirmCargo = () => {
-        //TODO  referencia max 9
+        //TODO 
 
-        if (referencia.length === 0 || nivel.length === 0 || cantidad.length === 0 || year.length === 0 || institucion.length === 0 || remuneracion.length === 0 || descripcion.length === 0 || IdPos.length === 0) {
+        if (referencia.length === 0 || contacto.length === 0 || nivel.length === 0 || cantidad.length === 0 || year.length === 0 || institucion.length === 0 || remuneracion.length === 0 || descripcion.length === 0 || IdPos.length === 0) {
             toast.warning('Complete todos los campos')
             return
         };
-        agregarCargo(referencia, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos)
+        agregarCargo(referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos)
         setReferencia('')
         setNivel('')
         setCantidad('')
@@ -115,9 +115,19 @@ const Step3 = () => {
     const [cantidad, setCantidad] = useState('')
     const [remuneracion, setRemuneracion] = useState('')
     const [descripcion, setDescripcion] = useState('')
+    const [contacto, setContacto] = useState('')
     const [mensaje, setMensaje] = useState('')
 
+    const onContactoChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value.length <= 0) {
+            setError(true)
+        } else {
+            setError(false)
 
+        }
+        setContacto(event.target.value);
+
+    }
     const onRefChange = (event: ChangeEvent<HTMLInputElement>) => {
 
 
@@ -223,7 +233,7 @@ const Step3 = () => {
                                         {e.descripcion}
                                     </TableCell>
                                     <TableCell align="right">{e.institucion}</TableCell>
-                                    <TableCell align="right">{e.referencia}</TableCell>
+                                    <TableCell align="right">{`${e.referencia}(${e.contacto})`}</TableCell>
                                     {/* <TableCell align="right">{e.nivel}</TableCell> */}
                                     {/* <TableCell align="right">{e.cantidadCargo}</TableCell> */}
                                     <TableCell align="right">{e.remuneracion}</TableCell>
@@ -364,7 +374,7 @@ const Step3 = () => {
                 handleClose={handleCloseCargo}
                 handleConfirm={handleConfirmCargo}
             >
-                <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
+                <Box display={'flex'} flexDirection={'column'} gap={.5} mt={1}
                     component="form"
                     sx={{
                         '& .MuiTextField-root': { m: 1, width: 350 },
@@ -377,7 +387,7 @@ const Step3 = () => {
                         multiline
                         id="descripcion"
                         label="Descripción del cargo"
-                        placeholder='Dirección, subdirección, coordinaciones, jefaturas, encargaturas, etc.
+                        placeholder='Dirección, subdirección, coordinaciones,etc.
                         '
                         variant="outlined"
                         error={error && descripcion.length <= 0}
@@ -400,8 +410,8 @@ const Step3 = () => {
                     <TextField
 
                         id="referencia"
-                        label="Referencia"
-                        placeholder='Referencia institucional'
+                        label="Número de Referencia"
+                        placeholder='Numero del contacto de referencia'
                         type='number'
                         variant="outlined"
                         error={mensaje.length > 0}
@@ -410,6 +420,20 @@ const Step3 = () => {
                         helperText={mensaje}
 
                     />
+                    <TextField
+
+                        id="contacto"
+                        label="Nombre del contacto referencia"
+                        placeholder='Nombre de contacto de referencia'
+                        type='text'
+                        variant="outlined"
+                        error={mensaje.length > 0}
+                        value={contacto}
+                        onChange={onContactoChange}
+
+
+                    />
+
                     <Box width={'96%'} marginLeft={1}>
                         <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-label">Nivel</InputLabel>

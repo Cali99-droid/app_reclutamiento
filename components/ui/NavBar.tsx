@@ -33,8 +33,15 @@ function ElevationScroll(props: Props) {
 }
 
 
-export const NavBar = (props: Props) => {
 
+
+export const NavBar = () => {
+
+    const props: Props = {
+        window: undefined,
+        children: <></>
+
+    };
     const { asPath, push } = useRouter();
 
     const { toggleSideMenu } = useContext(UiContext);

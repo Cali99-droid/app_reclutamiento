@@ -6,7 +6,7 @@ import { PostContext } from '@/context';
 
 import { GetServerSideProps, NextPage } from "next";
 import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
-import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip } from '@mui/material';
+import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled } from '@mui/material';
 import { evaluacion, evaluacion_x_postulante, postulante } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
@@ -24,8 +24,12 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import ModalClase from '../../../../components/modal/ModalClase';
-
-
+import NumbersIcon from '@mui/icons-material/Numbers';
+import PeopleIcon from '@mui/icons-material/People';
+import SpellcheckIcon from '@mui/icons-material/Spellcheck';
+import CategoryIcon from '@mui/icons-material/Category';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 interface Props {
   postulantes: postulante[]
   convocatoria: IJob
@@ -67,7 +71,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
       width: 250,
       renderCell: ({ row }) => {
         return (
-          <NextLink href={`/postulant/${row.id}`} passHref legacyBehavior>
+          <NextLink href={`/admin/convocatorias/convocatoria/p/${row.id}`} passHref legacyBehavior>
             <Link underline='always'>
               {row.postulante}
             </Link>
@@ -435,59 +439,148 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
 
   };
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    borderRadius: 10
 
+  }));
 
   return (
     <AdminLayout title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
 
-      <Box>
+      <Box mt={3}>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <Item elevation={4}>
 
-        <Typography variant="subtitle1">Vacantes: {convocatoria.vacantes}</Typography>
-        <Typography variant="subtitle1">Postulantes: {postulantes.length}</Typography>
-        <Typography variant="subtitle1">Estado: {convocatoria.estado.nombre}</Typography>
-        <Typography variant="subtitle1">Estado: {convocatoria.estado.id}</Typography>
-        <Typography variant="subtitle1">categoria: {convocatoria.categoria_id}</Typography>
-        <Typography variant="subtitle1">Postulantes: {postulantes.length}</Typography>
+              <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                <NumbersIcon sx={{ fontSize: 60, color: '#EC508B' }} />
+                <Box>
+                  <Typography color={'#454555'} variant="body1" > Vacantes</Typography>
+                  <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoria.vacantes} </Typography>
 
-        <Select
-          value={convocatoria.estado.id}
-          label="Rol"
-          onChange={(e: SelectChangeEvent<number>) => onStatusJobUpdated(convocatoria.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
-          sx={{ width: '200px' }}
-        >
-          <MenuItem value={1}> Abierta </MenuItem>
-          <MenuItem value={2}>En evaluación</MenuItem>
-          <MenuItem value={3}> Cerrada</MenuItem>
+                </Box>
+              </Box>
 
-        </Select>
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item elevation={4}>
+              <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                <PeopleIcon sx={{ fontSize: 60, color: '#FF7F6A' }} />
+                <Box>  <Typography color={'#454555'} variant="body1" > Postulantes</Typography>
+                  <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{postulantes.length} </Typography>
+
+                </Box>
+              </Box>
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item elevation={4}>
+              <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                <SpellcheckIcon sx={{ fontSize: 60, color: '#FFBC58' }} />
+                <Box>
+
+                  <Typography color={'#454555'} variant="body1" > Estado </Typography>
+                  <Select
+                    value={convocatoria.estado.id}
+                    label="Estado"
+                    onChange={(e: SelectChangeEvent<number>) => onStatusJobUpdated(convocatoria.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
+
+                  >
+                    <MenuItem value={1}> Abierta </MenuItem>
+                    <MenuItem value={2}>En evaluación</MenuItem>
+                    <MenuItem value={3}> Cerrada</MenuItem>
+
+                  </Select>
+
+                </Box>
+              </Box>
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item elevation={4}>
+              <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                <CategoryIcon sx={{ fontSize: 60, color: '#A242A6' }} />
+                <Box><Typography color={'#454555'} variant="body1" > Categoria</Typography>
+                  <Typography color={'#454555'} fontWeight={'bold'} fontSize={37} textTransform={'capitalize'}>{convocatoria.categoria.nombre} </Typography>
+
+                </Box>
+              </Box>
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item elevation={4}>
+              <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                <HowToRegIcon sx={{ fontSize: 60, color: '#5B4EB1' }} />
+                <Box>
+                  <Typography color={'#454555'} variant="body1" > Seleccionados</Typography>
+                  <Typography fontWeight={'bold'} color={'#454555'} variant="h3" textTransform={'uppercase'}>0 </Typography>
+
+                </Box>
+              </Box>
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item elevation={4}>
+              <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                <PersonRemoveAlt1Icon sx={{ fontSize: 60, color: '#DC4658' }} />
+                <Box>
+                  <Typography color={'#454555'} variant="body1" > Descartados</Typography>
+                  <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >0 </Typography>
+
+                </Box>
+              </Box>
+            </Item>
+          </Grid>
+
+        </Grid>
+
+
+
+
+
+
+
       </Box>
-      <Box
-        sx={{
-          height: 500,
-          width: '100%',
-          '& .mal': {
-            backgroundColor: '#ff5722',
-            color: '#FFF',
-          },
-          '& .medio': {
-            backgroundColor: '#ff943975',
-            color: '#FFF',
-          },
-          '& .bien': {
-            backgroundColor: '#4caf50',
-            color: '#FFF',
-          },
-        }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          getCellClassName={(params: GridCellParams<any, any, number>) => {
-            if (params.field !== 'total' || params.value == null) {
-              return '';
-            }
-            return params.value >= 75 ? 'bien' : 'mal';
-          }}
-        />
+      <Box mt={4}
+      >
+        <Item elevation={4}>
+          Listado de Postulantes
+          <Box
+            sx={{
+              height: 320,
+              width: '100%',
+              '& .mal': {
+                backgroundColor: '#ff5722',
+                color: '#FFF',
+              },
+              '& .medio': {
+                backgroundColor: '#ff943975',
+                color: '#FFF',
+              },
+              '& .bien': {
+                backgroundColor: '#4caf50',
+                color: '#FFF',
+              },
+            }} >
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              getCellClassName={(params: GridCellParams<any, any, number>) => {
+                if (params.field !== 'total' || params.value == null) {
+                  return '';
+                }
+                return params.value >= 75 ? 'bien' : 'mal';
+              }}
+            />
+          </Box>
+        </Item>
+
       </Box>
 
       <ModalEntrevista title={'Calificar Entrevista'} open={open} handleClose={handleClose} >
@@ -525,6 +618,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       },
       grado: {
         select: { nombre: true },
+      },
+      categoria: {
+        select: { nombre: true }
       },
       _count: {
         select: { postulante_x_convocatoria: true }

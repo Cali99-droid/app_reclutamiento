@@ -65,16 +65,16 @@ export const SideMenu = () => {
                             }
                         />
                     </ListItem>
-
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <AccountCircleOutlined />
+                        </ListItemIcon>
+                        <ListItemText primary={'Perfil'} />
+                    </ListItemButton>
                     {
-                        isLoggedIn && (
+                        isLoggedIn && user?.rol.name === 'postulante' && (
                             <>
-                                <ListItemButton>
-                                    <ListItemIcon>
-                                        <AccountCircleOutlined />
-                                    </ListItemIcon>
-                                    <ListItemText primary={'Perfil'} />
-                                </ListItemButton>
+
                                 <ListItemButton onClick={() => navigateTo('/postulant')}>
                                     <ListItemIcon>
                                         <FilePresentIcon />
@@ -133,27 +133,7 @@ export const SideMenu = () => {
                     </ListItemButton>
 
 
-                    {
-                        isLoggedIn
-                            ? (
-                                <ListItemButton onClick={logout}>
-                                    <ListItemIcon>
-                                        <LoginOutlined />
-                                    </ListItemIcon>
-                                    <ListItemText primary={'Salir'} />
-                                </ListItemButton>
-                            )
-                            : (
-                                <ListItemButton
-                                    onClick={() => navigateTo(`/auth/login?p=${router.asPath}`)}
-                                >
-                                    <ListItemIcon>
-                                        <VpnKeyOutlined />
-                                    </ListItemIcon>
-                                    <ListItemText primary={'Ingresar'} />
-                                </ListItemButton>
-                            )
-                    }
+
 
 
 
@@ -187,6 +167,28 @@ export const SideMenu = () => {
                                 </ListItemButton>
                             </>
                         )
+                    }
+                    <Divider />
+                    {
+                        isLoggedIn
+                            ? (
+                                <ListItemButton onClick={logout}>
+                                    <ListItemIcon>
+                                        <LoginOutlined />
+                                    </ListItemIcon>
+                                    <ListItemText primary={'Salir'} />
+                                </ListItemButton>
+                            )
+                            : (
+                                <ListItemButton
+                                    onClick={() => navigateTo(`/auth/login?p=${router.asPath}`)}
+                                >
+                                    <ListItemIcon>
+                                        <VpnKeyOutlined />
+                                    </ListItemIcon>
+                                    <ListItemText primary={'Ingresar'} />
+                                </ListItemButton>
+                            )
                     }
                 </List>
             </Box>

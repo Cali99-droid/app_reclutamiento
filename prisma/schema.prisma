@@ -234,9 +234,12 @@ model cargo {
   referencia    String     @db.Char(9)
   remuneracion  Float
   nivel         String     @db.VarChar(45)
-  cantidadCargo Int        @map("cantidad_cargo")
+  cantidadCargo Int?       @default(0) @map("cantidad_cargo")
   year          Int
   descripcion   String?    @db.VarChar(100)
+  contacto      String?    @db.VarChar(200)
+  desde         DateTime?  @db.Date
+  hasta         DateTime?  @db.Date
   postulante_id Int
   postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cargo_postulante1")
 

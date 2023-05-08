@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 import Head from 'next/head';
 
 import { NavBar } from '../ui';
@@ -12,7 +12,14 @@ interface Props extends PropsWithChildren {
 
 }
 
+
+
+
 export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageFullUrl }) => {
+    const props = {
+        window: undefined,
+        children: React
+    }
     return (
         <>
             <Head>
@@ -34,6 +41,7 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
 
             <SideMenu />
             <nav>
+
                 <NavBar />
             </nav>
 

@@ -170,8 +170,8 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     }
 
     //-------------------Cargos-----------------------
-    const agregarCargo = async (referencia: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => {
-        const { data } = await reclutApi.post<ICargo>('/postulants/cargo', { referencia, institucion, nivel, year, cantidadCargo, remuneracion, descripcion, idPos });
+    const agregarCargo = async (referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => {
+        const { data } = await reclutApi.post<ICargo>('/postulants/cargo', { referencia, contacto, institucion, nivel, year, cantidadCargo, remuneracion, descripcion, idPos });
         // const nuevoCargo: ICargo = {
         //     id: 12,
         //     referencia,
