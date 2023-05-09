@@ -7,6 +7,8 @@ import { DatosContext } from '@/context';
 import { useSession } from 'next-auth/react';
 import AddIcon from '@mui/icons-material/Add';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+
 
 
 const Step5 = () => {
@@ -132,6 +134,11 @@ const Step5 = () => {
             fontSize: 14,
         },
     }));
+
+    //--- Imagenes y documentos
+
+
+
 
     return (
         <Box padding={4} mt={3} className="fadeIn">
@@ -362,6 +369,7 @@ const Step5 = () => {
 
 
             </Box>
+
 
         </Box >
     );

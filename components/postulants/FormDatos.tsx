@@ -2,13 +2,13 @@ import { reclutApi } from '@/api';
 import { validations } from '@/helpers';
 import { IGrado, IPersona, IUser } from '@/interfaces';
 import { ErrorOutline } from '@mui/icons-material';
-import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, SelectChangeEvent } from '@mui/material';
+import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, SelectChangeEvent, FormLabel } from '@mui/material';
 import { postulante } from '@prisma/client';
 import axios from 'axios';
 import moment from 'moment';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import EastIcon from '@mui/icons-material/East';
@@ -21,6 +21,7 @@ interface Props {
     postulante: postulante
 }
 type FormData = {
+    images: string[];
     idPersona: number
     idPostulante: number
     nombre: string;
@@ -51,14 +52,14 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
     const [showError, setShowError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-
+    const fileInputRef = useRef<HTMLInputElement>(null)
     const [ex, setEx] = useState(true)
 
     const router = useRouter();
     const { activeStep, handleBack, handleNext, steps, setPos, pos } = useContext(DatosContext)
 
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({
         mode: 'all',
         defaultValues: {
             idPersona: persona.id,
@@ -129,6 +130,28 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
             return
         }
         setEx(true)
+    }
+
+    const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+        if (!target.files || target.files.length === 0) {
+            return;
+        }
+
+        try {
+
+            // console.log( file );
+            for (const file of target.files) {
+                const formData = new FormData();
+                formData.append('file', file);
+                const { data } = await reclutApi.post<{ message: string }>('/postulants/upload', formData);
+                // setValue('images', [...getValues('images'), data.message], { shouldValidate: true });
+                console.log(data)
+            }
+
+
+        } catch (error) {
+            console.log({ error });
+        }
     }
     return (
         <Box padding={6} bgcolor={'#FFF'} borderRadius={5} className="fadeIn">
@@ -461,6 +484,26 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
 
                         <Button disabled={isSaving} type='submit' size="large" sx={{ marginTop: 3, textAlign: 'end' }} endIcon={<EastIcon />} >Continuar</Button>
                     </Box>
+                </Box>
+                <Box>
+                    <FormLabel sx={{ mb: 1 }}>Imágenes</FormLabel>
+                    <Button
+                        color="secondary"
+                        fullWidth
+                        // startIcon={ <UploadOutlined /> }
+                        sx={{ mb: 3 }}
+                        onClick={() => fileInputRef.current?.click()}
+                    >
+                        Cargar imagen
+                    </Button>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        accept='image/png, image/gif, image/jpeg'
+                        style={{ display: 'none' }}
+                        onChange={onFilesSelected}
+                    />
                 </Box>
 
 
