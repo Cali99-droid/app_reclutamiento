@@ -35,7 +35,11 @@ interface Props {
     aficion: IAficion[]
 
 }
-
+export const config = {
+    api: {
+        bodyParser: false,
+    }
+}
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#FFF',
     ...theme.typography.body2,
@@ -63,8 +67,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         fontSize: 14,
     },
 }));
+
 const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves, capa, reco, tecno, aficion }) => {
     const router = useRouter();
+
     return (
         <JobsLayout title={"Postulante "} pageDescription={'Ficha'} >
             <Box className="fadeIn" padding={3} mt={15}>
@@ -79,7 +85,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                         <Item elevation={1}>
                             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Image
-                                    src="/postulants/p3.jpg"
+                                    src={`${postulante.image}`}
                                     width={150}
                                     height={150}
                                     alt="Imagen postulante"
@@ -506,8 +512,11 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
+
     const session: any = await getSession({ req });
     const { user } = session;
+
+
     const post = await prisma.postulante.findUnique({
         where: {
             id: parseInt(user.id)
@@ -516,6 +525,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
             persona: true
         }
     })
+
     const postulante = JSON.parse(JSON.stringify(post))
 
     const estudios = await prisma.estudios.findMany({

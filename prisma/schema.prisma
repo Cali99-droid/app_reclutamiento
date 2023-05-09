@@ -134,7 +134,9 @@ model postulante {
   egreso                    Int?
   hijos                     Int?
   discapacidad              Int?                        @db.TinyInt
+  image                     String?                     @db.LongText
   nivel                     String?                     @db.VarChar(60)
+  doc                       String?                     @db.LongText
   persona_id                Int
   gradoId                   Int                         @map("grado_id")
   tipoId                    Int                         @map("tipo_documento_id")

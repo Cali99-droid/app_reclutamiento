@@ -2,7 +2,7 @@ import { reclutApi } from '@/api';
 import { validations } from '@/helpers';
 import { IGrado, IPersona, IUser } from '@/interfaces';
 import { ErrorOutline } from '@mui/icons-material';
-import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, SelectChangeEvent, FormLabel } from '@mui/material';
+import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, SelectChangeEvent, FormLabel, Card, CardMedia, CardActions } from '@mui/material';
 import { postulante } from '@prisma/client';
 import axios from 'axios';
 import moment from 'moment';
@@ -21,7 +21,7 @@ interface Props {
     postulante: postulante
 }
 type FormData = {
-    images: string[];
+    image: string;
     idPersona: number
     idPostulante: number
     nombre: string;
@@ -46,6 +46,7 @@ type FormData = {
 
 };
 
+
 export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
 
     const [isSaving, setIsSaving] = useState(false);
@@ -56,7 +57,7 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
     const [ex, setEx] = useState(true)
 
     const router = useRouter();
-    const { activeStep, handleBack, handleNext, steps, setPos, pos } = useContext(DatosContext)
+    const { handleNext } = useContext(DatosContext)
 
 
     const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({
@@ -82,6 +83,8 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
             nivel: postulante.nivel === null ? '' : postulante.nivel,
 
             gradoId: postulante.gradoId,
+            image: postulante.image === null ? '' : postulante.image,
+
         }
     })
     const onRegisterForm = async (form: FormData) => {
@@ -144,7 +147,7 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                 const formData = new FormData();
                 formData.append('file', file);
                 const { data } = await reclutApi.post<{ message: string }>('/postulants/upload', formData);
-                // setValue('images', [...getValues('images'), data.message], { shouldValidate: true });
+                setValue('image', data.message, { shouldValidate: true });
                 console.log(data)
             }
 
@@ -152,6 +155,15 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
         } catch (error) {
             console.log({ error });
         }
+    }
+    const onDeleteImage = () => {
+        console.log(getValues('image'))
+        setValue(
+            'image',
+            '', { shouldValidate: true }
+        );
+        console.log(getValues('image'))
+
     }
     return (
         <Box padding={6} bgcolor={'#FFF'} borderRadius={5} className="fadeIn">
@@ -293,14 +305,14 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12} md={4}>
-                        <Chip
+                        {/* <Chip
                             label={errorMessage}
                             color="error"
                             icon={<ErrorOutline />}
                             className="fadeIn"
                             sx={{ display: showError ? 'flex' : 'none', mb: 4 }}
 
-                        />
+                        /> */}
                         <TextField
                             label="Numero de documento"
                             type="number"
@@ -476,35 +488,71 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                             <FormHelperText>*Solo si postula para docente</FormHelperText>
                         </FormControl>
                     </Grid>
+                    <Grid item xs={12} md={8}>
+                        <Box>
+                            <FormLabel >Foto</FormLabel>
+                            <Button
+                                color="secondary"
+                                fullWidth
+                                // startIcon={ <UploadOutlined /> }
 
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                Cargar imagen
+                            </Button>
+                            <FormHelperText>*Imagen actual con presentación formal.</FormHelperText>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                multiple
+                                accept='image/png, image/gif, image/jpeg'
+                                style={{ display: 'none' }}
+                                onChange={onFilesSelected}
+                            />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', }}>
+                            <Box width={'50%'} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 5 }}>
+
+                                <Button disabled={isSaving} type='submit' size="large" sx={{ marginTop: 2, textAlign: 'end' }} endIcon={<EastIcon />} >Continuar</Button>
+                            </Box>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+
+                        {
+                            postulante.image && getValues('image') && (
+                                <Box >
+                                    <Card>
+                                        <CardMedia
+                                            component='img'
+                                            className='fadeIn'
+                                            image={getValues('image')}
+                                            alt={getValues('image')}
+                                        />
+                                        <CardActions>
+                                            <Button
+                                                fullWidth
+                                                color="error"
+                                                onClick={() => onDeleteImage()}
+                                            >
+                                                Borrar
+                                            </Button>
+                                        </CardActions>
+                                    </Card>
+                                </Box>)
+
+                        }
+
+
+                    </Grid>
 
                 </Grid>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                    <Box width={'50%'} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 5 }}>
 
-                        <Button disabled={isSaving} type='submit' size="large" sx={{ marginTop: 3, textAlign: 'end' }} endIcon={<EastIcon />} >Continuar</Button>
-                    </Box>
-                </Box>
-                <Box>
-                    <FormLabel sx={{ mb: 1 }}>Imágenes</FormLabel>
-                    <Button
-                        color="secondary"
-                        fullWidth
-                        // startIcon={ <UploadOutlined /> }
-                        sx={{ mb: 3 }}
-                        onClick={() => fileInputRef.current?.click()}
-                    >
-                        Cargar imagen
-                    </Button>
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        multiple
-                        accept='image/png, image/gif, image/jpeg'
-                        style={{ display: 'none' }}
-                        onChange={onFilesSelected}
-                    />
-                </Box>
+
+
 
 
             </form >

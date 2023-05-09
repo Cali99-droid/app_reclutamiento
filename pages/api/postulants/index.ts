@@ -3,7 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
 import { getSession } from 'next-auth/react';
 
-
+import { v2 as cloudinary } from 'cloudinary';
+cloudinary.config( process.env.CLOUDINARY_URL || '' );
 
 
 type Data = 
@@ -34,7 +35,7 @@ async function  getPostulante(req: NextApiRequest, res: NextApiResponse<any>) {
   if ( !session ) {
       return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
   }
-  console.log(session.user.persona.id);
+
   const id = session.user.persona.id
 
   const p = await prisma.postulante.findFirst({
@@ -47,7 +48,7 @@ async function  getPostulante(req: NextApiRequest, res: NextApiResponse<any>) {
    
     })
 
-    console.log(p)
+ 
     return res.status(200).json(p)
 }
 
@@ -113,6 +114,8 @@ const createPostulant = async(req: NextApiRequest, res: NextApiResponse<Data>) =
         message:'Ya existe el numero de documento'
       })
     }
+
+    
 
     
     const persona = await prisma.persona.update({
@@ -189,7 +192,7 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
       nivel,
 
 
-
+      image,
       sueldoPretendido,
       gradoId ,
       idPersona,
@@ -215,10 +218,17 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
         hijos:number,
         discapacidad:number,
         nivel:string,
+        image:string,
        idPersona:number
         idPostulante:number
     };
 
+    if ( image.length <= 0 ) {
+      return res.status(400).json({ message: 'Es Necesario que suba una imagen' });
+  }
+    const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
+    console.log({ image, fileId, extension });
+    await cloudinary.uploader.destroy( fileId );
     
     const persona = await prisma.persona.update({
           where: {
@@ -235,7 +245,7 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
                 },
                 data:{ 
                   direccion,
-               
+               image,
                   nacimiento:new Date(nacimiento),
                   numeroDocumento,
                   sueldo:parseFloat(sueldoPretendido.toString()) ,
