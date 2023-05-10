@@ -1,5 +1,5 @@
-import { Box, Button, Divider, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses } from '@mui/material';
-import React, { useEffect } from 'react';
+import { Box, Button, Divider, FormControl, FormHelperText, FormLabel, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses } from '@mui/material';
+import React, { useEffect, useRef } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Modal } from '../modal';
 import { useState, useContext, ChangeEvent } from 'react';
@@ -8,6 +8,8 @@ import { useSession } from 'next-auth/react';
 import AddIcon from '@mui/icons-material/Add';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import { reclutApi } from '@/api';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 
 
@@ -17,13 +19,15 @@ const Step5 = () => {
     const { data }: any = useSession();
     // ** console.log(data?.user.persona.postulante[0].id);
     const IdPos = data?.user.persona.postulante[0].id;
-    const { aficiones, tecnologias, agregarAficion, quitarAficion, agregarTic, quitarTic, setTic } = useContext(DatosContext);
+
+    const { doc, docu, aficiones, tecnologias, agregarAficion, quitarAficion, agregarTic, quitarTic, setTic, subirDoc } = useContext(DatosContext);
     useEffect(() => {
         setTic()
+        doc();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const [error, setError] = useState(false)
-
+    console.log(docu)
     //--------------Modal Aficiones------------------
 
     const [open, setOpen] = useState(false)
@@ -135,9 +139,59 @@ const Step5 = () => {
         },
     }));
 
-    //--- Imagenes y documentos
+    //y documentos
+
+    const [file, setFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(docu.doc);
+
+    // const [doc, setDoc] = useState('')
+    const fileInputRef = useRef<HTMLInputElement>(null)
+
+    const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+        if (!target.files || target.files.length === 0) {
+            return;
+        }
+        const selectedFile = target.files?.[0];
+        setFile(selectedFile);
+        if (selectedFile) {
+            const fileReader = new FileReader();
+            fileReader.onload = () => {
+                setPreviewUrl(fileReader.result as string);
+            };
+            fileReader.readAsDataURL(selectedFile);
+        } else {
+            setPreviewUrl(null);
+        }
 
 
+    }
+
+    const handleFin = async () => {
+        if (!file) {
+            return;
+        }
+        try {
+
+            // console.log( file );
+
+            const formData = new FormData();
+            formData.append('file', file);
+            const { data } = await reclutApi.post<{ message: string }>('/postulants/docUpload', formData);
+            // setDoc(data.message);
+            subirDoc(data.message, IdPos);
+            console.log(data)
+
+
+
+        } catch (error) {
+            console.log({ error });
+        }
+    }
+
+    const handleReplaceFile = () => {
+        setFile(null);
+        setPreviewUrl(null);
+    };
 
 
     return (
@@ -369,7 +423,46 @@ const Step5 = () => {
 
 
             </Box>
+            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2} mt={3}>
+                <Box display={'flex'} justifyContent={'space-between'} mb={1}>
+                    <Typography fontWeight={'bold'} >Documentos de sustento</Typography>
 
+                    <Box>
+
+
+
+                        <input
+
+                            type="file"
+
+                            accept='.pdf'
+                            // style={{ display: 'none' }}
+                            onChange={onFilesSelected}
+                        />
+                        <FormHelperText>*En un solo archivo pdf suba sus documentos que sustenten la información brindada</FormHelperText>
+                    </Box>
+                    <Button onClick={() => handleFin()} startIcon={<FileUploadIcon />}>
+                        Subir
+                    </Button>
+                </Box>
+                <a href={docu.doc}>Documento</a>
+                {previewUrl && (
+                    <Box display={'flex'} alignItems={'center'} justifyContent={'space-evenly'}>
+                        <div>
+                            <a href={docu}>Documento</a>
+                            <object data={previewUrl} type="application/pdf" width="50%" height="200px">
+                                <p>Vista porevia no dies</p>
+                            </object>
+                        </div>
+                        <Button onClick={handleReplaceFile} >Quitar</Button>
+                    </Box>
+                )}
+
+
+
+
+                <Divider />
+            </Box>
 
         </Box >
     );

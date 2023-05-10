@@ -5,6 +5,7 @@ import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IPostulant, 
 
 type DatosType =
     
+    | { type: 'Load-doc', payload: string }
     | { type: 'Post - Load', payload: IPostulant }
     | { type: 'Estudios - Load', payload: IEstudio[] }
     | { type: 'Add-Estudio', payload: IEstudio }
@@ -31,6 +32,11 @@ type DatosType =
 export const datosReducer = (state: DatosState, action: DatosType): DatosState => {
 
     switch (action.type) {
+        case 'Load-doc':
+            return {
+                ...state,
+                docu: action.payload
+            }
         case 'Post - Load':
             return {
                 ...state,

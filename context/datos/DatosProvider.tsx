@@ -30,12 +30,14 @@ export interface DatosState {
     tecnologias: ITics[]
     pos?: IPostulant
     idPos: number
+    docu: string;
 
 
 
 }
 
 const DATOS_INITIAL_STATE: DatosState = {
+    docu: 'doc',
     prop: false,
     idPos: 0,
     pos: undefined,
@@ -274,7 +276,20 @@ export const DatosProvider: FC<Props> = ({ children }) => {
 
     }
 
+    //-------------DOCUMENTO
 
+    const subirDoc = async (doc: string, id: number) => {
+        const { data } = await reclutApi.post<any>('/postulants/document', { doc, id });
+        console.log(data)
+    }
+
+    const doc = async () => {
+
+        const { data } = await reclutApi.get<string>('/postulants/document');
+
+        dispatch({ type: 'Load-doc', payload: data });
+
+    }
 
 
 
@@ -285,6 +300,8 @@ export const DatosProvider: FC<Props> = ({ children }) => {
             steps,
 
             setPos,
+            doc,
+
 
             handleNext,
             handleBack,
@@ -316,6 +333,8 @@ export const DatosProvider: FC<Props> = ({ children }) => {
             setTic,
             agregarTic,
             quitarTic,
+
+            subirDoc
 
         }}>
             {children}

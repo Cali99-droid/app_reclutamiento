@@ -6,7 +6,7 @@ import { createContext } from 'react';
 interface ContextProps {
     prop: boolean;
     pos?: IPostulant;
-
+    docu: any
     estudios: IEstudio[];
     investigaciones: IInvestigacion[];
     cargos: ICargo[];
@@ -22,6 +22,7 @@ interface ContextProps {
     }[]
 
     setPos: () => Promise<void>
+    doc: () => Promise<void>
     handleNext: () => void,
     handleBack: () => void
 
@@ -59,5 +60,7 @@ interface ContextProps {
     setTic: () => Promise<void>
     agregarTic: (tecnologia: string, nivel: string, idPos: number) => void
     quitarTic: (id: number) => void
+
+    subirDoc: (doc: string, id: number) => Promise<void>
 }
 export const DatosContext = createContext({} as ContextProps);

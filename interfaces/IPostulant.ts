@@ -8,6 +8,7 @@ export interface IPostulant {
     tipoId        : number,
     numeroDocumento   : string,
     sueldo: number,
-    persona:persona
+    persona:persona,
+    doc:string
     
 }

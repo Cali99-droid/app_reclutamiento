@@ -504,7 +504,7 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                             <input
                                 ref={fileInputRef}
                                 type="file"
-                                multiple
+
                                 accept='image/png, image/gif, image/jpeg'
                                 style={{ display: 'none' }}
                                 onChange={onFilesSelected}

@@ -226,9 +226,26 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
     if ( image.length <= 0 ) {
       return res.status(400).json({ message: 'Es Necesario que suba una imagen' });
   }
-    const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
-    console.log({ image, fileId, extension });
-    await cloudinary.uploader.destroy( fileId );
+
+      const p = await prisma.postulante.findUnique({
+        where: {
+          id: parseInt(idPostulante.toString()) 
+        }
+        
+      
+        })
+        if(p === null){
+          return;
+      }
+      if(p.image ){
+          if ( p.image !== image) {
+          // Borrar de cloudinary
+          const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
+       
+          await cloudinary.uploader.destroy( fileId );
+      }
+    }
+   
     
     const persona = await prisma.persona.update({
           where: {
