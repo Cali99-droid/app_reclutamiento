@@ -1,5 +1,5 @@
 
-import { Box, Button, Grid, TextField, Link, Chip } from '@mui/material';
+import { Box, Button, Grid, TextField, Link, Chip, FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { AuthLayout } from "@/components/layouts/AuthLayout";
 import NextLink from 'next/link';
@@ -19,6 +19,8 @@ type FormData = {
   email: string;
   password: string;
   fechaNac: Date
+  tipoId: number;
+  numeroDocumento: string;
 };
 
 
@@ -42,10 +44,10 @@ export default function RegisterPage() {
 
 
   }, [router, status])
-  const onRegisterForm = async ({ nombre, apellidoPat, apellidoMat, email, password, fechaNac }: FormData,) => {
+  const onRegisterForm = async ({ nombre, apellidoPat, apellidoMat, email, password, fechaNac, tipoId, numeroDocumento }: FormData,) => {
 
     setShowError(false);
-    const { hasError, message } = await registerUser(nombre, apellidoPat, apellidoMat, email, password, fechaNac);
+    const { hasError, message } = await registerUser(nombre, apellidoPat, apellidoMat, email, password, fechaNac, tipoId, numeroDocumento);
 
     if (hasError) {
       setShowError(true);
@@ -64,7 +66,7 @@ export default function RegisterPage() {
   }
   return (
     <AuthLayout title={"Registrate y Postula "} >
-      <Box sx={{ width: 350, }} >
+      <Box sx={{ width: 400, }} bgcolor={'#FFF'} padding={4}>
         <form onSubmit={handleSubmit(onRegisterForm)} noValidate>
           <Chip
             label={errorMessage}
@@ -156,6 +158,55 @@ export default function RegisterPage() {
                 helperText={errors.email?.message}
               />
 
+
+            </Grid> <Grid item xs={12} md={12}>
+              <FormControl fullWidth >
+                <InputLabel id="tipoId">Tipo </InputLabel>
+                <Select
+                  labelId="tipoId"
+                  id="tipoId"
+                  label="tipo"
+
+                  required
+
+                  {...register('tipoId', {
+                    required: 'Este campo es requerido',
+
+                  })}
+                  error={!!errors.tipoId}
+                >
+
+                  <MenuItem value={1}>DNI</MenuItem>
+                  <MenuItem value={2}>Carnet de Extranjeria</MenuItem>
+
+                </Select>
+                <FormHelperText>Tipo de documento</FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={12}>
+              {/* <Chip
+                            label={errorMessage}
+                            color="error"
+                            icon={<ErrorOutline />}
+                            className="fadeIn"
+                            sx={{ display: showError ? 'flex' : 'none', mb: 4 }}
+
+                        /> */}
+              <TextField
+                label="Numero de documento"
+                type="number"
+                variant="outlined"
+                fullWidth
+                required
+                {...register('numeroDocumento', {
+                  required: 'Este campo es requerido',
+                  minLength: { value: 8, message: 'Mínimo 8 caracteres' },
+                  maxLength: { value: 8, message: 'Mínimo 8 caracteres' },
+                  validate: validations.isNumber
+                })}
+                error={!!errors.numeroDocumento}
+                helperText={errors.numeroDocumento?.message}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -218,6 +269,6 @@ export default function RegisterPage() {
           </Grid>
         </form>
       </Box>
-    </AuthLayout>
+    </AuthLayout >
   )
 }

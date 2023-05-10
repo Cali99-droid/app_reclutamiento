@@ -11,13 +11,13 @@ import { useState } from 'react';
 export interface AuthState {
     isLoggedIn: boolean;
     user?: IUser
-    confirmado: boolean;
+
 }
 
 const Auth_INITIAL_STATE: AuthState = {
     isLoggedIn: false,
     user: undefined,
-    confirmado: false,
+
 }
 
 interface Props {
@@ -41,10 +41,10 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 
 
 
-    const registerUser = async (nombre: string, apellidoPat: string, apellidoMat: string, email: string, password: string, fechaNac: Date): Promise<{ hasError: boolean; message?: string }> => {
+    const registerUser = async (nombre: string, apellidoPat: string, apellidoMat: string, email: string, password: string, fechaNac: Date, tipoId: number, numeroDocumento: string): Promise<{ hasError: boolean; message?: string }> => {
 
         try {
-            const { data } = await reclutApi.post('/user/register', { nombre, apellidoPat, apellidoMat, email, password, fechaNac });
+            const { data } = await reclutApi.post('/user/register', { nombre, apellidoPat, apellidoMat, email, password, fechaNac, tipoId, numeroDocumento });
 
             const { token, user } = data;
             Cookies.set('token', token);

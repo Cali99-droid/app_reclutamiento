@@ -37,7 +37,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
    
-    const { email = '', password = '', nombre = '',apellidoPat, apellidoMat,fechaNac } = req.body as { email: string, password: string, nombre: string, apellidoPat: string, apellidoMat: string,fechaNac:Date };
+    const { email = '', password = '', nombre = '',apellidoPat, apellidoMat,fechaNac, tipoId, numeroDocumento } = req.body as { email: string, password: string, nombre: string, apellidoPat: string, apellidoMat: string,fechaNac:Date, tipoId: number, numeroDocumento: string };
      
     if ( password.length < 6 ) {
         return res.status(400).json({
@@ -107,10 +107,10 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
                 direccion:'',
                 experiencia:0 ,
                 nacimiento:new Date(fechaNac),
-                numeroDocumento:'',
+                numeroDocumento,
                 sueldo:0 ,
                 gradoId:1,
-                tipoId:1,
+                tipoId,
                 telefono:'',
                 
               }
