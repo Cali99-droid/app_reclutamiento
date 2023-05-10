@@ -5,16 +5,19 @@ import { reclutApi } from '@/api';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { signOut, useSession } from 'next-auth/react';
+import { useState } from 'react';
 
 
 export interface AuthState {
     isLoggedIn: boolean;
     user?: IUser
+    confirmado: boolean;
 }
 
 const Auth_INITIAL_STATE: AuthState = {
     isLoggedIn: false,
     user: undefined,
+    confirmado: false,
 }
 
 interface Props {
@@ -42,7 +45,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 
         try {
             const { data } = await reclutApi.post('/user/register', { nombre, apellidoPat, apellidoMat, email, password, fechaNac });
-            console.log(data)
+
             const { token, user } = data;
             Cookies.set('token', token);
             dispatch({ type: '[Auth] - Login', payload: user });
@@ -71,14 +74,29 @@ export const AuthProvider: FC<Props> = ({ children }) => {
         signOut();
         // router.reload();   Cookies.remove('token');
     }
+    const [noConfirm, setNoConfirm] = useState(false)
+    const verificarConfirmacion = async (email: string) => {
+        const { data } = await reclutApi.get(`/user/${email}`);
+        if (data.user.confirmado === 1) {
+
+            setNoConfirm(false)
+            return true;
+        } else {
+            setNoConfirm(true)
+            return false
+        }
+        console.log(data.user.confirmado)
+
+    }
 
 
 
     return (
         <AuthContext.Provider value={{
             ...state,
-
+            verificarConfirmacion,
             registerUser,
+            noConfirm,
             logout
         }}>
             {children}

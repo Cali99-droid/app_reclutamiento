@@ -7,6 +7,8 @@ import { PrismaClient } from '@prisma/client'
 
 
 import { jwt, validations } from '../../../helpers';
+import { generarId } from '@/helpers/functions';
+import sendConfirmationEmail from '@/helpers/sendConfirmationEmail';
 
 
 type Data = 
@@ -74,7 +76,7 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
         },
       })
 
- 
+    const tokenEmail = generarId();
   
     if ( usuario ) {
         return res.status(400).json({
@@ -91,17 +93,18 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
             create:{
                 email:email.toLocaleLowerCase() ,
                 password:bcrypt.hashSync( password ),
+                token:tokenEmail,
                 rol:{
                     connect: {
                         id: 1
                     },
                 }
+                
             }
           } ,
           postulante:{
             create:{
                 direccion:'',
-                especialidad:'',
                 experiencia:0 ,
                 nacimiento:new Date(fechaNac),
                 numeroDocumento:'',
@@ -114,9 +117,12 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
           }
         },
         include: {
-            user: true, // Include all posts in the returned object
+            user: true, 
           },
       })
+      /**Enviar email de confirmacion */
+     await sendConfirmationEmail(email, tokenEmail)
+     console.log(tokenEmail)
     await prisma.$disconnect()
     const newUser = persona.user[0];
     const{id,rol_id} = newUser ;

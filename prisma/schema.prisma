@@ -18,6 +18,8 @@ model user {
   email               String?               @unique @db.VarChar(255)
   password            String                @db.VarChar(255)
   create_time         DateTime?             @default(now()) @db.Timestamp(0)
+  token               String?               @db.VarChar(100)
+  confirmado          Int?                  @default(0) @db.TinyInt
   rol_id              Int
   persona_id          Int
   convocatoria_x_user convocatoria_x_user[]

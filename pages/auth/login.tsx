@@ -4,165 +4,193 @@ import Typography from '@mui/material/Typography';
 import { AuthLayout } from "@/components/layouts/AuthLayout";
 import NextLink from 'next/link';
 import { useRouter } from "next/router";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useForm } from "react-hook-form";
 import { ErrorOutline } from "@mui/icons-material";
 import { getProviders, getSession, signIn } from "next-auth/react";
 import { validations } from '@/helpers';
 import { GetServerSideProps } from 'next';
 import GoogleIcon from '@mui/icons-material/Google';
+import { AuthContext } from '@/context';
 type FormData = {
-    email   : string,
+    email: string,
     password: string,
 };
 
 
-const LoginPage =()=> {
+const LoginPage = (error: string) => {
 
     const router = useRouter();
-   
+
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
-    const [ showError, setShowError ] = useState(false);
-
+    const [showError, setShowError] = useState(false);
+    const { verificarConfirmacion, noConfirm } = useContext(AuthContext)
     const [providers, setProviders] = useState<any>({})
     useEffect(() => {
-        getProviders().then(prov=>{
-          setProviders(prov)
-        }) 
-      }, [])
+        getProviders().then(prov => {
+            setProviders(prov)
+        })
+    }, [])
 
 
-    const onLoginUser = async( { email, password }: FormData ) => {
+
+    const onLoginUser = async ({ email, password }: FormData) => {
         setShowError(false);
-        await signIn('credentials', {email,password});
+        const confirmado = await verificarConfirmacion(email);
+        if (confirmado) {
+            console.log('esta confriamdo')
+            const resp = await signIn('credentials', { email, password, redirect: false, });
+            if (resp) {
+
+                setShowError(!resp.ok)
+                console.log(resp.ok)
+                if (resp.ok) {
+                    router.push('/')
+                }
+
+            }
+        }
     }
 
-  return (
-    <AuthLayout title={"Iniciar Sesion "} >
-                <Chip 
-                label="No reconocemos ese usuario / contraseña"
+    return (
+        <AuthLayout title={"Iniciar Sesion "} >
+            <Chip
+                label={'La cuenta aún no ha sido confirmada, revise su correo'}
                 color="error"
-                icon={ <ErrorOutline /> }
+                icon={<ErrorOutline />}
                 className="fadeIn"
-                sx={{ display: showError ? 'flex': 'none' }}
-                />
-        <form onSubmit={ handleSubmit(onLoginUser) } noValidate>
-            <Box sx={{ width: 350, }} >
-                <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    type="email"
-                                    label="Correo"
-                                    variant="outlined"
-                                    fullWidth 
-                                    { ...register('email', {
-                                        required: 'Este campo es requerido',
-                                        validate: validations.isEmail
-                                        
-                                    })}
-                                    error={ !!errors.email }
-                                    helperText={ errors.email?.message }
-                                />
-    
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                
-                                    label="Contraseña"
-                                    type='password'
-                                    variant="outlined"
-                                    fullWidth 
-                                    { ...register('password', {
-                                        required: 'Este campo es requerido',
-                                        minLength: { value: 6, message: 'Mínimo 6 caracteres' }
-                                    })}
-                                    error={ !!errors.password }
-                                    helperText={ errors.password?.message }
-                                />
-                            </Grid>
-    
-                            <Grid item xs={12}>
-                                <Button
+                sx={{ display: noConfirm ? 'flex' : 'none' }}
+            />
+            <Chip
+                label={'Credenciales incorrectas'}
+                color="error"
+                icon={<ErrorOutline />}
+                className="fadeIn"
+                sx={{ display: showError ? 'flex' : 'none' }}
+            />
+
+            <form onSubmit={handleSubmit(onLoginUser)} noValidate>
+                <Box sx={{ width: 350, }} >
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                type="email"
+                                label="Correo"
+                                variant="outlined"
+                                fullWidth
+                                {...register('email', {
+                                    required: 'Este campo es requerido',
+                                    validate: validations.isEmail
+
+                                })}
+                                error={!!errors.email}
+                                helperText={errors.email?.message}
+                            />
+
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+
+                                label="Contraseña"
+                                type='password'
+                                variant="outlined"
+                                fullWidth
+                                {...register('password', {
+                                    required: 'Este campo es requerido',
+                                    minLength: { value: 6, message: 'Mínimo 6 caracteres' }
+                                })}
+                                error={!!errors.password}
+                                helperText={errors.password?.message}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <Button
+                                type="submit"
+                                color="secondary"
+
+                                size='large'
+                                fullWidth>
+                                Ingresar
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} display={'flex'} justifyContent={'space-between'}>
+                            <Box >
+                                <Typography>¿No tienes una cuenta?</Typography>
+                                <NextLink passHref legacyBehavior
                                     type="submit"
                                     color="secondary"
-                                    
-                                    size='large'
-                                    fullWidth>
-                                    Ingresar
-                                </Button>
-                            </Grid>   
-                            <Grid item xs={12} display={'flex'} justifyContent={'space-between'}>  
-                                <Box >
-                                    <Typography> ¿No tienes una cuenta? <NextLink passHref legacyBehavior
-                                        type="submit"
-                                        color="secondary" 
-                                        href={ router.query.p ? `/auth/register?p=${ router.query.p }`: '/auth/register' }                                
-                                    
-                                        >
-                                    <Link> Registrate</Link>
-                                    </NextLink>
-                                    </Typography>
-                                    
-                                </Box>
+                                    href={router.query.p ? `/auth/register?p=${router.query.p}` : '/auth/register'}
 
-                                <Box textAlign={'end'}>
-                                    <NextLink 
-                                        type="submit"
-                                        color="secondary" 
-                                        href={"/auth/forgot"}                               
-                                        passHref
-                                        legacyBehavior>
-                                            <Link >Olvide mi contraseña
-                                            </Link>
-                                    </NextLink>
-                                    
-                                </Box>
-                                
-                            </Grid>    
-                            <Grid item xs={12} display='flex' justifyContent='end' flexDirection={'column'}>
-                            <Divider sx={{width:'100%', mb:2}} />
+                                >
+                                    <Link>Registrate</Link>
+                                </NextLink>
+
+
+                            </Box>
+
+                            <Box textAlign={'end'}>
+                                <NextLink
+                                    type="submit"
+                                    color="secondary"
+                                    href={"/auth/forgot"}
+                                    passHref
+                                    legacyBehavior>
+                                    <Link >Olvide mi contraseña</Link>
+                                </NextLink>
+
+                            </Box>
+
+                        </Grid>
+                        <Grid item xs={12} display='flex' justifyContent='end' flexDirection={'column'}>
+                            <Divider sx={{ width: '100%', mb: 2 }} />
                             {
-                                Object.values(providers).map((provider:any)=>{
-                                    if(provider.id === 'credentials') return (<div key={'credentials'}></div>)
-                                    return(
+                                Object.values(providers).map((provider: any) => {
+                                    if (provider.id === 'credentials') return (<div key={'credentials'}></div>)
+                                    return (
                                         <Button
-                                        key={provider.id}
-                                        variant='outlined'
-                                        fullWidth
-                                        size='medium'
-                                        startIcon={ <GoogleIcon/>}
-                                        onClick={()=>signIn(provider.id)}
-                                        >
-                                           Entrar con {provider.name}
+                                            key={provider.id}
+                                            variant='outlined'
+                                            fullWidth
+                                            size='medium'
+                                            startIcon={<GoogleIcon />}
+                                            onClick={() => signIn(provider.id)}
+                                        >{`Entrar con ${provider.name}`}
                                         </Button>
                                     )
                                 })
                             }
-                        
-                        </Grid>      
-                </Grid>     
+
+                        </Grid>
+                    </Grid>
                 </Box>
-        </form>
-    </AuthLayout>
-  )
+            </form>
+        </AuthLayout>
+    )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({req,query}) => {
-    const session = await getSession({req});
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+    let error = '';
+    const session = await getSession({ req });
+    if (query.error) {
+        error = JSON.parse(JSON.stringify(query.error))
+    }
 
-    const {p = '/'} = query;
-    if(session){
+
+    const { p = '/' } = query;
+    if (session) {
         return {
-            redirect:{
-                destination:p.toString(),
-                permanent:false
+            redirect: {
+                destination: p.toString(),
+                permanent: false
             }
         }
     }
 
     return {
-        props: {    
+        props: {
+            error
         }
     }
 }

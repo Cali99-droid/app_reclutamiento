@@ -53,7 +53,8 @@ export default function RegisterPage() {
       setTimeout(() => setShowError(false), 3000);
       return;
     }
-    await signIn('credentials', { email, password });
+    router.replace('/auth/confirm');
+    // await signIn('credentials', { email, password });
 
     //  Inicar session */
 
@@ -184,15 +185,18 @@ export default function RegisterPage() {
             </Grid>
             <Grid item xs={12} display={'flex'} justifyContent={'space-between'}>
               <Box >
-                <Typography> ¿Ya tienes una cuenta? <NextLink passHref legacyBehavior
+                <Typography> ¿Ya tienes una cuenta?
+                  <NextLink
+                    passHref
+                    legacyBehavior
 
-                  color="secondary"
-                  href={router.query.p ? `/auth/login?p=${router.query.p}` : '/auth/login'}
+                    color="secondary"
+                    href={router.query.p ? `/auth/login?p=${router.query.p}` : '/auth/login'}
 
 
-                >
-                  <Link> Iniciar Sesion</Link>
-                </NextLink>
+                  >
+                    <Link> Iniciar Sesion</Link>
+                  </NextLink>
                 </Typography>
 
               </Box>

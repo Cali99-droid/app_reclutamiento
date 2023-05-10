@@ -27,6 +27,9 @@ export const checkUserEmailPassword = async(email:string, password: string)=>{
     if(!user){
         return null;
     }
+    if(user.confirmado === 0){
+        return null;
+    }
 
     if(!bcrypt.compareSync(password, user.password!)){
         return null;
@@ -82,6 +85,7 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
             create:{
                 email:oAuthEmail.toLocaleLowerCase() ,
                 password:'@',
+                confirmado:1,
                 rol:{
                     connect: {
                         id: 1
