@@ -76,14 +76,24 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
         },
       })
 
-    const tokenEmail = generarId();
+    
   
     if ( usuario ) {
         return res.status(400).json({
             message:'Este correo ya esta registrado'
         })
     }
-
+    const pos =  await prisma.postulante.findFirst({
+        where: {
+          numeroDocumento,
+        },
+      })
+      if ( pos ) {
+        return res.status(400).json({
+            message:'Este numero de documento ya existe'
+        })
+    }
+    const tokenEmail = generarId();
     const persona = await prisma.persona.create({
         data: {
           apellido_pat:apellidoPat,

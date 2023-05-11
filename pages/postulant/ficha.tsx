@@ -516,17 +516,18 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const session: any = await getSession({ req });
     const { user } = session;
 
-
-    const post = await prisma.postulante.findUnique({
+    const post = await prisma.postulante.findFirst({
         where: {
-            id: parseInt(user.id)
+            persona_id: parseInt(user.persona.id)
         },
         include: {
             persona: true
         }
     })
 
+
     const postulante = JSON.parse(JSON.stringify(post))
+
 
     const estudios = await prisma.estudios.findMany({
         where: {

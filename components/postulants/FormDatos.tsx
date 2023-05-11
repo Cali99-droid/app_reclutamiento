@@ -523,7 +523,7 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                     <Grid item xs={12} md={3}>
 
                         {
-                            postulante.image && getValues('image') && (
+                            getValues('image') && (
                                 <Box >
                                     <Card>
                                         <CardMedia

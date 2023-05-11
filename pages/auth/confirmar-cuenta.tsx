@@ -28,10 +28,11 @@ const ConfirmAccountPage = () => {
         <AuthLayout title={"Confirmar cuenta "} >
 
 
-            <Alert variant="outlined" severity="success">
-                Tu cuenta ha sido confirmanda con éxito
-            </Alert>
-            <Box mt={4}>
+
+            <Box bgcolor={'#FFF'} padding={4} display={'flex'} flexDirection={'column'} alignItems={'center'} gap={3}>
+                <Alert variant="outlined" severity="success">
+                    Tu cuenta ha sido confirmanda con éxito
+                </Alert>
                 <NextLink
                     passHref
                     legacyBehavior

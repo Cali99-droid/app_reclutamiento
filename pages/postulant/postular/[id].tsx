@@ -84,7 +84,7 @@ const PostularPage: NextPage<Props> = ({ convocatoria, persona, postulo }) => {
 
 
             <Button startIcon={<FilePresentIcon />} size='medium' color='info' variant='outlined' onClick={() => {
-              router.push('/postulant')
+              router.push('/postulant/ficha')
             }}>Revisar mi ficha</Button>
             <Button size='medium' color='error' variant='outlined' onClick={() => { history.go(-1); return false; }}>Volver</Button>
           </Box>

@@ -25,12 +25,13 @@ const ConfirmPage = () => {
 
 
     return (
-        <AuthLayout title={"Iniciar Sesion "} >
+        <AuthLayout title={"¡ Correo Enviado ! "} >
 
+            <Box bgcolor={'#FFF'} padding={4} >
+                <Alert variant="outlined" severity="success">
+                    Hemos enviado las instrucciones para que confirmes tu cuenta, revisa tu correo electrónico
+                </Alert></Box>
 
-            <Alert variant="outlined" severity="success">
-                Revisa tu correo y confirma tu cuenta
-            </Alert>
         </AuthLayout>
     )
 }
