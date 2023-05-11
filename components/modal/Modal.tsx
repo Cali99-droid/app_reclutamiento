@@ -16,10 +16,10 @@ export const Modal: FC<ModalProps> = ({ title, children, open, handleClose, hand
       <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>{children}</DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color='error' sx={{ textTransform: 'uppercase', color: '#FFF' }} >
+        <Button onClick={handleClose}  >
           Cancelar
         </Button>
-        <Button onClick={handleConfirm} color='success' sx={{ textTransform: 'uppercase', color: '#FFF' }}>
+        <Button onClick={handleConfirm} >
           Aceptar
         </Button>
       </DialogActions>

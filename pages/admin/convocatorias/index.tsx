@@ -1,10 +1,6 @@
 import { prisma } from '@/server/db/client';
 
 
-import { AdminLayout, JobsLayout } from "@/components/layouts";
-
-
-import { AnnouncementList } from '../../../components/jobs';
 import { GetStaticProps } from "next";
 
 
@@ -13,14 +9,14 @@ import useSWR from 'swr';
 import { useEffect, } from 'react';
 
 
-import { Grid, Link, Box, Button, IconButton, Typography, Select, MenuItem, SelectChangeEvent } from '@mui/material';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import { red } from '@mui/material/colors';
+import { Grid, Link, Box, Button, IconButton, Typography, Select, MenuItem, SelectChangeEvent, Paper, Tabs, Tab, TextField, Toolbar, AppBar } from '@mui/material';
+import { DataGrid, GridColDef, esES } from '@mui/x-data-grid';
+
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useRouter } from 'next/router';
 ;
 import { IJob } from '@/interfaces';
-import { NextPage } from 'next';
+
 
 
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -31,7 +27,7 @@ import { reclutApi } from '@/api';
 import NextLink from 'next/link';
 import Modal from '@/components/modal/Modal';
 import axios from 'axios';
-import { postulante } from '@prisma/client';
+import { Paperbase } from '@/components/dash';
 
 
 
@@ -46,10 +42,6 @@ const ConvocatoriasPage = () => {
       setConvocatorias(data);
     }
   }, [data])
-
-
-
-
 
 
 
@@ -145,12 +137,10 @@ const ConvocatoriasPage = () => {
       }
 
     },
-    { field: 'vacantes', headerName: 'Vacantes disponibles', width: 160 },
-    { field: 'postulantes', headerName: 'Postulantes', width: 160 },
-    { field: 'sueldo', headerName: 'Sueldo Ofertado', width: 180 },
-    { field: 'experiencia', headerName: 'Experiencia Mínima', width: 180 },
-    { field: 'grado', headerName: 'Grado Mínimo', width: 180 },
-    // { field: 'col3', headerName: 'Numero de Postulantes', width: 180 },
+    { field: 'vacantes', headerName: '# Vacantes ', width: 120 },
+    { field: 'postulantes', headerName: ' # Postulantes', width: 120 },
+
+
     {
       field: 'estado',
       headerName: 'Estado',
@@ -159,26 +149,29 @@ const ConvocatoriasPage = () => {
 
         return (
 
+
           <Select
             value={parseInt(params.row.estado)}
             label="Rol"
             onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
-            sx={{ width: '200px' }}
+            sx={{ width: '200px', padding: 1 }}
           >
             <MenuItem value={1}> Abierta </MenuItem>
             <MenuItem value={2}>En evaluación</MenuItem>
             <MenuItem value={3}> Cerrada</MenuItem>
 
           </Select>
+
         )
       }
     },
     {
-      field: 'actions', headerName: 'Acciones', width: 200,
+      field: 'actions', headerName: 'Acciones', width: 100,
       sortable: false,
       renderCell: (params) => {
         return (
-          <>
+
+          <Box display={'flex'} justifyContent={'end'} width={'100%'}>
             <IconButton disabled={params.row.estado > 1} aria-label="evaluar" color='info' onClick={() => { router.push(`/admin/convocatorias/${params.row.id}`) }}  >
               <EditIcon />
             </IconButton>
@@ -187,7 +180,9 @@ const ConvocatoriasPage = () => {
             <IconButton disabled={params.row.postulantes > 0} color='error' aria-label="delete" onClick={() => { handleOpen(params.row.id) }}  >
               <DeleteIcon />
             </IconButton>
-          </>
+          </Box>
+
+
         )
       }
     }
@@ -200,54 +195,84 @@ const ConvocatoriasPage = () => {
     titulo: job.titulo,
     vacantes: job.vacantes,
     estado: job.estado.id,
-    sueldo: 'S/' + job.sueldoOfertado,
-    experiencia: job.experiencia.toString() + ' ' + 'Años',
-    grado: job.grado.nombre.toLocaleUpperCase(),
     jobId: job.id,
     postulantes: job._count.postulante_x_convocatoria,
   }))
 
-
+  const Navigate = () => {
+    return (
+      <Tabs value={0} textColor="inherit">
+        <Tab label="Users" />
+        <Tab label="Sign-in method" />
+        <Tab label="Templates" />
+        <Tab label="Usage" />
+      </Tabs>
+    );
+  }
 
   const navigateTo = (url: string) => {
     router.push(url);
   }
   return (
-    <AdminLayout title={"Administrar convocatorias "} subTitle={"Listado de convocatorias"}>
-      <Box className="fadeIn">
-
-        <Grid
-          container
-          spacing={4}
-          marginTop={'.1rem'}
-          justifyContent={'end'}
+    <Paperbase title={"Administrar convocatorias "} subTitle={"Listado de convocatorias"} navigate={<Navigate />}>
+      <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' }}>
+        <AppBar
+          position="static"
+          color="default"
+          elevation={0}
+          sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}
         >
-          <Grid item >
-            <Button
-              size='medium'
-              startIcon={<AddCircleIcon />}
+          <Toolbar>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item>
+                <span color="inherit" />
+              </Grid>
+              <Grid item xs>
+                <Typography>Listado de convocatorias</Typography>
+              </Grid>
+              <Grid item>
+                <Button
+                  size='medium'
+                  startIcon={<AddCircleIcon />}
 
-              onClick={() => navigateTo('/admin/convocatorias/new')}
+                  onClick={() => navigateTo('/admin/convocatorias/new')}
 
-            >Nuevo</Button>
-          </Grid >
-          <Grid item xs={12} sx={{ height: 650, width: '100%' }}>
+                >Nuevo</Button>
 
-            <DataGrid
-              rows={rows}
-              columns={columns}
+              </Grid>
+            </Grid>
+          </Toolbar>
+        </AppBar>
+        <Box className="fadeIn" padding={4}>
 
-            />
+          <Grid
+            container
+            justifyContent={'end'}
+
+          >
+            <Grid item >
+
+            </Grid >
+            <Grid item xs={12} sx={{ height: 580, width: '100%' }}>
+
+              <DataGrid
+                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+                rows={rows}
+                columns={columns}
+                rowHeight={45}
+              />
+            </Grid>
           </Grid>
-        </Grid>
 
-        <Modal title={'¿ Esta seguro de eliminar la convocatoria ?'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
-          <Typography >La Convocatoria se eliminará definitivamente</Typography>
+          <Modal title={'¿ Esta seguro de eliminar la convocatoria ?'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
+            <Typography >La Convocatoria se eliminará definitivamente</Typography>
 
-        </Modal>
-      </Box>
+          </Modal>
+        </Box>
+      </Paper>
 
-    </AdminLayout>
+
+    </Paperbase>
 
 
   )

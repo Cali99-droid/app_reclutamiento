@@ -132,9 +132,22 @@ export const SideMenu = () => {
                         <ListItemText primary={'Beneficios'} />
                     </ListItemButton>
 
+                    {/**Jurado */}
 
+                    <>
+                        <Divider />
+                        <ListSubheader>Jurado Panel</ListSubheader>
 
+                        <ListItemButton
+                            onClick={() => navigateTo(`/jurado?p=${router.asPath}`)}
+                        >
+                            <ListItemIcon>
+                                <CategoryOutlined />
+                            </ListItemIcon>
+                            <ListItemText primary={'Convocatorias'} />
+                        </ListItemButton>
 
+                    </>
 
 
                     {/* Admin */}

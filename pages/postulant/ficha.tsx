@@ -1,12 +1,11 @@
 import { prisma } from '@/server/db/client';
 
-import { apiCon, reclutApi } from "@/api";
-import AnnouncementForm from "@/components/jobs/AnnouncementForm";
+
 import { AdminLayout, JobsLayout } from "@/components/layouts";
 
 import { IAficion, ICapacitacion, ICargo, IEstudio, IGrado, IInvestigacion, IPostulant, IReconocimiento, ITics } from "@/interfaces";
 import { Box, Button, Typography, Grid, styled, Paper, Card, CardMedia, CardContent, CardActions, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses } from '@mui/material';
-import { convocatoria, persona, estudios } from '@prisma/client';
+
 import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import { getSession } from 'next-auth/react';
 import Image from 'next/image';

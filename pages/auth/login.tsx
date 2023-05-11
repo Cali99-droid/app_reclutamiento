@@ -46,7 +46,7 @@ const LoginPage = (error: string) => {
                 setShowError(!resp.ok)
                 console.log(resp.ok)
                 if (resp.ok) {
-                    router.push('/')
+                    router.push('/admin/convocatorias')
                 }
 
             }

@@ -9,6 +9,7 @@ import { GetStaticProps, NextPage } from "next";
 
 
 import { IJob } from '@/interfaces';
+import { Paperbase } from '@/components/dash';
 
 
 interface Props {
@@ -18,7 +19,7 @@ interface Props {
 const EvaluacionesPage: NextPage<Props> = ({ }) => {
 
   return (
-    <AdminLayout title={"Administrar convocatorias "} subTitle={"Listado de convocatorias"}>
+    <Paperbase title={"Administrar convocatorias "} subTitle={"Listado de convocatorias"}>
       <Box className="fadeIn">
         <h1>Lista de evaluaciones</h1>
         <Button>Nueva </Button>
@@ -62,7 +63,7 @@ const EvaluacionesPage: NextPage<Props> = ({ }) => {
 
       </Box>
 
-    </AdminLayout >
+    </Paperbase >
 
 
   )

@@ -8,6 +8,7 @@ import { IGrado } from "@/interfaces";
 import { Box } from "@mui/material";
 import { convocatoria } from "@prisma/client";
 import { GetServerSideProps, GetStaticProps, NextPage } from "next";
+import { Paperbase } from '@/components/dash';
 
 
 
@@ -21,14 +22,14 @@ interface Props {
 
 const ConvocatoriasPage: NextPage<Props> = ({ grados, job }) => {
   return (
-    <AdminLayout title={"Crear convocatoria "} subTitle={"Publica una nueva concocatoria"}>
+    <Paperbase title={"Crear convocatoria "} subTitle={"Publica una nueva concocatoria"} >
       <Box className="fadeIn" display={'flex'} gap={2}>
 
 
       </Box>
       <AnnouncementForm grados={grados} job={job} />
 
-    </AdminLayout>
+    </Paperbase>
   )
 }
 

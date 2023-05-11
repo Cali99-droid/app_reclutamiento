@@ -5,8 +5,8 @@ import { PostContext } from '@/context';
 
 
 import { GetServerSideProps, NextPage } from "next";
-import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
-import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled } from '@mui/material';
+import { DataGrid, GridCellParams, GridColDef, esES } from "@mui/x-data-grid";
+import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Toolbar, AppBar, Breadcrumbs } from '@mui/material';
 import { evaluacion, evaluacion_x_postulante, postulante } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
@@ -30,6 +30,7 @@ import SpellcheckIcon from '@mui/icons-material/Spellcheck';
 import CategoryIcon from '@mui/icons-material/Category';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
+import { Paperbase } from '@/components/dash';
 interface Props {
   postulantes: postulante[]
   convocatoria: IJob
@@ -86,18 +87,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
       width: 100,
 
     },
-    {
-      field: 'especialidad',
-      headerName: 'Especialidad',
-      width: 150,
 
-    },
-    {
-      field: 'experiencia',
-      headerName: 'Años de Experiencia',
-      width: 150,
 
-    },
     {
       field: 'puntajeEntr',
       headerName: 'Puntaje Entrevista',
@@ -248,8 +239,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
     postulante: p.postulante.persona.nombres + ' ' + p.postulante.persona.apellido_pat + ' ' + p.postulante.persona.apellido_mat,
     estado: parseInt(p.estado_postulante_id),
     edad: calcularEdad(p.postulante.nacimiento) + ' años',
-    especialidad: p.postulante.especialidad,
-    experiencia: p.postulante.experiencia + ' años',
+
     sueldo: 'S/ ' + p.postulante.sueldo,
     puntajeEntr: devolverPuntajeEntrevista(p.postulante.evaluacion_x_postulante),
     puntajeJur: devolverPuntajeJurado(p.postulante.evaluacion_x_postulante),
@@ -450,138 +440,151 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
   }));
 
   return (
-    <AdminLayout title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
+    <Paperbase title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
+      <Box sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden', }} className="fadeIn" >
+        <Box mb={2}>
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link underline="hover" color="inherit" onClick={() => router.push("/admin/convocatorias")} sx={{ cursor: 'pointer' }}>
+              Convocatorias
+            </Link>
 
-      <Box mt={3}>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <Item elevation={4}>
+            <Typography fontWeight={'bold'} color="text.primary">{convocatoria.titulo}</Typography>
+          </Breadcrumbs>
+        </Box>
 
-              <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                <NumbersIcon sx={{ fontSize: 60, color: '#EC508B' }} />
-                <Box>
-                  <Typography color={'#454555'} variant="body1" > Vacantes</Typography>
-                  <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoria.vacantes} </Typography>
+        <Box >
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Item elevation={4}>
 
+                <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                  <NumbersIcon sx={{ fontSize: 60, color: '#EC508B' }} />
+                  <Box>
+                    <Typography color={'#454555'} variant="body1" > Vacantes</Typography>
+                    <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoria.vacantes} </Typography>
+
+                  </Box>
                 </Box>
-              </Box>
 
-            </Item>
-          </Grid>
-          <Grid item xs={4}>
-            <Item elevation={4}>
-              <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                <PeopleIcon sx={{ fontSize: 60, color: '#FF7F6A' }} />
-                <Box>  <Typography color={'#454555'} variant="body1" > Postulantes</Typography>
-                  <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{postulantes.length} </Typography>
+              </Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Item elevation={4}>
+                <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                  <PeopleIcon sx={{ fontSize: 60, color: '#FF7F6A' }} />
+                  <Box>  <Typography color={'#454555'} variant="body1" > Postulantes</Typography>
+                    <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{postulantes.length} </Typography>
 
+                  </Box>
                 </Box>
-              </Box>
-            </Item>
-          </Grid>
-          <Grid item xs={4}>
-            <Item elevation={4}>
-              <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                <SpellcheckIcon sx={{ fontSize: 60, color: '#FFBC58' }} />
-                <Box>
+              </Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Item elevation={4}>
+                <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                  <SpellcheckIcon sx={{ fontSize: 60, color: '#FFBC58' }} />
+                  <Box>
 
-                  <Typography color={'#454555'} variant="body1" > Estado </Typography>
-                  <Select
-                    value={convocatoria.estado.id}
-                    label="Estado"
-                    onChange={(e: SelectChangeEvent<number>) => onStatusJobUpdated(convocatoria.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
+                    <Typography color={'#454555'} variant="body1" > Estado </Typography>
+                    <Select
+                      value={convocatoria.estado.id}
+                      label="Estado"
+                      onChange={(e: SelectChangeEvent<number>) => onStatusJobUpdated(convocatoria.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
 
-                  >
-                    <MenuItem value={1}> Abierta </MenuItem>
-                    <MenuItem value={2}>En evaluación</MenuItem>
-                    <MenuItem value={3}> Cerrada</MenuItem>
+                    >
+                      <MenuItem value={1}> Abierta </MenuItem>
+                      <MenuItem value={2}>En evaluación</MenuItem>
+                      <MenuItem value={3}> Cerrada</MenuItem>
 
-                  </Select>
+                    </Select>
 
+                  </Box>
                 </Box>
-              </Box>
-            </Item>
-          </Grid>
-          <Grid item xs={4}>
-            <Item elevation={4}>
-              <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                <CategoryIcon sx={{ fontSize: 60, color: '#A242A6' }} />
-                <Box><Typography color={'#454555'} variant="body1" > Categoria</Typography>
-                  <Typography color={'#454555'} fontWeight={'bold'} fontSize={37} textTransform={'capitalize'}>{convocatoria.categoria.nombre} </Typography>
+              </Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Item elevation={4}>
+                <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                  <CategoryIcon sx={{ fontSize: 60, color: '#A242A6' }} />
+                  <Box><Typography color={'#454555'} variant="body1" > Categoria</Typography>
+                    <Typography color={'#454555'} fontWeight={'bold'} fontSize={37} textTransform={'capitalize'}>{convocatoria.categoria.nombre} </Typography>
 
+                  </Box>
                 </Box>
-              </Box>
-            </Item>
-          </Grid>
-          <Grid item xs={4}>
-            <Item elevation={4}>
-              <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                <HowToRegIcon sx={{ fontSize: 60, color: '#5B4EB1' }} />
-                <Box>
-                  <Typography color={'#454555'} variant="body1" > Seleccionados</Typography>
-                  <Typography fontWeight={'bold'} color={'#454555'} variant="h3" textTransform={'uppercase'}>0 </Typography>
+              </Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Item elevation={4}>
+                <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                  <HowToRegIcon sx={{ fontSize: 60, color: '#5B4EB1' }} />
+                  <Box>
+                    <Typography color={'#454555'} variant="body1" > Seleccionados</Typography>
+                    <Typography fontWeight={'bold'} color={'#454555'} variant="h3" textTransform={'uppercase'}>0 </Typography>
 
+                  </Box>
                 </Box>
-              </Box>
-            </Item>
-          </Grid>
-          <Grid item xs={4}>
-            <Item elevation={4}>
-              <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                <PersonRemoveAlt1Icon sx={{ fontSize: 60, color: '#DC4658' }} />
-                <Box>
-                  <Typography color={'#454555'} variant="body1" > Descartados</Typography>
-                  <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >0 </Typography>
+              </Item>
+            </Grid>
+            <Grid item xs={4}>
+              <Item elevation={4}>
+                <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                  <PersonRemoveAlt1Icon sx={{ fontSize: 60, color: '#DC4658' }} />
+                  <Box>
+                    <Typography color={'#454555'} variant="body1" > Descartados</Typography>
+                    <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >0 </Typography>
 
+                  </Box>
                 </Box>
-              </Box>
-            </Item>
+              </Item>
+            </Grid>
+
           </Grid>
 
-        </Grid>
 
 
 
 
 
 
+        </Box>
+        <Box mt={4}
+        >
+          <Item elevation={4}>
+            Listado de Postulantes
+            <Box
+              sx={{
+                height: 400,
+                width: '100%',
+                '& .mal': {
+                  backgroundColor: '#ff5722',
+                  color: '#FFF',
+                },
+                '& .medio': {
+                  backgroundColor: '#ff943975',
+                  color: '#FFF',
+                },
+                '& .bien': {
+                  backgroundColor: '#4caf50',
+                  color: '#FFF',
+                },
+              }} >
+              <DataGrid
+                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+                rows={rows}
+                columns={columns}
+                getCellClassName={(params: GridCellParams<any, any, number>) => {
+                  if (params.field !== 'total' || params.value == null) {
+                    return '';
+                  }
+                  return params.value >= 75 ? 'bien' : 'mal';
+                }}
+              />
+            </Box>
+          </Item>
 
+        </Box>
       </Box>
-      <Box mt={4}
-      >
-        <Item elevation={4}>
-          Listado de Postulantes
-          <Box
-            sx={{
-              height: 320,
-              width: '100%',
-              '& .mal': {
-                backgroundColor: '#ff5722',
-                color: '#FFF',
-              },
-              '& .medio': {
-                backgroundColor: '#ff943975',
-                color: '#FFF',
-              },
-              '& .bien': {
-                backgroundColor: '#4caf50',
-                color: '#FFF',
-              },
-            }} >
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              getCellClassName={(params: GridCellParams<any, any, number>) => {
-                if (params.field !== 'total' || params.value == null) {
-                  return '';
-                }
-                return params.value >= 75 ? 'bien' : 'mal';
-              }}
-            />
-          </Box>
-        </Item>
 
-      </Box>
 
       <ModalEntrevista title={'Calificar Entrevista'} open={open} handleClose={handleClose} >
         <form onSubmit={handleConfirm}>
@@ -602,7 +605,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
       </ModalEntrevista>
       <ModalClase title={'Evaluar Clase Modelo'} open={openClase} handleClose={handleCloseClase} handleConfirm={handleConfirmClase} />
       <ModalAptitud title={'Evaluar aptitudes'} open={openAptitud} handleClose={handleCloseAptitud} handleConfirm={handleConfirmAptitud} />
-    </AdminLayout>
+    </Paperbase>
   )
 }
 

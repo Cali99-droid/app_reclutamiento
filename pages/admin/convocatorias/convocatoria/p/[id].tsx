@@ -1,18 +1,17 @@
 import { prisma } from '@/server/db/client';
 
-import { apiCon, reclutApi } from "@/api";
-import AnnouncementForm from "@/components/jobs/AnnouncementForm";
-import { AdminLayout, JobsLayout } from "@/components/layouts";
 
-import { IAficion, ICapacitacion, ICargo, IEstudio, IGrado, IInvestigacion, IPostulant, IReconocimiento, ITics } from "@/interfaces";
-import { Box, Button, Typography, Grid, styled, Paper, Card, CardMedia, CardContent, CardActions, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses } from '@mui/material';
-import { convocatoria, persona, estudios } from '@prisma/client';
-import { GetServerSideProps, GetStaticProps, NextPage } from "next";
-import { getSession } from 'next-auth/react';
+import { AdminLayout } from "@/components/layouts";
+
+import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics } from "@/interfaces";
+import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link } from '@mui/material';
+
+import { GetServerSideProps, NextPage } from "next";
+
 import Image from 'next/image';
 import { calcularEdad } from '@/helpers/functions';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
-import PersonIcon from '@mui/icons-material/Person';
+
 import PhoneIcon from '@mui/icons-material/Phone';
 import MailIcon from '@mui/icons-material/Mail';
 import { useRouter } from 'next/router';
@@ -23,6 +22,7 @@ import NaturePeopleIcon from '@mui/icons-material/NaturePeople';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DevicesIcon from '@mui/icons-material/Devices';
+import { Paperbase } from '@/components/dash';
 interface Props {
     postulante: any
     user: any
@@ -34,6 +34,11 @@ interface Props {
     tecno: ITics[]
     aficion: IAficion[]
 
+}
+export const config = {
+    api: {
+        bodyParser: false,
+    }
 }
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -66,8 +71,25 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves, capa, reco, tecno, aficion }) => {
     const router = useRouter();
     return (
-        <AdminLayout title={"Postulante "} subTitle={'ficha'}  >
-            <Box className="fadeIn" padding={3} >
+        <Paperbase title={"Postulante "} subTitle={'ficha'}  >
+
+
+            <Box className="fadeIn" sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' }} >
+                <Box mb={2}>
+                    <Breadcrumbs aria-label="breadcrumb">
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            onClick={() => router.push("/admin/convocatorias")} sx={{ cursor: 'pointer' }}
+                        >
+                            Convocatorias
+                        </Link>
+                        <Link underline="hover" sx={{ cursor: 'pointer' }} color="inherit" onClick={() => router.back()}>
+                            Administrar Convocatoria
+                        </Link>
+
+                        <Typography fontWeight={'bold'} color="text.primary">{postulante.persona.nombres}</Typography>
+                    </Breadcrumbs></Box>
 
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -79,7 +101,8 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                         <Item elevation={1}>
                             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Image
-                                    src="/postulants/p3.jpg"
+
+                                    src={(postulante.image === null ? '/avatar.jpg' : postulante.image)}
                                     width={150}
                                     height={150}
                                     alt="Imagen postulante"
@@ -498,8 +521,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
             </Box>
 
 
-
-        </AdminLayout>
+        </Paperbase >
     )
 }
 

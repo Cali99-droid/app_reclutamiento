@@ -1,7 +1,7 @@
-import { green, pink } from '@mui/material/colors';
+
 import { createTheme } from '@mui/material/styles';
 import { esES } from '@mui/x-data-grid';
-export const lightTheme = createTheme({
+export let lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
@@ -14,23 +14,21 @@ export const lightTheme = createTheme({
     info: {
       main: '#001C75',
     },
-    neutral:{
-      main:'#DEDEDE'
-    },
-    dorado:{
-      main:'#EECA73'
-    },
-    exito:{
-      main:green[500]
-    },
-    cancel:{
-      main:pink[500]
-    }
+  
+   
 
   },
  
 
   components: {
+
+    MuiDrawer: {
+      styleOverrides: {
+          paper: {
+              backgroundColor: '#081627',
+          },
+      },
+  },
     MuiLink: {
       defaultProps: {
         underline: 'none',
@@ -97,7 +95,13 @@ export const lightTheme = createTheme({
          fontFamily:'Raleway',
           borderRadius: 10,
          
-        }
+        },
+        contained: {
+          boxShadow: 'none',
+          '&:active': {
+              boxShadow: 'none',
+          },
+      },
       }
     },
 
@@ -112,34 +116,10 @@ export const lightTheme = createTheme({
           borderRadius: '10px',
         }
       }
-    }
+    },
+    
+},
     
   }
 
-  
-},esES);
-
-declare module '@mui/material/styles' {
- 
-
-  interface Palette {
-    neutral: Palette['primary'];
-  }
-
-  interface PaletteOptions {
-    neutral: PaletteOptions['primary'];
-    dorado: PaletteOptions['secondary'];
-    exito: PaletteOptions['success'];
-    cancel: PaletteOptions['error'];
-  }
-
-  interface PaletteColor {
-    darker?: string;
-  }
-
-  interface SimplePaletteColorOptions {
-    darker?: string;
-  }
-
-
-}
+);

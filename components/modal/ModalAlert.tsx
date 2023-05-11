@@ -12,12 +12,12 @@ interface ModalProps extends PropsWithChildren {
 export const ModalAlert: FC<ModalProps> = ({ title, children, open, handleClose, handleConfirm }) => {
 
   return (
-    <Dialog  open={open}  sx={{padding:10}} >
+    <Dialog open={open} sx={{ padding: 10 }} >
       <DialogTitle color={'#324B4A'} fontWeight={'bold'}>{title}</DialogTitle>
       <DialogContent >{children}</DialogContent>
       <DialogActions>
-        
-        <Button  onClick={handleConfirm}   sx={{textTransform:'uppercase', color:'#FFF'}}>
+
+        <Button onClick={handleConfirm}  >
           Aceptar
         </Button>
       </DialogActions>
