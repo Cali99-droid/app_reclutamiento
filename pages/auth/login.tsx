@@ -39,7 +39,7 @@ const LoginPage = (error: string) => {
         setShowError(false);
         const confirmado = await verificarConfirmacion(email);
         if (confirmado) {
-            console.log('esta confriamdo')
+
             const resp = await signIn('credentials', { email, password, redirect: false, });
             if (resp) {
 

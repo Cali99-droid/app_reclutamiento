@@ -1,5 +1,5 @@
 
-import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, CardActionArea, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material'
+import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, CardActionArea, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Chip } from '@mui/material'
 
 import { IPostulant } from '@/interfaces';
 
@@ -10,141 +10,116 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { PostContext, UiContext } from '@/context';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Modal from '../modal/Modal';
 
 
-import {  ToastContainer, toast } from 'react-toastify';
 
 
-const steps = ['Preselección', 'Entrevista', 'Evaluación', 'Negociación','Contrato'];
+import FactCheckIcon from '@mui/icons-material/FactCheck';
+import FilePresentIcon from '@mui/icons-material/FilePresent';
+import { Modal } from '../modal';
+import { Ficha } from './Ficha';
+import { persona } from '@prisma/client';
+
+
 
 interface Props {
     postulant: IPostulant;
-    index:number;
+    index: number;
 }
 
 
-export const PostulantCard: FC<Props> = ({ postulant,index }) => {
+export const PostulantCard: FC<Props> = ({ postulant, index }) => {
 
 
+    const { handleOpenClase } = useContext(PostContext)
 
-    const{backPhase, activeStep,contrato,advancePhase} = useContext(PostContext)
-
-    const [open, setOpen] = useState(false);
-
-    const handleClickOpen = () => {
-          setOpen(true);
-    };
-
-    const handleClose = () => {
-          setOpen(false);
-    };
-    
-  const handleConfirm = () => {
-    // aquí puedes ejecutar cualquier acción que necesites cuando el usuario confirma la ventana modal
-    toast.success(`Promoviendo al postulante ${postulant.nombres}`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        });
-    advancePhase(postulant);
-  };
-
-
+    const [open, setOpen] = useState(false)
+    const [pos, setPos] = useState<any>();
+    console.log(pos)
+    const handleOpen = (pos: any) => {
+        setOpen(true);
+        setPos(pos)
+    }
     return (
-        <Grid item   
-        xs={12} 
-        sm={3}
-        > 
-            <Card sx={{ maxWidth: 345 }}>      
-            <NextLink   href={`#`} passHref prefetch={ false } legacyBehavior>
+        <Grid item
+            xs={12}
+            sm={3}
+        >
+            <Card sx={{ maxWidth: 345 }} >
 
-                <Link>
-                    <CardActionArea>
+
+                <CardActionArea >
                     <CardMedia
                         sx={{ height: 220 }}
-                        image={`/postulants/${postulant.img}.jpg`}
-                        // title={job.titulo}
+                        image={(postulant.image === null ? '/avatar.jpg' : postulant.image)}
+
                     />
                     <CardContent>
-                        <Typography fontWeight={'bold'} color={'#FFBC58'}># {index+1}</Typography>
-                        <Typography gutterBottom variant="h5" component="div">
-                        {postulant.nombres + ' ' + postulant.apellido_paterno + ' '+postulant.apellido_materno}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                        {postulant.grado}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                        Puntaje:{postulant.puntaje_in}
-                        </Typography>
-                            
+
+                        <Typography fontWeight={'bold'} color={'#FFBC58'}># {index + 1}</Typography>
+
+                        <Typography fontWeight={'bold'} >{postulant.persona.nombres + ' ' + postulant.persona.apellido_pat + ' ' + postulant.persona.apellido_mat}</Typography>
                         {/* <Box mt={1}>
                             <Chip label={`${job.categoria}`} color="success" variant="outlined" />
                         </Box> */}
-                    </CardContent>  
-                    </CardActionArea>
-                    
-                </Link>
-                </NextLink>
-                <CardActions sx={{display:'flex', justifyContent:'space-between'}}>
-                    {
-                        !contrato
-                        ?(
-                            <Box>
-                            {activeStep !== 0
-                            ?( <IconButton 
-                                aria-label="remove to favorites"
-                                onClick={()=>{                      
-                                        backPhase(postulant) 
-                                }}                   
-                                >
-                                    <RemoveCircleIcon fontSize="large" />
-                            </IconButton>)
-                            :''
-                            }                       
-                        {
-                            activeStep === 4
-                            ?
-                                ''                           
-                            :(  <IconButton aria-label="add to favorites" onClick={handleClickOpen}>
-                                <AddCircleIcon fontSize="large" color="secondary"/>
-                            </IconButton>)
-                        }
+                    </CardContent>
+                </CardActionArea>
 
-                    </Box>
 
-                        )
-                        :(
-                            ''
-                        )
-                    }
-                  
-                    
-                        <IconButton>
-                            <ExpandMoreIcon />
-                        </IconButton>
-                    
-                 
-                
-                    </CardActions>
-                
-               
+
+
+
+                <CardActions >
+
+                    <Chip
+                        icon={<FactCheckIcon />}
+                        label="Evaluar"
+                        variant="outlined"
+                        clickable
+                        sx={{ width: '100%' }}
+                        color={'primary'}
+                        onClick={() => { handleOpenClase(postulant.id) }}
+                    />
+
+                    <Chip
+                        icon={<FilePresentIcon />}
+                        label="Ver ficha"
+                        variant="outlined"
+                        clickable
+                        sx={{ width: '100%' }}
+                        color={'secondary'}
+                        onClick={() => { handleOpen(postulant) }}
+                    />
+
+
+                    {/* <IconButton
+
+                        aria-label="evaluar"
+                    // 
+
+                    >
+                        < FactCheckIcon />
+                    </IconButton> */}
+
+
+
+                </CardActions>
+
+
             </Card>
 
-            <Modal
-                title="¿Esta seguro de pasar al postulante a la siguiente fase?"
-                open={open}
-                handleClose={handleClose}
-                handleConfirm={handleConfirm}
-            >
-                <p>El postulante <strong>{postulant.nombres}</strong> sera agregado a la fase de <strong>{`${steps[activeStep+1]}`}</strong></p>
+
+            <Modal title={'Ficha'} open={open} handleClose={function (): void {
+                throw new Error('Function not implemented.');
+            }} handleConfirm={function (): void {
+                throw new Error('Function not implemented.');
+            }}>
+
+                <Ficha grados={[]} postulante={pos} estudios={[]} cargos={[]} inves={[]} capa={[]} reco={[]} tecno={[]} aficion={[]} />
+
+
             </Modal>
-       
+
         </Grid>
     )
 }

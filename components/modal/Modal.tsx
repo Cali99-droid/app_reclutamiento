@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren } from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, useMediaQuery } from "@mui/material";
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Box } from "@mui/material";
 
 
 interface ModalProps extends PropsWithChildren {
@@ -12,9 +12,16 @@ interface ModalProps extends PropsWithChildren {
 export const Modal: FC<ModalProps> = ({ title, children, open, handleClose, handleConfirm }) => {
 
   return (
-    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" >
-      <DialogTitle id="form-dialog-title">{title}</DialogTitle>
-      <DialogContent>{children}</DialogContent>
+
+    <Dialog open={open} onClose={handleClose}  >
+
+      <DialogTitle >{title}</DialogTitle>
+      <DialogContent  >
+
+        {children}
+
+
+      </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}  >
           Cancelar
@@ -23,7 +30,10 @@ export const Modal: FC<ModalProps> = ({ title, children, open, handleClose, hand
           Aceptar
         </Button>
       </DialogActions>
+
+
     </Dialog>
+
   );
 };
 

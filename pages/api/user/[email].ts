@@ -9,6 +9,7 @@ import { PrismaClient, user } from '@prisma/client'
 import { jwt, validations } from '../../../helpers';
 import { generarId } from '@/helpers/functions';
 import sendConfirmationEmail from '@/helpers/sendConfirmationEmail';
+import { prisma } from '../../../server/db/client';
 
 
 type Data = 
@@ -33,7 +34,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 const getUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     const{email}:any = req.query ;
    
- const user = await prisma?.user.findFirst({
+ const user = await prisma.user.findFirst({
     where:{
         email
     },

@@ -1,7 +1,7 @@
 import { IJob } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
-import { convocatoria, postulante } from '@prisma/client';
+import { convocatoria, postulante, user } from '@prisma/client';
 
 
 
@@ -50,7 +50,11 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
         include: {
           postulante: {
             include: {
-              persona: true,
+              persona: {
+                include:{
+                  user:true
+                }
+              },
             
               evaluacion_x_postulante:{
                 where:{
@@ -62,7 +66,8 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
                 orderBy:{
                   puntaje:'asc'
                 }
-              }
+              },
+              estudios:true
               
             }
             

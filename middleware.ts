@@ -9,6 +9,7 @@ export async function middleware(req: NextRequest) {
 
     const requestedPage = req.nextUrl.pathname;
     const validRoles = ['admin'];
+    const validRolJurados = ['jurado1', 'jurado2'];
 
     if( !session ){
       const url = req.nextUrl.clone();
@@ -46,6 +47,11 @@ export async function middleware(req: NextRequest) {
  
       return NextResponse.redirect(new URL('/', req.url));
     };
+    if( requestedPage.includes('/jurado') &&  !validRolJurados.includes( session.user.rol.name ) ){
+ 
+      return NextResponse.redirect(new URL('/', req.url));
+    };
+
  
 
     return NextResponse.next();
@@ -54,5 +60,5 @@ export async function middleware(req: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher:[ '/admin/:path*','/postulant/:path*'],
+  matcher:[ '/admin/:path*','/postulant/:path*','/jurado/:path*'],
 }

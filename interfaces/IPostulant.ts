@@ -10,5 +10,6 @@ export interface IPostulant {
     sueldo: number,
     persona:persona,
     doc:string
+    image:string
     
 }

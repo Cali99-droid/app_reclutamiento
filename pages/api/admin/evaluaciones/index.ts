@@ -25,22 +25,22 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
 
      const {id, puntaje, idPos,idEv,max} = req.body
 
-    const existeEv = await prisma.evaluacion_x_postulante.findMany({
-        where:{
-            convocatoria_id:parseInt(id),
-            AND:{
-                postulante_id:idPos,
-                evaluacion_id:idEv
-            }
+    // const existeEv = await prisma.evaluacion_x_postulante.findMany({
+    //     where:{
+    //         convocatoria_id:parseInt(id),
+    //         AND:{
+    //             postulante_id:idPos,
+    //             evaluacion_id:idEv
+    //         }
             
-        },
-    })
+    //     },
+    // })
 
-    if(existeEv.length>0){
-        return res.status(400).json({
-            message:'Ya tiene evaluación'
-        })
-    }
+    // if(existeEv.length>0){
+    //     return res.status(400).json({
+    //         message:'Ya tiene evaluación'
+    //     })
+    // }
 
     try {
         const  ev = await prisma.evaluacion_x_postulante.create({

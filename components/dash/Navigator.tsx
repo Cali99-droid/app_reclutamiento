@@ -27,6 +27,7 @@ import { Typography } from '@mui/material';
 import { useState, useContext } from 'react';
 import { AuthContext } from '@/context';
 import QuizIcon from '@mui/icons-material/Quiz';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
 const categories = [
     {
         id: 'Administrador',
@@ -82,7 +83,7 @@ const itemCategory = {
 };
 
 
-
+const validRolJurados = ['jurado1', 'jurado2'];
 export default function Navigator(props: DrawerProps) {
     const { ...other } = props;
     const [option, setOption] = useState(categories)
@@ -113,26 +114,42 @@ export default function Navigator(props: DrawerProps) {
                     </ListItemIcon>
                     <ListItemText>Ir a inicio</ListItemText>
                 </ListItem>
-                {option.map(({ id, hijos }) => (
-                    <Box key={id} sx={{ bgcolor: '#7268D0' }} >
-                        <ListItem sx={{ py: 2, px: 3 }}>
-                            <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
-                        </ListItem>
-                        {hijos.map(({ id: childId, icon, active, dir }) => (
-                            <ListItem disablePadding key={childId}>
-                                <ListItemButton
-                                    selected={asPath.includes(`${dir}`)}
-                                    sx={item}
-                                    onClick={() => navigateTo(`${dir}`, childId)}>
-                                    <ListItemIcon>{icon}</ListItemIcon>
-                                    <ListItemText>{childId}</ListItemText>
-                                </ListItemButton>
+                {user?.rol.name === 'admin' && (
+                    option.map(({ id, hijos }) => (
+                        <Box key={id} sx={{ bgcolor: '#7268D0' }} >
+                            <ListItem sx={{ py: 2, px: 3 }}>
+                                <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
                             </ListItem>
-                        ))}
-                        <Divider sx={{ mt: 2 }} />
-                    </Box>
-                ))}
-                <ListItem disablePadding >
+                            {hijos.map(({ id: childId, icon, active, dir }) => (
+                                <ListItem disablePadding key={childId}>
+                                    <ListItemButton
+                                        selected={asPath.includes(`${dir}`)}
+                                        sx={item}
+                                        onClick={() => navigateTo(`${dir}`, childId)}>
+                                        <ListItemIcon>{icon}</ListItemIcon>
+                                        <ListItemText>{childId}</ListItemText>
+                                    </ListItemButton>
+                                </ListItem>
+                            ))}
+                            <Divider sx={{ mt: 2 }} />
+                        </Box>
+                    )))}
+                {isLoggedIn && (user?.rol.name === 'jurado1' || user?.rol.name === 'jurado2') && (
+                    <ListItem sx={{ ...item, ...itemCategory }}>
+                        <ListItemButton
+                            selected={true}
+                            onClick={() => push('/jurado')}
+                        >
+                            <ListItemIcon>
+                                <FactCheckIcon />
+                            </ListItemIcon>
+                            <ListItemText>Evaluar Docente</ListItemText>
+                        </ListItemButton>
+                    </ListItem>
+                )}
+
+                <ListItem disablePadding  >
+
                     <ListItemButton
 
                         sx={item}
@@ -140,6 +157,7 @@ export default function Navigator(props: DrawerProps) {
                         <ListItemIcon><LoginOutlined /></ListItemIcon>
                         <ListItemText>Salir</ListItemText>
                     </ListItemButton>
+
                 </ListItem>
 
             </List>

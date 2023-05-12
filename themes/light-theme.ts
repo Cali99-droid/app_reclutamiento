@@ -22,13 +22,7 @@ export let lightTheme = createTheme({
 
   components: {
 
-    MuiDrawer: {
-      styleOverrides: {
-          paper: {
-              backgroundColor: '#081627',
-          },
-      },
-  },
+   
     MuiLink: {
       defaultProps: {
         underline: 'none',
