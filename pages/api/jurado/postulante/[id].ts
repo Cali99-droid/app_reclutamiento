@@ -16,7 +16,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     
     switch (req.method) {
         case 'GET':
-            return getPostulantes( req, res );
+            return getPostulante( req, res );
             
       
 
@@ -33,7 +33,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
  
 }
 
-const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
+const getPostulante = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
     const { id=''  } = req.query;
     // const convocatoria = await prisma.convocatoria.findUnique({

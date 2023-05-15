@@ -19,26 +19,36 @@ import FilePresentIcon from '@mui/icons-material/FilePresent';
 import { Modal } from '../modal';
 import { Ficha } from './Ficha';
 import { persona } from '@prisma/client';
+import { useSession } from 'next-auth/react';
+import CheckIcon from '@mui/icons-material/Check';
 
 
 
 interface Props {
-    postulant: IPostulant;
+    postulant: any;
     index: number;
 }
 
 
 export const PostulantCard: FC<Props> = ({ postulant, index }) => {
 
+    const { data: session } = useSession()
 
     const { handleOpenClase } = useContext(PostContext)
 
+
+
     const [open, setOpen] = useState(false)
-    const [pos, setPos] = useState<any>();
-    console.log(pos)
+    const [pos, setPos] = useState<any>(postulant);
+
     const handleOpen = (pos: any) => {
         setOpen(true);
         setPos(pos)
+
+    }
+    const handleClose = () => {
+        setOpen(false);
+
     }
     return (
         <Grid item
@@ -62,6 +72,15 @@ export const PostulantCard: FC<Props> = ({ postulant, index }) => {
                         {/* <Box mt={1}>
                             <Chip label={`${job.categoria}`} color="success" variant="outlined" />
                         </Box> */}
+                        {
+                            // puntaje.map(p =>(
+                            //     p.
+                            // ))
+                        }
+                        {postulant.evaluacion_x_postulante.map((e: any, index: number) => (
+                            <Typography key={index}>Puntaje: {e.puntaje}</Typography>
+
+                        ))}
                     </CardContent>
                 </CardActionArea>
 
@@ -70,16 +89,31 @@ export const PostulantCard: FC<Props> = ({ postulant, index }) => {
 
 
                 <CardActions >
+                    {postulant.evaluacion_x_postulante.length > 0 ? (
 
-                    <Chip
-                        icon={<FactCheckIcon />}
-                        label="Evaluar"
-                        variant="outlined"
-                        clickable
-                        sx={{ width: '100%' }}
-                        color={'primary'}
-                        onClick={() => { handleOpenClase(postulant.id) }}
-                    />
+                        <Chip
+                            icon={<CheckIcon />}
+                            label="Evaluado"
+                            variant="outlined"
+                            // clickable
+
+                            sx={{ width: '100%' }}
+                            color={'warning'}
+                        // onClick={() => { handleOpenClase(postulant.id) }}
+                        />
+                    ) : (
+                        <Chip
+                            icon={<FactCheckIcon />}
+                            label="Evaluar"
+                            variant="outlined"
+                            clickable
+
+                            sx={{ width: '100%' }}
+                            color={'primary'}
+                            onClick={() => { handleOpenClase(postulant.id) }}
+                        />
+                    )}
+
 
                     <Chip
                         icon={<FilePresentIcon />}
@@ -109,13 +143,12 @@ export const PostulantCard: FC<Props> = ({ postulant, index }) => {
             </Card>
 
 
-            <Modal title={'Ficha'} open={open} handleClose={function (): void {
-                throw new Error('Function not implemented.');
-            }} handleConfirm={function (): void {
-                throw new Error('Function not implemented.');
-            }}>
+            <Modal title={'Ficha'} open={open} handleClose={() => handleClose()} handleConfirm={() => handleClose()}>
 
-                <Ficha grados={[]} postulante={pos} estudios={[]} cargos={[]} inves={[]} capa={[]} reco={[]} tecno={[]} aficion={[]} />
+
+
+                <Ficha postulante={pos} />
+
 
 
             </Modal>

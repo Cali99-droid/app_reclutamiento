@@ -15,7 +15,7 @@ interface Props extends PropsWithChildren {
 export const DashLayout: FC<Props> = ({ children, title, subTitle, icon }) => {
     return (
         <>
-            <ToastContainer />
+
             <Box className='fadeIn'>
                 {children}
             </Box>

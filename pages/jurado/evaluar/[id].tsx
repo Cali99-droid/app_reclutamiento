@@ -6,10 +6,8 @@ import { PostContext } from '@/context';
 import { GetServerSideProps, NextPage } from "next";
 import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Toolbar, AppBar, Breadcrumbs } from '@mui/material';
 import { evaluacion, evaluacion_x_postulante, postulante } from '@prisma/client';
-import { calcularEdad } from "@/helpers/functions";
-import FactCheckIcon from '@mui/icons-material/FactCheck';
-import TaskTwoToneIcon from '@mui/icons-material/TaskTwoTone';
-import { cyan } from '@mui/material/colors';
+
+
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
@@ -37,115 +35,30 @@ interface Props {
 const EvaluarPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
     const router = useRouter();
     const { id } = router.query
-    const { data, error } = useSWR<any[]>(`/api/admin/postulantes/${id}`);
+    const { data, error } = useSWR<any[]>(`/api/jurado/postulantes/${id}`);
 
     const [postulantes, setPostulantes] = useState<any[]>([]);
-    const [status, setStatus] = useState(true)
-    const { criterios, calcularTotal, limpiarCriterios, openClase, handleCloseClase, handleConfirmClase } = useContext(PostContext);
-    const [total, setTotal] = useState(0)
 
-
+    const { openClase, handleCloseClase, handleConfirmClase, openAptitud, handleConfirmAptitud, handleCloseAptitud, idUser } = useContext(PostContext);
 
     useEffect(() => {
         if (data) {
-            // const newPost = data?.sort((x, y) => x.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje) - y.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)).reverse()
-            setPostulantes(data);
+            const newPost = data.sort((x, y) => x.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje) - y.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)).reverse()
+            setPostulantes(newPost);
 
         }
 
-    }, [data])
-
-
-    const devolverPuntajeEntrevista = (puntajes: evaluacion_x_postulante[]) => {
-        let formato = '';
-
-        puntajes.forEach(p => {
-            formato += p.puntaje + ','
-
-        });
-
-
-        return formato.split(',')[0]
-    }
-    const devolverPuntajeJurado = (puntajes: evaluacion_x_postulante[]) => {
-        let formato = '';
-        puntajes.forEach(p => {
-            formato += p.puntaje + ','
-
-        });
-
-
-        return formato.split(',')[1]
-    }
-
-    const tot = (puntajes: evaluacion_x_postulante[]) => {
-        let suma = 0;
-        puntajes.forEach(p => {
-            suma += p.puntaje
-        });
-
-        return suma;
-
-    }
-
-
-    const [idEv, setIdEv] = useState<string | number>('');
-    const [idPos, setIdPos] = useState<string | number>('');
-
-
-    const refreshData = () => {
-        router.replace(router.asPath)
-    }
-    //------------------------------------Evaluaciones-----------------------------------------------------
+    }, [data, idUser])
 
 
 
 
-
-
-
-    //-------------------------------------------------------------------
-    const [openAptitud, setOpenAptitud] = useState(false)
-    const handleOpenAptitud = (id: number) => {
-        setOpenAptitud(true);
-        setIdPos(id)
-        setIdEv(2)
-    };
-
-    const handleCloseAptitud = () => {
-        setOpenAptitud(false);
-    };
-    const handleConfirmAptitud = async () => {
-        //TODO validar actualizacion o creacion  */
-
-
-        const puntaje = calcularTotal();
-
-
-        try {
-
-            const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 100 });
-            console.log(resp)
-            toast.success('🦄 Puntaje asignado correctamente!'),
-                handleCloseAptitud()
-            limpiarCriterios()
-
-        } catch (error) {
-
-            console.log(error);
-            alert('El postulante ya tiene puntaje');
-        }
-
-
-
-
-
-    };
 
 
 
     return (
         <Paperbase title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
+            <ToastContainer />
             <Box sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden', }} className="fadeIn" >
                 <Box mb={2}>
                     <Breadcrumbs aria-label="breadcrumb">

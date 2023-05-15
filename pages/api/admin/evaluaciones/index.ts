@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { prisma } from '@/server/db/client';
 import {  evaluacion_x_postulante } from '@prisma/client';
+import { getSession } from 'next-auth/react';
 
 type Data = 
 | { message: string }
@@ -23,8 +24,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
-     const {id, puntaje, idPos,idEv,max} = req.body
+     
+    
+ 
 
+  const {id, puntaje, idPos,idEv,max,idUser} = req.body
     // const existeEv = await prisma.evaluacion_x_postulante.findMany({
     //     where:{
     //         convocatoria_id:parseInt(id),
@@ -49,7 +53,8 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
                puntaje_max:max,
                postulante_id:idPos,
                convocatoria_id:parseInt(id) ,
-               evaluacion_id:idEv
+               evaluacion_id:idEv,
+               user_id:parseInt(idUser.toString()) 
 
             },
         })

@@ -13,13 +13,12 @@ export const Modal: FC<ModalProps> = ({ title, children, open, handleClose, hand
 
   return (
 
-    <Dialog open={open} onClose={handleClose}  >
+    <Dialog open={open} onClose={handleClose} maxWidth='lg'>
 
       <DialogTitle >{title}</DialogTitle>
       <DialogContent  >
 
         {children}
-
 
       </DialogContent>
       <DialogActions>

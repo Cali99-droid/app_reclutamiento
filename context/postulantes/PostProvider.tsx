@@ -7,6 +7,7 @@ import { reclutApi } from '@/api';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { AuthContext } from '../auth';
+import { useSession } from 'next-auth/react';
 
 export interface PostState {
       postulants: IPostulant[];
@@ -78,7 +79,9 @@ export const PostProvider: FC<Props> = ({ children }) => {
             setOpenClase(false);
       };
 
-
+      const { data }: any = useSession();
+      // ** console.log(data?.user.persona.postulante[0].id);
+      const idUser = data?.user.id
 
       const handleConfirmClase = async () => {
             //TODO validar actualizacion o creacion  */
@@ -89,8 +92,8 @@ export const PostProvider: FC<Props> = ({ children }) => {
 
             try {
 
-                  const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 100 });
-                  console.log(resp)
+                  const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 100, idUser });
+
                   toast.success('🦄 Puntaje asignado correctamente0!'),
                         handleCloseClase()
                   limpiarCriterios()
@@ -123,8 +126,8 @@ export const PostProvider: FC<Props> = ({ children }) => {
 
             try {
 
-                  const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 100 });
-                  console.log(resp)
+                  const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 100, idUser });
+
                   toast.success('🦄 Puntaje asignado correctamente!'),
                         handleCloseAptitud()
                   limpiarCriterios()
@@ -148,12 +151,18 @@ export const PostProvider: FC<Props> = ({ children }) => {
                   criterios,
                   calcularTotal,
                   limpiarCriterios,
+                  idUser,
 
                   //Modales
                   handleOpenClase,
                   openClase,
                   handleCloseClase,
                   handleConfirmClase,
+
+                  openAptitud,
+                  handleOpenAptitud,
+                  handleCloseAptitud,
+                  handleConfirmAptitud
 
             }}>
                   {children}

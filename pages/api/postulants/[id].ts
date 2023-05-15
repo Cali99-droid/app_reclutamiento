@@ -34,7 +34,7 @@ async function  getPostulante(req: NextApiRequest, res: NextApiResponse<any>) {
     if ( !session ) {
         return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
     }
-    console.log(session.user.persona.id);
+
     const id = session.user.persona.id
  
     const p = await prisma.postulante.findFirst({

@@ -17,10 +17,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     
     switch (req.method) {
         case 'GET':
-            return getPostulantes( req, res );
-            
-        case 'PUT':
-            return updatePostulante( req, res );
+            return getEvaluacionPostulante( req, res );
+       
 
         // case 'POST':
         //     return createConvocatoria( req, res );
@@ -35,10 +33,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
  
 }
 
-const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
+const getEvaluacionPostulante = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
     const { id=''  } = req.query;
-
+    const session: any = await getSession({ req });
+    if ( !session ) {
+        return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
+    }
+    const idUser = session.user.id
+  
     // const convocatoria = await prisma.convocatoria.findUnique({
     //     where: {
     //       id: parseInt(id.toString())
@@ -46,15 +49,21 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
     //   })
       const listaPostulantes = await prisma.postulante_x_convocatoria.findMany({
         where: {
-          convocatoria_id: parseInt(id.toString())
+          convocatoria_id: parseInt(id.toString()),
+          AND:{
+            estado_postulante_id: 3
+          }
          
         },
         
         
         include: {
           postulante: {
+         
             include: {
+            
               persona: {
+                
                 include:{
                   user:true
                 }
@@ -63,7 +72,9 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
               evaluacion_x_postulante:{
                 where:{
                   convocatoria_id:parseInt(id.toString()),
-                 
+                  AND:{
+                  user_id:parseInt(idUser.toString())
+                  }
                  
 
                 },
@@ -83,6 +94,7 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
             }
             
           }
+
         },
       });
       const postulantes = JSON.parse(JSON.stringify(listaPostulantes))
@@ -91,30 +103,3 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
       res.status(201).json( postulantes );
  
  }
-
-async function updatePostulante(req: NextApiRequest, res: NextApiResponse<any>) {
-  const { id , status } = req.body;
-
-  try {
-    const  p = await prisma.postulante_x_convocatoria.update({
-      where: {
-        id
-      },
-      data: {
-        
-          estado_postulante_id:  parseInt(status),
-        
-
-      },
-    })
-
-    
-    await prisma.$disconnect()
-    res.status(201).json({p});
-  } catch (error) {
-    console.log(error);
-    await prisma.$disconnect()
-    return res.status(400).json({ message: 'Revisar logs del servidor' });
- }
-}
-

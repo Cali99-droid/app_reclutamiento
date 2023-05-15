@@ -24,16 +24,16 @@ import DevicesIcon from '@mui/icons-material/Devices';
 import NaturePeopleIcon from '@mui/icons-material/NaturePeople';
 interface Props {
 
-    grados: IGrado[]
+    // grados: IGrado[]
     // user: any
     postulante: any
-    estudios: IEstudio[]
-    cargos: ICargo[]
-    inves: IInvestigacion[]
-    capa: ICapacitacion[]
-    reco: IReconocimiento[]
-    tecno: ITics[]
-    aficion: IAficion[]
+    // estudios: IEstudio[]
+    // cargos: ICargo[]
+    // inves: IInvestigacion[]
+    // capa: ICapacitacion[]
+    // reco: IReconocimiento[]
+    // tecno: ITics[]
+    // aficion: IAficion[]
 }
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -65,12 +65,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 
-export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, capa, reco, tecno, aficion }) => {
+export const Ficha: NextPage<Props> = ({ postulante }) => {
 
     const router = useRouter();
     console.log(postulante)
     return (
-        <Box className="fadeIn" padding={3} mt={15} >
+        <Box className="fadeIn" padding={2}  >
 
             <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -82,7 +82,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                     <Item elevation={1}>
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                             <Image
-                                src={`${postulante.image}`}
+                                src={(postulante.image === null ? '/avatar.jpg' : postulante.image)}
                                 width={150}
                                 height={150}
                                 alt="Imagen postulante"
@@ -217,7 +217,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {cargos.map((e) => (
+                                            {postulante.cargo.map((e: ICargo) => (
                                                 <TableRow
                                                     key={e.id}
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -239,7 +239,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                                     </Table>
                                 </TableContainer>
                                 {
-                                    cargos.length === 0 && (
+                                    postulante.cargo.length === 0 && (
                                         <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                     )
@@ -266,7 +266,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {inves.map((e) => (
+                                            {postulante.investigacion.map((e: IInvestigacion) => (
                                                 <TableRow
                                                     key={e.id}
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -284,7 +284,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                                     </Table>
                                 </TableContainer>
                                 {
-                                    inves.length === 0 && (
+                                    postulante.investigacion.length === 0 && (
                                         <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                     )
@@ -316,7 +316,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {capa.map((e) => (
+                                            {postulante.capacitacion.map((e: ICapacitacion) => (
                                                 <TableRow
                                                     key={e.id}
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -336,7 +336,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                                     </Table>
                                 </TableContainer>
                                 {
-                                    capa.length === 0 && (
+                                    postulante.capacitacion.length === 0 && (
                                         <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                     )
@@ -364,7 +364,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {reco.map((e) => (
+                                            {postulante.reconocimiento.map((e: IReconocimiento) => (
                                                 <TableRow
                                                     key={e.id}
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -383,7 +383,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                                     </Table>
                                 </TableContainer>
                                 {
-                                    reco.length === 0 && (
+                                    postulante.reconocimiento.length === 0 && (
                                         <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                     )
@@ -414,7 +414,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {tecno.map((e) => (
+                                            {postulante.tics.map((e: ITics) => (
                                                 <TableRow
                                                     key={e.id}
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -432,7 +432,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                                     </Table>
                                 </TableContainer>
                                 {
-                                    tecno.length === 0 && (
+                                    postulante.tics.length === 0 && (
                                         <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                     )
@@ -460,7 +460,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {aficion.map((e) => (
+                                            {postulante.aficion.map((e: IAficion) => (
                                                 <TableRow
                                                     key={e.id}
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -480,7 +480,7 @@ export const Ficha: NextPage<Props> = ({ postulante, estudios, cargos, inves, ca
                                     </Table>
                                 </TableContainer>
                                 {
-                                    aficion.length === 0 && (
+                                    postulante.aficion.length === 0 && (
                                         <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                     )

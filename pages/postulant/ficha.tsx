@@ -84,7 +84,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                         <Item elevation={1}>
                             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Image
-                                    src={`${postulante.image}`}
+                                    src={(postulante.image === null ? '/avatar.jpg' : postulante.image)}
                                     width={150}
                                     height={150}
                                     alt="Imagen postulante"
