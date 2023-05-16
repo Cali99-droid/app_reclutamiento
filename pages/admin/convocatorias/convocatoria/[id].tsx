@@ -31,6 +31,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 import { Paperbase } from '@/components/dash';
+import { useSession } from 'next-auth/react';
 interface Props {
   postulantes: postulante[]
   convocatoria: IJob
@@ -55,13 +56,24 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
       // const newPost = data?.sort((x, y) => x.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje) - y.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)).reverse()
       setPostulantes(data);
 
+      console.log(data)
     }
 
   }, [data])
 
 
 
+  const comprobarEntrevista = (puntajes: evaluacion_x_postulante[]) => {
+    puntajes.forEach(p => {
+      if (p.evaluacion_id === 1) {
+        return true;
+      } else {
+        return false;
+      }
 
+    });
+
+  }
 
 
   const columns: GridColDef[] = [
@@ -97,20 +109,20 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
     },
     {
       field: 'puntajeJur',
-      headerName: convocatoria.categoria_id === 1 ? 'Puntaje Jurado' : 'Puntaje Clase Modelo',
+      headerName: ' Puntaje Jurados',
       width: 150,
 
     },
     {
       field: 'total',
       headerName: 'Total',
-      width: 90,
+      width: 50,
 
     },
     {
       field: 'estado',
       headerName: 'Estado',
-      width: 200,
+      width: 220,
       renderCell: (params) => {
 
         return (
@@ -134,7 +146,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
       }
     },
     {
-      field: 'actions', headerName: 'Evaluar', width: 150,
+      field: 'actions', headerName: 'Evaluar Entrevista', width: 200,
       sortable: false,
       renderCell: (params) => {
         return (
@@ -145,17 +157,17 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
 
                   <>
-                    <Tooltip title="Evaluar Entrevista" placement="right-start">
-                      <IconButton
-                        sx={{ color: cyan[600] }}
-                        aria-label="evaluar"
-                        onClick={() => { handleOpen(params.row.id,) }}
-                        disabled={params.row.estado !== 2 || params.row.puntajeEntr > 0}
-                      >
-                        < FactCheckIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Evaluar Clase" placement="right-start" >
+
+                    <IconButton
+                      sx={{ color: cyan[600] }}
+                      aria-label="evaluar"
+                      onClick={() => { handleOpen(params.row.id,) }}
+                      disabled={params.row.estado !== 2 || params.row.puntajeEntr > 0}
+                    >
+                      < FactCheckIcon />
+                    </IconButton>
+
+                    {/* <Tooltip title="Evaluar Clase" placement="right-start" >
                       <IconButton
                         sx={{ color: cyan[600] }}
                         aria-label="evaluar"
@@ -165,23 +177,29 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
                       >
                         < TaskTwoToneIcon />
                       </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                   </>
 
                 ) : (convocatoria.estado.id > 1 && convocatoria.categoria_id == 1) ? (
                   <>
-                    <Tooltip title="Evaluar Entrevista" placement="right-start">
-                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => { handleOpen(params.row.id) }}    >
-                        < FactCheckIcon sx={{ color: cyan[600] }} />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Evaluar Desempeño" placement="right-start">
-                      <IconButton sx={{ color: '#f3f3f3' }} aria-label="evaluar" onClick={() => {
-                        handleOpenAptitud(params.row.id)
-                      }}   >
-                        <TaskTwoToneIcon sx={{ color: cyan[600] }} />
-                      </IconButton>
-                    </Tooltip>
+
+                    <IconButton
+                      sx={{ color: cyan[600] }}
+                      aria-label="evaluar"
+                      onClick={() => { handleOpen(params.row.id) }}
+                      disabled={params.row.estado !== 2 || params.row.puntajeEntr > 0} >
+                      < FactCheckIcon />
+                    </IconButton>
+
+
+                    {/* <IconButton
+                      sx={{ color: cyan[600] }}
+                      aria-label="evaluar"
+                      onClick={() => { handleOpenAptitud(params.row.id) }}
+                      disabled={params.row.estado !== 3 || params.row.puntajeJur > 0}>
+                      <TaskTwoToneIcon />
+                    </IconButton> */}
+
                   </>
 
                 ) :
@@ -202,25 +220,27 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
   ];
   const devolverPuntajeEntrevista = (puntajes: evaluacion_x_postulante[]) => {
-    let formato = '';
-
-    puntajes.forEach(p => {
-      formato += p.puntaje + ','
-
+    let puntaje = 0;
+    const resultado = puntajes.forEach(x => {
+      if (x.evaluacion_id === 1) {
+        puntaje += x.puntaje
+      } else {
+        return '';
+      }
     });
-
-
-    return formato.split(',')[0]
+    return puntaje;
   }
   const devolverPuntajeJurado = (puntajes: evaluacion_x_postulante[]) => {
-    let formato = '';
-    puntajes.forEach(p => {
-      formato += p.puntaje + ','
 
+    let puntaje = 0;
+    const resultado = puntajes.forEach(x => {
+      if (x.evaluacion_id === 2) {
+        puntaje += x.puntaje
+      } else {
+        return '';
+      }
     });
-
-
-    return formato.split(',')[1]
+    return puntaje;
   }
 
   const tot = (puntajes: evaluacion_x_postulante[]) => {
@@ -265,16 +285,17 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
 
 
+  const ses: any = useSession();
+
+
   const handleConfirm = async () => {
-
-
-
+    const idUser = ses.data.user.id;
     const puntaje = calcularTotal();
     setIdEv(1)
 
     try {
 
-      const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 50 });
+      const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 50, idUser });
       console.log(resp)
       toast.success('🦄 Puntaje asignado correctamente!'),
         limpiarCriterios()

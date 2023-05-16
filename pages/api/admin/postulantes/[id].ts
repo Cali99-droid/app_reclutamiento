@@ -63,13 +63,15 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
               evaluacion_x_postulante:{
                 where:{
                   convocatoria_id:parseInt(id.toString()),
-                 
+                  
                  
 
                 },
-                select:{puntaje:true,user_id:true},
-                orderBy:{
-                  puntaje:'asc'
+                select:{
+                  puntaje:true,
+                  user_id:true,
+                  evaluacion_id:true,
+                  
                 }
               },
               estudios:true,

@@ -25,6 +25,7 @@ import { Paperbase } from '@/components/dash';
 import ModalClase from '@/components/modal/ModalClase';
 import { PostulantsList } from '../../../components/postulants/PostulantsList';
 import { Ficha } from '../../../components/postulants/Ficha';
+import { getSession } from 'next-auth/react';
 interface Props {
     postulantes: postulante[]
     convocatoria: IJob
@@ -83,7 +84,7 @@ const EvaluarPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps = async ({ query, req }) => {
     const { id = '' } = query;
     const convocatoria = await prisma.convocatoria.findUnique({
         where: {
@@ -104,6 +105,36 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             }
         },
     })
+
+    const session: any = await getSession({ req });
+
+
+
+    const { user } = session;
+    if (user.rol_id === 3 && convocatoria?.categoria_id !== 2) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            }
+        }
+    }
+    if (user.rol_id === 4 && convocatoria?.categoria_id !== 1) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            }
+        }
+    }
+    if (convocatoria?.estadoId !== 2) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            }
+        }
+    }
 
 
     const evaluaciones = JSON.parse(JSON.stringify(await prisma.evaluacion.findMany()))
