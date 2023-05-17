@@ -6,12 +6,12 @@ import { PostContext } from '@/context';
 
 import { GetServerSideProps, NextPage } from "next";
 import { DataGrid, GridCellParams, GridColDef, esES } from "@mui/x-data-grid";
-import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Toolbar, AppBar, Breadcrumbs } from '@mui/material';
+import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Toolbar, AppBar, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import { evaluacion, evaluacion_x_postulante, postulante } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import TaskTwoToneIcon from '@mui/icons-material/TaskTwoTone';
-import { cyan } from '@mui/material/colors';
+import { cyan, yellow } from '@mui/material/colors';
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
@@ -27,11 +27,13 @@ import ModalClase from '../../../../components/modal/ModalClase';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import PeopleIcon from '@mui/icons-material/People';
 import SpellcheckIcon from '@mui/icons-material/Spellcheck';
+import StarsIcon from '@mui/icons-material/Stars';
 import CategoryIcon from '@mui/icons-material/Category';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 import { Paperbase } from '@/components/dash';
 import { useSession } from 'next-auth/react';
+import Modal from '../../../../components/modal/Modal';
 interface Props {
   postulantes: postulante[]
   convocatoria: IJob
@@ -49,14 +51,20 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
   const { criterios, calcularTotal, limpiarCriterios } = useContext(PostContext);
   const [total, setTotal] = useState(0)
 
+  const [calificacion, setCalificacion] = useState<any[]>([])
+  const [modalCalificacion, setModalCalificacion] = useState(false)
+  const hadleOpenCalificacion = (puntajes: any[]) => {
+    setCalificacion(puntajes);
+    setModalCalificacion(true);
 
 
+  }
   useEffect(() => {
     if (data) {
       // const newPost = data?.sort((x, y) => x.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje) - y.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)).reverse()
       setPostulantes(data);
 
-      console.log(data)
+
     }
 
   }, [data])
@@ -166,7 +174,16 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
                     >
                       < FactCheckIcon />
                     </IconButton>
+                    <Tooltip title="Ver puntos" placement="right-start" >
+                      <IconButton
+                        sx={{ color: yellow[800] }}
+                        aria-label="evaluar"
+                        onClick={() => { hadleOpenCalificacion(params.row.calificaciones) }}
 
+                      >
+                        < StarsIcon />
+                      </IconButton>
+                    </Tooltip>
                     {/* <Tooltip title="Evaluar Clase" placement="right-start" >
                       <IconButton
                         sx={{ color: cyan[600] }}
@@ -264,6 +281,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
     puntajeEntr: devolverPuntajeEntrevista(p.postulante.evaluacion_x_postulante),
     puntajeJur: devolverPuntajeJurado(p.postulante.evaluacion_x_postulante),
     total: tot(p.postulante.evaluacion_x_postulante),
+    calificaciones: p.postulante.evaluacion_x_postulante,
     idCp: p.id
 
   }))
@@ -282,12 +300,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
   const handleClose = () => {
     setOpen(false);
   };
-
-
-
   const ses: any = useSession();
-
-
   const handleConfirm = async () => {
     const idUser = ses.data.user.id;
     const puntaje = calcularTotal();
@@ -605,8 +618,56 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
         </Box>
       </Box>
+      <Modal title={'Calificación'} open={modalCalificacion} handleClose={() => setModalCalificacion(false)}
+        handleConfirm={() => setModalCalificacion(false)}>
+
+        <Box width={500} display={'flex'} gap={5} justifyContent={'start'}>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 300 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Jurado</TableCell>
+                  <TableCell align="right">Puntaje</TableCell>
+                  <TableCell align="right">Tipo</TableCell>
 
 
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {calificacion.map((e: any) => (
+                  <TableRow
+                    key={e.user.email}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  >
+                    <TableCell align="left">{e.user.email}</TableCell>
+                    <TableCell align="right">{e.puntaje}</TableCell>
+
+                    <TableCell align="right" component="th" scope="row">
+                      {e.evaluacion_id === 1 ? 'Entrevista ' : 'Jurado'}
+                    </TableCell>
+
+
+                  </TableRow>
+                ))}
+
+              </TableBody>
+            </Table>
+            {
+              calificacion.length === 0 && (
+                <Box padding={4}>
+                  <Typography align="center">El postulante aún no tiene calificación</Typography>
+                </Box>
+
+
+              )
+            }
+          </TableContainer>
+
+
+        </Box>
+
+
+      </Modal>
       <ModalEntrevista title={'Calificar Entrevista'} open={open} handleClose={handleClose} >
         <form onSubmit={handleConfirm}>
           <DialogContent>

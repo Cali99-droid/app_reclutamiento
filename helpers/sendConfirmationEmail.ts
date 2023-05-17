@@ -26,7 +26,11 @@ const sendConfirmationEmail = async (email: string, confirmationCode: string) =>
       from: 'micorreo@dominio.com',
       to: email,
       subject: 'Confirma tu cuenta de usuario',
-      text: `Por favor, haz clic en este enlace para confirmar tu cuenta: ${process.env.BASE_URL}/auth/confirmar-cuenta?token=${confirmationCode}`,
+      text: `Por favor, haz clic en este enlace para confirmar tu cuenta:  ${process.env.BASE_URL}/auth/confirmar-cuenta?token=${confirmationCode}`,
+      html:`
+      <h2>Por favor, haz clic en este enlace para confirmar tu cuenta</h2>
+      <a href=${process.env.BASE_URL}/auth/confirmar-cuenta?token=${confirmationCode}>Confirmar mi cuenta</a>
+      `
     });
   } catch (error) {
     console.error(error);

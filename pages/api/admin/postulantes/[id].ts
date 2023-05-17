@@ -71,7 +71,7 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
                   puntaje:true,
                   user_id:true,
                   evaluacion_id:true,
-                  
+                  user:true
                 }
               },
               estudios:true,

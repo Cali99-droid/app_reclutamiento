@@ -23,16 +23,17 @@ import BiotechIcon from '@mui/icons-material/Biotech';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DevicesIcon from '@mui/icons-material/Devices';
 import { Paperbase } from '@/components/dash';
+import { cargo, investigacion, capacitacion, reconocimiento, tics, aficion, evaluacion_x_postulante, evaluacion } from '@prisma/client';
 interface Props {
     postulante: any
     user: any
-    estudios: IEstudio[]
-    cargos: ICargo[]
-    inves: IInvestigacion[]
-    capa: ICapacitacion[]
-    reco: IReconocimiento[]
-    tecno: ITics[]
-    aficion: IAficion[]
+    // estudios: IEstudio[]
+    // cargos: ICargo[]
+    // inves: IInvestigacion[]
+    // capa: ICapacitacion[]
+    // reco: IReconocimiento[]
+    // tecno: ITics[]
+    // aficion: IAficion[]
 
 }
 export const config = {
@@ -68,8 +69,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         fontSize: 14,
     },
 }));
-const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves, capa, reco, tecno, aficion }) => {
+const PostulantePage: NextPage<Props> = ({ postulante, user }) => {
     const router = useRouter();
+    console.log(postulante.evaluacion_x_postulante)
+        ;
     return (
         <Paperbase title={"Postulante "} subTitle={'ficha'}  >
 
@@ -89,7 +92,24 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                         </Link>
 
                         <Typography fontWeight={'bold'} color="text.primary">{postulante.persona.nombres}</Typography>
-                    </Breadcrumbs></Box>
+                    </Breadcrumbs>
+                </Box>
+                {/* <Box>
+                    <Typography fontWeight={'bold'}>Calificación: </Typography>
+                    {postulante.evaluacion_x_postulante.map((e: any) => (
+                        <Box key={e.id} display={'flex'} justifyContent={'space-between'}>
+
+                            <Typography >{e.evaluacion_id === 1 ? 'Entrevista: ' :
+                                'Jurado: '}  </Typography>
+                            <Typography >{e.puntaje}  </Typography>
+                            < Typography > {e.user.email}</Typography>
+
+                        </Box>
+
+
+                    ))}
+
+                </Box> */}
 
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -136,7 +156,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                         </Item>
                     </Grid>
                     <Grid item xs={9} >
-                        <Item sx={{ height: 320 }}>
+                        <Item sx={{ height: 340 }}>
                             {/* <Typography variant='h2'>Mis datos</Typography> */}
                             <Box display={'flex'} justifyContent={'space-between'} padding={2}>
                                 <Box display={'flex'} flexDirection={'column'} gap={1}>
@@ -150,6 +170,8 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                     <Typography fontWeight={'bold'}>Numero de Hijos: </Typography>{postulante.hijos}
                                     <Typography fontWeight={'bold'}>Persona con discapacidad: </Typography>{postulante.discapacidad}
                                     <Typography fontWeight={'bold'}>Exalumno: </Typography>{postulante.exalumno}
+
+
                                 </Box>
                                 <Box display={'flex'} flexDirection={'column'} gap={2}>
                                     <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary">
@@ -185,7 +207,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {estudios.map((e) => (
+                                                {postulante.estudios.map((e: IEstudio) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -203,7 +225,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                         </Table>
                                     </TableContainer>
                                     {
-                                        estudios.length === 0 && (
+                                        postulante.estudios.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -237,7 +259,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {cargos.map((e) => (
+                                                {postulante.cargo.map((e: cargo) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -259,7 +281,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                         </Table>
                                     </TableContainer>
                                     {
-                                        cargos.length === 0 && (
+                                        postulante.cargo.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -286,7 +308,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {inves.map((e) => (
+                                                {postulante.investigacion.map((e: investigacion) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -304,7 +326,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                         </Table>
                                     </TableContainer>
                                     {
-                                        inves.length === 0 && (
+                                        postulante.investigacion.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -336,7 +358,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {capa.map((e) => (
+                                                {postulante.capacitacion.map((e: capacitacion) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -356,7 +378,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                         </Table>
                                     </TableContainer>
                                     {
-                                        capa.length === 0 && (
+                                        postulante.capacitacion.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -384,7 +406,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {reco.map((e) => (
+                                                {postulante.reconocimiento.map((e: reconocimiento) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -403,7 +425,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                         </Table>
                                     </TableContainer>
                                     {
-                                        reco.length === 0 && (
+                                        postulante.reconocimiento.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -434,7 +456,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {tecno.map((e) => (
+                                                {postulante.tics.map((e: tics) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -452,7 +474,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                         </Table>
                                     </TableContainer>
                                     {
-                                        tecno.length === 0 && (
+                                        postulante.tics.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -480,7 +502,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {aficion.map((e) => (
+                                                {postulante.aficion.map((e: aficion) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -500,7 +522,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
                                         </Table>
                                     </TableContainer>
                                     {
-                                        aficion.length === 0 && (
+                                        postulante.aficion.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -518,7 +540,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user, estudios, cargos, i
 
 
 
-            </Box>
+            </Box >
 
 
         </Paperbase >
@@ -535,7 +557,25 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             id: parseInt(id.toString())
         },
         include: {
-            persona: true
+            persona: true,
+            estudios: true,
+            cargo: true,
+            investigacion: true,
+            capacitacion: true,
+            aficion: true,
+            reconocimiento: true,
+            tics: true,
+            evaluacion_x_postulante: {
+                where: {
+                    convocatoria_id: parseInt(id.toString()),
+
+
+
+                },
+                include: {
+                    user: true
+                }
+            }
         }
     })
 
@@ -550,61 +590,61 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     })
     const postulante = JSON.parse(JSON.stringify(post))
 
-    const estudios = await prisma.estudios.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
+    // const estudios = await prisma.estudios.findMany({
+    //     where: {
+    //         postulante_id: postulante.id
+    //     }
 
-    })
-    const cargos = await prisma.cargo.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
+    // })
+    // const cargos = await prisma.cargo.findMany({
+    //     where: {
+    //         postulante_id: postulante.id
+    //     }
 
-    })
+    // })
 
-    const inves = await prisma.investigacion.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
+    // const inves = await prisma.investigacion.findMany({
+    //     where: {
+    //         postulante_id: postulante.id
+    //     }
 
-    })
+    // })
 
-    const capa = await prisma.capacitacion.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
+    // const capa = await prisma.capacitacion.findMany({
+    //     where: {
+    //         postulante_id: postulante.id
+    //     }
 
-    })
-    const reco = await prisma.reconocimiento.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
+    // })
+    // const reco = await prisma.reconocimiento.findMany({
+    //     where: {
+    //         postulante_id: postulante.id
+    //     }
 
-    })
-    const tecno = await prisma.tics.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
+    // })
+    // const tecno = await prisma.tics.findMany({
+    //     where: {
+    //         postulante_id: postulante.id
+    //     }
 
-    })
-    const aficion = await prisma.aficion.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
+    // })
+    // const aficion = await prisma.aficion.findMany({
+    //     where: {
+    //         postulante_id: postulante.id
+    //     }
 
-    })
+    // })
 
     return {
         props: {
             postulante,
-            estudios,
-            cargos,
-            inves,
-            capa,
-            reco,
-            tecno,
-            aficion,
+
+            // cargos,
+            // inves,
+            // capa,
+            // reco,
+            // tecno,
+            // aficion,
             user
 
         }
