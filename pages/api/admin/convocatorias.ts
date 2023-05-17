@@ -77,7 +77,9 @@ const getConvocatorias = async(req: NextApiRequest, res: NextApiResponse<Data>) 
           _count: {
             select: { postulante_x_convocatoria: true }
           }
-        },
+        }, orderBy: {
+          id: "desc"
+        }
       });
     
     await prisma.$disconnect()

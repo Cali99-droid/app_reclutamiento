@@ -34,7 +34,9 @@ const getConvocatorias = async(req: NextApiRequest, res: NextApiResponse<Data>) 
             grado:{
               select: {  nombre: true},  
             }
-        }
+        }, orderBy: {
+            id: "desc"
+          }
     });
     await prisma.$disconnect()
      return  res.status(200).json( convocatorias );
