@@ -18,11 +18,9 @@ import TimerIcon from '@mui/icons-material/Timer';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
 import { useRouter } from 'next/router';
-import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, LoginOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
+import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, LoginOutlined, SearchOutlined, SupervisedUserCircle, SupervisedUserCircleOutlined, VpnKeyOutlined } from "@mui/icons-material"
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
-import FilePresentIcon from '@mui/icons-material/FilePresent';
+import GroupIcon from '@mui/icons-material/Group';
 import { Typography } from '@mui/material';
 import { useState, useContext } from 'react';
 import { AuthContext } from '@/context';
@@ -49,6 +47,12 @@ const categories = [
                 icon: <QuizIcon />,
                 active: false,
                 dir: '/admin/evaluaciones'
+            },
+            {
+                id: 'Usuarios',
+                icon: <GroupIcon />,
+                active: false,
+                dir: '/admin/users'
             }
         ],
     },
@@ -59,7 +63,7 @@ const categories = [
 
             {
                 id: 'Config', icon: <SettingsIcon />, active: false,
-                dir: '/usuarios'
+                dir: '/perfil'
             }
 
 

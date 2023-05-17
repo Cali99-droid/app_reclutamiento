@@ -278,32 +278,32 @@ const ConvocatoriasPage = () => {
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+// export const getStaticProps: GetStaticProps = async () => {
 
 
-  // const convocatorias = await apiCon('/admin/convocatorias')
-  const convocatorias = await prisma.convocatoria.findMany({
-    include: {
-      estado: {
-        select: { id: true, nombre: true },
-      },
-      grado: {
-        select: { nombre: true },
-      },
-      _count: {
-        select: { postulante_x_convocatoria: true }
-      }
-    },
-  });
+//   // const convocatorias = await apiCon('/admin/convocatorias')
+//   const convocatorias = await prisma.convocatoria.findMany({
+//     include: {
+//       estado: {
+//         select: { id: true, nombre: true },
+//       },
+//       grado: {
+//         select: { nombre: true },
+//       },
+//       _count: {
+//         select: { postulante_x_convocatoria: true }
+//       }
+//     },
+//   });
 
-  await prisma.$disconnect()
+//   await prisma.$disconnect()
 
-  return {
-    props: {
-      convocatorias
+//   return {
+//     props: {
+//       convocatorias
 
-    }
-  }
-}
+//     }
+//   }
+// }
 
 export default ConvocatoriasPage

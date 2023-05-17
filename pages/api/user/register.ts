@@ -3,12 +3,14 @@ import bcrypt from 'bcryptjs';
 
 // import { db } from '../../../database';
 // import { User } from '../../../models';
-import { PrismaClient } from '@prisma/client'
+
 
 
 import { jwt, validations } from '../../../helpers';
 import { generarId } from '@/helpers/functions';
 import sendConfirmationEmail from '@/helpers/sendConfirmationEmail';
+import { prisma } from '../../../server/db/client';
+import { checkUserEmailPassword } from '../../../database/dbUser';
 
 
 type Data = 
@@ -27,6 +29,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     switch( req.method ) {
         case 'POST':
             return registerUser(req, res)
+        case 'PUT':
+            return updateUser(req, res)
 
         default:
             res.status(400).json({
@@ -67,7 +71,7 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
         });
     }
     
-    const prisma = new PrismaClient()
+  
 
    
     const usuario =  await prisma.user.findFirst({
@@ -132,7 +136,7 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
       })
       /**Enviar email de confirmacion */
      await sendConfirmationEmail(email, tokenEmail)
-     console.log(tokenEmail)
+    //  console.log(tokenEmail)
     await prisma.$disconnect()
     const newUser = persona.user[0];
     const{id,rol_id} = newUser ;
@@ -151,3 +155,74 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 
 }
+async function updateUser(req: NextApiRequest, res: NextApiResponse<Data>) {
+    const {idPersona , password = '', nombre = '',apellidoPat, apellidoMat,newPassword='',email=''} = req.body as {idPersona:number, password: string, nombre: string, apellidoPat: string, apellidoMat: string, newPassword:string,email:string};
+
+    const resultado = await checkUserEmailPassword(email,password)
+
+    if(resultado === null){
+        return res.status(400).json({
+            message: 'Las contraseña anterior es incorrecta'
+        });
+    }
+    if ( newPassword.length < 6 ) {
+        return res.status(400).json({
+            message: 'La contraseña debe de ser de 6 caracteres'
+        });
+    }
+
+    if ( nombre.length < 2 ) {
+        return res.status(400).json({
+            message: 'El nombre debe de ser de 2 caracteres'
+        });
+    }
+    if ( apellidoPat.length < 2 ) {
+        return res.status(400).json({
+            message: 'El apellido debe de ser de 2 caracteres'
+        });
+    }
+    if ( apellidoMat.length < 2 ) {
+        return res.status(400).json({
+            message: 'El apellido debe de ser de 2 caracteres'
+        });
+    }
+
+    // const userUpdate = await prisma.user.update({
+    //     where:{
+    //         email
+    //     },data:{
+    //           password:bcrypt.hashSync( newPassword )
+    //     }
+   
+          
+       
+    // })
+
+    const persona = await prisma.persona.update({
+        where: {
+          id:idPersona
+        },
+        data: {
+          nombres:nombre,
+          apellido_pat:apellidoPat,
+          apellido_mat:apellidoMat,
+          user:{
+            update:{
+                where: {
+                email
+              },
+              data:{
+                password:bcrypt.hashSync( newPassword )
+              } 
+            }
+          }
+        },
+         
+    } )
+
+    return res.status(200).json({
+        message: 'Datos actualizados correctamente'
+        
+    })
+}
+

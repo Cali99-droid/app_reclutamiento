@@ -89,7 +89,33 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 
     }
 
+    const updateUser = async (idPersona: number, nombre: string, apellidoPat: string, apellidoMat: string, email: string, password: string, newPassword: string): Promise<{ hasError: boolean; message?: string }> => {
 
+        try {
+            const { data } = await reclutApi.put('/user/register', { idPersona, nombre, apellidoPat, apellidoMat, email, password, newPassword });
+
+            const { token, user } = data;
+            Cookies.set('token', token);
+            dispatch({ type: '[Auth] - Login', payload: user });
+
+            return {
+                hasError: false
+            }
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return {
+                    hasError: true,
+                    message: error.response?.data.message
+                }
+            }
+
+            return {
+                hasError: true,
+                message: 'No se pudo crear el usuario - intente de nuevo'
+            }
+        }
+    }
 
     return (
         <AuthContext.Provider value={{
@@ -97,6 +123,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
             verificarConfirmacion,
             registerUser,
             noConfirm,
+            updateUser,
             logout
         }}>
             {children}

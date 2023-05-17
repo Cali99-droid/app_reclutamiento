@@ -1,9 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+
 
 import bcrypt from 'bcryptjs';
+import { prisma } from '../server/db/client';
 export const checkUserEmailPassword = async(email:string, password: string)=>{
    
-    const prisma = new PrismaClient()
+
 
     const user =  await prisma.user.findFirst({
         where: {
@@ -51,7 +52,7 @@ export const checkUserEmailPassword = async(email:string, password: string)=>{
 
 //funtioo ppara crear un uaurio mediante oauth
 export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:string)=>{
-    const prisma = new PrismaClient()
+
 
     const user =  await prisma.user.findFirst({
         where: {
