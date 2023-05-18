@@ -10,7 +10,8 @@ import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectCha
 import { evaluacion, evaluacion_x_postulante, postulante } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
-import TaskTwoToneIcon from '@mui/icons-material/TaskTwoTone';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { cyan, yellow } from '@mui/material/colors';
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
@@ -34,6 +35,7 @@ import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 import { Paperbase } from '@/components/dash';
 import { useSession } from 'next-auth/react';
 import Modal from '../../../../components/modal/Modal';
+
 interface Props {
   postulantes: postulante[]
   convocatoria: IJob
@@ -47,12 +49,16 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
   const { data, error } = useSWR<any[]>(`/api/admin/postulantes/${id}`);
 
   const [postulantes, setPostulantes] = useState<any[]>([]);
-  const [status, setStatus] = useState(true)
-  const { criterios, calcularTotal, limpiarCriterios } = useContext(PostContext);
-  const [total, setTotal] = useState(0)
+
+  const { calcularTotal, limpiarCriterios } = useContext(PostContext);
+
+  const [seleccionados, setSeleccionados] = useState<any[]>([])
+  const [descartados, setDescartados] = useState<any[]>([])
 
   const [calificacion, setCalificacion] = useState<any[]>([])
   const [modalCalificacion, setModalCalificacion] = useState(false)
+
+  const [filtrando, setFiltrando] = useState(true)
   const hadleOpenCalificacion = (puntajes: any[]) => {
     setCalificacion(puntajes);
     setModalCalificacion(true);
@@ -62,12 +68,23 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
   useEffect(() => {
     if (data) {
       // const newPost = data?.sort((x, y) => x.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje) - y.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)).reverse()
-      setPostulantes(data);
 
 
+      const seleccionados = data.filter(d => d.estado_postulante_id === 6)
+      const descartados = data.filter(d => d.estado_postulante_id === 4)
+      if (filtrando) {
+        const aptos = data.filter(d => d.estado_postulante_id !== 4)
+        setPostulantes(aptos);
+      } else {
+        setPostulantes(data)
+      }
+
+
+      setSeleccionados(seleccionados);
+      setDescartados(descartados);
     }
 
-  }, [data])
+  }, [data, filtrando])
 
 
 
@@ -140,7 +157,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
             label="Estado"
             onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.idCp, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
             sx={{ width: '200px' }}
-            disabled={!(convocatoria.estadoId > 1)}
+            disabled={!(convocatoria.estadoId > 1) || convocatoria.estadoId === 3}
           >
             <MenuItem value={1}> Inscrito </MenuItem>
             <MenuItem value={2}> Apto a Entrevista</MenuItem>
@@ -325,21 +342,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
   };
 
-  const handleChange = (event: SelectChangeEvent<typeof idEv>) => {
 
-    setIdEv(event.target.value);
-
-  };
-  const puntajeEntrevistaValido = (id: number) => {
-
-    const result = postulantes.filter(p => id === p.postulante.id);
-    // console.log(result[0].postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje).length)
-    if (result[0].postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje).length <= 0 && result[0].postulante.estado_postulante.id > 1) {
-      return true;
-    }
-    return false;
-
-  }
 
   const onStatusUpdated = async (id: number, newStatus: string) => {
     //TODO validar puntaje en entrevista */
@@ -365,12 +368,15 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
     }
 
 
-    // } else {
-    //   alert('no se puede promover al postulante, no tiene puntaje en la fase anterior')
-    // }
 
   }
   const onStatusJobUpdated = async (id: number, newStatus: string) => {
+
+    //TODO verificar cantidad de seleccionados antes de cambiar de estado
+    if (convocatoria.vacantes !== seleccionados.length && parseInt(newStatus) === 3) {
+      toast.error('No se puede cerrar la convocatoria, la cantidad de vacantes no coincide con los seleccionados')
+      return;
+    }
     try {
 
       await reclutApi.put('/admin/job', { id, status: newStatus });
@@ -400,12 +406,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
 
   const handleConfirmClase = async () => {
-    //TODO validar actualizacion o creacion  */
-
-
     const puntaje = calcularTotal();
-
-
     try {
 
       const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 100 });
@@ -438,7 +439,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
     setOpenAptitud(false);
   };
   const handleConfirmAptitud = async () => {
-    //TODO validar actualizacion o creacion  */
+
 
 
     const puntaje = calcularTotal();
@@ -458,11 +459,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
       alert('El postulante ya tiene puntaje');
     }
 
-
-
-
-
   };
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -475,6 +473,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
   return (
     <Paperbase title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
+      <ToastContainer />
       <Box sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden', }} className="fadeIn" >
         <Box mb={2}>
           <Breadcrumbs aria-label="breadcrumb">
@@ -553,7 +552,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
                   <HowToRegIcon sx={{ fontSize: 60 }} color={'primary'} />
                   <Box>
                     <Typography color={'#454555'} variant="body1" > Seleccionados</Typography>
-                    <Typography fontWeight={'bold'} color={'#454555'} variant="h3" textTransform={'uppercase'}>0 </Typography>
+                    <Typography fontWeight={'bold'} color={'#454555'} variant="h3" textTransform={'uppercase'}>{seleccionados.length} </Typography>
 
                   </Box>
                 </Box>
@@ -565,7 +564,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
                   <PersonRemoveAlt1Icon sx={{ fontSize: 60 }} color={'primary'} />
                   <Box>
                     <Typography color={'#454555'} variant="body1" > Descartados</Typography>
-                    <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >0 </Typography>
+                    <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{descartados.length} </Typography>
 
                   </Box>
                 </Box>
@@ -573,18 +572,32 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
             </Grid>
 
           </Grid>
-
-
-
-
-
-
-
         </Box>
         <Box mt={4}
         >
           <Item elevation={4}>
-            Listado de Postulantes
+            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+              <Typography>Listado de Postulantes</Typography>
+
+              {filtrando ? (
+                <Tooltip title={'Mostrar descartados'} >
+                  <IconButton onClick={() => setFiltrando(false)}>
+                    <RemoveRedEyeIcon />
+                  </IconButton>
+                </Tooltip>
+
+              ) : (
+                <Tooltip title={'Ocultar descartados'} >
+                  <IconButton onClick={() => setFiltrando(true)}>
+                    <VisibilityOffIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
+
+
+
+
+            </Box>
             <Box
               sx={{
                 height: 400,
