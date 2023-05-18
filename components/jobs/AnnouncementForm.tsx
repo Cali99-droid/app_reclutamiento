@@ -29,6 +29,7 @@ type FormData = {
     sueldoOfertado: number;
     gradoId: number;
     estadoId: number;
+    categoria_id: number | null;
 };
 
 
@@ -108,7 +109,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
 
                             >
-                                <MenuItem value={''}></MenuItem>
+
 
                                 {
                                     grados.map(grado => (
@@ -190,8 +191,32 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                         />
                     </Grid>
 
-                    <Grid item xs={12} md={6} >
+                    <Grid item xs={12} md={6}>
+                        <FormControl fullWidth >
+                            <InputLabel id="categoria_id">Categoría</InputLabel>
+                            <Select
+                                labelId="categoria_id"
+                                id="categoria_id"
+                                label="Requisito"
+                                defaultValue={`${job.categoria_id}`}
+                                {...register('categoria_id', {
+                                    required: 'Este campo es requerido',
 
+                                })}
+                                error={!!errors.gradoId}
+
+
+                            >
+                                <MenuItem value={1}>Administrativo</MenuItem>
+                                <MenuItem value={2}>Docente</MenuItem>
+
+
+
+
+
+                            </Select>
+
+                        </FormControl>
                     </Grid>
 
 
@@ -200,7 +225,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                     <Box width={'50%'} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 5 }}>
                         <Button
                             size="large"
-                            sx={{ marginTop: 3, textAlign: 'end', bgcolor: '#9E002B', }}
+                            sx={{ marginTop: 3, textAlign: 'end', }}
                             startIcon={<ArrowBackIcon />}
                             onClick={() => navigateTo('/admin/convocatorias/')}
                         >Volver

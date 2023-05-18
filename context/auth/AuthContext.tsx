@@ -18,5 +18,14 @@ interface ContextProps {
       logout: () => void
       verificarConfirmacion: (email: string) => Promise<boolean>
 
+      forgotPassword: (email: string) => Promise<{
+            hasError: boolean;
+            message?: string;
+      }>
+      updatePassword: (newPassword: string, token: string) => Promise<{
+            hasError: boolean;
+            message?: string;
+      }>
+
 }
 export const AuthContext = createContext({} as ContextProps);

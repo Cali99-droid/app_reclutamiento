@@ -135,7 +135,7 @@ const LoginPage = (error: string) => {
                                     <NextLink
                                         type="submit"
                                         color="secondary"
-                                        href={"/auth/forgot"}
+                                        href={"/auth/forgot-password"}
                                         passHref
                                         legacyBehavior>
                                         <Link >Olvide mi contraseña</Link>

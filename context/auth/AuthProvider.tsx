@@ -117,6 +117,56 @@ export const AuthProvider: FC<Props> = ({ children }) => {
         }
     }
 
+    const forgotPassword = async (email: string): Promise<{ hasError: boolean; message?: string }> => {
+
+        try {
+            const { data } = await reclutApi.post('/user/forgot', { email });
+
+            return {
+                hasError: false
+            }
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return {
+                    hasError: true,
+                    message: error.response?.data.message
+                }
+            }
+
+            return {
+                hasError: true,
+                message: 'No se pudo recuperar el usuario - intente de nuevo'
+            }
+        }
+    }
+
+    const updatePassword = async (newPassword: string, token: string): Promise<{ hasError: boolean; message?: string }> => {
+
+        try {
+            const { data } = await reclutApi.put('/user/forgot', { newPassword, token });
+
+
+
+            return {
+                hasError: false
+            }
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return {
+                    hasError: true,
+                    message: error.response?.data.message
+                }
+            }
+
+            return {
+                hasError: true,
+                message: 'No se pudo recuperar el usuario - intente de nuevo'
+            }
+        }
+    }
+
     return (
         <AuthContext.Provider value={{
             ...state,
@@ -124,6 +174,8 @@ export const AuthProvider: FC<Props> = ({ children }) => {
             registerUser,
             noConfirm,
             updateUser,
+            forgotPassword,
+            updatePassword,
             logout
         }}>
             {children}
