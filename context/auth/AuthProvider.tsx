@@ -77,15 +77,23 @@ export const AuthProvider: FC<Props> = ({ children }) => {
     const [noConfirm, setNoConfirm] = useState(false)
     const verificarConfirmacion = async (email: string) => {
         const { data } = await reclutApi.get(`/user/${email}`);
-        if (data.user.confirmado === 1) {
+        if (data.user) {
+            if (data.user.confirmado === 1) {
 
-            setNoConfirm(false)
-            return true;
+                setNoConfirm(false)
+                return true;
+            } else {
+                setNoConfirm(true)
+                return false
+            }
         } else {
-            setNoConfirm(true)
-            return false
+            return {
+                hasError: true,
+                message: 'No se encontrar esta cuenta'
+            }
         }
-        console.log(data.user.confirmado)
+
+
 
     }
 

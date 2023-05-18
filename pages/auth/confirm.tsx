@@ -29,7 +29,7 @@ const ConfirmPage = () => {
 
             <Box bgcolor={'#FFF'} padding={4} >
                 <Alert variant="outlined" severity="success">
-                    Hemos enviado las instrucciones para que confirmes tu cuenta, revisa tu correo electrónico
+                    Te hemos enviado las instrucciones correo electrónico , revisa tu bandeja de entrada.
                 </Alert></Box>
 
         </AuthLayout>

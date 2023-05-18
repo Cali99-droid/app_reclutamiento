@@ -16,8 +16,11 @@ interface ContextProps {
             message?: string;
       }>,
       logout: () => void
-      verificarConfirmacion: (email: string) => Promise<boolean>
 
+      verificarConfirmacion: (email: string) => Promise<boolean | {
+            hasError: boolean;
+            message: string;
+      }>
       forgotPassword: (email: string) => Promise<{
             hasError: boolean;
             message?: string;

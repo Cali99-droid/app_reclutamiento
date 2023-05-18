@@ -18,6 +18,11 @@ export default function ConvocatoriasPage() {
         <Divider />
         <Box >
           <JobList jobs={jobs} />
+          {jobs.length === 0 && (
+            <Box bgcolor={grey[50]} padding={3} borderRadius={2} width={'100%'} >
+              <Typography color={grey[800]} variant='h2' textAlign={'center'}>No hay convocatorias abiertas, pronto tendremos nuevas convocatorias</Typography>
+            </Box>
+          )}
         </Box>
       </Box>
 

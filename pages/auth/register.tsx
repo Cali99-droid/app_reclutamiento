@@ -176,7 +176,7 @@ export default function RegisterPage() {
                   error={!!errors.tipoId}
                 >
 
-                  <MenuItem value={1}>DNI</MenuItem>
+                  <MenuItem value={1} selected={true}>DNI</MenuItem>
                   <MenuItem value={2}>Carnet de Extranjeria</MenuItem>
 
                 </Select>

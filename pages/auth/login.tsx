@@ -25,6 +25,7 @@ const LoginPage = (error: string) => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const [showError, setShowError] = useState(false);
+
     const { verificarConfirmacion, noConfirm } = useContext(AuthContext)
     const [providers, setProviders] = useState<any>({})
     useEffect(() => {
@@ -44,6 +45,7 @@ const LoginPage = (error: string) => {
             if (resp) {
 
                 setShowError(!resp.ok)
+                setTimeout(() => setShowError(false), 3000);
                 console.log(resp.ok)
                 if (resp.ok) {
                     router.push('/admin/convocatorias')
@@ -57,18 +59,18 @@ const LoginPage = (error: string) => {
         <AuthLayout title={"Iniciar Sesion "} >
             <Box bgcolor={'#FFF'} padding={4} >
                 <Chip
-                    label={'La cuenta aún no ha sido confirmada, revise su correo'}
+                    label={'La cuenta aún no ha sido confirmada, revisa tu email'}
                     color="error"
                     icon={<ErrorOutline />}
                     className="fadeIn"
-                    sx={{ display: noConfirm ? 'flex' : 'none' }}
+                    sx={{ display: noConfirm ? 'flex' : 'none', mb: 2 }}
                 />
                 <Chip
                     label={'Credenciales incorrectas'}
                     color="error"
                     icon={<ErrorOutline />}
                     className="fadeIn"
-                    sx={{ display: showError ? 'flex' : 'none' }}
+                    sx={{ display: showError ? 'flex' : 'none', mb: 2 }}
                 />
 
                 <form onSubmit={handleSubmit(onLoginUser)} noValidate>
