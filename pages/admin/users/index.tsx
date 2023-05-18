@@ -81,7 +81,7 @@ const UsersPage: NextPage<Props> = ({ users }) => {
         { field: 'id', headerName: 'ID', width: 50 },
 
         { field: 'nombres', headerName: 'Nombres', width: 300 },
-        { field: 'email', headerName: 'Usuario', width: 200 },
+        { field: 'email', headerName: 'Usuario', width: 250 },
 
 
 
@@ -89,7 +89,7 @@ const UsersPage: NextPage<Props> = ({ users }) => {
         {
             field: 'rol',
             headerName: 'Rol',
-            width: 300,
+            width: 250,
             renderCell: (params) => {
 
                 return (
@@ -99,7 +99,7 @@ const UsersPage: NextPage<Props> = ({ users }) => {
                         value={parseInt(params.row.rol)}
                         label="Rol"
                         onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
-                        sx={{ width: '250px', padding: 1 }}
+                        sx={{ width: '250px', }}
                     >
                         <MenuItem value={1}>Postulante</MenuItem>
                         <MenuItem value={2}>Administrador</MenuItem>
@@ -139,7 +139,7 @@ const UsersPage: NextPage<Props> = ({ users }) => {
         router.push(url);
     }
     return (
-        <Paperbase title={"Administrar convocatorias "} subTitle={"Listado de convocatorias"} navigate={<Navigate />}>
+        <Paperbase title={"Administrar Usuarios "} subTitle={"Listado de convocatorias"}>
             <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' }}>
                 <AppBar
                     position="static"

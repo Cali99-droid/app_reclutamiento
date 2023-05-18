@@ -106,21 +106,24 @@ export default function Navigator(props: DrawerProps) {
         <Drawer variant="permanent" {...other}>
             <List disablePadding >
                 <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
-                    <Box display='flex' justifyContent={'end'} alignItems={'center'} mt={4}>
+                    <Box display='flex' justifyContent={'end'} alignItems={'center'} mt={4} mb={3}>
                         <Typography variant='h5' fontWeight={'bold'} >AE  </Typography>
                         <Typography variant='h6' sx={{ ml: 0.5 }} >| Empleos</Typography>
 
                     </Box>
                 </ListItem>
-                <ListItem sx={{ ...item, ...itemCategory }}>
-                    <ListItemIcon>
-                        <HomeIcon />
-                    </ListItemIcon>
-                    <ListItemText>Ir a inicio</ListItemText>
+                <ListItem disablePadding >
+                    <ListItemButton sx={{ ...item }} onClick={() => push('/')}>
+
+                        <ListItemIcon><HomeIcon /></ListItemIcon>
+                        <ListItemText>Ir a inicio</ListItemText>
+                    </ListItemButton>
+
                 </ListItem>
+
                 {user?.rol.name === 'admin' && (
                     option.map(({ id, hijos }) => (
-                        <Box key={id} sx={{ bgcolor: '#7268D0' }} >
+                        <Box key={id} sx={{ bgcolor: '#101F33' }} >
                             <ListItem sx={{ py: 2, px: 3 }}>
                                 <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
                             </ListItem>

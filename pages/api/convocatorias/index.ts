@@ -27,6 +27,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 const getConvocatorias = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
     const convocatorias =await prisma.convocatoria.findMany({
+        where:{
+            estadoId:1
+        },
         include: {
             estado:{
               select: {  nombre: true},  

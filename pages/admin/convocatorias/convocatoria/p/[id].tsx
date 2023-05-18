@@ -168,15 +168,15 @@ const PostulantePage: NextPage<Props> = ({ postulante, user }) => {
                                 </Box>
                                 <Box display={'flex'} flexDirection={'column'} gap={1}>
                                     <Typography fontWeight={'bold'}>Numero de Hijos: </Typography>{postulante.hijos}
-                                    <Typography fontWeight={'bold'}>Persona con discapacidad: </Typography>{postulante.discapacidad}
-                                    <Typography fontWeight={'bold'}>Exalumno: </Typography>{postulante.exalumno}
+                                    <Typography fontWeight={'bold'}>Persona con discapacidad: </Typography>{postulante.discapacidad === 0 ? 'No' : 'Si'}
+                                    <Typography fontWeight={'bold'}>Exalumno: </Typography>{postulante.exalumno === 0 ? 'No' : 'Si'}
 
 
                                 </Box>
                                 <Box display={'flex'} flexDirection={'column'} gap={2}>
-                                    <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary">
+                                    {/* <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary">
                                         Editar
-                                    </Button>
+                                    </Button> */}
 
                                     <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary" >
                                         Exportar PDF

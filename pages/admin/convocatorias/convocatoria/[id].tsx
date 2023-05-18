@@ -492,7 +492,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
               <Item elevation={4}>
 
                 <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                  <NumbersIcon sx={{ fontSize: 60, color: '#EC508B' }} />
+                  <NumbersIcon sx={{ fontSize: 60 }} color={'primary'} />
                   <Box>
                     <Typography color={'#454555'} variant="body1" > Vacantes</Typography>
                     <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoria.vacantes} </Typography>
@@ -505,7 +505,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
             <Grid item xs={4}>
               <Item elevation={4}>
                 <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                  <PeopleIcon sx={{ fontSize: 60, color: '#FF7F6A' }} />
+                  <PeopleIcon sx={{ fontSize: 60 }} color={'primary'} />
                   <Box>  <Typography color={'#454555'} variant="body1" > Postulantes</Typography>
                     <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{postulantes.length} </Typography>
 
@@ -516,7 +516,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
             <Grid item xs={4}>
               <Item elevation={4}>
                 <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                  <SpellcheckIcon sx={{ fontSize: 60, color: '#FFBC58' }} />
+                  <SpellcheckIcon sx={{ fontSize: 60 }} color={'primary'} />
                   <Box>
 
                     <Typography color={'#454555'} variant="body1" > Estado </Typography>
@@ -539,7 +539,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
             <Grid item xs={4}>
               <Item elevation={4}>
                 <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                  <CategoryIcon sx={{ fontSize: 60, color: '#A242A6' }} />
+                  <CategoryIcon sx={{ fontSize: 60 }} color={'primary'} />
                   <Box><Typography color={'#454555'} variant="body1" > Categoria</Typography>
                     <Typography color={'#454555'} fontWeight={'bold'} fontSize={37} textTransform={'capitalize'}>{convocatoria.categoria.nombre} </Typography>
 
@@ -550,7 +550,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
             <Grid item xs={4}>
               <Item elevation={4}>
                 <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                  <HowToRegIcon sx={{ fontSize: 60, color: '#5B4EB1' }} />
+                  <HowToRegIcon sx={{ fontSize: 60 }} color={'primary'} />
                   <Box>
                     <Typography color={'#454555'} variant="body1" > Seleccionados</Typography>
                     <Typography fontWeight={'bold'} color={'#454555'} variant="h3" textTransform={'uppercase'}>0 </Typography>
@@ -562,7 +562,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
             <Grid item xs={4}>
               <Item elevation={4}>
                 <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                  <PersonRemoveAlt1Icon sx={{ fontSize: 60, color: '#DC4658' }} />
+                  <PersonRemoveAlt1Icon sx={{ fontSize: 60 }} color={'primary'} />
                   <Box>
                     <Typography color={'#454555'} variant="body1" > Descartados</Typography>
                     <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >0 </Typography>

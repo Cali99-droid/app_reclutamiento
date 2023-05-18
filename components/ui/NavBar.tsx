@@ -159,14 +159,25 @@ export const NavBar = () => {
 
                         isLoggedIn && (
 
-                            <Box sx={{ padding: 1 }}>
-                                <Tooltip title={`${user?.persona?.nombres}`}>
+                            <Box display={'flex'} alignItems={'center'} sx={{ padding: 1 }} gap={1}>
+                                <Box >
+                                    <Tooltip title={`${user?.persona?.nombres}`}>
 
-                                    <Avatar sx={{ bgcolor: '#0045AA' }} />
+                                        <Avatar sx={{ bgcolor: '#0045AA' }} />
 
-                                </Tooltip>
+                                    </Tooltip>
+
+
+                                </Box>
+                                {user?.rol.name === 'admin' && (
+                                    <Box>
+                                        <Button variant='outlined' onClick={() => push('/admin/convocatorias')}>Administrar</Button>
+                                    </Box>
+                                )}
 
                             </Box>
+
+
 
                         )
                     }

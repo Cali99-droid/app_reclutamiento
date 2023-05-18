@@ -13,6 +13,8 @@ import Tabs from '@mui/material/Tabs';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import { useContext } from 'react';
+import { AuthContext } from '@/context';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -23,6 +25,7 @@ interface HeaderProps extends React.PropsWithChildren {
 
 export default function Header(props: HeaderProps) {
     const { onDrawerToggle } = props;
+    const { isLoggedIn, user } = useContext(AuthContext);
 
     return (
         <React.Fragment>
@@ -42,7 +45,8 @@ export default function Header(props: HeaderProps) {
                         <Grid item xs />
                         <Grid item>
                             <Link
-                                href="/"
+
+                                href="/convocatorias"
                                 variant="body2"
                                 sx={{
                                     textDecoration: 'none',
@@ -54,7 +58,7 @@ export default function Header(props: HeaderProps) {
                                 rel="noopener noreferrer"
                                 target="_blank"
                             >
-                                Go to docs
+                                Convocatorias
                             </Link>
                         </Grid>
                         <Grid item>
@@ -65,9 +69,11 @@ export default function Header(props: HeaderProps) {
                             </Tooltip>
                         </Grid>
                         <Grid item>
-                            <IconButton color="inherit" sx={{ p: 0.5 }}>
-                                <Avatar alt="My Avatar" />
-                            </IconButton>
+                            <Tooltip title={`${user?.persona?.nombres}`}>
+                                <IconButton color="inherit" sx={{ p: 0.5 }}>
+                                    <Avatar alt="My Avatar" />
+                                </IconButton>
+                            </Tooltip>
                         </Grid>
                     </Grid>
                 </Toolbar>
@@ -86,7 +92,7 @@ export default function Header(props: HeaderProps) {
                                 {props.titulo}
                             </Typography>
                         </Grid>
-                        <Grid item>
+                        {/* <Grid item>
                             <Button
                                 sx={{ borderColor: lightColor }}
                                 variant="outlined"
@@ -95,9 +101,9 @@ export default function Header(props: HeaderProps) {
                             >
                                 Web setup
                             </Button>
-                        </Grid>
+                        </Grid> */}
                         <Grid item>
-                            <Tooltip title="Help">
+                            <Tooltip title="Ayuda">
                                 <IconButton color="inherit">
                                     <HelpIcon />
                                 </IconButton>

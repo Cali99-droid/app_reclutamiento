@@ -69,7 +69,7 @@ export const SideMenu = () => {
                         <ListItemIcon>
                             <AccountCircleOutlined />
                         </ListItemIcon>
-                        <ListItemText primary={'Perfil'} />
+                        <ListItemText primary={user?.persona?.nombres} />
                     </ListItemButton>
                     {
                         isLoggedIn && user?.rol.name === 'postulante' && (
@@ -132,55 +132,9 @@ export const SideMenu = () => {
                         <ListItemText primary={'Beneficios'} />
                     </ListItemButton>
 
-                    {/**Jurado */}
-
-                    <>
-                        <Divider />
-                        <ListSubheader>Jurado Panel</ListSubheader>
-
-                        <ListItemButton
-                            onClick={() => navigateTo(`/jurado?p=${router.asPath}`)}
-                        >
-                            <ListItemIcon>
-                                <CategoryOutlined />
-                            </ListItemIcon>
-                            <ListItemText primary={'Convocatorias'} />
-                        </ListItemButton>
-
-                    </>
 
 
-                    {/* Admin */}
-                    {
-                        user?.rol.name === 'admin' && (
-                            <>
-                                <Divider />
-                                <ListSubheader>Admin Panel</ListSubheader>
 
-                                <ListItemButton
-                                    onClick={() => navigateTo(`/admin/convocatorias?p=${router.asPath}`)}
-                                >
-                                    <ListItemIcon>
-                                        <CategoryOutlined />
-                                    </ListItemIcon>
-                                    <ListItemText primary={'Convocatorias'} />
-                                </ListItemButton>
-                                <ListItemButton onClick={() => navigateTo(`/admin/evaluaciones`)}>
-                                    <ListItemIcon>
-                                        <ConfirmationNumberOutlined />
-                                    </ListItemIcon>
-                                    <ListItemText primary={'Evaluaciones'} />
-                                </ListItemButton>
-
-                                <ListItemButton>
-                                    <ListItemIcon>
-                                        <AdminPanelSettings />
-                                    </ListItemIcon>
-                                    <ListItemText primary={'Usuarios'} />
-                                </ListItemButton>
-                            </>
-                        )
-                    }
                     <Divider />
                     {
                         isLoggedIn

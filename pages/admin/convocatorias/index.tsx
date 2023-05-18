@@ -214,7 +214,7 @@ const ConvocatoriasPage = () => {
     router.push(url);
   }
   return (
-    <Paperbase title={"Administrar convocatorias "} subTitle={"Listado de convocatorias"} navigate={<Navigate />}>
+    <Paperbase title={"Administrar convocatorias "} subTitle={"Listado de convocatorias"} >
       <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' }}>
         <AppBar
           position="static"
