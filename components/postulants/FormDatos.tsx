@@ -157,12 +157,12 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
         }
     }
     const onDeleteImage = () => {
-        console.log(getValues('image'))
+        // console.log(getValues('image'))
         setValue(
             'image',
             '', { shouldValidate: true }
         );
-        console.log(getValues('image'))
+        // console.log(getValues('image'))
 
     }
     return (

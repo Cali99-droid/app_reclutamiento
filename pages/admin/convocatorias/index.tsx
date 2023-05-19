@@ -1,7 +1,3 @@
-import { prisma } from '@/server/db/client';
-
-
-import { GetStaticProps } from "next";
 
 
 
@@ -18,6 +14,8 @@ import { useRouter } from 'next/router';
 import { IJob } from '@/interfaces';
 
 
+import * as React from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -35,7 +33,7 @@ import { Paperbase } from '@/components/dash';
 const ConvocatoriasPage = () => {
   const { data, error } = useSWR<IJob[]>('/api/admin/convocatorias');
   const [convocatorias, setConvocatorias] = useState<IJob[]>([]);
-
+  const matches = useMediaQuery('(min-width:600px)');
 
   useEffect(() => {
     if (data) {
@@ -125,7 +123,7 @@ const ConvocatoriasPage = () => {
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 50 },
     {
-      field: 'titulo', headerName: 'Convocatoria', width: 200,
+      field: 'titulo', headerName: 'Convocatoria', width: 350,
       renderCell: ({ row }) => {
         return (
           <NextLink href={`/admin/convocatorias/convocatoria/${row.id}`} passHref legacyBehavior>
@@ -213,9 +211,11 @@ const ConvocatoriasPage = () => {
   const navigateTo = (url: string) => {
     router.push(url);
   }
+
   return (
+
     <Paperbase title={"Administrar convocatorias "} subTitle={"Listado de convocatorias"} >
-      <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' }}>
+      <Paper sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }}>
         <AppBar
           position="static"
           color="default"
@@ -243,26 +243,19 @@ const ConvocatoriasPage = () => {
             </Grid>
           </Toolbar>
         </AppBar>
-        <Box className="fadeIn" padding={4}>
+        <Box className="fadeIn" padding={4} sx={{ height: 580 }} width={'100%'} textAlign={'center'}>
 
-          <Grid
-            container
-            justifyContent={'end'}
 
-          >
-            <Grid item >
 
-            </Grid >
-            <Grid item xs={12} sx={{ height: 580, width: '100%' }}>
+          <DataGrid
 
-              <DataGrid
-                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-                rows={rows}
-                columns={columns}
-                rowHeight={45}
-              />
-            </Grid>
-          </Grid>
+            localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+            rows={rows}
+            columns={columns}
+            rowHeight={45}
+
+          />
+
 
           <Modal title={'¿ Esta seguro de eliminar la convocatoria ?'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
             <Typography >La Convocatoria se eliminará definitivamente</Typography>
@@ -272,7 +265,7 @@ const ConvocatoriasPage = () => {
       </Paper>
 
 
-    </Paperbase>
+    </Paperbase >
 
 
   )

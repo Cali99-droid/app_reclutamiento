@@ -55,7 +55,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       estadoId: 1,
       sueldoOfertado: 2000,
       vacantes: 1,
-      categoria_id: 1
+      categoria_id: null
     }
     job = jobTemp;
 
