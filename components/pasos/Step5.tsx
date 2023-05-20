@@ -42,6 +42,7 @@ const Step5 = () => {
 
         if (actividad.length === 0 || nivel.length === 0 || logro.length === 0 || year.length === 0 || IdPos.length === 0) {
             toast.warning('¡Complete los campos requeridos!')
+            setError(true)
             return
         };
         agregarAficion(actividad, year, nivel, logro, IdPos)
@@ -74,6 +75,7 @@ const Step5 = () => {
             setError(true)
         }
         setNivel(event.target.value);
+        setError(false)
 
     }
     const onLogroChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -106,6 +108,7 @@ const Step5 = () => {
 
         if (tecnologia.length === 0 || nivel.length === 0 || IdPos.length === 0) {
             toast.warning('¡Complete los campos requeridos!')
+            setError(true)
             return
         };
         agregarTic(tecnologia, nivel, IdPos)
@@ -259,6 +262,7 @@ const Step5 = () => {
                     >
                         <TextField
                             autoFocus
+                            required
                             multiline
                             id="tecnologia"
                             label="Tecnologia"
@@ -272,7 +276,7 @@ const Step5 = () => {
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Nivel</InputLabel>
                                 <Select
-
+                                    required
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     value={nivel}
@@ -362,7 +366,7 @@ const Step5 = () => {
                         autoComplete="off"
                     >
                         <TextField
-
+                            required
                             autoFocus
                             multiline
                             id="actividad"
@@ -373,16 +377,17 @@ const Step5 = () => {
                             value={actividad}
                             onChange={onActividadChange}
                         />
-                        <Box width={'96%'} marginLeft={1}>
+                        <Box width={'98%'} marginLeft={1}>
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Nivel</InputLabel>
                                 <Select
-
+                                    required
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     value={nivel}
                                     label="Nivel"
                                     onChange={(e) => onNivelChange(e)}
+                                    error={error && nivel.length <= 0}
                                 >
                                     <MenuItem value={'Basico'}>Básico</MenuItem>
                                     <MenuItem value={'Intermedio'}>Intermedio</MenuItem>
@@ -394,7 +399,7 @@ const Step5 = () => {
                         </Box>
                         <TextField
                             autoFocus
-
+                            required
                             id="logro"
                             label="Logro"
                             placeholder='Logro'
@@ -410,7 +415,7 @@ const Step5 = () => {
                             variant="outlined"
                             value={year}
                             error={error && year.length <= 0}
-
+                            required
                             onChange={onYearChange}
                             helperText='*año en el que culminó el curso'
                         />

@@ -59,19 +59,20 @@ async function  getCargos(req: NextApiRequest, res: NextApiResponse<any>) {
 
 
 async function  postCargo(req: NextApiRequest, res: NextApiResponse<any>) {
-  const{referencia='',  contacto='',institucion='',remuneracion,nivel='',cantidadCargo='',descripcion,year,idPos}=req.body
+  const{referencia='',  contacto='',institucion='',remuneracion,nivel='',cantidadCargo=0,descripcion,year,idPos}=req.body
+
 
 
   try {
      const cargo = await prisma.cargo.create({
         data:{
-   
+    
           referencia,
           contacto,
           institucion,
           remuneracion:parseFloat(remuneracion),
           nivel,
-          cantidadCargo:parseInt(cantidadCargo),
+          cantidadCargo: isNaN(cantidadCargo) ? parseInt(cantidadCargo) : 0,
           descripcion,
           year:parseInt(year),
           postulante_id:idPos

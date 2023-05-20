@@ -46,9 +46,11 @@ const LoginPage = (error: string) => {
 
                 setShowError(!resp.ok)
                 setTimeout(() => setShowError(false), 3000);
-                console.log(resp.ok)
+                const destination = router.query.p?.toString() || '/';
+                router.replace(destination);
+                // console.log(resp.ok)
                 if (resp.ok) {
-                    router.push('/admin/convocatorias')
+                    router.push(destination)
                 }
 
             }

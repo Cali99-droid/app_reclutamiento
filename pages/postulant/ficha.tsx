@@ -92,7 +92,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                 />
                             </Box>
                             <Box mt={2} textAlign={'center'}>
-                                <Typography > {postulante.persona.nombres + ' ' + postulante.persona.apellido_pat + postulante.persona.apellido_mat}</Typography>
+                                <Typography > {postulante.persona.nombres + ' ' + postulante.persona.apellido_pat + ' ' + postulante.persona.apellido_mat}</Typography>
                                 <Typography fontSize={12}> {calcularEdad(postulante.persona.nacimiento)} Años</Typography>
                                 <Box ml={4} mt={1} display={'flex'} flexDirection={'column'} alignItems={'start'} gap={1}>
 

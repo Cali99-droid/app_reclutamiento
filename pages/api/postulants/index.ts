@@ -227,6 +227,14 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
       return res.status(400).json({ message: 'Es Necesario que suba una imagen' });
   }
 
+
+        // Borrar de cloudinary
+        const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
+        console.log({ image, fileId, extension });
+        await cloudinary.uploader.destroy( fileId );
+ 
+
+
       const p = await prisma.postulante.findUnique({
         where: {
           id: parseInt(idPostulante.toString()) 

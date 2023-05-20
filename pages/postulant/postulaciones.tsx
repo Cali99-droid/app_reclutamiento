@@ -1,14 +1,14 @@
 import { JobsLayout } from "@/components/layouts";
 import { prisma } from '@/server/db/client';
 
-import { Box } from '@mui/material';
+import { Box, Chip, Grid, Paper, useMediaQuery } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { postulante, convocatoria } from '@prisma/client';
 import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 import { IConvocatoriaPostulante, IJob } from "@/interfaces";
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridValueGetterParams, esES } from '@mui/x-data-grid';
 interface Props {
 
     convocatorias: any[],
@@ -17,21 +17,39 @@ interface Props {
 }
 
 
-const postulacionesPage: NextPage<Props> = ({ convocatorias }) => {
+const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
 
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID', width: 90 },
+        { field: 'id', headerName: 'Código', width: 90 },
         {
             field: 'convocatoria',
             headerName: 'Puesto',
-            width: 200,
+            width: 300,
             editable: true,
         },
         {
             field: 'estado',
             headerName: 'Estado',
-            width: 150,
-            editable: true,
+            description: 'Muestra el estado de la convocatoria',
+            width: 200,
+            renderCell: (params) => {
+                return (
+                    <Chip color="info" label={`${params.row.estado}`} variant='outlined' />
+
+                )
+            }
+        },
+
+        {
+            field: 'estadoPostulante',
+            headerName: 'Estado Del Postulante',
+            width: 200,
+            renderCell: (params) => {
+                return (
+                    <Chip color="warning" label={`${params.row.estadoPostulante}`} variant='outlined' />
+
+                )
+            }
         },
 
 
@@ -42,23 +60,40 @@ const postulacionesPage: NextPage<Props> = ({ convocatorias }) => {
         id: job.id,
         convocatoria: job.convocatoria.titulo,
         estado: job.convocatoria.estado.nombre,
+        estadoPostulante: job.estado_postulante.nombre
 
     }))
 
     return (
-        <JobsLayout title={"Mis postulaciones"} pageDescription={"Lsita de postulacioes"}>
-            <Box mt={15}>
-                <Typography variant='h1' component='h1'>Mis postulanciones</Typography>
-            </Box>
-            <Divider variant="middle" />
-            <Box sx={{ height: 300, width: '100%' }}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
+        <JobsLayout title={"Mis postulaciones"} pageDescription={"Lista de postulacioes"}>
+            <Box mb={2} mt={15} padding={4}  >
+                <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'visible' }} >
+                    <Grid container spacing={2} alignItems="center" mb={2} padding={2}>
+                        <Grid item>
+                            <span color="inherit" />
+                        </Grid>
+                        <Grid item xs>
+                            <Typography>Mis postulaciones</Typography>
+                        </Grid>
 
-                />
+                    </Grid>
+                </Paper>
+                <Paper >
+
+                    <Box sx={{ height: 400, width: '100%', padding: 2 }}>
+                        <DataGrid
+                            rows={rows}
+                            columns={columns}
+                            localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+
+                        />
+                    </Box>
+
+                </Paper>
             </Box>
-        </JobsLayout>
+
+
+        </JobsLayout >
     )
 }
 
@@ -104,6 +139,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
                 select: {
                     titulo: true,
                     estado: true,
+
+                }
+            },
+            estado_postulante: {
+                select: {
+                    nombre: true,
                 }
             }
         },
@@ -119,5 +160,5 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     }
 }
 
-export default postulacionesPage
+export default PostulacionesPage
 

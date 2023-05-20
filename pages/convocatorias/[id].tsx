@@ -10,6 +10,8 @@ import { ReqList } from "@/components/jobs/ReqList";
 import ShareIcon from '@mui/icons-material/Share';
 import { convocatoria } from '@prisma/client';
 import { grey } from '@mui/material/colors';
+import Image from 'next/image';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 
 
 
@@ -22,46 +24,52 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
   return (
     <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion}>
 
-      <Grid className="fadeIn" container sx={{ mt: 10, padding: 5 }} direction="column"
-        justifyContent="center"
-        alignItems="center">
+      <Box className="fadeIn" sx={{ mt: 10, padding: 6 }} display={'flex'}
+        gap={4}
+        alignItems="self-start" justifyContent={'center'} width={'80%'} margin={'auto'}>
 
-        <Grid item xs={12} sm={12} >
-          <Box bgcolor={'#F8F8F8'} padding={3} borderRadius={10}>
-            <Box>
-              <Box display={'flex'} justifyContent={'space-between'}>
-                <Typography variant='h1' fontSize={50} component='h1'>
-                  {convocatoria.titulo}
+        <Box>
+          <Image src={'/jobs/img-6.jpg'} alt={''} width={500} height={500} />
+        </Box>
 
-                </Typography>
+        <Box padding={3} borderRadius={10}>
+          <Box>
+            <Box display={'flex'} justifyContent={'space-between'}>
+              <Typography variant='h1' component='h1'>
+                {convocatoria.titulo}
+
+              </Typography>
+              <Box>
                 <IconButton aria-label="share" >
                   <ShareIcon />
                 </IconButton>
-
               </Box>
 
 
-              <Typography variant='subtitle1' component='p' sx={{ mt: 2, width: '100%' }} color={grey}>{convocatoria.descripcion}</Typography>
-
             </Box>
-            <Divider variant="middle" />
-            <Box sx={{ mt: 4 }} >
 
-              <Typography variant='h5' component='h5'> Requisitos</Typography>
-              <Divider variant="middle" />
-              <ReqList job={convocatoria} />
 
-            </Box>
-            <Button sx={{ mt: 3, width: '50%' }} size="large" href={`/postulant/postular/${convocatoria.id}`}>
-              Postular
-            </Button>
+            <Typography variant='subtitle1' component='p' sx={{ mt: 2, width: '100%' }} color={grey}>{convocatoria.descripcion}</Typography>
+
           </Box>
+          <Divider variant="middle" />
+          <Box sx={{ mt: 2 }} >
 
 
-        </Grid>
+
+            <ReqList job={convocatoria} />
+
+          </Box>
+          <Button startIcon={<PostAddIcon />} color='info' sx={{ mt: 6, width: '100%' }} size="large" href={`/postulant/postular/${convocatoria.id}`}>
+            Postular
+          </Button>
+        </Box>
 
 
-      </Grid>
+      </Box>
+
+
+
 
 
 

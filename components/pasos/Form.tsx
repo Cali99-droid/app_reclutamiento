@@ -28,7 +28,7 @@ const Form = () => {
     };
 
     return (
-        <Box padding={6} bgcolor={'#FFF'} borderRadius={5} mb={2}>
+        <Box bgcolor={'#FFF'} borderRadius={5} mb={2} >
             <FormStepper onSubmit={handleSubmit} />
         </Box>
     );

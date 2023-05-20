@@ -1,14 +1,13 @@
 import { prisma } from '@/server/db/client';
 import { JobsLayout } from "@/components/layouts";
 
-import { Box, Button, Step, StepLabel, Stepper, TextField } from '@mui/material';
-import Typography from '@mui/material/Typography';
+import { Box } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
-import { IGrado, IPersona, IPostulant, IUser } from "@/interfaces";
-import { getSession, useSession } from 'next-auth/react';
+import { IGrado, IPersona } from "@/interfaces";
+import { getSession } from 'next-auth/react';
 
-import { apiCon, reclutApi } from '@/api';
+import { apiCon } from '@/api';
 
 import { postulante } from '@prisma/client';
 import { ToastContainer, toast } from 'react-toastify';
@@ -35,7 +34,7 @@ const PostulantPage: NextPage<Props> = ({ persona, grados, postulante }) => {
     <JobsLayout title={"AE | Postulante "} pageDescription={"Postular a un empleo"}>
       <ToastContainer />
 
-      <Box mb={2} mt={15} padding={8}>
+      <Box mb={2} mt={15} padding={4}>
 
         <Form />
         {

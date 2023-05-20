@@ -339,7 +339,7 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                                 id="estadoCivil"
                                 label="estadoCivil"
                                 required
-                                defaultValue={postulante.estado_civil || 'Soltero'}
+                                defaultValue={postulante.estado_civil || ''}
                                 {...register('estadoCivil', {
                                     required: 'Este campo es requerido',
 

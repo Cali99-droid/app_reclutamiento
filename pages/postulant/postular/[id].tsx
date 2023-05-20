@@ -4,7 +4,7 @@ import { JobsLayout } from '@/components/layouts'
 import { GetServerSideProps, NextPage } from 'next'
 import React, { useState } from 'react'
 
-import { Box, Button, Chip, Typography } from '@mui/material';
+import { Box, Button, Chip, Paper, Typography, styled } from '@mui/material';
 
 import { green, grey, } from '@mui/material/colors';
 import { ReqList } from '@/components/jobs';
@@ -15,6 +15,7 @@ import { reclutApi } from '@/api';
 import { getSession } from 'next-auth/react';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
 import CheckIcon from '@mui/icons-material/Check';
+
 interface Props {
 
   convocatoria: IJob,
@@ -55,39 +56,69 @@ const PostularPage: NextPage<Props> = ({ convocatoria, persona, postulo }) => {
     }
 
   }
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#FFF',
+    ...theme.typography.body2,
+    padding: theme.spacing(3),
+
+    color: theme.palette.text.secondary,
+    borderRadius: 10
+
+  }));
   return (
     <JobsLayout title={"Postular "} pageDescription={'postular a un trabajo'} >
-      <Box display='flex' gap={4} justifyContent='center' flexDirection={'column'} alignItems='center' height="calc(80vh - 200px)" width={'100%'} >
+      <Box display='flex' justifyContent='center' mt={15} width={'100%'} padding={10}>
 
-        <Box>
-          <Box display={'flex'} gap={2}>
-            <Typography variant='h1' sx={{ color: grey[800] }}>{`Usted Postulará al puesto de: `}</Typography >
-            <Typography variant='h1' sx={{ color: grey[600] }}>{` ${convocatoria.titulo} `}</Typography >
+        <Item sx={{ margin: '0 auto' }}>
+          <Box display={'flex'} gap={1} justifyContent={'center'}>
+            <Typography fontSize={20} fontWeight={500} sx={{ color: grey[800] }}>{`Confirme su postulación a: `}</Typography >
+            <Typography fontSize={20} fontWeight={800} sx={{ color: '#001C75' }}>{` ${convocatoria.titulo} `}</Typography >
           </Box>
-
-        </Box>
-        <Box display={'flex'} justifyContent={'space-between'} width={'40%'}>
-          <Box sx={{ bgcolor: grey[100], padding: 2, borderRadius: 4 }}>
-            <Typography>Requisitos de la convocatoria</Typography>
+          {/* <Box mt={2}>
+            <Typography>Detalles de la convocatoria</Typography>
+           
             <ReqList job={convocatoria} />
-          </Box>
-          <Box sx={{ bgcolor: grey[100], padding: 2, borderRadius: 4 }} display={'flex'} flexDirection={'column'} justifyContent={'center'} gap={3}>
-            {
-              postulo ? (
-                <Chip label="Ya se encuentra inscrito" color='warning' variant='outlined' />
+          </Box> */}
+          <Item sx={{ padding: 2, borderRadius: 4, mt: 2 }} >
 
-              )
-                : (
-                  <Button startIcon={<CheckIcon />} size='medium' color='success' variant='outlined' onClick={() => handleConfirm()} >Confirmar</Button>
+            <Box display={'flex'} gap={4}>
+              <Button
+                startIcon={<FilePresentIcon />}
+                size='medium'
+                color='info'
+                variant='outlined'
+                onClick={() => {
+                  router.push('/postulant/ficha')
+                }}>
+                Revisar mi ficha
+              </Button>
+              {
+                postulo ? (
+                  <Chip label="Ya se encuentra inscrito" color='warning' variant='outlined' />
+
                 )
-            }
+                  : (
+                    <Button startIcon={<CheckIcon />} size='medium' color='success' variant='outlined' onClick={() => handleConfirm()} >Confirmar</Button>
+                  )
+              }
+
+              <Button
+                size='medium'
+                color='error'
+                variant='outlined'
+                onClick={() => { history.go(-1); return false; }}>
+                Cancelar
+              </Button>
+            </Box>
+          </Item>
+        </Item>
+        <Box display={'flex'} justifyContent={'space-around'} >
 
 
-            <Button startIcon={<FilePresentIcon />} size='medium' color='info' variant='outlined' onClick={() => {
-              router.push('/postulant/ficha')
-            }}>Revisar mi ficha</Button>
-            <Button size='medium' color='error' variant='outlined' onClick={() => { history.go(-1); return false; }}>Volver</Button>
-          </Box>
+
+
+
+
         </Box>
 
       </Box>

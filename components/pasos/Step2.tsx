@@ -57,18 +57,21 @@ const Step2 = () => {
     }
     const handleClose = () => {
         setOpen(false);
+        setError(false)
     }
     const handleConfirm = () => {
         //TODO validar campos
         if (profesion.length === 0 || institucion.length === 0 || grado.length === 0) {
             toast.warning('Complete todos los campos')
+            setError(true)
             return
         };
         agregarEstudio(profesion, institucion, grado, year, IdPos)
+        toast.success('Agregado con éxito')
         setProfesion('')
         setInstitucion('')
         setGrado('')
-
+        setError(false)
         handleClose()
     }
     const handleDelete = (id: number) => {
@@ -143,7 +146,7 @@ const Step2 = () => {
             </Box>
 
 
-            <Modal title={'Nueva Profesión'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
+            <Modal title={'AGREGAR ESTUDIO / PROFESION'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
                 <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
                     component="form"
                     sx={{
@@ -164,6 +167,8 @@ const Step2 = () => {
                         error={error && profesion.length <= 0}
                         value={profesion}
                         onChange={onProfesionChange}
+
+                        helperText={'* Ingrese una profesión o campo de estudio'}
                     />
                     <TextField
                         id="institucion"
@@ -173,6 +178,7 @@ const Step2 = () => {
                         error={error && institucion.length <= 0}
                         value={institucion}
                         onChange={onInstitucionChange}
+                        helperText={'* Ingrese la institución de estudios'}
                     />
                     <Box width={'96%'} marginLeft={1}>
                         <FormControl fullWidth>
@@ -184,8 +190,9 @@ const Step2 = () => {
                                 value={grado}
                                 label="Grado"
                                 onChange={(e) => onGradoChange(e)}
+                                error={error && grado.length <= 0}
                             >
-                                <MenuItem selected={true} value={'Estudiante'}>Estudiante</MenuItem>
+                                <MenuItem value={'Estudiante'}>Estudiante</MenuItem>
                                 <MenuItem value={'Practicante'}>Practicante</MenuItem>
                                 <MenuItem value={'Bachiller'}>Bachiller</MenuItem>
                                 <MenuItem value={'Titulado'}>Titulado</MenuItem>
@@ -193,6 +200,7 @@ const Step2 = () => {
                                 <MenuItem value={'Doctorado'}>Doctorado</MenuItem>
                             </Select>
                         </FormControl>
+                        <FormHelperText>* Grado que alcanzó</FormHelperText>
                     </Box>
 
                     <TextField

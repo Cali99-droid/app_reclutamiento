@@ -239,7 +239,7 @@ model investigacion {
 model cargo {
   id            Int        @id @default(autoincrement())
   institucion   String     @db.VarChar(150)
-  referencia    String     @db.Char(9)
+  referencia    String?    @db.Char(9)
   remuneracion  Float
   nivel         String     @db.VarChar(45)
   cantidadCargo Int?       @default(0) @map("cantidad_cargo")

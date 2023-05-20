@@ -10,6 +10,9 @@ import ShareIcon from '@mui/icons-material/Share';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { ReqList } from './ReqList';
 import NextLink from 'next/link';
+import WorkIcon from '@mui/icons-material/Work';
+import SchoolIcon from '@mui/icons-material/School';
+import GroupIcon from '@mui/icons-material/Group';
 
 
 interface Props {
@@ -31,21 +34,34 @@ export const JobCard: FC<Props> = ({ job }) => {
 
                     <Link>
                         <CardActionArea>
-
+                            <CardMedia
+                                sx={{ height: 250 }}
+                                image="/jobs/img-6.jpg"
+                                title="green iguana"
+                            />
                             <CardContent>
-                                <Typography fontWeight={800} gutterBottom variant="h5" >
-                                    {job.titulo}
-                                </Typography>
+                                <Box display={'flex'} gap={1}>
+
+                                    <Typography fontWeight={800} gutterBottom variant="h5" >
+                                        {job.titulo}
+                                    </Typography>
+
+                                    <Box>
+                                        <IconButton aria-label="share" size='small'>
+                                            <ShareIcon />
+                                        </IconButton>
+                                    </Box>
+
+                                </Box>
                                 <Typography variant="body2" color="text.secondary">
                                     {job.descripcion}
                                 </Typography>
-
                                 <ReqList job={job} />
-
                                 {/* <Box mt={1}>
                             <Chip label={`${job.categoria}`} color="success" variant="outlined" />
                         </Box> */}
                             </CardContent>
+
                         </CardActionArea>
 
                     </Link>

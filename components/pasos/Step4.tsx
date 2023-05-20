@@ -27,6 +27,7 @@ const Step4 = () => {
     const handleConfirm = () => {
         if (titulo.length === 0 || horas.length === 0 || year.length === 0 || institucion.length === 0 || descripcion.length === 0 || IdPos.length === 0) {
             toast.warning('¡Complete los campos requeridos!')
+            setError(true)
             return
         };
         agregarCapacitacion(titulo, horas, year, institucion, descripcion, IdPos)
@@ -99,6 +100,7 @@ const Step4 = () => {
 
         if (reconocimiento.length === 0 || year.length === 0 || institucion.length === 0 || descripcion.length === 0 || IdPos.length === 0) {
             toast.warning('¡Complete los campos requeridos!')
+            setError(true)
             return
         };
         agregarReconocimiento(reconocimiento, year, institucion, descripcion, IdPos)
@@ -207,10 +209,11 @@ const Step4 = () => {
                             error={error && titulo.length <= 0}
                             value={titulo}
                             onChange={onTituloChange}
+                            required
                         />
                         <TextField
                             autoFocus
-
+                            required
                             id="institucion"
                             label="Institución"
                             placeholder='Intitucion donde llevo el curso'
@@ -229,6 +232,7 @@ const Step4 = () => {
                             error={error && horas.length <= 0}
                             value={horas}
                             onChange={onHorasChange}
+                            required
                         />
                         <TextField
                             type='number'
@@ -237,12 +241,13 @@ const Step4 = () => {
                             variant="outlined"
                             value={year}
                             error={error && year.length <= 0}
-
+                            required
                             onChange={onYearChange}
                             helperText='*año en el que culminó el curso'
                         />
                         <TextField
                             autoFocus
+                            required
                             multiline
                             id="desc"
                             label="Explique cómo aplicó lo aprendido"
@@ -328,6 +333,7 @@ const Step4 = () => {
                         <TextField
                             autoFocus
                             multiline
+                            required
                             id="reconocimento"
                             label="Reconocimento"
                             placeholder='Titulo del reconocimento'
@@ -338,7 +344,7 @@ const Step4 = () => {
                         />
                         <TextField
                             autoFocus
-
+                            required
                             id="institucion"
                             label="Institución"
                             placeholder='Intitucion donde llevo el curso'
@@ -355,7 +361,7 @@ const Step4 = () => {
                             variant="outlined"
                             value={year}
                             error={error && year.length <= 0}
-
+                            required
                             onChange={onYearChange}
 
                         />
@@ -369,6 +375,7 @@ const Step4 = () => {
                             error={error && descripcion.length <= 0}
                             value={descripcion}
                             onChange={onDescripcionChange}
+                            required
                         />
 
                     </Box>

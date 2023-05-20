@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stepper, Step, StepLabel, Button, Box, Divider } from '@mui/material';
+import { Stepper, Step, StepLabel, Button, Box, Divider, useMediaQuery } from '@mui/material';
 import { useContext } from 'react';
 import { DatosContext } from '@/context/datos';
 import LabelIcon from '@mui/icons-material/Label';
@@ -12,17 +12,17 @@ type FormStepperProps = {
 };
 
 const FormStepper = ({ onSubmit }: FormStepperProps) => {
-
+    const matches = useMediaQuery('(min-width:600px)');
     const { activeStep, handleBack, handleNext, steps } = useContext(DatosContext)
 
     const isLastStep = activeStep === steps.length - 1;
     const router = useRouter();
     return (
         <>
-            <Stepper activeStep={activeStep} >
+            <Stepper activeStep={activeStep} orientation={matches ? 'horizontal' : 'vertical'} sx={{ padding: 4 }}>
                 {steps.map(({ label, icon }, index) => (
                     <Step key={label} sx={{ color: '#FFF' }}>
-                        <Box display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'}>
+                        <Box display={'flex'} flexDirection={'column'} alignItems={matches ? 'center' : 'start'} >
                             <Box width={'50px'} height={'50px'} padding={3} bgcolor={activeStep === index ? '#0045aa' : '#F1F1F1'} display={'flex'} justifyContent={'center'} alignItems={'center'} borderRadius={'50%'}>{icon}
 
                             </Box>

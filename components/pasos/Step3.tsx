@@ -1,4 +1,4 @@
-import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, FormHelperText } from '@mui/material';
 import React, { useEffect } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useContext, ChangeEvent } from 'react';
@@ -40,7 +40,7 @@ const Step3 = () => {
     const handleConfirmInves = () => {
 
         if (titulo.length === 0 || year.length === 0 || institucion.length === 0 || IdPos.length === 0) {
-            toast.warning('Complete todos los campos')
+            toast.warning('Complete todos los campos obligatorios')
             return
         };
         agregarInvestigacion(titulo, institucion, year, IdPos)
@@ -90,10 +90,11 @@ const Step3 = () => {
         setError(false)
     }
     const handleConfirmCargo = () => {
-        //TODO 
 
-        if (referencia.length === 0 || contacto.length === 0 || nivel.length === 0 || cantidad.length === 0 || year.length === 0 || institucion.length === 0 || remuneracion.length === 0 || descripcion.length === 0 || IdPos.length === 0) {
-            toast.warning('Complete todos los campos')
+
+        if (nivel.length === 0 || year.length === 0 || institucion.length === 0 || remuneracion.length === 0 || descripcion.length === 0 || IdPos.length === 0 || error === true) {
+            toast.warning('Complete todos los campos obligatorios')
+            setError(true)
             return
         };
         agregarCargo(referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos)
@@ -131,7 +132,7 @@ const Step3 = () => {
     const onRefChange = (event: ChangeEvent<HTMLInputElement>) => {
 
 
-        if (!validations.isValidTelephone(event.target.value.toString())) {
+        if (!validations.isValidTelephone(event.target.value.toString()) && event.target.value.length >= 1) {
             setError(true)
             setMensaje('El numero de telefono no parece ser válido')
         } else {
@@ -335,11 +336,13 @@ const Step3 = () => {
                         error={error && titulo.length <= 0}
                         value={titulo}
                         onChange={onNombreChange}
+                        required
 
                     />
                     <TextField
                         autoFocus
                         multiline
+                        required
                         id="institucion"
                         label="Nombre de la institución"
                         placeholder='Nombre de la institución'
@@ -351,6 +354,7 @@ const Step3 = () => {
 
                     />
                     <TextField
+                        required
                         type='number'
                         id="outlined-basic"
                         label="Año"
@@ -389,6 +393,7 @@ const Step3 = () => {
                         label="Descripción del cargo"
                         placeholder='Dirección, subdirección, coordinaciones,etc.
                         '
+                        required
                         variant="outlined"
                         error={error && descripcion.length <= 0}
                         value={descripcion}
@@ -400,8 +405,9 @@ const Step3 = () => {
                         multiline
                         id="institucion"
                         label="Institución"
-                        placeholder='Nombre de la institución'
+                        placeholder='Nombre de la institución donde laboró'
                         variant="outlined"
+                        required
                         error={error && institucion.length <= 0}
                         value={institucion}
                         onChange={onInstitucionChange}
@@ -410,7 +416,7 @@ const Step3 = () => {
                     <TextField
 
                         id="referencia"
-                        label="Número de Referencia"
+                        label="Número de Referencia (opcional)"
                         placeholder='Numero del contacto de referencia'
                         type='number'
                         variant="outlined"
@@ -423,7 +429,7 @@ const Step3 = () => {
                     <TextField
 
                         id="contacto"
-                        label="Nombre del contacto referencia"
+                        label="Nombre del contacto referencia (opcional)"
                         placeholder='Nombre de contacto de referencia'
                         type='text'
                         variant="outlined"
@@ -444,6 +450,7 @@ const Step3 = () => {
                                 value={nivel}
                                 label="Nivel"
                                 onChange={(e) => onNivelChange(e)}
+                                error={error}
                             >
                                 <MenuItem value={'Inicial'}>Inicial</MenuItem>
                                 <MenuItem value={'Primaria'}>Primaria</MenuItem>
@@ -454,18 +461,19 @@ const Step3 = () => {
                                 <MenuItem value={'Otro'}>Otro</MenuItem>
 
                             </Select>
+
                         </FormControl>
                     </Box>
                     <TextField
                         type='number'
                         id="cantidadCargo"
-                        label="Cantidad de personas a cargo"
+                        label="Cantidad de personas a cargo (opcional)"
                         variant="outlined"
                         value={cantidad}
                         // error={error && cantidad.length <= 0}
                         inputProps={inputProps}
                         onChange={onCantidadChange}
-                        helperText={'* Opcional'}
+
                     />
                     <TextField
                         type='number'
@@ -474,7 +482,7 @@ const Step3 = () => {
                         variant="outlined"
                         value={remuneracion}
                         error={error && remuneracion.length <= 0}
-
+                        required
                         onChange={onRemuneracionChange}
 
                     />
