@@ -65,16 +65,16 @@ export const SideMenu = () => {
                             }
                         />
                     </ListItem>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <AccountCircleOutlined />
-                        </ListItemIcon>
-                        <ListItemText primary={user?.persona?.nombres} />
-                    </ListItemButton>
+
                     {
                         isLoggedIn && user?.rol.name === 'postulante' && (
                             <>
-
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        <AccountCircleOutlined />
+                                    </ListItemIcon>
+                                    <ListItemText primary={user?.persona?.nombres} />
+                                </ListItemButton>
                                 <ListItemButton onClick={() => navigateTo('/postulant')}>
                                     <ListItemIcon>
                                         <FilePresentIcon />

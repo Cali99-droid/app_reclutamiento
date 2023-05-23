@@ -163,7 +163,7 @@ export const NavBar = () => {
                                 <Box >
                                     <Tooltip title={`${user?.persona?.nombres}`}>
 
-                                        <Avatar sx={{ bgcolor: '#0045AA' }} />
+                                        <Avatar sx={{ bgcolor: '#0045AA' }} src={user?.oAuthImg ? user?.oAuthImg : ''} />
 
                                     </Tooltip>
 

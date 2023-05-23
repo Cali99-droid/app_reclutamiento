@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Slide } from 'react-slideshow-image';
+import { Fade, Slide } from 'react-slideshow-image';
 
 import 'react-slideshow-image/dist/styles.css';
 import styles from './Slideshow.module.css';
@@ -10,10 +10,10 @@ interface Props {
 
 export const ImageSlideshow: FC<Props> = ({ images }) => {
     return (
-        <Slide
+        <Fade
             easing="ease"
             duration={5000}
-
+            arrows={false}
         >
             {
                 images.map(image => {
@@ -25,12 +25,13 @@ export const ImageSlideshow: FC<Props> = ({ images }) => {
                                 backgroundRepeat: 'no-repeat'
                             }}>
                             </div>
+
                         </div>
                     )
 
                 })
             }
 
-        </Slide>
+        </Fade>
     )
 }

@@ -94,6 +94,19 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
                 }
             }
           } ,
+          postulante:{
+            create:{
+                direccion:'',
+                experiencia:0 ,
+                nacimiento:new Date(),
+                numeroDocumento:'00000000',
+                sueldo:0 ,
+                gradoId:1,
+                tipoId:1,
+                telefono:'',
+                
+              }
+          }
         },
         include: {
             user: true,
@@ -117,5 +130,5 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
     const rol_id = newUser.rol_id.toString()
     
 
-    return {id, rol_id,email,oAuthImg,oAuthName,rol};
+    return {id, rol_id,email,oAuthImg,oAuthName,rol,persona};
 }

@@ -26,6 +26,9 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
                 <title>{title}</title>
 
                 <meta name="description" content={pageDescription} />
+                <meta name="description" content={pageDescription} />
+                <meta name="referrer" content="no-referrer" />
+
 
 
                 <meta name="og:title" content={title} />
@@ -50,7 +53,7 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
                 margin: '50px auto',
                 width: '100%',
 
-                background: '#eeeeee',
+
             }}>
                 {children}
             </main>

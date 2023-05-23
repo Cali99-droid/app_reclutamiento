@@ -13,7 +13,7 @@ interface Props {
 export const JobList: FC<Props> = ({ jobs }) => {
 
   return (
-    <Grid container columns={{ xs: 4, md: 12 }}
+    <Grid container columns={{ xs: 3, md: 12 }}
       spacing={2} marginTop={2} padding={2} borderRadius={4}>
       {
         jobs.map(job => (

@@ -10,9 +10,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { ReqList } from './ReqList';
 import NextLink from 'next/link';
-import WorkIcon from '@mui/icons-material/Work';
-import SchoolIcon from '@mui/icons-material/School';
-import GroupIcon from '@mui/icons-material/Group';
+
 
 
 interface Props {
@@ -22,10 +20,11 @@ interface Props {
 export const JobCard: FC<Props> = ({ job }) => {
 
 
+
     return (
         <Grid item
             xs={12}
-            sm={3}
+            sm={4}
 
         >
             <Card>
@@ -36,8 +35,8 @@ export const JobCard: FC<Props> = ({ job }) => {
                         <CardActionArea>
                             <CardMedia
                                 sx={{ height: 250 }}
-                                image="/jobs/img-6.jpg"
-                                title="green iguana"
+                                image="/img/work.svg"
+
                             />
                             <CardContent>
                                 <Box display={'flex'} gap={1}>
@@ -53,9 +52,9 @@ export const JobCard: FC<Props> = ({ job }) => {
                                     </Box>
 
                                 </Box>
-                                <Typography variant="body2" color="text.secondary">
+                                {/* <Typography variant="body2" color="text.secondary">
                                     {job.descripcion}
-                                </Typography>
+                                </Typography> */}
                                 <ReqList job={job} />
                                 {/* <Box mt={1}>
                             <Chip label={`${job.categoria}`} color="success" variant="outlined" />

@@ -12,14 +12,24 @@ import { convocatoria } from '@prisma/client';
 import { grey } from '@mui/material/colors';
 import Image from 'next/image';
 import PostAddIcon from '@mui/icons-material/PostAdd';
-
-
-
+import { useRouter } from 'next/router';
+import ModalAlert from '../../components/modal/ModalAlert';
+import { useState } from 'react';
+import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 interface Props {
   convocatoria: IJob;
+  w: Window & typeof globalThis;
 }
 
 const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
+  const router = useRouter();
+  const url = `https://localhost:3000${router.asPath}`;
+
+  const [open, setOpen] = useState(false);
+
+
 
   return (
     <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion}>
@@ -40,9 +50,10 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
 
               </Typography>
               <Box>
-                <IconButton aria-label="share" >
+                <IconButton aria-label="share" onClick={() => setOpen(true)}>
                   <ShareIcon />
                 </IconButton>
+
               </Box>
 
 
@@ -67,6 +78,20 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
 
 
       </Box>
+
+      <ModalAlert title={'Compartir en:'} open={open} handleClose={() => setOpen(false)} handleConfirm={() => setOpen(false)}>
+        <Box display={'flex'} justifyContent={'space-evenly'} width={300}>
+          <IconButton size='large' aria-label="add to shopping cart" target='_blank' href={`https://www.facebook.com/sharer/sharer.php?u=${url}`}>
+            <FacebookOutlinedIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton size='large' aria-label="add to shopping cart" target='_blank' href={`https://api.whatsapp.com/send?text=Postula%20a%20este%20empleo%20de%20desde%20este%20enlace,%20${url}`}>
+            <WhatsAppIcon fontSize="inherit" />
+          </IconButton>
+          <IconButton size='large' aria-label="add to shopping cart" target='_blank' href={`https://www.linkedin.com/sharing/share-offsite/?url=${url}`}>
+            <LinkedInIcon fontSize="inherit" />
+          </IconButton>
+        </Box>
+      </ModalAlert>
 
 
 
