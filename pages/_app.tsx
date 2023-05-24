@@ -9,7 +9,10 @@ import { PostProvider } from '../context';
 import { SWRConfig } from 'swr'
 
 
+
 export default function App({ Component, pageProps }: AppProps) {
+
+
   return (
     <SessionProvider >
       <SWRConfig
@@ -28,11 +31,9 @@ export default function App({ Component, pageProps }: AppProps) {
                   <CssBaseline />
                   <Component {...pageProps} />
                 </ThemeProvider>
-
               </UiProvider>
             </DatosProvider>
           </PostProvider>
-
         </AuthProvider>
       </SWRConfig>
     </SessionProvider>

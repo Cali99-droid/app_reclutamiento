@@ -4,7 +4,7 @@ import { apiCon, reclutApi } from "@/api";
 import AnnouncementForm from "@/components/jobs/AnnouncementForm";
 import { AdminLayout } from "@/components/layouts";
 
-import { IGrado } from "@/interfaces";
+import { IGrado, IJob } from "@/interfaces";
 import { Box } from "@mui/material";
 import { convocatoria } from "@prisma/client";
 import { GetServerSideProps, GetStaticProps, NextPage } from "next";
@@ -15,7 +15,7 @@ import { Paperbase } from '@/components/dash';
 interface Props {
   grados: IGrado[]
   estados: IGrado[]
-  job: convocatoria
+  job: IJob
 
 }
 
@@ -35,7 +35,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ grados, job }) => {
 
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  let job: convocatoria | null
+  let jobSer: convocatoria | null
   const { slug = '' } = query;
 
 
@@ -55,9 +55,10 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       estadoId: 1,
       sueldoOfertado: 2000,
       vacantes: 1,
-      categoria_id: null
+      categoria_id: null,
+      vigencia: null
     }
-    job = jobTemp;
+    jobSer = jobTemp;
 
 
   } else {
@@ -70,7 +71,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       }
     }
 
-    job = await prisma.convocatoria.findUnique({
+    jobSer = await prisma.convocatoria.findUnique({
       where: {
         id
       },
@@ -80,7 +81,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   }
 
-  if (!job) {
+  if (!jobSer) {
     return {
       redirect: {
         destination: '/admin/convocatorias',
@@ -88,6 +89,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       }
     }
   }
+  const job = JSON.parse(JSON.stringify(jobSer))
   return {
     props: {
       grados,

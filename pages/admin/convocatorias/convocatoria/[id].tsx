@@ -706,7 +706,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { id = '' } = query;
-  const convocatoria = await prisma.convocatoria.findUnique({
+  const resConvocatoria = await prisma.convocatoria.findUnique({
     where: {
       id: parseInt(id.toString())
     },
@@ -728,6 +728,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 
   const evaluaciones = JSON.parse(JSON.stringify(await prisma.evaluacion.findMany()))
+  const convocatoria = JSON.parse(JSON.stringify(resConvocatoria))
   await prisma.$disconnect()
 
   return {

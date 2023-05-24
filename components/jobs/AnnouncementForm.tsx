@@ -4,7 +4,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { NextPage } from 'next';
-import { IGrado } from '@/interfaces';
+import { IGrado, IJob } from '@/interfaces';
 
 import { reclutApi } from '@/api';
 import { useState } from 'react';
@@ -13,17 +13,19 @@ import { ModalAlert } from '../modal/ModalAlert';
 
 import { convocatoria } from '@prisma/client';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import moment from 'moment';
 
 
 interface Props {
     grados: IGrado[]
-    job: convocatoria
+    job: IJob
 }
 
 type FormData = {
     id: number
     titulo: string;
     descripcion: string;
+    vigencia: Date | string | null;
     experiencia: number;
     vacantes: number;
     sueldoOfertado: number;
@@ -35,6 +37,9 @@ type FormData = {
 
 const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
+    if (job.vigencia) {
+        job.vigencia = moment(job.vigencia).toDate().toISOString().substring(0, 10)
+    }
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
         defaultValues: job
@@ -175,7 +180,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                 helperText={errors.vacantes?.message}
                             />
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={3}>
                             <TextField
                                 label="Sueldo ofertado"
                                 variant="outlined"
@@ -190,6 +195,24 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                 })}
                                 error={!!errors.sueldoOfertado}
                                 helperText={errors.sueldoOfertado?.message}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={3}>
+                            <label htmlFor="vigencia" >Vigencia</label>
+                            <TextField
+                                id='vigencia'
+                                variant="standard"
+                                type="date"
+                                fullWidth
+
+                                required
+
+                                {...register('vigencia', {
+                                    required: 'Este campo es requerido',
+
+                                })}
+                                error={!!errors.vigencia}
+                                helperText={errors.vigencia?.message}
                             />
                         </Grid>
 
@@ -242,7 +265,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
             </Paper>
 
 
-            <ModalAlert title={'¡ Creado Correctamente !'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
+            <ModalAlert title={'¡ Guardado Correctamente !'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
                 <Typography >La Convocatoria se guardó correctamente y esta publicada</Typography>
 
             </ModalAlert>

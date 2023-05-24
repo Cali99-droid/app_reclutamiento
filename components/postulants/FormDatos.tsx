@@ -60,7 +60,7 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
     const { handleNext } = useContext(DatosContext)
 
 
-    const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, getValues, setValue } = useForm<FormData>({
         mode: 'all',
         defaultValues: {
             idPersona: persona.id,

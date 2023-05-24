@@ -47,7 +47,7 @@ const LoginPage = (error: string) => {
                 setShowError(!resp.ok)
                 setTimeout(() => setShowError(false), 3000);
                 const destination = router.query.p?.toString() || '/';
-                router.replace(destination);
+
                 // console.log(resp.ok)
                 if (resp.ok) {
                     router.push(destination)

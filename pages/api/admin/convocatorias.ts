@@ -104,7 +104,7 @@ const updateConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
             sueldoOfertado:  parseFloat(convo.sueldoOfertado.toString()) ,
             estadoId:        1,
             gradoId:         parseInt(convo.gradoId.toString()),
-
+            vigencia:  new Date(convo.vigencia),
         },
       })
 
@@ -131,6 +131,7 @@ const createConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
                 experiencia:      parseInt(convo.experiencia.toString()),
                 vacantes:         parseInt(convo.vacantes.toString()),
                 sueldoOfertado:   parseFloat(convo.sueldoOfertado.toString()) ,
+                vigencia:  new Date(convo.vigencia),
                 estadoId:         1,
                 gradoId:           parseInt(convo.gradoId.toString()),
                 categoria_id:           parseInt(convo.categoria_id.toString()),

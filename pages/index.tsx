@@ -1,19 +1,17 @@
 import { JobsLayout } from "@/components/layouts";
 
 
-import { AppBar, Box, Button, Card, CardMedia, Grid, Grow, useScrollTrigger } from '@mui/material';
+import { Box, Button, Card, Grid, } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import Lenis from '@studio-freight/lenis'
 
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 
 import { CalendarMonth, EmojiEventsOutlined, HistoryEdu, ShieldOutlined } from "@mui/icons-material";
 import SchoolIcon from '@mui/icons-material/School';
 import Divider from '@mui/material/Divider';
-import React, { useRef } from "react";
-import { Compo } from '../components/ui/Compo';
-import NextLink from 'next/link';
-import { Link } from "react-router-dom";
+
+
+
 
 
 const images = [
@@ -34,37 +32,11 @@ const images = [
     url: '/jobs/logo.png'
   },
 ];
-interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window?: () => Window;
-  children: React.ReactElement;
-}
 
-function ElevationScroll(props: Props) {
-  const { children, window } = props;
-  // Note that you normally won't need to set the window ref as useScrollTrigger
-  // will default to window.
-  // This is only being set here because the demo is in an iframe.
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 0,
-    target: window ? window() : undefined,
-  });
-
-  return React.cloneElement(children, {
-    elevation: trigger ? 4 : 0,
-  });
-}
 
 export default function Home() {
-  const props: Props = {
-    window: undefined,
-    children: <></>
 
-  };
+
   return (
     <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatoria a trabajos en Ancash"} >
 
@@ -102,7 +74,7 @@ export default function Home() {
 
 
         </Box>
-        <Box padding={8} bgcolor={'#DEDEDE '} >
+        <Box padding={8} bgcolor={'#DEDEDE '} className='fadeIn' >
           <Box width={'70%'} sx={{ margin: 'auto' }}>
 
             <Box mb={3} >
@@ -111,21 +83,21 @@ export default function Home() {
             </Box>
             <Grid container spacing={4} alignContent={'center'}>
               <Grid item xs={12} sm={4} >
-                <Grow >
-                  <Card >
-                    <Box display={'flex'} borderRadius={5} padding={2} flexDirection={'column'} >
-                      <ShieldOutlined sx={{ fontSize: 60 }} color='info' />
-                      <Typography fontWeight={'bold'} sx={{ fontSize: 25 }} >
-                        Ingreso a planilla con beneficios de ley
-                      </Typography>
-                      <Typography variant="body2" >
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, amet distinctio architecto dolorem possimus iusto maxime nulla, quis exercitationem porro incidunt vero.
-                      </Typography>
 
-                    </Box>
-                  </Card>
+                <Card >
+                  <Box display={'flex'} borderRadius={5} padding={2} flexDirection={'column'} >
+                    <ShieldOutlined sx={{ fontSize: 60 }} color='info' />
+                    <Typography fontWeight={'bold'} sx={{ fontSize: 25 }} >
+                      Ingreso a planilla con beneficios de ley
+                    </Typography>
+                    <Typography variant="body2" >
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, amet distinctio architecto dolorem possimus iusto maxime nulla, quis exercitationem porro incidunt vero.
+                    </Typography>
 
-                </Grow>
+                  </Box>
+                </Card>
+
+
 
               </Grid>
 
@@ -218,10 +190,6 @@ export default function Home() {
         </Box>
 
       </Box>
-
-
-
-
 
     </JobsLayout >
   )

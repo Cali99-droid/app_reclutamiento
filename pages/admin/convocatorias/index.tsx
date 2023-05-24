@@ -26,11 +26,13 @@ import NextLink from 'next/link';
 import Modal from '@/components/modal/Modal';
 import axios from 'axios';
 import { Paperbase } from '@/components/dash';
+import moment from 'moment';
 
 
 
 
 const ConvocatoriasPage = () => {
+
   const { data, error } = useSWR<IJob[]>('/api/admin/convocatorias');
   const [convocatorias, setConvocatorias] = useState<IJob[]>([]);
   const matches = useMediaQuery('(min-width:600px)');
@@ -135,6 +137,7 @@ const ConvocatoriasPage = () => {
       }
 
     },
+    { field: 'vigencia', headerName: 'Vigente hasta ', width: 120 },
     { field: 'vacantes', headerName: '# Vacantes ', width: 120 },
     { field: 'postulantes', headerName: ' # Postulantes', width: 120 },
 
@@ -194,6 +197,7 @@ const ConvocatoriasPage = () => {
     vacantes: job.vacantes,
     estado: job.estado.id,
     jobId: job.id,
+    vigencia: moment(job.vigencia).toDate().toLocaleDateString(),
     postulantes: job._count.postulante_x_convocatoria,
   }))
 

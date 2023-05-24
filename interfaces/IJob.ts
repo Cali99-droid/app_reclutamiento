@@ -7,6 +7,7 @@ export interface IJob {
     experiencia   : number;
     vacantes     : number;
     sueldoOfertado : number;
+    vigencia:Date |string;
     gradoId : number;
     estadoId: number;
     estado:{
@@ -19,4 +20,5 @@ export interface IJob {
     _count:{ postulante_x_convocatoria: number }
     categoria_id:number;
     categoria:categoria;
+
 }

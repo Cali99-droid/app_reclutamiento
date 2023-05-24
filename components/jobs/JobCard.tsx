@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
-import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, Chip, CardContent, Button, CardActionArea, IconButton, ListItemAvatar, ListItemText, ListItem } from '@mui/material'
+import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, Chip, CardContent, Button, CardActionArea, IconButton, ListItemAvatar, ListItemText, ListItem, styled } from '@mui/material';
 
 
 
@@ -10,6 +10,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { ReqList } from './ReqList';
 import NextLink from 'next/link';
+import moment from 'moment';
 
 
 
@@ -18,7 +19,6 @@ interface Props {
 }
 
 export const JobCard: FC<Props> = ({ job }) => {
-
 
 
     return (
@@ -52,13 +52,18 @@ export const JobCard: FC<Props> = ({ job }) => {
                                     </Box>
 
                                 </Box>
+
                                 {/* <Typography variant="body2" color="text.secondary">
                                     {job.descripcion}
                                 </Typography> */}
                                 <ReqList job={job} />
-                                {/* <Box mt={1}>
-                            <Chip label={`${job.categoria}`} color="success" variant="outlined" />
-                        </Box> */}
+                                <Box mt={1}>
+
+                                    <span style={{ color: 'gray' }}>
+
+                                        Vigente hasta: {moment(job.vigencia).toDate().toLocaleDateString()}
+                                    </span>
+                                </Box>
                             </CardContent>
 
                         </CardActionArea>
@@ -67,6 +72,7 @@ export const JobCard: FC<Props> = ({ job }) => {
 
                 </NextLink>
                 <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+
                     <Button color='info' startIcon={<PostAddIcon />} sx={{ mt: 3, width: '100%' }} size="large" href={`/postulant/postular/${job.id}`}>
                         Postular
                     </Button>
