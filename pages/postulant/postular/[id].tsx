@@ -157,7 +157,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
 
   const { id = '' } = query
   const idConvocatoria = parseInt(id.toString())
-  const convocatoria = await prisma.convocatoria.findUnique({
+  const convocatoriares = await prisma.convocatoria.findUnique({
     where: {
       id: idConvocatoria
     },
@@ -180,7 +180,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
     postulo = true
   }
 
-
+  const convocatoria = JSON.parse(JSON.stringify(convocatoriares))
 
 
   return {

@@ -152,6 +152,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
         },
         include: {
             convocatoria: {
+
                 include: {
                     estado: true
                 }

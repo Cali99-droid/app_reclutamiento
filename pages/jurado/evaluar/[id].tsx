@@ -86,7 +86,7 @@ const EvaluarPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ query, req }) => {
     const { id = '' } = query;
-    const convocatoria = await prisma.convocatoria.findUnique({
+    const convocatoriaSer = await prisma.convocatoria.findUnique({
         where: {
             id: parseInt(id.toString())
         },
@@ -111,7 +111,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
 
 
     const { user } = session;
-    if (user.rol_id === 3 && convocatoria?.categoria_id !== 2) {
+    if (user.rol_id === 3 && convocatoriaSer?.categoria_id !== 2) {
         return {
             redirect: {
                 destination: '/',
@@ -119,7 +119,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
             }
         }
     }
-    if (user.rol_id === 4 && convocatoria?.categoria_id !== 1) {
+    if (user.rol_id === 4 && convocatoriaSer?.categoria_id !== 1) {
         return {
             redirect: {
                 destination: '/',
@@ -127,7 +127,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
             }
         }
     }
-    if (convocatoria?.estadoId !== 2) {
+    if (convocatoriaSer?.estadoId !== 2) {
         return {
             redirect: {
                 destination: '/',
@@ -138,6 +138,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
 
 
     const evaluaciones = JSON.parse(JSON.stringify(await prisma.evaluacion.findMany()))
+    const convocatoria = JSON.parse(JSON.stringify(convocatoriaSer))
     await prisma.$disconnect()
 
     return {

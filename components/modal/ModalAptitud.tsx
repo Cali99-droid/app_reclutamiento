@@ -86,17 +86,17 @@ export const ModalAptitud: FC<ModalProps> = ({ title, children, open, handleClos
     };
 
     return (
-        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" scroll='body'>
+        <Dialog maxWidth={'xs'} open={open} onClose={handleClose} aria-labelledby="form-dialog-title" scroll='body'>
             <DialogTitle id="form-dialog-title">{title}</DialogTitle>
             <DialogContent>
-                <Box sx={{ width: 500 }}>
+                <Box >
                     <Box display={'flex'} justifyContent={'end'}>
                         <Typography variant='subtitle1'>Puntaje Total: {tot}</Typography>
                     </Box>
 
                     <Grid container spacing={2} alignItems="center" >
 
-                        <Grid item xs={12}>
+                        <Grid item xs={2}>
                             <Box mb={3}>
                                 <Typography id="input-slider" gutterBottom>
                                     1. Item 1
@@ -116,7 +116,7 @@ export const ModalAptitud: FC<ModalProps> = ({ title, children, open, handleClos
                             />
                         </Grid>
 
-                        <Grid item xs={12} >
+                        <Grid item xs>
                             <Box mb={3}>
                                 <Typography id="input-slider" gutterBottom>
                                     2. Item 2
@@ -135,7 +135,7 @@ export const ModalAptitud: FC<ModalProps> = ({ title, children, open, handleClos
                                 max={10}
                             />
                         </Grid>
-                        <Grid item xs={12} >
+                        <Grid item xs={2} >
                             <Box mb={3}>
                                 <Typography id="input-slider" gutterBottom>
                                     3. item 3

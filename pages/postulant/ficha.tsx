@@ -22,6 +22,7 @@ import NaturePeopleIcon from '@mui/icons-material/NaturePeople';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DevicesIcon from '@mui/icons-material/Devices';
+import moment from 'moment';
 interface Props {
     postulante: any
     user: any
@@ -72,13 +73,17 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
 
     return (
         <JobsLayout title={"Postulante "} pageDescription={'Ficha'} >
-            <Box className="fadeIn" padding={3} mt={15}>
 
+
+            <Box borderRadius={5} className="fadeIn" padding={3} bgcolor={'#eeeeee'} maxWidth={1500} margin={'auto'} mt={15}>
+                <Box maxWidth={1500} margin={'auto'} >
+                    <Item elevation={1} >
+                        <Typography fontWeight={'bold'}>Ficha del Postulante</Typography>
+                    </Item>
+                </Box>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <Item elevation={1}>
-                            Ficha del Postulante
-                        </Item>
+
                     </Grid>
                     <Grid item xs={3}>
                         <Item elevation={1}>
@@ -123,15 +128,15 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                             <Box display={'flex'} justifyContent={'space-between'} padding={2}>
                                 <Box display={'flex'} flexDirection={'column'} gap={1}>
                                     <Typography fontWeight={'bold'}>Numero de Documento: </Typography>{postulante.numeroDocumento}
-                                    <Typography fontWeight={'bold'}>Nacimiento: </Typography>{postulante.nacimiento}
+                                    <Typography fontWeight={'bold'}>Nacimiento: </Typography>{moment(postulante.nacimiento).toDate().toLocaleDateString()}
                                     <Typography fontWeight={'bold'}>Pretención Salarial: </Typography>{postulante.sueldo}
                                     <Typography fontWeight={'bold'}>Estado Civil: </Typography>{postulante.estado_civil}
 
                                 </Box>
                                 <Box display={'flex'} flexDirection={'column'} gap={1}>
                                     <Typography fontWeight={'bold'}>Numero de Hijos: </Typography>{postulante.hijos}
-                                    <Typography fontWeight={'bold'}>Persona con discapacidad: </Typography>{postulante.discapacidad}
-                                    <Typography fontWeight={'bold'}>Exalumno: </Typography>{postulante.exalumno}
+                                    <Typography fontWeight={'bold'}>Persona con discapacidad: </Typography>{postulante.discapacidad === 0 ? 'No' : 'Si'}
+                                    <Typography fontWeight={'bold'}>Exalumno: </Typography>{postulante.exalumno === 0 ? 'No' : 'Si'}
                                 </Box>
                                 <Box display={'flex'} flexDirection={'column'} gap={2}>
                                     <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary">
