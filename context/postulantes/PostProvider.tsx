@@ -1,6 +1,6 @@
 import { FC, useEffect, useReducer, useState, useContext } from 'react';
 import { PostContext, postReducer } from './'
-import { postulants as listPost, postulants } from '../../database/seedPost';
+
 import { IPostulant } from '@/interfaces';
 import confetti from "canvas-confetti";
 import { reclutApi } from '@/api';
@@ -13,6 +13,7 @@ export interface PostState {
       postulants: IPostulant[];
       isLoaded: boolean;
       criterios: any;
+      juradosAsignados: any;
 
 }
 
@@ -20,6 +21,7 @@ const POST_INITIAL_STATE: PostState = {
       postulants: [],
       isLoaded: false,
       criterios: [],
+      juradosAsignados: []
 
 }
 
@@ -31,6 +33,53 @@ export const PostProvider: FC<Props> = ({ children }) => {
 
       const [state, dispatch] = useReducer(postReducer, POST_INITIAL_STATE)
       const criterios = new Map()
+      const router = useRouter();
+      const { id } = router.query
+
+      const addNewJurado = async (jurado: string) => {
+
+            const { data } = await reclutApi.post('/admin/asignar/jurado', { id, jurado });
+
+            if (!data.message) {
+                  dispatch({ type: '[jurados] Add-Jurado', payload: data.juradoNew })
+                  return;
+            }
+
+            return data.message
+
+
+      }
+      const deleteJurado = async (idJurado: number) => {
+            try {
+                  reclutApi({
+                        url: `/admin/asignar/${id}`,
+                        method: 'DELETE',
+                        data: idJurado
+                  }).then(() => {
+                        dispatch({ type: '[jurado] jurado-DELETE', payload: idJurado })
+                        // refreshJurados()
+                  });
+
+
+
+
+            } catch (error) {
+                  console.log(error)
+            }
+
+      }
+
+      const refreshJurados = async () => {
+            const { data } = await reclutApi.get<any>(`/admin/asignar/${id}`)
+            dispatch({ type: '[jurados] REFRESH-Data', payload: data })
+
+      }
+      useEffect(() => {
+
+
+
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [])
 
 
       const calcularTotal = () => {
@@ -54,8 +103,7 @@ export const PostProvider: FC<Props> = ({ children }) => {
 
 
       //-----EValuaciones
-      const router = useRouter();
-      const { id } = router.query
+
       const [idEv, setIdEv] = useState<string | number>('');
       const [idPos, setIdPos] = useState<string | number>('');
       const [openClase, setOpenClase] = useState(false)
@@ -145,6 +193,10 @@ export const PostProvider: FC<Props> = ({ children }) => {
       };
 
 
+
+
+
+
       return (
             <PostContext.Provider value={{
                   ...state,
@@ -162,8 +214,11 @@ export const PostProvider: FC<Props> = ({ children }) => {
                   openAptitud,
                   handleOpenAptitud,
                   handleCloseAptitud,
-                  handleConfirmAptitud
+                  handleConfirmAptitud,
 
+                  refreshJurados,
+                  addNewJurado,
+                  deleteJurado
             }}>
                   {children}
 

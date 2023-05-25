@@ -7,6 +7,7 @@ interface ContextProps {
       calcularTotal: () => number
       limpiarCriterios: () => void
       idUser: any
+      juradosAsignados: any[]
 
       //Modales
       openClase: boolean
@@ -19,5 +20,9 @@ interface ContextProps {
       handleOpenAptitud: (id: number) => void
       handleConfirmAptitud: () => Promise<void>
       handleCloseAptitud: () => void
+
+      addNewJurado: (jurado: string) => Promise<void>
+      deleteJurado: (idJurado: number) => Promise<void>
+      refreshJurados: () => Promise<void>
 }
 export const PostContext = createContext({} as ContextProps);

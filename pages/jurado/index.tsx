@@ -12,6 +12,7 @@ import { DataGrid, GridColDef, GridValueGetterParams, esES } from '@mui/x-data-g
 import { Paperbase } from '../../components/dash/Paperbase';
 import { useRouter } from "next/router";
 import { useContext } from 'react';
+import { parse } from "path";
 
 
 interface Props {
@@ -24,7 +25,7 @@ interface Props {
 
 const JuradoPage: NextPage<Props> = ({ convocatorias }) => {
 
-
+    console.log(convocatorias)
     const { push } = useRouter();
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
@@ -69,10 +70,11 @@ const JuradoPage: NextPage<Props> = ({ convocatorias }) => {
     ];
 
 
-    const rows = convocatorias.map((convocatoria) => ({
-        id: convocatoria.id,
-        convocatoria: convocatoria.titulo,
-        estado: convocatoria.estado.nombre,
+    const rows = convocatorias.map((c) => ({
+        id: c.convocatoria.id,
+        convocatoria: c.convocatoria.titulo,
+        estado: c.convocatoria.estado.nombre,
+
 
     }))
 
@@ -144,19 +146,21 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     }
 
     // const convocatorias = await apiCon('/admin/convocatorias')
-    const convocatorias = await prisma.convocatoria.findMany({
+    const convocatoriasSer = await prisma.convocatoria_x_jurado.findMany({
         where: {
-            estadoId: 2,
-            AND: {
-                categoria_id: category
-            }
+            user_id: parseInt(user.id)
         },
         include: {
-            estado: true,
+            convocatoria: {
+                include: {
+                    estado: true
+                }
+            },
         }
 
     });
 
+    const convocatorias = JSON.parse(JSON.stringify(convocatoriasSer))
     await prisma.$disconnect()
 
     return {

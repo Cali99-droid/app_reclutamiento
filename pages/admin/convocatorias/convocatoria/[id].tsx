@@ -1,13 +1,12 @@
 import NextLink from 'next/link';
-import { AdminLayout } from "@/components/layouts";
 import { prisma } from '@/server/db/client';
 import { PostContext } from '@/context';
 
 
 import { GetServerSideProps, NextPage } from "next";
-import { DataGrid, GridCellParams, GridColDef, esES } from "@mui/x-data-grid";
-import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Toolbar, AppBar, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import { evaluacion, evaluacion_x_postulante, postulante } from '@prisma/client';
+import { DataGrid, GridCellParams, GridCloseIcon, GridColDef, esES } from "@mui/x-data-grid";
+import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider } from '@mui/material';
+import { evaluacion_x_postulante, postulante } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -16,7 +15,7 @@ import { cyan, yellow } from '@mui/material/colors';
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import { IJob } from '@/interfaces';
+import { IJob, IUser } from '@/interfaces';
 import { reclutApi } from '@/api';
 import { ModalAptitud, ModalEntrevista } from '@/components/modal';
 import RatingFrom from '@/components/modal/RatingForm';
@@ -35,22 +34,24 @@ import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 import { Paperbase } from '@/components/dash';
 import { useSession } from 'next-auth/react';
 import Modal from '../../../../components/modal/Modal';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Props {
   postulantes: postulante[]
   convocatoria: IJob
-  evaluaciones: evaluacion[]
 
+  jurados: IUser[];
+  // juradosAsignados: any[]
 }
 
-const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
+const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
   const router = useRouter();
   const { id } = router.query
   const { data, error } = useSWR<any[]>(`/api/admin/postulantes/${id}`);
 
   const [postulantes, setPostulantes] = useState<any[]>([]);
 
-  const { calcularTotal, limpiarCriterios } = useContext(PostContext);
+  const { calcularTotal, limpiarCriterios, juradosAsignados, addNewJurado, deleteJurado, refreshJurados } = useContext(PostContext);
 
   const [seleccionados, setSeleccionados] = useState<any[]>([])
   const [descartados, setDescartados] = useState<any[]>([])
@@ -65,11 +66,15 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
 
 
   }
+
+
   useEffect(() => {
+
+
     if (data) {
       // const newPost = data?.sort((x, y) => x.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje) - y.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)).reverse()
 
-
+      refreshJurados()
       const seleccionados = data.filter(d => d.estado_postulante_id === 6)
       const descartados = data.filter(d => d.estado_postulante_id === 4)
       if (filtrando) {
@@ -84,6 +89,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
       setDescartados(descartados);
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, filtrando])
 
 
@@ -470,6 +476,29 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
     borderRadius: 10
 
   }));
+  const [juradoModal, setJuradoModal] = useState(false)
+  const [jurado, setJurado] = useState('')
+  const onJuradoChange = (event: SelectChangeEvent<string>) => {
+    setJurado(event.target.value);
+
+  }
+
+  const asignarJurado = async () => {
+    if (jurado) {
+      const mensaje = await addNewJurado(jurado)
+
+    } else {
+      toast.error('Seleccione una opción')
+      return
+    }
+
+    setJuradoModal(false)
+
+
+  }
+
+
+
 
   return (
     <Paperbase title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
@@ -485,7 +514,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
           </Breadcrumbs>
         </Box>
 
-        <Box >
+        <Box display={'flex'} gap={3}>
+
           <Grid container spacing={2}>
             <Grid item xs={4}>
               <Item elevation={4}>
@@ -572,6 +602,33 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
             </Grid>
 
           </Grid>
+          <Box>
+            <Item elevation={4}>
+              <Button onClick={() => setJuradoModal(true)}>Asignar jurados</Button>
+              <List dense>
+                {
+                  juradosAsignados.map((j) =>
+                  (
+                    <>
+                      <ListItem key={j.id}>
+                        <ListItemText
+                          primary={`${j.user.email}`}
+
+                        />
+
+                        <IconButton size="small" aria-label="delete" onClick={() => deleteJurado(j.id)}>
+                          <GridCloseIcon fontSize="inherit" />
+                        </IconButton>
+                      </ListItem>
+                      <Divider component="li" />
+                    </>
+
+                  )
+                  )
+                }
+              </List></Item>
+
+          </Box>
         </Box>
         <Box mt={4}
         >
@@ -700,6 +757,35 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, evaluaciones }) => {
       </ModalEntrevista>
       <ModalClase title={'Evaluar Clase Modelo'} open={openClase} handleClose={handleCloseClase} handleConfirm={handleConfirmClase} />
       <ModalAptitud title={'Evaluar aptitudes'} open={openAptitud} handleClose={handleCloseAptitud} handleConfirm={handleConfirmAptitud} />
+
+
+      <Modal title={'Asignar jurados'} open={juradoModal} handleClose={() => setJuradoModal(false)} handleConfirm={() => asignarJurado()}>
+        <Box width={400}>
+          <FormControl fullWidth >
+            <InputLabel id="gradoId">Seleccione</InputLabel>
+            <Select
+              labelId="gradoId"
+              id="gradoId"
+              label="Requisito"
+              onChange={onJuradoChange}
+              value={jurado}
+
+            >
+
+              <MenuItem value={0} disabled></MenuItem>
+              {
+                jurados.map(jurado => (
+                  <MenuItem key={jurado.id} value={jurado.id}>{jurado.email.toLocaleUpperCase()}</MenuItem>
+                ))
+              }
+
+
+            </Select>
+
+          </FormControl>
+        </Box>
+
+      </Modal>
     </Paperbase>
   )
 }
@@ -726,13 +812,31 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     },
   })
 
+  const juradosSer = await prisma.user.findMany({
+    where: {
+      rol_id: 3
+    }
+  })
 
-  const evaluaciones = JSON.parse(JSON.stringify(await prisma.evaluacion.findMany()))
-  const convocatoria = JSON.parse(JSON.stringify(resConvocatoria))
+  // const juradosAser = await prisma.convocatoria_x_jurado.findMany({
+  //   where: {
+  //     convocatoria_id: parseInt(id.toString())
+  //   },
+  //   include:
+  //   {
+  //     user: true
+  //   }
+  // })
+
   await prisma.$disconnect()
 
+  const convocatoria = JSON.parse(JSON.stringify(resConvocatoria))
+  const jurados = JSON.parse(JSON.stringify(juradosSer))
+  // const juradosAsignados = JSON.parse(JSON.stringify(juradosAser))
+
+
   return {
-    props: { convocatoria, evaluaciones }
+    props: { convocatoria, jurados }
   }
 }
 
