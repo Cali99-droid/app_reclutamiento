@@ -1,4 +1,4 @@
-import { postulants } from '@/database/seedPost';
+
 import { IPostulant } from './IPostulant';
 import { IUser } from './IUser';
 import { postulante } from '@prisma/client';
