@@ -31,7 +31,7 @@ const FormStepper = ({ onSubmit }: FormStepperProps) => {
                     </Step>
                 ))}
             </Stepper >
-            {steps[activeStep].content}
+
 
             < Box display={'flex'} justifyContent={'space-between'} gap={1} padding={4} mt={2}>
 
@@ -63,6 +63,7 @@ const FormStepper = ({ onSubmit }: FormStepperProps) => {
                     // )
                 }
             </Box >
+            {steps[activeStep].content}
         </>
     );
 };

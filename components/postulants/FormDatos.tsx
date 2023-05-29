@@ -488,7 +488,7 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                             <FormHelperText>*Solo si postula para docente</FormHelperText>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={8}>
+                    <Grid item xs={12} md={4}>
                         <Box>
                             <FormLabel >Foto</FormLabel>
                             <Button
@@ -511,26 +511,20 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                             />
                         </Box>
                     </Grid>
+
                     <Grid item xs={12} md={4}>
 
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', }}>
-                            <Box width={'50%'} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 5 }}>
-
-                                <Button disabled={isSaving} type='submit' size="large" sx={{ marginTop: 2, textAlign: 'end' }} endIcon={<EastIcon />} >Continuar</Button>
-                            </Box>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} md={3}>
 
                         {
                             getValues('image') && (
-                                <Box >
+                                <Box width={150} margin={'auto'}>
                                     <Card>
                                         <CardMedia
                                             component='img'
                                             className='fadeIn'
                                             image={getValues('image')}
                                             alt={getValues('image')}
+
                                         />
                                         <CardActions>
                                             <Button
@@ -547,6 +541,15 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
                         }
 
 
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', }}>
+                            <Box width={'50%'} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 5 }}>
+
+                                <Button disabled={isSaving} type='submit' size="large" sx={{ marginTop: 2, textAlign: 'end' }} endIcon={<EastIcon />} >Continuar</Button>
+                            </Box>
+                        </Box>
                     </Grid>
 
                 </Grid>

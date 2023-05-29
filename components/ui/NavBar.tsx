@@ -1,12 +1,14 @@
 import React, { useContext, useState } from 'react';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 
-import { AppBar, Avatar, Box, Button, Divider, IconButton, Input, InputAdornment, Link, Slide, Toolbar, Tooltip, Typography, useScrollTrigger } from '@mui/material';
-import { ClearOutlined, SearchOutlined } from '@mui/icons-material';
+import { AppBar, Avatar, Box, Button, Divider, IconButton, Input, InputAdornment, Link, Menu, MenuItem, MenuProps, Slide, Toolbar, Tooltip, Typography, alpha, styled, useScrollTrigger } from '@mui/material';
+import { ClearOutlined, ConfirmationNumberOutlined, SearchOutlined } from '@mui/icons-material';
 
 import { AuthContext, UiContext } from '@/context';
-
+import EditIcon from '@mui/icons-material/Edit';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import FilePresentIcon from '@mui/icons-material/FilePresent';
 interface Props {
     /**
      * Injected by the documentation to work in an iframe.
@@ -32,7 +34,46 @@ function ElevationScroll(props: Props) {
     });
 }
 
-
+const StyledMenu = styled((props: MenuProps) => (
+    <Menu
+        elevation={0}
+        anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+        }}
+        transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+        }}
+        {...props}
+    />
+))(({ theme }) => ({
+    '& .MuiPaper-root': {
+        borderRadius: 6,
+        marginTop: theme.spacing(1),
+        minWidth: 180,
+        color:
+            theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+        boxShadow:
+            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+        '& .MuiMenu-list': {
+            padding: '4px 0',
+        },
+        '& .MuiMenuItem-root': {
+            '& .MuiSvgIcon-root': {
+                fontSize: 18,
+                color: theme.palette.text.secondary,
+                marginRight: theme.spacing(1.5),
+            },
+            '&:active': {
+                backgroundColor: alpha(
+                    theme.palette.primary.main,
+                    theme.palette.action.selectedOpacity,
+                ),
+            },
+        },
+    },
+}));
 
 
 export const NavBar = () => {
@@ -56,6 +97,14 @@ export const NavBar = () => {
 
     const { isLoggedIn, user } = useContext(AuthContext);
 
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
     return (
         <ElevationScroll {...props}>
             <AppBar >
@@ -112,7 +161,44 @@ export const NavBar = () => {
                         </NextLink>
 
                     </Box>
+                    {isLoggedIn && user?.rol.name === 'postulante' && (
+                        <div>
+                            <Button
+                                id="demo-customized-button"
+                                aria-controls={open ? 'demo-customized-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                variant="contained"
+                                disableElevation
+                                onClick={handleClick}
+                                endIcon={<KeyboardArrowDownIcon />}
+                            >
+                                Mis Datos
+                            </Button>
+                            <StyledMenu
+                                id="demo-customized-menu"
+                                MenuListProps={{
+                                    'aria-labelledby': 'demo-customized-button',
+                                }}
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                            >
+                                <MenuItem onClick={() => push('/postulant')} disableRipple>
+                                    <EditIcon />
+                                    Actualizar mi ficha
+                                </MenuItem>
+                                <MenuItem onClick={() => push('/postulant/ficha')} disableRipple>
+                                    <FilePresentIcon />
+                                    Ver mi ficha
+                                </MenuItem>
+                                <MenuItem onClick={() => push('/postulant/postulaciones')} disableRipple>
+                                    <ConfirmationNumberOutlined />
+                                    Mis postulaciones
+                                </MenuItem>
 
+                            </StyledMenu>
+                        </div>)}
 
                     <Box flex={1} />
 
