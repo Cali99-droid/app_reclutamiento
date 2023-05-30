@@ -163,13 +163,12 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     //---------------Investigaciones--------------
     const agregarInvestigacion = async (titulo: string, institucion: string, year: string, idPos: number) => {
         const { data } = await reclutApi.post<IInvestigacion>('/postulants/investigacion', { titulo, institucion, year, idPos });
-        // const nuevaInvestigacion: IInvestigacion = {
-        //     id: 12,
-        //     titulo,
-        //     year,
-        //     institucion
-        // }
         dispatch({ type: 'Add-Investigacion', payload: data });
+
+    }
+    const editarInvestigacion = async (id: number, titulo: string, institucion: string, year: string, idPos: number) => {
+        const { data } = await reclutApi.put<IInvestigacion>('/postulants/investigacion', { id, titulo, institucion, year, idPos });
+        dispatch({ type: 'Update-Investigacion', payload: data });
 
     }
     const quitarInvestigacion = async (id: number) => {
@@ -181,19 +180,13 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     //-------------------Cargos-----------------------
     const agregarCargo = async (referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => {
         const { data } = await reclutApi.post<ICargo>('/postulants/cargo', { referencia, contacto, institucion, nivel, year, cantidadCargo, remuneracion, descripcion, idPos });
-        // const nuevoCargo: ICargo = {
-        //     id: 12,
-        //     referencia,
-        //     nivel,
-        //     cantidadCargo: cantidad,
-        //     year,
-        //     institucion,
-        //     remuneracion,
-
-
-        // }
         dispatch({ type: 'Add-Cargo', payload: data });
 
+    }
+    const editarCargo = async (id: number, referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => {
+        const { data } = await reclutApi.put<ICargo>('/postulants/cargo', { id, referencia, contacto, nivel, cantidadCargo, year, institucion, remuneracion, descripcion, idPos });
+
+        dispatch({ type: 'Update-Cargo', payload: data });
     }
     const quitarCargo = async (id: number) => {
         const { data } = await reclutApi.delete<ICargo>(`/postulants/cargo/${id}`);
@@ -204,16 +197,12 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     //----------------Capacitaciones---------------------
     const agregarCapacitacion = async (titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number) => {
         const { data } = await reclutApi.post<ICapacitacion>('/postulants/capacitacion', { titulo, institucion, horas, year, descripcion, idPos });
-        // const nuevoCapacitacion: ICapacitacion = {
-        //     id: 12,
-        //     titulo,
-        //     horas,
-        //     descripcion,
-        //     year,
-        //     institucion,
-
-        // }
         dispatch({ type: 'Add-Capacitacion', payload: data });
+
+    }
+    const editarCapacitacion = async (id: number, titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number) => {
+        const { data } = await reclutApi.put<ICapacitacion>('/postulants/capacitacion', { id, titulo, institucion, horas, year, descripcion, idPos });
+        dispatch({ type: 'Update-Capacitacion', payload: data });
 
     }
     const quitarCapacitacion = async (id: number) => {
@@ -225,16 +214,12 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     //-------------------Reconocimientos---------------------
     const agregarReconocimiento = async (reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number) => {
         const { data } = await reclutApi.post<IReconocimiento>('/postulants/reconocimiento', { reconocimento, institucion, year, descripcion, idPos });
-        // const nuevoReconocimiento: IReconocimiento = {
-        //     id: 12,
-        //     reconocimento,
-
-        //     descripcion,
-        //     year,
-        //     institucion,
-
-        // }
         dispatch({ type: 'Add-Reconocimiento', payload: data });
+
+    }
+    const editarReconocimiento = async (id: number, reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number) => {
+        const { data } = await reclutApi.put<IReconocimiento>('/postulants/reconocimiento', { id, reconocimento, institucion, year, descripcion, idPos });
+        dispatch({ type: 'Update-Reconocimiento', payload: data });
 
     }
     const quitarReconocimiento = async (id: number) => {
@@ -246,15 +231,15 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     //-------------------Aficiones---------------------
     const agregarAficion = async (actividad: string, year: string, nivel: string, logro: string, idPos: number) => {
         const { data } = await reclutApi.post<IAficion>('/postulants/aficion', { actividad, nivel, year, logro, idPos });
-        // const nuevaAficion: IAficion = {
-        //     id: 12,
-        //     actividad,
-        //     nivel,
-        //     year,
-        //     logro,
 
-        // }
         dispatch({ type: 'Add-Aficion', payload: data });
+
+    }
+
+    const editarAficion = async (id: number, actividad: string, year: string, nivel: string, logro: string, idPos: number) => {
+        const { data } = await reclutApi.put<IAficion>('/postulants/aficion', { id, actividad, nivel, year, logro, idPos });
+
+        dispatch({ type: 'Update-Aficion', payload: data });
 
     }
     const quitarAficion = async (id: number) => {
@@ -268,13 +253,16 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     const agregarTic = async (tecnologia: string, nivel: string, idPos: number) => {
 
         const { data } = await reclutApi.post<ITics>('/postulants/tic', { tecnologia, nivel, idPos });
-        // const nuevaTic: ITics = {
-        //     id: 12,
-        //     tecnologia,
-        //     nivel,
 
-        // }
         dispatch({ type: 'Add-Tic', payload: data });
+
+    }
+
+    const editarTic = async (id: number, tecnologia: string, nivel: string, idPos: number) => {
+
+        const { data } = await reclutApi.put<ITics>('/postulants/tic', { id, tecnologia, nivel, idPos });
+
+        dispatch({ type: 'Update-Tic', payload: data });
 
     }
     const quitarTic = async (id: number) => {
@@ -320,26 +308,32 @@ export const DatosProvider: FC<Props> = ({ children }) => {
 
             setInvestigaciones,
             agregarInvestigacion,
+            editarInvestigacion,
             quitarInvestigacion,
 
             setCargos,
             agregarCargo,
+            editarCargo,
             quitarCargo,
 
             setCapacitacion,
             agregarCapacitacion,
+            editarCapacitacion,
             quitarCapacitacion,
 
             setReconocimiento,
             agregarReconocimiento,
+            editarReconocimiento,
             quitarReconocimiento,
 
             setAficion,
             agregarAficion,
+            editarAficion,
             quitarAficion,
 
             setTic,
             agregarTic,
+            editarTic,
             quitarTic,
 
             subirDoc

@@ -12,6 +12,8 @@ import { reclutApi } from '@/api';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import PdfViewer from '../ui/PdfViewer';
 import { CloudinaryContext, Image, Transformation } from 'cloudinary-react';
+import { tics } from '@prisma/client';
+import { Edit } from '@mui/icons-material';
 
 
 
@@ -22,14 +24,14 @@ const Step5 = () => {
     // ** console.log(data?.user.persona.postulante[0].id);
     const IdPos = data?.user.persona.postulante[0].id;
 
-    const { doc, docu, aficiones, tecnologias, agregarAficion, quitarAficion, agregarTic, quitarTic, setTic, subirDoc } = useContext(DatosContext);
+    const { doc, docu, aficiones, tecnologias, agregarAficion, editarAficion, quitarAficion, agregarTic, editarTic, quitarTic, setTic, subirDoc } = useContext(DatosContext);
     useEffect(() => {
         setTic()
         doc();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const [error, setError] = useState(false)
-    console.log(docu)
+
     //--------------Modal Aficiones------------------
 
     const [open, setOpen] = useState(false)
@@ -39,6 +41,11 @@ const Step5 = () => {
     const handleClose = () => {
         setOpen(false);
         setError(false)
+        setIdAct(null);
+        setActividad('');
+        setNivel('');
+        setLogro('');
+        setYear('');
     }
     const handleConfirm = () => {
 
@@ -47,11 +54,18 @@ const Step5 = () => {
             setError(true)
             return
         };
-        agregarAficion(actividad, year, nivel, logro, IdPos)
-        setActividad('')
-
-        setNivel('')
-        setLogro('')
+        if (year.toString().length !== 4) {
+            toast.warning('Ingrese un año válido')
+            setError(true)
+            return
+        }
+        if (idAct) {
+            editarAficion(idAct, actividad, year, nivel, logro, IdPos)
+            toast.success('Actualizado con éxito')
+        } else {
+            agregarAficion(actividad, year, nivel, logro, IdPos)
+            toast.success('Agregado con éxito')
+        }
 
         handleClose()
     }
@@ -60,6 +74,7 @@ const Step5 = () => {
     }
 
     //--------------------Aficiones---------------------
+    const [idAct, setIdAct] = useState<null | number>()
     const [actividad, setActividad] = useState('')
     const [nivel, setNivel] = useState('')
     const [logro, setLogro] = useState('')
@@ -95,6 +110,15 @@ const Step5 = () => {
         setYear(event.target.value);
 
     }
+    function handleEditActividad(id: number, actividad: string, nivel: string, logro: string, year: string): void {
+        handleOpen()
+        setIdAct(id);
+        setActividad(actividad);
+        setNivel(nivel);
+        setLogro(logro);
+        setYear(year);
+    }
+
 
     //--------------Modal TICS------------------
 
@@ -105,6 +129,9 @@ const Step5 = () => {
     const handleCloseTics = () => {
         setOpenTics(false);
         setError(false)
+        setIdTic(null)
+        setTecnologia('')
+        setNivel('')
     }
     const handleConfirmTics = () => {
 
@@ -113,12 +140,25 @@ const Step5 = () => {
             setError(true)
             return
         };
-        agregarTic(tecnologia, nivel, IdPos)
+        if (idTic) {
+            editarTic(idTic, tecnologia, nivel, IdPos)
+            toast.success('Actualizado con éxito')
+        } else {
+
+            agregarTic(tecnologia, nivel, IdPos)
+            toast.success('Agregado con éxito')
+        }
         setTecnologia('')
         setNivel('')
 
 
         handleCloseTics()
+    }
+    function handleEditTic(id: number, tics: string, nivel: string) {
+        handleOpenTics();
+        setIdTic(id)
+        setTecnologia(tics)
+        setNivel(nivel)
     }
     const handleDeleteTics = (id: number) => {
         quitarTic(id)
@@ -127,6 +167,7 @@ const Step5 = () => {
 
     //-----------------TICS-.----------------
     const [tecnologia, setTecnologia] = useState('')
+    const [idTic, setIdTic] = useState<null | number>()
     const onTecnologiaChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.length <= 0) {
             setError(true)
@@ -184,7 +225,7 @@ const Step5 = () => {
             const { data } = await reclutApi.post<{ message: string }>('/postulants/docUpload', formData);
             // setDoc(data.message);
             subirDoc(data.message, IdPos);
-            console.log(data)
+
 
 
 
@@ -197,6 +238,7 @@ const Step5 = () => {
         setFile(null);
         setPreviewUrl(null);
     };
+
 
 
     return (
@@ -232,6 +274,9 @@ const Step5 = () => {
                                     <TableCell align="right">{e.nivel}</TableCell>
 
                                     <TableCell align="right">
+                                        <IconButton onClick={() => handleEditTic(e.id, e.tecnologia, e.nivel)} >
+                                            <Edit />
+                                        </IconButton>
                                         <IconButton onClick={() => handleDeleteTics(e.id)} color='error'>
                                             <DeleteForeverIcon />
                                         </IconButton>
@@ -337,6 +382,9 @@ const Step5 = () => {
                                     <TableCell align="right">{e.year}</TableCell>
 
                                     <TableCell align="right">
+                                        <IconButton onClick={() => handleEditActividad(e.id, e.actividad, e.nivel, e.logro, e.year)} >
+                                            <Edit />
+                                        </IconButton>
                                         <IconButton onClick={() => handleDelete(e.id)} color='error'>
                                             <DeleteForeverIcon />
                                         </IconButton>
@@ -416,7 +464,7 @@ const Step5 = () => {
                             label="Año"
                             variant="outlined"
                             value={year}
-                            error={error && year.length <= 0}
+                            error={error && year.length <= 0 || year.length > 4}
                             required
                             onChange={onYearChange}
                             helperText='*año en el que culminó el curso'
@@ -456,15 +504,7 @@ const Step5 = () => {
                 {previewUrl && (
                     <Box display={'flex'} alignItems={'center'} justifyContent={'space-evenly'}>
                         <div>
-                            <CloudinaryContext cloudName="test-ae">
-                                <a href={docu} download>
-                                    <Image publicId={docu} secure="true" width="600" height="800" alt='pfd' >
-                                        <Transformation flags="attachment:pretty_flower" fetchFormat="auto" />
-                                    </Image>
 
-                                </a>
-
-                            </CloudinaryContext>
 
                             <a href={docu}>Documento</a>
                             <object data={previewUrl} type="application/pdf" width="50%" height="200px">
@@ -480,7 +520,7 @@ const Step5 = () => {
 
                 <Divider />
             </Box>
-            <PdfViewer />
+
 
         </Box >
     );

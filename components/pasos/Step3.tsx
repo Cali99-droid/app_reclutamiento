@@ -1,4 +1,4 @@
-import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, FormHelperText } from '@mui/material';
+import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import React, { useEffect } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useContext, ChangeEvent } from 'react';
@@ -6,10 +6,11 @@ import { DatosContext } from '@/context';
 import { useState } from 'react';
 import Modal from '../modal/Modal';
 import { useSession } from 'next-auth/react';
-import { investigacion } from '@prisma/client';
+
 import AddIcon from '@mui/icons-material/Add';
 import { toast } from 'react-toastify';
 import { validations } from '@/helpers';
+import { Edit } from '@mui/icons-material';
 
 const inputProps = {
     max: '50',
@@ -20,7 +21,7 @@ const Step3 = () => {
     const { data }: any = useSession();
     // ** console.log(data?.user.persona.postulante[0].id);
     const IdPos = data?.user.persona.postulante[0].id;
-    const { investigaciones, setInvestigaciones, cargos, agregarInvestigacion, quitarInvestigacion, agregarCargo, quitarCargo } = useContext(DatosContext);
+    const { investigaciones, setInvestigaciones, cargos, agregarInvestigacion, editarInvestigacion, quitarInvestigacion, agregarCargo, editarCargo, quitarCargo } = useContext(DatosContext);
     useEffect(() => {
 
 
@@ -29,6 +30,8 @@ const Step3 = () => {
     }, [])
     const [error, setError] = useState(false)
     //------------------Modal Investigaciones------------------------------
+
+    const [idInvestigacion, setIdInvestigacion] = useState<number | null>()
     const [openInves, setOpenInves] = useState(false)
     const handleOpenInves = () => {
         setOpenInves(true);
@@ -36,6 +39,9 @@ const Step3 = () => {
     const handleCloseInves = () => {
         setOpenInves(false);
         setError(false)
+        setInstitucion('')
+        setTitulo('')
+        setYear('')
     }
     const handleConfirmInves = () => {
 
@@ -43,7 +49,20 @@ const Step3 = () => {
             toast.warning('Complete todos los campos obligatorios')
             return
         };
-        agregarInvestigacion(titulo, institucion, year, IdPos)
+        if (year.toString().length !== 4) {
+            toast.warning('Ingrese un año válido')
+            setError(true)
+            return
+        }
+
+        if (idInvestigacion) {
+            editarInvestigacion(idInvestigacion, titulo, institucion, year, IdPos)
+            toast.success('Actualizado con éxito')
+        } else {
+            agregarInvestigacion(titulo, institucion, year, IdPos)
+            toast.success('Agregado con éxito')
+        }
+
         setInstitucion('')
         setTitulo('')
 
@@ -80,7 +99,18 @@ const Step3 = () => {
         setYear(event.target.value);
 
     }
+    function handleEditInvestigacion(id: number, titulo: string, institucion: string, year: string): void {
+        handleOpenInves()
+        setIdInvestigacion(id)
+        setInstitucion(institucion)
+        setTitulo(titulo)
+        setYear(year)
+    }
     //.......................Modal Cargos  .............
+
+    const [idCargo, setIdCargo] = useState<number | null>()
+
+
     const [openCargo, setOpenCargo] = useState(false)
     const handleOpenCargo = () => {
         setOpenCargo(true);
@@ -88,6 +118,15 @@ const Step3 = () => {
     const handleCloseCargo = () => {
         setOpenCargo(false);
         setError(false)
+        setIdCargo(null)
+        setReferencia('')
+        setNivel('')
+        setCantidad('')
+        setRemuneracion('')
+        setInstitucion('')
+        setDescripcion('')
+        setContacto('')
+        setYear('')
     }
     const handleConfirmCargo = () => {
 
@@ -97,7 +136,19 @@ const Step3 = () => {
             setError(true)
             return
         };
-        agregarCargo(referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos)
+        if (year.toString().length !== 4) {
+            toast.warning('Ingrese un año válido')
+            setError(true)
+            return
+        }
+        if (idCargo) {
+            editarCargo(idCargo, referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos)
+            toast.success('Actualizado con éxito')
+        } else {
+            agregarCargo(referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos)
+            toast.success('Agregado con éxito')
+        }
+
         setReferencia('')
         setNivel('')
         setCantidad('')
@@ -110,7 +161,10 @@ const Step3 = () => {
     const handleDeleteCargo = (id: number) => {
         quitarCargo(id)
     }
+
     //..............Cargos...........................
+
+
     const [referencia, setReferencia] = useState('')
     const [nivel, setNivel] = useState('')
     const [cantidad, setCantidad] = useState('')
@@ -194,6 +248,22 @@ const Step3 = () => {
             fontSize: 14,
         },
     }));
+    function handleEdit(id: number, descripcion: string, institucion: string, referencia: string, contacto: string, nivel: string, cantidadCargo: string, remuneracion: string, year: string): void {
+        setOpenCargo(true)
+        setIdCargo(id),
+            setDescripcion(descripcion);
+        setInstitucion(institucion);
+        setReferencia(referencia);
+        setContacto(contacto);
+        setRemuneracion(remuneracion);
+        setYear(year)
+        setNivel(nivel);
+        setCantidad(cantidadCargo)
+
+    }
+
+
+
     return (
         <Box padding={4} mt={3} className="fadeIn" >
 
@@ -237,9 +307,12 @@ const Step3 = () => {
                                     <TableCell align="right">{`${e.referencia}(${e.contacto})`}</TableCell>
                                     {/* <TableCell align="right">{e.nivel}</TableCell> */}
                                     {/* <TableCell align="right">{e.cantidadCargo}</TableCell> */}
-                                    <TableCell align="right">{e.remuneracion}</TableCell>
+                                    <TableCell align="right">S/ {parseFloat(e.remuneracion)}</TableCell>
 
                                     <TableCell align="right">
+                                        <IconButton onClick={() => handleEdit(e.id, e.descripcion, e.institucion, e.referencia, e.contacto, e.nivel, e.cantidadCargo, e.remuneracion, e.year)} >
+                                            <Edit />
+                                        </IconButton>
                                         <IconButton onClick={() => handleDeleteCargo(e.id)} color='error'>
                                             <DeleteForeverIcon />
                                         </IconButton>
@@ -292,6 +365,9 @@ const Step3 = () => {
 
                                     <TableCell align="right">{e.year}</TableCell>
                                     <TableCell align="right">
+                                        <IconButton onClick={() => handleEditInvestigacion(e.id, e.titulo, e.institucion, e.year)} >
+                                            <Edit />
+                                        </IconButton>
                                         <IconButton onClick={() => handleDelete(e.id)} color='error'>
                                             <DeleteForeverIcon />
                                         </IconButton>
@@ -360,10 +436,13 @@ const Step3 = () => {
                         label="Año"
                         variant="outlined"
                         value={year}
-                        error={error && year.length <= 0}
+                        error={error && year.length <= 0 || year.length > 4}
                         onChange={onYearChange}
                         helperText='*año en el que se realizó la investigación'
-
+                        inputProps={{
+                            max: 3000,
+                            min: 1950
+                        }}
                     />
 
 
@@ -387,8 +466,8 @@ const Step3 = () => {
                     autoComplete="off"
                 >
                     <TextField
-                        autoFocus
-                        multiline
+
+
                         id="descripcion"
                         label="Descripción del cargo"
                         placeholder='Dirección, subdirección, coordinaciones,etc.
@@ -402,7 +481,7 @@ const Step3 = () => {
                     />
                     <TextField
                         autoFocus
-                        multiline
+
                         id="institucion"
                         label="Institución"
                         placeholder='Nombre de la institución donde laboró'
@@ -484,7 +563,10 @@ const Step3 = () => {
                         error={error && remuneracion.length <= 0}
                         required
                         onChange={onRemuneracionChange}
-
+                        inputProps={{
+                            max: 20000,
+                            min: 100
+                        }}
                     />
 
                     <TextField
@@ -493,10 +575,14 @@ const Step3 = () => {
                         label="Año"
                         variant="outlined"
                         value={year}
-                        error={error && year.length <= 0}
+                        error={error && year.length <= 0 || year.length > 4}
 
                         onChange={onYearChange}
                         helperText='*año en el que laboró'
+                        inputProps={{
+                            max: 3000,
+                            min: 1950
+                        }}
                     />
 
 

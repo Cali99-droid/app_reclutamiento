@@ -22,6 +22,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
             return getInv( req, res );
           case 'POST':
             return postInv(req, res)
+          case 'PUT':
+          return updateInv(req, res)
           default:
               return res.status(400).json({ message: 'Bad request' });
       }
@@ -80,5 +82,30 @@ async function  postInv(req: NextApiRequest, res: NextApiResponse<any>) {
   }
  
 
+}
+
+async function updateInv(req: NextApiRequest, res: NextApiResponse<any>) {
+  const{id,titulo='', institucion='',year,idPos}=req.body
+
+
+  try {
+     const inv = await prisma.investigacion.update({
+      where:{
+        id
+      },
+        data:{
+          titulo,
+          institucion,
+          year:parseInt(year),
+          postulante_id:idPos
+        }
+      })  
+    return res.status(200).json(inv)
+  } catch (error) {
+    await prisma.$disconnect();
+    console.log(error);
+    return res.status(500).json({message:'algo salio mal'})
+    
+  }
 }
 

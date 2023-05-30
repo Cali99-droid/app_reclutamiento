@@ -22,6 +22,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
             return getReconocimiento( req, res );
           case 'POST':
             return postReconocimiento(req, res)
+          case 'PUT':
+            return updateReconocimiento(req, res)
           default:
               return res.status(400).json({ message: 'Bad request' });
       } 
@@ -82,4 +84,33 @@ async function  postReconocimiento(req: NextApiRequest, res: NextApiResponse<any
  
 
 }
+
+async function  updateReconocimiento(req: NextApiRequest, res: NextApiResponse<any>) {
+  const{id, reconocimento, institucion, year, descripcion, idPos}=req.body
+
+
+  try {
+     const cargo = await prisma.reconocimiento.update({
+      where:{
+        id
+      }, 
+        data:{
+            reconocimento, 
+            institucion, 
+            descripcion, 
+            year:parseInt(year),
+          postulante_id:idPos
+        }
+      })  
+    return res.status(200).json(cargo)
+  } catch (error) {
+    await prisma.$disconnect();
+    console.log(error);
+    return res.status(500).json({message:'algo salio mal'})
+    
+  }
+ 
+
+}
+
 

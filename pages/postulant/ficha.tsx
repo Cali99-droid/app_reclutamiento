@@ -1,12 +1,12 @@
 import { prisma } from '@/server/db/client';
 
 
-import { AdminLayout, JobsLayout } from "@/components/layouts";
+import { JobsLayout } from "@/components/layouts";
 
-import { IAficion, ICapacitacion, ICargo, IEstudio, IGrado, IInvestigacion, IPostulant, IReconocimiento, ITics } from "@/interfaces";
-import { Box, Button, Typography, Grid, styled, Paper, Card, CardMedia, CardContent, CardActions, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses } from '@mui/material';
+import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics } from "@/interfaces";
+import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses } from '@mui/material';
 
-import { GetServerSideProps, GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { getSession } from 'next-auth/react';
 import Image from 'next/image';
 import { calcularEdad } from '@/helpers/functions';
@@ -129,7 +129,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                 <Box display={'flex'} flexDirection={'column'} gap={1}>
                                     <Typography fontWeight={'bold'}>Numero de Documento: </Typography>{postulante.numeroDocumento}
                                     <Typography fontWeight={'bold'}>Nacimiento: </Typography>{moment(postulante.nacimiento).toDate().toLocaleDateString()}
-                                    <Typography fontWeight={'bold'}>Pretención Salarial: </Typography>{postulante.sueldo}
+                                    <Typography fontWeight={'bold'}>Pretención Salarial: </Typography>S/ {postulante.sueldo}
                                     <Typography fontWeight={'bold'}>Estado Civil: </Typography>{postulante.estado_civil}
 
                                 </Box>

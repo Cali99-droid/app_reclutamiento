@@ -35,31 +35,37 @@ interface ContextProps {
 
     setInvestigaciones: () => Promise<void>
     agregarInvestigacion: (nombre: string, institucion: string, year: string, idPos: number) => void
+    editarInvestigacion: (id: number, titulo: string, institucion: string, year: string, idPos: number) => Promise<void>
     quitarInvestigacion: (id: number) => void
 
 
     setCargos: () => Promise<void>
-    agregarCargo: (referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => void
+    agregarCargo: (referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => void,
+    editarCargo: (id: number, referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => Promise<void>
     quitarCargo: (id: number) => void
 
 
     setCapacitacion: () => Promise<void>
-    agregarCapacitacion: (titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number) => void
+    agregarCapacitacion: (titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number) => void,
+    editarCapacitacion: (id: number, titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number) => Promise<void>
     quitarCapacitacion: (id: number) => void
 
 
     setReconocimiento: () => Promise<void>
     agregarReconocimiento: (reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number) => void
+    editarReconocimiento: (id: number, reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number) => Promise<void>
     quitarReconocimiento: (id: number) => void
 
 
     setAficion: () => Promise<void>
     agregarAficion: (actividad: string, year: string, nivel: string, logro: string, idPos: number) => void
+    editarAficion: (id: number, actividad: string, year: string, nivel: string, logro: string, idPos: number) => Promise<void>
     quitarAficion: (id: number) => void,
 
 
     setTic: () => Promise<void>
     agregarTic: (tecnologia: string, nivel: string, idPos: number) => void
+    editarTic: (id: number, tecnologia: string, nivel: string, idPos: number) => Promise<void>
     quitarTic: (id: number) => void
 
     subirDoc: (doc: string, id: number) => Promise<void>

@@ -21,7 +21,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
           case 'GET':
             return getCargos( req, res );
           case 'POST':
-            return postCargo(req, res)
+            return postCargo(req, res);
+          case 'PUT':
+            return updateCargo(req, res)
           default:
               return res.status(400).json({ message: 'Bad request' });
       }
@@ -87,5 +89,37 @@ async function  postCargo(req: NextApiRequest, res: NextApiResponse<any>) {
   }
  
 
+}
+
+async function updateCargo(req: NextApiRequest, res: NextApiResponse<any>) {
+  const{id,referencia='',  contacto='',institucion='',remuneracion,nivel='',cantidadCargo=0,descripcion,year,idPos}=req.body
+
+
+
+  try {
+     const cargo = await prisma.cargo.update({
+      where:{
+        id
+      },
+        data:{
+    
+          referencia,
+          contacto,
+          institucion,
+          remuneracion:parseFloat(remuneracion),
+          nivel,
+          cantidadCargo: isNaN(cantidadCargo) ? parseInt(cantidadCargo) : 0,
+          descripcion,
+          year:parseInt(year),
+          postulante_id:idPos
+        }
+      })  
+    return res.status(200).json(cargo)
+  } catch (error) {
+    await prisma.$disconnect();
+    console.log(error);
+    return res.status(500).json({message:'algo salio mal'})
+    
+  }
 }
 

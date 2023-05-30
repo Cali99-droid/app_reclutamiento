@@ -8,14 +8,15 @@ import Modal from '../modal/Modal';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
+import { Edit } from '@mui/icons-material';
 const Step4 = () => {
-    const { capacitaciones, agregarCapacitacion, quitarCapacitacion, reconocimientos, agregarReconocimiento, quitarReconocimiento } = useContext(DatosContext)
+    const { capacitaciones, agregarCapacitacion, editarCapacitacion, quitarCapacitacion, reconocimientos, agregarReconocimiento, editarReconocimiento, quitarReconocimiento } = useContext(DatosContext)
     const { data }: any = useSession();
     // ** console.log(data?.user.persona.postulante[0].id);
     const IdPos = data?.user.persona.postulante[0].id;
     const [error, setError] = useState(false)
     //--------------Modal Capacitaciones------------------
-
+    const [idCapacitacion, setIdCapacitacion] = useState<null | number>()
     const [open, setOpen] = useState(false)
     const handleOpen = () => {
         setOpen(true);
@@ -23,6 +24,12 @@ const Step4 = () => {
     const handleClose = () => {
         setOpen(false);
         setError(false)
+        setIdCapacitacion(null);
+        setTitulo('');
+        setInstitucion('')
+        setHoras('')
+        setDescripcion('');
+        setYear('')
     }
     const handleConfirm = () => {
         if (titulo.length === 0 || horas.length === 0 || year.length === 0 || institucion.length === 0 || descripcion.length === 0 || IdPos.length === 0) {
@@ -30,7 +37,19 @@ const Step4 = () => {
             setError(true)
             return
         };
-        agregarCapacitacion(titulo, horas, year, institucion, descripcion, IdPos)
+        if (year.toString().length !== 4) {
+            toast.warning('Ingrese un año válido')
+            setError(true)
+            return
+        }
+        if (idCapacitacion) {
+            editarCapacitacion(idCapacitacion, titulo, horas, year, institucion, descripcion, IdPos)
+            toast.success('Actualizado con éxito')
+        } else {
+            agregarCapacitacion(titulo, horas, year, institucion, descripcion, IdPos)
+            toast.success('Agregado con éxito')
+        }
+
         setTitulo('')
         setHoras('')
 
@@ -45,6 +64,7 @@ const Step4 = () => {
 
 
     //--------------Capacitaciones------------------
+
     const [titulo, setTitulo] = useState('')
     const [horas, setHoras] = useState('')
     const [institucion, setInstitucion] = useState('')
@@ -86,9 +106,20 @@ const Step4 = () => {
         setYear(event.target.value);
 
     }
+    function handleEditCapacitacion(id: number, titulo: string, institucion: string, horas: string, descripcion: string, year: string): void {
+        handleOpen()
+        setIdCapacitacion(id);
+        setTitulo(titulo);
+        setInstitucion(institucion)
+        setHoras(horas)
+        setDescripcion(descripcion);
+        setYear(year)
+
+    }
 
     //------------------reconociemirteos Modal----------------
     const [openRec, setOpenRec] = useState(false)
+    const [idRec, setIdRec] = useState<null | number>()
     const handleOpenRec = () => {
         setOpenRec(true);
     }
@@ -103,7 +134,20 @@ const Step4 = () => {
             setError(true)
             return
         };
-        agregarReconocimiento(reconocimiento, year, institucion, descripcion, IdPos)
+        if (year.toString().length !== 4) {
+            toast.warning('Ingrese un año válido')
+            setError(true)
+            return
+        }
+
+        if (idRec) {
+            editarReconocimiento(idRec, reconocimiento, year, institucion, descripcion, IdPos)
+            toast.success('Actualizado con éxito')
+        } else {
+            agregarReconocimiento(reconocimiento, year, institucion, descripcion, IdPos)
+            toast.success('Agregado con éxito')
+        }
+
         setReconocimiento('')
 
         setInstitucion('')
@@ -122,6 +166,16 @@ const Step4 = () => {
 
     }
 
+    function handleEditReconocimiento(id: number, reconocimiento: string, institucion: string, descripcion: string, year: string): void {
+        handleOpenRec()
+        setIdRec(id);
+        setReconocimiento(reconocimiento)
+        setInstitucion(institucion)
+        setDescripcion(descripcion);
+        setYear(year)
+
+    }
+
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
             backgroundColor: '#0045aa',
@@ -131,6 +185,8 @@ const Step4 = () => {
             fontSize: 14,
         },
     }));
+
+
 
     return (
         <Box padding={4} mt={3} className="fadeIn">
@@ -169,6 +225,9 @@ const Step4 = () => {
                                     <TableCell align="right">{e.year}</TableCell>
                                     <TableCell align="right">{e.descripcion}</TableCell>
                                     <TableCell align="right">
+                                        <IconButton onClick={() => handleEditCapacitacion(e.id, e.titulo, e.institucion, e.horas, e.descripcion, e.year)} >
+                                            <Edit />
+                                        </IconButton>
                                         <IconButton onClick={() => handleDelete(e.id)} color='error'>
                                             <DeleteForeverIcon />
                                         </IconButton>
@@ -233,6 +292,10 @@ const Step4 = () => {
                             value={horas}
                             onChange={onHorasChange}
                             required
+                            inputProps={{
+                                max: 1000,
+                                min: 1
+                            }}
                         />
                         <TextField
                             type='number'
@@ -240,10 +303,14 @@ const Step4 = () => {
                             label="Año"
                             variant="outlined"
                             value={year}
-                            error={error && year.length <= 0}
+                            error={error && year.length <= 0 || year.length > 4}
                             required
                             onChange={onYearChange}
                             helperText='*año en el que culminó el curso'
+                            inputProps={{
+                                max: 3000,
+                                min: 1950
+                            }}
                         />
                         <TextField
                             autoFocus
@@ -300,6 +367,9 @@ const Step4 = () => {
                                     <TableCell align="right">{e.year}</TableCell>
                                     <TableCell align="right">{e.descripcion}</TableCell>
                                     <TableCell align="right">
+                                        <IconButton onClick={() => handleEditReconocimiento(e.id, e.reconocimento, e.institucion, e.descripcion, e.year)} >
+                                            <Edit />
+                                        </IconButton>
                                         <IconButton onClick={() => handleDeleteRec(e.id)} color='error'>
                                             <DeleteForeverIcon />
                                         </IconButton>
@@ -360,9 +430,13 @@ const Step4 = () => {
                             label="Año"
                             variant="outlined"
                             value={year}
-                            error={error && year.length <= 0}
+                            error={error && year.length <= 0 || year.length > 4}
                             required
                             onChange={onYearChange}
+                            inputProps={{
+                                max: 3000,
+                                min: 1950
+                            }}
 
                         />
                         <TextField

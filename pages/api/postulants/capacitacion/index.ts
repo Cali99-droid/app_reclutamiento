@@ -21,7 +21,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
           case 'GET':
             return getCapacitacion( req, res );
           case 'POST':
-            return postCapacitacion(req, res)
+            return postCapacitacion(req, res);
+          case 'PUT':
+            return updateCapacitacion(req, res)
           default:
               return res.status(400).json({ message: 'Bad request' });
       }
@@ -83,5 +85,33 @@ async function  postCapacitacion(req: NextApiRequest, res: NextApiResponse<any>)
   }
  
 
+}
+
+async function updateCapacitacion(req: NextApiRequest, res: NextApiResponse<any>) {
+  const{id,titulo='', institucion='',horas,descripcion,year,idPos}=req.body
+
+
+  try {
+     const cargo = await prisma.capacitacion.update({
+      where:{
+        id
+      },
+        data:{
+   
+          titulo,
+          institucion,
+          horas:parseInt(horas),
+          descripcion,
+          year:parseInt(year),
+          postulante_id:idPos
+        }
+      })  
+    return res.status(200).json(cargo)
+  } catch (error) {
+    await prisma.$disconnect();
+    console.log(error);
+    return res.status(500).json({message:'algo salio mal'})
+    
+  }
 }
 

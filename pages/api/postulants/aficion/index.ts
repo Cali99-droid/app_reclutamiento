@@ -22,6 +22,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
             return getAficion( req, res );
           case 'POST':
             return postAficion(req, res)
+            case 'PUT':
+              return updateAficion(req, res)
           default:
               return res.status(400).json({ message: 'Bad request' });
       }
@@ -64,6 +66,35 @@ async function  postAficion(req: NextApiRequest, res: NextApiResponse<any>) {
 
   try {
      const tic = await prisma.aficion.create({
+        data:{
+          actividad, 
+          nivel,
+          year:parseInt(year),
+          logro, 
+          postulante_id:idPos
+        }
+      })  
+    return res.status(200).json(tic)
+  } catch (error) {
+    await prisma.$disconnect();
+    console.log(error);
+    return res.status(500).json({message:'algo salio mal'})
+    
+  }
+ 
+
+}
+
+
+async function  updateAficion(req: NextApiRequest, res: NextApiResponse<any>) {
+  const{id, nivel='',actividad, year,logro, idPos }=req.body
+
+
+  try {
+     const tic = await prisma.aficion.update({
+      where:{
+        id
+      },
         data:{
           actividad, 
           nivel,

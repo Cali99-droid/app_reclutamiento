@@ -1,6 +1,6 @@
 
 import { DatosContext } from '@/context';
-import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, IconButton, TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody, styled, tableCellClasses, SelectChangeEvent } from '@mui/material';
+import { Box, Button, Chip, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography, IconButton, TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody, styled, tableCellClasses, SelectChangeEvent } from '@mui/material';
 import { useContext, ChangeEvent, useEffect } from 'react';
 import Modal from '../modal/Modal';
 import { useState } from 'react';
@@ -8,8 +8,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+
 import { Edit } from '@mui/icons-material';
 const Step2 = () => {
 
@@ -48,9 +47,12 @@ const Step2 = () => {
 
     }
     const onYearChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value.length <= 0) {
+
+        if (event.target.value.length <= 0 || event.target.value.length > 4) {
             setError(true)
         }
+
+
         setyear(event.target.value);
 
     }
@@ -64,15 +66,21 @@ const Step2 = () => {
         setInstitucion('')
         setGrado('')
         setyear('')
+        setId(null)
     }
     const handleConfirm = () => {
 
 
-        if (profesion.length === 0 || institucion.length === 0 || grado.length === 0) {
-            toast.warning('Complete todos los campos')
+        if (profesion.length === 0 || institucion.length === 0 || grado.length === 0 || year.length <= 0) {
+            toast.warning('Complete correctamente  todos los campos')
             setError(true)
             return
         };
+        if (year.toString().length !== 4) {
+            toast.warning('Ingrese un año válido')
+            setError(true)
+            return
+        }
 
         if (id) {
             editarEstudio(id, profesion, institucion, grado, year, IdPos)
@@ -230,13 +238,19 @@ const Step2 = () => {
                     <TextField
                         type='number'
                         id="outlined-basic"
-                        label="Año"
+                        label="Ingrese año"
+                        placeholder="Ingrese año"
                         variant="outlined"
                         value={year}
-                        error={error && year.length <= 0}
+                        error={error && year.length <= 0 || year.length > 4}
                         required
                         onChange={onYearChange}
                         helperText='*año en el que se graduo'
+                        inputProps={{
+                            max: 3000,
+                            min: 1950
+                        }}
+
                     />
 
                 </Box>
