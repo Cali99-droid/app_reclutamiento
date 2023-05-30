@@ -10,6 +10,8 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { reclutApi } from '@/api';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import PdfViewer from '../ui/PdfViewer';
+import { CloudinaryContext, Image, Transformation } from 'cloudinary-react';
 
 
 
@@ -454,6 +456,16 @@ const Step5 = () => {
                 {previewUrl && (
                     <Box display={'flex'} alignItems={'center'} justifyContent={'space-evenly'}>
                         <div>
+                            <CloudinaryContext cloudName="test-ae">
+                                <a href={docu} download>
+                                    <Image publicId={docu} secure="true" width="600" height="800" alt='pfd' >
+                                        <Transformation flags="attachment:pretty_flower" fetchFormat="auto" />
+                                    </Image>
+
+                                </a>
+
+                            </CloudinaryContext>
+
                             <a href={docu}>Documento</a>
                             <object data={previewUrl} type="application/pdf" width="50%" height="200px">
                                 <p>Vista porevia no dies</p>
@@ -468,6 +480,7 @@ const Step5 = () => {
 
                 <Divider />
             </Box>
+            <PdfViewer />
 
         </Box >
     );

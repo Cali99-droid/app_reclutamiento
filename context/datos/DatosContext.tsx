@@ -29,6 +29,7 @@ interface ContextProps {
 
     setEstudios: () => Promise<void>
     agregarEstudio: (profesion: string, institucion: string, grado: string, year: string, idPos: number) => void
+    editarEstudio: (id: number, profesion: string, institucion: string, grado: string, year: string, idPos: number) => Promise<void>
     quitarEstudio: (id: number) => void,
 
 

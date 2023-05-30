@@ -148,6 +148,13 @@ export const DatosProvider: FC<Props> = ({ children }) => {
         // }
         dispatch({ type: 'Add-Estudio', payload: data });
     }
+    const editarEstudio = async (id: number, profesion: string, institucion: string, grado: string, year: string, idPos: number) => {
+        const { data } = await reclutApi.put<IEstudio>('/postulants/estudios', { id, profesion, institucion, grado, year, idPos });
+
+        dispatch({ type: 'Update-Estudio', payload: data });
+    }
+
+
     const quitarEstudio = async (id: number) => {
         const { data } = await reclutApi.delete<ITics>(`/postulants/estudios/${id}`);
         dispatch({ type: 'Delete-Estudio', payload: id });
@@ -308,6 +315,7 @@ export const DatosProvider: FC<Props> = ({ children }) => {
 
             setEstudios,
             agregarEstudio,
+            editarEstudio,
             quitarEstudio,
 
             setInvestigaciones,

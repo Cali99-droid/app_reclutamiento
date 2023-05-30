@@ -9,6 +9,7 @@ type DatosType =
     | { type: 'Post - Load', payload: IPostulant }
     | { type: 'Estudios - Load', payload: IEstudio[] }
     | { type: 'Add-Estudio', payload: IEstudio }
+    | { type: 'Update-Estudio', payload: IEstudio }
     | { type: 'Delete-Estudio', payload: number }
     | { type: 'Investigaciones - Load', payload: IInvestigacion[] }
     | { type: 'Add-Investigacion', payload: IInvestigacion }
@@ -58,6 +59,20 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
                 ...state,
 
                 estudios:[...state.estudios, action.payload]
+            }
+        case 'Update-Estudio':
+            return{
+                ...state,
+                estudios:[...state.estudios.map(e=>{
+                    if(e.id === action.payload.id){
+                        e.grado = action.payload.grado;
+                        e.institucion = action.payload.institucion;
+                        e.profesion = action.payload.profesion;
+                        e.year = action.payload.year
+
+                    }
+                    return e;
+                })]
             }
         case 'Delete-Estudio':
             return{

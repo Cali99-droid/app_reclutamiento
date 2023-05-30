@@ -21,7 +21,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
           case 'GET':
             return getProfesion( req, res );
           case 'POST':
-            return postEstudios(req, res)
+            return postEstudios(req, res);
+          case 'PUT':
+            return updateEstudios(req, res)
           default:
               return res.status(400).json({ message: 'Bad request' });
       }
@@ -81,5 +83,31 @@ async function  postEstudios(req: NextApiRequest, res: NextApiResponse<any>) {
   }
  
 
+}
+
+async function updateEstudios(req: NextApiRequest, res: NextApiResponse<any>) {
+  const{id, profesion='', institucion='',grado='',year=0,idPos}=req.body
+
+
+  try {
+     const estudio = await prisma.estudios.update({
+      where:{
+        id
+      },
+        data:{
+          profesion,
+          institucion,
+          grado,
+          year:parseInt(year),
+          postulante_id:idPos
+        }
+      })  
+    return res.status(200).json(estudio)
+  } catch (error) {
+    await prisma.$disconnect();
+    console.log(error);
+    return res.status(500).json({message:'algo salio mal'})
+    
+  }
 }
 

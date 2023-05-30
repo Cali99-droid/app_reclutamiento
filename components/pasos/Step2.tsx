@@ -10,12 +10,13 @@ import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { Edit } from '@mui/icons-material';
 const Step2 = () => {
 
     const { data }: any = useSession();
     // ** console.log(data?.user.persona.postulante[0].id);
     const IdPos = data?.user.persona.postulante[0].id;
-    const { setEstudios, estudios, agregarEstudio, quitarEstudio } = useContext(DatosContext)
+    const { setEstudios, estudios, agregarEstudio, editarEstudio, quitarEstudio } = useContext(DatosContext)
     const [open, setOpen] = useState(false)
     // useEffect(() => {
     //     setEstudios()
@@ -23,6 +24,7 @@ const Step2 = () => {
     // }, [])
 
     const [error, setError] = useState(false)
+    const [id, setId] = useState<number | null>()
     const [profesion, setProfesion] = useState('')
     const [institucion, setInstitucion] = useState('')
     const [grado, setGrado] = useState('')
@@ -58,16 +60,28 @@ const Step2 = () => {
     const handleClose = () => {
         setOpen(false);
         setError(false)
+        setProfesion('')
+        setInstitucion('')
+        setGrado('')
+        setyear('')
     }
     const handleConfirm = () => {
-        //TODO validar campos
+
+
         if (profesion.length === 0 || institucion.length === 0 || grado.length === 0) {
             toast.warning('Complete todos los campos')
             setError(true)
             return
         };
-        agregarEstudio(profesion, institucion, grado, year, IdPos)
-        toast.success('Agregado con éxito')
+
+        if (id) {
+            editarEstudio(id, profesion, institucion, grado, year, IdPos)
+            toast.success('Actualizado con éxito')
+        } else {
+            agregarEstudio(profesion, institucion, grado, year, IdPos)
+            toast.success('Agregado con éxito')
+        }
+
         setProfesion('')
         setInstitucion('')
         setGrado('')
@@ -88,6 +102,15 @@ const Step2 = () => {
             fontSize: 14,
         },
     }));
+
+    function handleEdit(id: number, profesion: string, institucion: string, grado: string, year: string): void {
+        handleOpen();
+        setId(id)
+        setProfesion(profesion)
+        setInstitucion(institucion)
+        setGrado(grado)
+        setyear(year)
+    }
 
     return (
         <Box padding={4} mt={3} bgcolor={'#FFF'} className="fadeIn">
@@ -115,13 +138,14 @@ const Step2 = () => {
                                     key={e.id}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
-                                    <TableCell component="th" scope="row">
-                                        {e.profesion}
-                                    </TableCell>
+                                    <TableCell component="th" scope="row">{e.profesion}</TableCell>
                                     <TableCell align="right">{e.institucion}</TableCell>
                                     <TableCell align="right">{e.grado}</TableCell>
                                     <TableCell align="right">{e.year}</TableCell>
                                     <TableCell align="right">
+                                        <IconButton onClick={() => handleEdit(e.id, e.profesion, e.institucion, e.grado, e.year)} >
+                                            <Edit />
+                                        </IconButton>
                                         <IconButton onClick={() => handleDelete(e.id)} color='error'>
                                             <DeleteForeverIcon />
                                         </IconButton>
