@@ -35,7 +35,8 @@ import { Paperbase } from '@/components/dash';
 import { useSession } from 'next-auth/react';
 import Modal from '../../../../components/modal/Modal';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
+import TextField from '@mui/material/TextField';
 interface Props {
   postulantes: postulante[]
   convocatoria: IJob
@@ -63,6 +64,28 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
   const hadleOpenCalificacion = (puntajes: any[]) => {
     setCalificacion(puntajes);
     setModalCalificacion(true);
+
+
+  }
+
+
+  const [idEv, setIdEv] = useState<string | number>('');
+  const [idPos, setIdPos] = useState<string | number>('');
+
+  const [messageModal, setMessageModal] = useState(false)
+  const [message, setMessage] = useState('')
+  const sendMessage = async () => {
+    console.log(idPos)
+    try {
+      const { data } = await reclutApi.post(`/admin/postulantes/1`, { idPos, message });
+      setMessage(data.p.comentario)
+      toast.success('🦄 Mensage enviado asignado correctamente!')
+
+    } catch (error) {
+      console.log(error)
+    }
+
+    setMessageModal(false)
 
 
   }
@@ -163,7 +186,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
             label="Estado"
             onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.idCp, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
             sx={{ width: '200px' }}
-            disabled={!(convocatoria.estadoId > 1) || convocatoria.estadoId === 3}
+            disabled={convocatoria.estadoId === 3}
           >
             <MenuItem value={1}> Inscrito </MenuItem>
             <MenuItem value={2}> Apto a Entrevista</MenuItem>
@@ -180,10 +203,20 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
       field: 'actions', headerName: 'Evaluar Entrevista', width: 200,
       sortable: false,
       renderCell: (params) => {
+
+
+        function handleOpenMessage(id: any, comentario: string) {
+          setMessageModal(true)
+          setIdPos(id)
+          setMessage(comentario)
+        }
+
         return (
           <>
+
             {
-              (convocatoria.estado.id > 1 && convocatoria.categoria_id == 2) ?
+
+              (convocatoria.estado.id !== 3 && convocatoria.categoria_id == 2) ?
                 (
 
 
@@ -197,7 +230,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
                     >
                       < FactCheckIcon />
                     </IconButton>
-                    <Tooltip title="Ver puntos" placement="right-start" >
+                    <Tooltip title="Ver puntos"  >
                       <IconButton
                         sx={{ color: yellow[800] }}
                         aria-label="evaluar"
@@ -220,7 +253,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
                     </Tooltip> */}
                   </>
 
-                ) : (convocatoria.estado.id > 1 && convocatoria.categoria_id == 1) ? (
+                ) : (convocatoria.estado.id !== 3 && convocatoria.categoria_id == 1) ? (
                   <>
 
                     <IconButton
@@ -249,7 +282,14 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
                   )
             }
 
+            <IconButton
+              sx={{ color: cyan[600] }}
+              aria-label="evaluar"
+              onClick={() => { handleOpenMessage(params.row.idCp, params.row.comentario) }}
 
+            >
+              < SpeakerNotesIcon />
+            </IconButton>
 
           </>
         )
@@ -305,14 +345,12 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
     puntajeJur: devolverPuntajeJurado(p.postulante.evaluacion_x_postulante),
     total: tot(p.postulante.evaluacion_x_postulante),
     calificaciones: p.postulante.evaluacion_x_postulante,
-    idCp: p.id
-
+    idCp: p.id,
+    comentario: p.comentario
   }))
 
 
 
-  const [idEv, setIdEv] = useState<string | number>('');
-  const [idPos, setIdPos] = useState<string | number>('');
   const [open, setOpen] = useState(false)
   const handleOpen = (id: number) => {
     setOpen(true);
@@ -416,7 +454,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
     try {
 
       const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 100 });
-      console.log(resp)
+
       toast.success('🦄 Puntaje asignado correctamente!'),
         handleCloseClase()
       limpiarCriterios()
@@ -496,6 +534,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
 
   }
+
 
 
 
@@ -758,7 +797,15 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
       <ModalClase title={'Evaluar Clase Modelo'} open={openClase} handleClose={handleCloseClase} handleConfirm={handleConfirmClase} />
       <ModalAptitud title={'Evaluar aptitudes'} open={openAptitud} handleClose={handleCloseAptitud} handleConfirm={handleConfirmAptitud} />
 
+      <Modal title={'Enviar agregar comentario'} open={messageModal} handleClose={() => setMessageModal(false)} handleConfirm={sendMessage}>
+        <Box mt={1} width={300}>
 
+          <TextField onChange={(e) => setMessage(e.target.value)} multiline rows={3} fullWidth id="outlined-basic" label="Agregar Mensaje" variant="outlined" value={message} />
+
+        </Box>
+
+
+      </Modal>
       <Modal title={'Asignar jurados'} open={juradoModal} handleClose={() => setJuradoModal(false)} handleConfirm={() => asignarJurado()}>
         <Box width={400}>
           <FormControl fullWidth >

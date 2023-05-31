@@ -1,6 +1,3 @@
-
-
-
 import useSWR from 'swr';
 import { useEffect, } from 'react';
 

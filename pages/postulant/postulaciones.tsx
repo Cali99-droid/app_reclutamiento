@@ -51,16 +51,23 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
                 )
             }
         },
+        {
+            field: 'mensajes',
+            headerName: 'Mensaje',
+            width: 300,
+            editable: true,
+        },
 
 
     ];
 
-
+    console.log(convocatorias)
     const rows = convocatorias.map((job) => ({
         id: job.id,
         convocatoria: job.convocatoria.titulo,
         estado: job.convocatoria.estado.nombre,
-        estadoPostulante: job.estado_postulante.nombre
+        estadoPostulante: job.estado_postulante.nombre,
+        mensajes: job.comentario
 
     }))
 

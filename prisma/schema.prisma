@@ -170,6 +170,7 @@ model postulante {
 
 model postulante_x_convocatoria {
   id                   Int               @id @default(autoincrement())
+  comentario           String?           @db.LongText
   convocatoria_id      Int
   estado_postulante_id Int
   postulante_id        Int

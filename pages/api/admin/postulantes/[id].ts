@@ -22,8 +22,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
         case 'PUT':
             return updatePostulante( req, res );
 
-        // case 'POST':
-        //     return createConvocatoria( req, res );
+        case 'POST':
+            return sendMessage( req, res );
 
         // case 'DELETE':
         //     return deleteConvocatoria( req, res );
@@ -107,6 +107,30 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<any>) 
           estado_postulante_id:  parseInt(status),
         
 
+      },
+    })
+
+    
+    await prisma.$disconnect()
+    res.status(201).json({p});
+  } catch (error) {
+    console.log(error);
+    await prisma.$disconnect()
+    return res.status(400).json({ message: 'Revisar logs del servidor' });
+ }
+}
+
+
+async function sendMessage(req: NextApiRequest, res: NextApiResponse<any>) {
+  const { idPos , message } = req.body;
+
+  try {
+    const  p = await prisma.postulante_x_convocatoria.update({
+      where: {
+        id:idPos
+      },
+      data: {       
+          comentario:  message,
       },
     })
 
