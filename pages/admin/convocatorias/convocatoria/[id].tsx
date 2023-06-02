@@ -37,6 +37,10 @@ import Modal from '../../../../components/modal/Modal';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import TextField from '@mui/material/TextField';
+import moment from 'moment';
+import 'moment/locale/es';
+moment.locale('es');
+
 interface Props {
   postulantes: postulante[]
   convocatoria: IJob
@@ -74,18 +78,22 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
   const [messageModal, setMessageModal] = useState(false)
   const [message, setMessage] = useState('')
+  const [lastMessage, setLastMessage] = useState('')
+  const [fechaComennt, setFechaComennt] = useState('')
   const sendMessage = async () => {
-    console.log(idPos)
+
     try {
       const { data } = await reclutApi.post(`/admin/postulantes/1`, { idPos, message });
-      setMessage(data.p.comentario)
+      setLastMessage(data.p.comentario)
+      setFechaComennt(data.p.fecha_comentario)
+      setMessage('');
       toast.success('🦄 Mensage enviado asignado correctamente!')
 
     } catch (error) {
       console.log(error)
     }
 
-    setMessageModal(false)
+    // setMessageModal(false)
 
 
   }
@@ -205,10 +213,11 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
       renderCell: (params) => {
 
 
-        function handleOpenMessage(id: any, comentario: string) {
+        function handleOpenMessage(id: any, comentario: string, fecha: string) {
           setMessageModal(true)
           setIdPos(id)
-          setMessage(comentario)
+          setLastMessage(comentario)
+          setFechaComennt(fecha)
         }
 
         return (
@@ -285,7 +294,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
             <IconButton
               sx={{ color: cyan[600] }}
               aria-label="evaluar"
-              onClick={() => { handleOpenMessage(params.row.idCp, params.row.comentario) }}
+              onClick={() => { handleOpenMessage(params.row.idCp, params.row.comentario, params.row.fechaComentario) }}
 
             >
               < SpeakerNotesIcon />
@@ -346,7 +355,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
     total: tot(p.postulante.evaluacion_x_postulante),
     calificaciones: p.postulante.evaluacion_x_postulante,
     idCp: p.id,
-    comentario: p.comentario
+    comentario: p.comentario,
+    fechaComentario: p.fecha_comentario
   }))
 
 
@@ -797,14 +807,21 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
       <ModalClase title={'Evaluar Clase Modelo'} open={openClase} handleClose={handleCloseClase} handleConfirm={handleConfirmClase} />
       <ModalAptitud title={'Evaluar aptitudes'} open={openAptitud} handleClose={handleCloseAptitud} handleConfirm={handleConfirmAptitud} />
 
-      <Modal title={'Enviar agregar comentario'} open={messageModal} handleClose={() => setMessageModal(false)} handleConfirm={sendMessage}>
+      <Modal title={'Agregar comentario'} open={messageModal} handleClose={() => setMessageModal(false)} handleConfirm={sendMessage}>
         <Box mt={1} width={300}>
 
-          <TextField onChange={(e) => setMessage(e.target.value)} multiline rows={3} fullWidth id="outlined-basic" label="Agregar Mensaje" variant="outlined" value={message} />
-
+          <TextField onChange={(e) => setMessage(e.target.value)} value={message} multiline rows={3} fullWidth id="outlined-basic" label="Agregar Mensaje" variant="outlined" sx={{ mb: 2 }} />
+          <Divider />
+          <Box mt={2}>
+            <Typography variant='body1' fontWeight={'bold'}>Último mensaje</Typography>
+            <Paper>
+              <Box padding={1} mt={1}>
+                <Typography >{lastMessage}</Typography>
+                <Typography variant='body2' color={'gray'}>{moment(fechaComennt).fromNow()}</Typography>
+              </Box>
+            </Paper>
+          </Box>
         </Box>
-
-
       </Modal>
       <Modal title={'Asignar jurados'} open={juradoModal} handleClose={() => setJuradoModal(false)} handleConfirm={() => asignarJurado()}>
         <Box width={400}>

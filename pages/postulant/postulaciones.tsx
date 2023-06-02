@@ -74,8 +74,8 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
     return (
         <JobsLayout title={"Mis postulaciones"} pageDescription={"Lista de postulacioes"}>
             <Box mb={2} mt={15} padding={4}  >
-                <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'visible' }} >
-                    <Grid container spacing={2} alignItems="center" mb={2} padding={2}>
+                <Paper  >
+                    <Grid container spacing={2} alignItems="center" mb={1} padding={2}>
                         <Grid item>
                             <span color="inherit" />
                         </Grid>

@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
 import { convocatoria, postulante, user } from '@prisma/client';
 import { getSession } from 'next-auth/react';
-
+import moment from 'moment-timezone';
 
 
 
@@ -123,6 +123,7 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<any>) 
 
 async function sendMessage(req: NextApiRequest, res: NextApiResponse<any>) {
   const { idPos , message } = req.body;
+  let fecha =  moment().tz('America/Lima').format('YYYY-MM-DD HH:mm:ss');
 
   try {
     const  p = await prisma.postulante_x_convocatoria.update({
@@ -131,6 +132,7 @@ async function sendMessage(req: NextApiRequest, res: NextApiResponse<any>) {
       },
       data: {       
           comentario:  message,
+          fecha_comentario:  moment().tz('America/Lima').format('YYYY-MM-DD HH:mm:ss')
       },
     })
 

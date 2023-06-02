@@ -107,8 +107,9 @@ export const NavBar = () => {
     };
     return (
         <ElevationScroll {...props}>
-            <AppBar >
+            <AppBar sx={{ borderBottom: '1px solid #e1eeee' }} >
                 <Toolbar >
+                    <Box flex={1} />
                     <NextLink href='/' passHref legacyBehavior>
                         <Link color={'secondary'} display='flex' alignItems='end'>
                             <Typography variant='h5' fontWeight={'bold'} >AE  </Typography>
@@ -122,8 +123,8 @@ export const NavBar = () => {
                         gap={'2rem'} >
                         <NextLink href='/' passHref legacyBehavior>
                             <Link
-                                color={asPath === '/' ? '#0045aa' : 'secondary'}
-                                sx={{ padding: '1.5rem' }}
+                                color={asPath === '/' ? '#0045aa' : '#767687'}
+                                sx={{ padding: '1.5rem', textTransform: 'uppercase', fontWeight: 'bold', fontSize: 14 }}
                                 fontWeight={asPath === '/' ? 600 : 500}
 
                             >
@@ -132,8 +133,8 @@ export const NavBar = () => {
                         </NextLink>
                         <NextLink href='/convocatorias' passHref legacyBehavior>
                             <Link
-                                color={asPath === '/convocatorias' ? '#0045aa' : 'secondary'}
-                                sx={{ padding: '1.5rem' }}
+                                color={asPath === '/convocatorias' ? '#0045aa' : '#767687'}
+                                sx={{ padding: '1.5rem', textTransform: 'uppercase', fontWeight: 'bold', fontSize: 14 }}
                                 fontWeight={asPath === '/convocatorias' ? 600 : 500}
                             >
                                 Convocatorias
@@ -142,8 +143,8 @@ export const NavBar = () => {
                         </NextLink>
                         <NextLink href='/beneficios' passHref legacyBehavior>
                             <Link
-                                color={asPath === '/beneficios' ? '#0045aa' : 'secondary'}
-                                sx={{ padding: '1.5rem' }}
+                                color={asPath === '/beneficios' ? '#0045aa' : '#767687'}
+                                sx={{ padding: '1.5rem', textTransform: 'uppercase', fontWeight: 'bold', fontSize: 14 }}
                                 fontWeight={asPath === '/beneficios' ? 600 : 500}
 
                             >
@@ -152,8 +153,8 @@ export const NavBar = () => {
                         </NextLink>
                         <NextLink href='/docentes' passHref legacyBehavior>
                             <Link
-                                color={asPath === '/docentes' ? '#0045aa' : 'secondary'}
-                                sx={{ padding: '1.5rem' }}
+                                color={asPath === '/docentes' ? '#0045aa' : '#767687'}
+                                sx={{ padding: '1.5rem', textTransform: 'uppercase', fontWeight: 'bold', fontSize: 14 }}
                                 fontWeight={asPath === '/docentes' ? 600 : 500}
                             >
                                 ¿Cómo Postular?
@@ -200,45 +201,12 @@ export const NavBar = () => {
                             </StyledMenu>
                         </div>)}
 
+
                     <Box flex={1} />
 
 
-
                     {/* Pantallas pantallas grandes */}
-                    {
-                        isSearchVisible
-                            ? (
-                                <Input
-                                    sx={{ display: { xs: 'none', sm: 'flex' } }}
-                                    className='fadeIn'
-                                    autoFocus
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    onKeyPress={(e) => e.key === 'Enter' ? onSearchTerm() : null}
-                                    type='text'
-                                    placeholder="Buscar..."
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                onClick={() => setIsSearchVisible(false)}
-                                            >
-                                                <ClearOutlined />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                />
-                            )
-                            :
-                            (
-                                <IconButton
-                                    onClick={() => setIsSearchVisible(true)}
-                                    className="fadeIn"
-                                    sx={{ display: { xs: 'none', sm: 'flex' } }}
-                                >
-                                    <SearchOutlined />
-                                </IconButton>
-                            )
-                    }
+
 
 
                     {
@@ -277,9 +245,11 @@ export const NavBar = () => {
 
 
 
-
+                    <Box flex={1} />
                 </Toolbar>
+
             </AppBar>
+
         </ElevationScroll>
     )
 }
