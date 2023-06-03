@@ -1,6 +1,6 @@
 import { JobsLayout } from "@/components/layouts";
 
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Chip, Grid, IconButton, Link, List, ListItem, ListItemText, Paper, } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Chip, Grid, IconButton, Link, List, ListItem, ListItemText, Paper, useMediaQuery, } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -40,13 +40,13 @@ const images = [
 
 
 export default function Home() {
-
+  const matches = useMediaQuery('(min-width:600px)');
 
   return (
     <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatoria a trabajos en Ancash"} >
 
-      <Box maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={25}>
-        <Box display={"flex"} gap={20}>
+      <Box maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={25} padding={3}>
+        <Box display={"flex"} gap={20} flexDirection={matches ? 'row' : 'column'}>
           <Box paddingTop={7} >
             <Typography variant='h1' component='h1' fontSize={90} color={'#000'} fontWeight={'bold'} >Trabaja con nosotros</Typography>
             <Typography textAlign={'start'} mt={2} color={'#454555'} >Lorem ipsum dolor sit amet consectetur adipisicing elit. In voluptas reprehenderit possimus odit reiciendis, lorem ipsum dolor sit amet consectetur adipisicing elit. In voluptas reprehenderit possimus odit reiciendis</Typography>
@@ -68,7 +68,7 @@ export default function Home() {
         </Box>
         <Box width={'100%'} >
           <Typography variant='h6' component='h6' color={'#767687'} fontWeight={'bold'} textAlign={'center'} textTransform={'uppercase'} >Nuestras Instituciones</Typography>
-          <Box display={'flex'} justifyContent={'space-between'} gap={5} mt={8}>
+          <Box display={'flex'} flexDirection={matches ? 'row' : 'column'} justifyContent={'space-between'} gap={5} mt={8}>
             <Box>
               <Typography component='p' color={'primary'} fontSize={18} fontWeight={'bold'} textAlign={'center'} textTransform={'uppercase'} >Colegio Albert Einstein</Typography>
             </Box>
@@ -87,12 +87,12 @@ export default function Home() {
         </Box>
 
         <Box className='fadeIn' mt={10}>
-          <Box display={'flex'} alignItems={'center'} gap={1}>
+          <Box display={'flex'} alignItems={'center'} gap={1} >
             <SquareIcon color="secondary" fontSize="large" />
             <Typography variant='h2' component='h2' fontWeight={'bold'} textAlign={'start'} fontSize={40} color={'#000'} > BENEFICIOS </Typography>
           </Box>
 
-          <Box display={'flex'} gap={10} paddingLeft={4} paddingRight={4} alignItems={'center'}>
+          <Box display={'flex'} gap={10} paddingLeft={4} paddingRight={4} alignItems={'center'} flexDirection={matches ? 'row' : 'column'}>
             <Box>
               <Image src={"/img/b1.svg"} alt={""} width={500} height={600} />
 
@@ -109,7 +109,7 @@ export default function Home() {
 
           </Box>
 
-          <Box display={'flex'} gap={10} paddingLeft={4} paddingRight={4} alignItems={'center'}>
+          <Box display={'flex'} flexDirection={matches ? 'row' : 'column'} gap={10} paddingLeft={4} paddingRight={4} alignItems={'center'}>
 
             <Box>
               <Typography fontWeight={900} sx={{ fontSize: 50 }} color={'#000'}>
@@ -126,7 +126,7 @@ export default function Home() {
 
           </Box>
 
-          <Box display={'flex'} gap={10} paddingLeft={4} paddingRight={4} alignItems={'center'}>
+          <Box display={'flex'} flexDirection={matches ? 'row' : 'column'} gap={10} paddingLeft={4} paddingRight={4} alignItems={'center'}>
             <Box>
               <Image src={"/img/b3.svg"} alt={""} width={500} height={600} />
 
@@ -284,7 +284,7 @@ export default function Home() {
       <Box maxWidth={1200} margin={'auto'}>
         <Typography variant="h2" color={'#000'} fontSize={50} textAlign={'center'} fontWeight={'bold'}>¿Tienes dudas?</Typography>
         <Typography textAlign={'center'} fontSize={20} paddingTop={3}>Ponte en contacto con nosotros mediante nuestros canales de atención</Typography>
-        <Box display={'flex'} justifyContent={'space-evenly'} padding={10}>
+        <Box display={'flex'} flexDirection={matches ? 'row' : 'column'} justifyContent={'space-evenly'} padding={10}>
           <Paper elevation={2} sx={{ padding: 3 }}>
             <Link sx={{ cursor: 'pointer' }}>
               <Image src={"/img/whatsapp-icon.svg"} alt={""} width={150} height={150} />
