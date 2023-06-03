@@ -46,25 +46,7 @@ export const SideMenu = () => {
 
                 <List>
 
-                    <ListItem>
-                        <Input
-                            autoFocus
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' ? onSearchTerm() : null}
-                            type='text'
-                            placeholder="Buscar..."
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        onClick={onSearchTerm}
-                                    >
-                                        <SearchOutlined />
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                        />
-                    </ListItem>
+
 
                     {
                         isLoggedIn && user?.rol.name === 'postulante' && (

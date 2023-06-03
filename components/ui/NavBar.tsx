@@ -109,7 +109,7 @@ export const NavBar = () => {
         <ElevationScroll {...props}>
             <AppBar sx={{ borderBottom: '1px solid #e1eeee' }} >
                 <Toolbar >
-
+                    <Box flex={1} />
                     <NextLink href='/' passHref legacyBehavior>
                         <Link color={'secondary'} display='flex' alignItems='end'>
                             <Typography variant='h5' fontWeight={'bold'} >AE  </Typography>
@@ -245,7 +245,7 @@ export const NavBar = () => {
 
 
 
-
+                    <Box flex={1} />
                 </Toolbar>
 
             </AppBar>
