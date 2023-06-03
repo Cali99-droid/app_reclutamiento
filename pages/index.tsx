@@ -45,7 +45,7 @@ export default function Home() {
   return (
     <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatoria a trabajos en Ancash"} >
 
-      <Box maxWidth={1400} sx={{ margin: 'auto' }} paddingTop={25}>
+      <Box maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={25}>
         <Box display={"flex"} gap={20}>
           <Box paddingTop={7} >
             <Typography variant='h1' component='h1' fontSize={90} color={'#000'} fontWeight={'bold'} >Trabaja con nosotros</Typography>
@@ -162,13 +162,13 @@ export default function Home() {
         <Box padding={10} bgcolor={'#001A72'} >
           <Typography variant="h2" color={'#FFF'} fontSize={50} textAlign={'center'} fontWeight={'bold'}>¿Cómo Postular?</Typography>
           <Typography color={'#FFF'} textAlign={'center'} > Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, amet distinctio architecto dolorem possimus iusto maxime nulla, quis exercitationem</Typography>
-          <Box mt={3} maxWidth={1400} sx={{ margin: 'auto' }} paddingTop={5}>
+          <Box mt={3} maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={5}>
             <VerticalTabs />
           </Box>
 
         </Box>
       </Box>
-      <Box maxWidth={1400} sx={{ margin: 'auto' }} paddingTop={5} >
+      <Box maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={5} >
         <Box display={'flex'} alignItems={'center'} gap={1}>
           <SquareIcon color="secondary" fontSize="large" />
           <Typography variant='h2' component='h2' fontWeight={'bold'} textAlign={'start'} fontSize={40} color={'#000'} > NOSOTROS </Typography>
@@ -281,7 +281,7 @@ export default function Home() {
 
       </Box>
 
-      <Box maxWidth={1400} margin={'auto'}>
+      <Box maxWidth={1200} margin={'auto'}>
         <Typography variant="h2" color={'#000'} fontSize={50} textAlign={'center'} fontWeight={'bold'}>¿Tienes dudas?</Typography>
         <Typography textAlign={'center'} fontSize={20} paddingTop={3}>Ponte en contacto con nosotros mediante nuestros canales de atención</Typography>
         <Box display={'flex'} justifyContent={'space-evenly'} padding={10}>
@@ -310,7 +310,7 @@ export default function Home() {
         <Box padding={10} bgcolor={'#001A72'} mt={-25}>
 
 
-          <Box mt={3} maxWidth={1400} sx={{ margin: 'auto' }} >
+          <Box mt={3} maxWidth={1200} sx={{ margin: 'auto' }} >
             <Typography variant="h2" color={'#FFF'} fontSize={50} textAlign={'center'} fontWeight={'bold'} textTransform={'capitalize'}>Asociacion educativa Luz y Ciencia</Typography>
             <Grid container mt={10} justifyContent={'space-around'}>
               <Grid item>
