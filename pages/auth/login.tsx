@@ -1,5 +1,5 @@
 
-import { Box, Button, Grid, TextField, Link, Chip, Divider } from '@mui/material';
+import { Box, Button, Grid, TextField, Link, Chip, Divider, useMediaQuery } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { AuthLayout } from "@/components/layouts/AuthLayout";
 import NextLink from 'next/link';
@@ -56,7 +56,7 @@ const LoginPage = (error: string) => {
             }
         }
     }
-
+    const matches = useMediaQuery('(min-width:600px)');
     return (
         <AuthLayout title={"Iniciar Sesion "} >
             <Box bgcolor={'#FFF'} padding={4} >
@@ -76,7 +76,7 @@ const LoginPage = (error: string) => {
                 />
 
                 <form onSubmit={handleSubmit(onLoginUser)} noValidate>
-                    <Box sx={{ width: 350, }} >
+                    <Box width={matches ? 350 : 290}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <TextField

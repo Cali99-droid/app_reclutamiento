@@ -1,5 +1,5 @@
 
-import { Box, Button, Grid, TextField, Link, Chip, FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
+import { Box, Button, Grid, TextField, Link, Chip, FormControl, InputLabel, Select, MenuItem, FormHelperText, useMediaQuery, Divider } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { AuthLayout } from "@/components/layouts/AuthLayout";
 import NextLink from 'next/link';
@@ -8,8 +8,9 @@ import { validations } from '@/helpers';
 import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '@/context/';
 import { ErrorOutline } from '@mui/icons-material';
-import { signIn, useSession } from 'next-auth/react';
+import { getProviders, signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import GoogleIcon from '@mui/icons-material/Google';
 
 
 type FormData = {
@@ -25,6 +26,13 @@ type FormData = {
 
 
 export default function RegisterPage() {
+  const [providers, setProviders] = useState<any>({})
+  useEffect(() => {
+    getProviders().then(prov => {
+      setProviders(prov)
+    })
+  }, [])
+
   const router = useRouter();
   const { registerUser } = useContext(AuthContext);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
@@ -64,9 +72,10 @@ export default function RegisterPage() {
 
 
   }
+  const matches = useMediaQuery('(min-width:600px)');
   return (
     <AuthLayout title={"Registrate y Postula "} >
-      <Box sx={{ width: 400, }} bgcolor={'#FFF'} padding={4}>
+      <Box width={matches ? 350 : 290} bgcolor={'#FFF'} padding={4}>
         <form onSubmit={handleSubmit(onRegisterForm)} noValidate>
           <Chip
             label={errorMessage}
@@ -256,7 +265,7 @@ export default function RegisterPage() {
                 <NextLink
 
                   color="secondary"
-                  href={"/auth/forget"}
+                  href={"/auth/forgot-password"}
                   passHref
                   legacyBehavior>
                   <Link >Olvide mi contraseña
@@ -268,6 +277,26 @@ export default function RegisterPage() {
             </Grid>
           </Grid>
         </form>
+        <Grid item xs={12} display='flex' justifyContent='end' flexDirection={'column'}>
+          <Divider sx={{ width: '100%', mb: 2 }} />
+          {
+            Object.values(providers).map((provider: any) => {
+              if (provider.id === 'credentials') return (<div key={'credentials'}></div>)
+              return (
+                <Button
+                  key={provider.id}
+                  variant='outlined'
+                  fullWidth
+                  size='medium'
+                  startIcon={<GoogleIcon />}
+                  onClick={() => signIn(provider.id)}
+                >{`Entrar con ${provider.name}`}
+                </Button>
+              )
+            })
+          }
+
+        </Grid>
       </Box>
     </AuthLayout >
   )
