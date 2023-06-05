@@ -15,6 +15,8 @@ import Image from 'next/image';
 import SquareIcon from '@mui/icons-material/Square';
 import VerticalTabs from "@/views/VerticalTabs";
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import { AuthContext } from "@/context";
+import { useContext } from 'react';
 
 
 
@@ -41,7 +43,8 @@ const images = [
 
 export default function Home() {
   const matches = useMediaQuery('(min-width:600px)');
-
+  const { isLoggedIn, user } = useContext(AuthContext);
+  console.log(isLoggedIn)
   return (
     <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatoria a trabajos en Ancash"} >
 
