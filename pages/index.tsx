@@ -20,7 +20,7 @@ export default function Home() {
 
 
   return (
-    <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatoria a trabajos en Ancash"} >
+    <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatoria a trabajos en Ancash"} imageFullUrl={''} >
 
       <Box maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18} >
         <Hero />

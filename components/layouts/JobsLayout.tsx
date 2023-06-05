@@ -30,7 +30,7 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
                 <meta name="referrer" content="no-referrer" />
 
 
-
+                <meta property="og:image" content={`${origin}/img/img-5.jpg`} />
                 <meta name="og:title" content={title} />
                 <meta name="og:description" content={pageDescription} />
 
