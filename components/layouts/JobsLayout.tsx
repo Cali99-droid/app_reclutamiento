@@ -51,6 +51,8 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
 
             <main style={{
 
+                margin: '0 auto',
+
 
 
             }}>

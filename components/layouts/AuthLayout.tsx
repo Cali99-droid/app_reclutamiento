@@ -34,8 +34,11 @@ export const AuthLayout: FC<Props> = ({ children, title }) => {
                         </Box>
                         <Typography variant='h6' sx={{ ml: 0.5 }} >{title}</Typography>
                     </Box>
+                    <Box>
+                        {children}
+                    </Box>
 
-                    {children}
+
                 </Box>
             </main>
 
