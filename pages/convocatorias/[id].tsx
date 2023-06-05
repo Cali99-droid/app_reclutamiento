@@ -122,7 +122,7 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
 
-  const convocatoria = await prisma.convocatoria.findUnique({
+  const convo = await prisma.convocatoria.findUnique({
     where: {
       id: Number(params?.id),
     },
@@ -137,7 +137,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     },
   });
   await prisma.$disconnect()
-
+  const convocatoria = JSON.parse(JSON.stringify(convo))
   return {
     props: { convocatoria },
   };
