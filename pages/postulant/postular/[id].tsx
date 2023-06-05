@@ -11,7 +11,7 @@ import { ReqList } from '@/components/jobs';
 import { IJob } from '@/interfaces';
 import { useRouter } from 'next/router';
 import Modal from '@/components/modal/Modal';
-import { reclutApi } from '@/api';
+import { reclutApi } from '@/apies';
 import { getSession } from 'next-auth/react';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
 import CheckIcon from '@mui/icons-material/Check';

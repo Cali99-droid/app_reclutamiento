@@ -3,7 +3,7 @@ import { PostContext, postReducer } from './'
 
 import { IPostulant } from '@/interfaces';
 import confetti from "canvas-confetti";
-import { reclutApi } from '@/api';
+import { reclutApi } from '@/apies';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { AuthContext } from '../auth';

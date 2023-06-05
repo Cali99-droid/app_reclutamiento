@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react';
 import AddIcon from '@mui/icons-material/Add';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
-import { reclutApi } from '@/api';
+import { reclutApi } from '@/apies';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import PdfViewer from '../ui/PdfViewer';
 import { CloudinaryContext, Image, Transformation } from 'cloudinary-react';

@@ -1,7 +1,7 @@
 import { FC, useReducer, useEffect } from 'react';
 import { AuthContext, authReducer } from './'
 import { IUser } from '@/interfaces';
-import { reclutApi } from '@/api';
+import { reclutApi } from '@/apies';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { signOut, useSession } from 'next-auth/react';

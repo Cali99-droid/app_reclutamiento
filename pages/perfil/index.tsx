@@ -10,7 +10,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { persona } from '@prisma/client';
 import { checkUserEmailPassword } from '@/database/dbUser';
-import { reclutApi } from '@/api';
+import { reclutApi } from '@/apies';
 
 
 interface Props {

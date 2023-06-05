@@ -7,7 +7,7 @@ import { GetServerSideProps, NextPage } from "next";
 import { IGrado, IPersona } from "@/interfaces";
 import { getSession } from 'next-auth/react';
 
-import { apiCon } from '@/api';
+import { apiCon } from '@/apies';
 
 import { postulante } from '@prisma/client';
 import { ToastContainer, toast } from 'react-toastify';

@@ -9,7 +9,7 @@ import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IPostulant, 
 
 import { SessionContextValue, getSession, useSession } from 'next-auth/react';
 import { AuthContext } from '../auth';
-import { reclutApi } from '@/api';
+import { reclutApi } from '@/apies';
 import { postulante, user } from '@prisma/client';
 import { prisma } from '@/server/db/client';
 import { Session } from 'next-auth';

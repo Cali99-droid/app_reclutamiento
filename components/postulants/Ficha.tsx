@@ -1,4 +1,4 @@
-import { reclutApi } from '@/api';
+import { reclutApi } from '@/apies';
 import { validations } from '@/helpers';
 
 import { ErrorOutline } from '@mui/icons-material';

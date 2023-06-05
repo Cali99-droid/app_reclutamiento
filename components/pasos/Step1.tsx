@@ -6,7 +6,7 @@ import { useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { validations } from '@/helpers';
 import { ErrorOutline } from '@mui/icons-material';
-import { reclutApi } from '@/api';
+import { reclutApi } from '@/apies';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import SaveIcon from '@mui/icons-material/Save';

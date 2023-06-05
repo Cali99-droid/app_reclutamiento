@@ -1,6 +1,6 @@
 import { prisma } from '@/server/db/client';
 
-import { apiCon, reclutApi } from "@/api";
+import { apiCon, reclutApi } from "@/apies";
 import AnnouncementForm from "@/components/jobs/AnnouncementForm";
 import { AdminLayout } from "@/components/layouts";
 

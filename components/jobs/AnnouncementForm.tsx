@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { NextPage } from 'next';
 import { IGrado, IJob } from '@/interfaces';
 
-import { reclutApi } from '@/api';
+import { reclutApi } from '@/apies';
 import { useState } from 'react';
 
 import { ModalAlert } from '../modal/ModalAlert';

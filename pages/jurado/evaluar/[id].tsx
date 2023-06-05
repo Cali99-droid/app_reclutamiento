@@ -12,7 +12,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { IJob } from '@/interfaces';
-import { reclutApi } from '@/api';
+import { reclutApi } from '@/apies';
 import { Modal, ModalAptitud, ModalEntrevista } from '@/components/modal';
 import RatingFrom from '@/components/modal/RatingForm';
 

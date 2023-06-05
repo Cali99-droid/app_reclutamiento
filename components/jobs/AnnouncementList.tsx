@@ -15,7 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import GradingOutlinedIcon from '@mui/icons-material/GradingOutlined';
 import Modal from '../modal/Modal';
 import { useState } from 'react';
-import { reclutApi } from '@/api';
+import { reclutApi } from '@/apies';
 
 
 

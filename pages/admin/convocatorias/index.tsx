@@ -18,7 +18,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { useState } from 'react';
-import { reclutApi } from '@/api';
+import { reclutApi } from '@/apies';
 import NextLink from 'next/link';
 import Modal from '@/components/modal/Modal';
 import axios from 'axios';
