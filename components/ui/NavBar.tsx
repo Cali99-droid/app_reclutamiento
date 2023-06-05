@@ -207,7 +207,11 @@ export const NavBar = () => {
 
                     {/* Pantallas pantallas grandes */}
 
-
+                    {!isLoggedIn && (
+                        <Box sx={{ padding: 1 }}>
+                            <Button variant='outlined' onClick={() => push('/auth/login')}>Acceder</Button>
+                        </Box>
+                    )}
 
                     {
 
