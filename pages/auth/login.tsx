@@ -181,6 +181,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query }) => 
     const session = await getSession({ req });
     if (query.error) {
         error = JSON.parse(JSON.stringify(query.error))
+        console.log('eror ssp')
     }
 
 
