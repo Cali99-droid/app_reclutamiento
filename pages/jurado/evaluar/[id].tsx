@@ -110,39 +110,24 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
 
 
 
-    const { user } = session;
-    if (user.rol_id === 3 && convocatoriaSer?.categoria_id !== 2) {
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            }
-        }
-    }
-    if (user.rol_id === 4 && convocatoriaSer?.categoria_id !== 1) {
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            }
-        }
-    }
-    if (convocatoriaSer?.estadoId !== 2) {
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            }
-        }
-    }
+
+    // if (user.rol_id === 3 && convocatoriaSer?.categoria_id !== 2) {
+    //     return {
+    //         redirect: {
+    //             destination: '/',
+    //             permanent: false,
+    //         }
+    //     }
+    // }
+    // if (user.rol_id === 4 && convocatoriaSer?.categoria_id !==  
 
 
-    const evaluaciones = JSON.parse(JSON.stringify(await prisma.evaluacion.findMany()))
+    // const evaluaciones = JSON.parse(JSON.stringify(await prisma.evaluacion.findMany()))
     const convocatoria = JSON.parse(JSON.stringify(convocatoriaSer))
     await prisma.$disconnect()
 
     return {
-        props: { convocatoria, evaluaciones }
+        props: { convocatoria }
     }
 }
 

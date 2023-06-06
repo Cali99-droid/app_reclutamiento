@@ -2,7 +2,7 @@ import { reclutApi } from '@/apies';
 import { validations } from '@/helpers';
 
 import { ErrorOutline } from '@mui/icons-material';
-import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, styled, tableCellClasses } from '@mui/material';
+import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, styled, tableCellClasses, useMediaQuery } from '@mui/material';
 import { postulante } from '@prisma/client';
 
 import moment from 'moment';
@@ -27,13 +27,7 @@ interface Props {
     // grados: IGrado[]
     // user: any
     postulante: any
-    // estudios: IEstudio[]
-    // cargos: ICargo[]
-    // inves: IInvestigacion[]
-    // capa: ICapacitacion[]
-    // reco: IReconocimiento[]
-    // tecno: ITics[]
-    // aficion: IAficion[]
+
 }
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -68,9 +62,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 export const Ficha: NextPage<Props> = ({ postulante }) => {
 
     const router = useRouter();
-    console.log(postulante)
+    const matches = useMediaQuery('(min-width:600px)');
     return (
-        <Box className="fadeIn" padding={2}  >
+        <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} >
 
             <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -78,7 +72,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                         Ficha del Postulante
                     </Item>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={12} sm={3}>
                     <Item elevation={1}>
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                             <Image
@@ -104,7 +98,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                                 </Box>
                                 <Box display={'flex'} gap={1}>
 
-                                    <MailIcon /> <Typography fontSize={12}> </Typography>
+                                    <MailIcon /> <Typography fontSize={12}> {postulante.persona.user[0].email}</Typography>
                                 </Box>
                             </Box>
 
@@ -115,21 +109,21 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                         </Box>
                     </Item>
                 </Grid>
-                <Grid item xs={9} >
-                    <Item sx={{ height: 320 }}>
+                <Grid item xs={12} sm={9} >
+                    <Item sx={matches ? { height: 340 } : { height: 500 }}>
                         {/* <Typography variant='h2'>Mis datos</Typography> */}
-                        <Box display={'flex'} justifyContent={'space-between'} padding={2}>
+                        <Box display={'flex'} flexDirection={matches ? 'row' : 'column'} justifyContent={'space-between'} padding={2}>
                             <Box display={'flex'} flexDirection={'column'} gap={1}>
                                 <Typography fontWeight={'bold'}>Numero de Documento: </Typography>{postulante.numeroDocumento}
-                                <Typography fontWeight={'bold'}>Nacimiento: </Typography>{postulante.nacimiento}
-                                <Typography fontWeight={'bold'}>Pretención Salarial: </Typography>{postulante.sueldo}
+                                <Typography fontWeight={'bold'}>Nacimiento: </Typography>{moment(postulante.nacimiento).format('L')}
+                                <Typography fontWeight={'bold'}>Pretención Salarial: </Typography>S/ {postulante.sueldo}
                                 <Typography fontWeight={'bold'}>Estado Civil: </Typography>{postulante.estado_civil}
 
                             </Box>
                             <Box display={'flex'} flexDirection={'column'} gap={1}>
                                 <Typography fontWeight={'bold'}>Numero de Hijos: </Typography>{postulante.hijos}
-                                <Typography fontWeight={'bold'}>Persona con discapacidad: </Typography>{postulante.discapacidad}
-                                <Typography fontWeight={'bold'}>Exalumno: </Typography>{postulante.exalumno}
+                                <Typography fontWeight={'bold'}>Persona con discapacidad: </Typography>{postulante.discapacidad === 0 ? 'No' : 'Si'}
+                                <Typography fontWeight={'bold'}>Exalumno: </Typography>{postulante.exalumno === 0 ? 'No' : 'Si'}
                             </Box>
                             {/* <Box display={'flex'} flexDirection={'column'} gap={2}>
                                 <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary">

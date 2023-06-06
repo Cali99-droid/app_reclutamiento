@@ -1,10 +1,7 @@
 import { prisma } from '@/server/db/client';
 
-
-import { AdminLayout } from "@/components/layouts";
-
-import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics } from "@/interfaces";
-import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link } from '@mui/material';
+import { IEstudio } from "@/interfaces";
+import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 
@@ -23,10 +20,11 @@ import BiotechIcon from '@mui/icons-material/Biotech';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DevicesIcon from '@mui/icons-material/Devices';
 import { Paperbase } from '@/components/dash';
-import { cargo, investigacion, capacitacion, reconocimiento, tics, aficion, evaluacion_x_postulante, evaluacion } from '@prisma/client';
+import { cargo, investigacion, capacitacion, reconocimiento, tics, aficion, evaluacion_x_postulante, evaluacion, persona } from '@prisma/client';
+import moment from 'moment';
 interface Props {
     postulante: any
-    user: any
+
     // estudios: IEstudio[]
     // cargos: ICargo[]
     // inves: IInvestigacion[]
@@ -69,15 +67,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         fontSize: 14,
     },
 }));
-const PostulantePage: NextPage<Props> = ({ postulante, user }) => {
+
+const PostulantePage: NextPage<Props> = ({ postulante }) => {
     const router = useRouter();
-    console.log(postulante.evaluacion_x_postulante)
-        ;
+    const matches = useMediaQuery('(min-width:600px)');
     return (
         <Paperbase title={"Postulante "} subTitle={'ficha'}  >
 
 
-            <Box className="fadeIn" sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' }} >
+            <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} >
                 <Box mb={2}>
                     <Breadcrumbs aria-label="breadcrumb">
                         <Link
@@ -94,30 +92,15 @@ const PostulantePage: NextPage<Props> = ({ postulante, user }) => {
                         <Typography fontWeight={'bold'} color="text.primary">{postulante.persona.nombres}</Typography>
                     </Breadcrumbs>
                 </Box>
-                {/* <Box>
-                    <Typography fontWeight={'bold'}>Calificación: </Typography>
-                    {postulante.evaluacion_x_postulante.map((e: any) => (
-                        <Box key={e.id} display={'flex'} justifyContent={'space-between'}>
 
-                            <Typography >{e.evaluacion_id === 1 ? 'Entrevista: ' :
-                                'Jurado: '}  </Typography>
-                            <Typography >{e.puntaje}  </Typography>
-                            < Typography > {e.user.email}</Typography>
-
-                        </Box>
-
-
-                    ))}
-
-                </Box> */}
 
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} >
                         <Item elevation={1}>
                             Ficha del Postulante
                         </Item>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} sm={3}>
                         <Item elevation={1}>
                             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Image
@@ -130,7 +113,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user }) => {
                                 />
                             </Box>
                             <Box mt={2} textAlign={'center'}>
-                                <Typography > {postulante.persona.nombres + ' ' + postulante.persona.apellido_pat + postulante.persona.apellido_mat}</Typography>
+                                <Typography > {postulante.persona.nombres + ' ' + postulante.persona.apellido_pat + ' ' + postulante.persona.apellido_mat}</Typography>
                                 <Typography fontSize={12}> {calcularEdad(postulante.persona.nacimiento)} Años</Typography>
                                 <Box ml={4} mt={1} display={'flex'} flexDirection={'column'} alignItems={'start'} gap={1}>
 
@@ -144,7 +127,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, user }) => {
                                     </Box>
                                     <Box display={'flex'} gap={1}>
 
-                                        <MailIcon /> <Typography fontSize={12}>  {user.email}</Typography>
+                                        <MailIcon /> <Typography fontSize={12}>  {postulante.persona.user[0].email}</Typography>
                                     </Box>
                                 </Box>
 
@@ -155,14 +138,14 @@ const PostulantePage: NextPage<Props> = ({ postulante, user }) => {
                             </Box>
                         </Item>
                     </Grid>
-                    <Grid item xs={9} >
+                    <Grid item xs={12} sm={9} >
                         <Item sx={{ height: 340 }}>
                             {/* <Typography variant='h2'>Mis datos</Typography> */}
                             <Box display={'flex'} justifyContent={'space-between'} padding={2}>
                                 <Box display={'flex'} flexDirection={'column'} gap={1}>
                                     <Typography fontWeight={'bold'}>Numero de Documento: </Typography>{postulante.numeroDocumento}
-                                    <Typography fontWeight={'bold'}>Nacimiento: </Typography>{postulante.nacimiento}
-                                    <Typography fontWeight={'bold'}>Pretención Salarial: </Typography>{postulante.sueldo}
+                                    <Typography fontWeight={'bold'}>Nacimiento: </Typography>{moment(postulante.nacimiento).format('L')}
+                                    <Typography fontWeight={'bold'}>Pretención Salarial: </Typography>S/ {postulante.sueldo}
                                     <Typography fontWeight={'bold'}>Estado Civil: </Typography>{postulante.estado_civil}
 
                                 </Box>
@@ -173,15 +156,11 @@ const PostulantePage: NextPage<Props> = ({ postulante, user }) => {
 
 
                                 </Box>
-                                <Box display={'flex'} flexDirection={'column'} gap={2}>
-                                    {/* <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary">
-                                        Editar
-                                    </Button> */}
-
+                                {/* <Box display={'flex'} flexDirection={'column'} gap={2}>
                                     <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary" >
                                         Exportar PDF
                                     </Button>
-                                </Box>
+                                </Box> */}
                             </Box>
                         </Item>
                     </Grid>
@@ -557,7 +536,15 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             id: parseInt(id.toString())
         },
         include: {
-            persona: true,
+            persona: {
+                include: {
+                    user: {
+                        select: {
+                            email: true
+                        }
+                    }
+                }
+            },
             estudios: true,
             cargo: true,
             investigacion: true,
@@ -579,73 +566,15 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
         }
     })
 
-    const user = await prisma.user.findFirst({
 
-        where: {
-            persona_id: post?.persona_id
-        },
-        select: {
-            email: true
-        }
-    })
     const postulante = JSON.parse(JSON.stringify(post))
 
-    // const estudios = await prisma.estudios.findMany({
-    //     where: {
-    //         postulante_id: postulante.id
-    //     }
-
-    // })
-    // const cargos = await prisma.cargo.findMany({
-    //     where: {
-    //         postulante_id: postulante.id
-    //     }
-
-    // })
-
-    // const inves = await prisma.investigacion.findMany({
-    //     where: {
-    //         postulante_id: postulante.id
-    //     }
-
-    // })
-
-    // const capa = await prisma.capacitacion.findMany({
-    //     where: {
-    //         postulante_id: postulante.id
-    //     }
-
-    // })
-    // const reco = await prisma.reconocimiento.findMany({
-    //     where: {
-    //         postulante_id: postulante.id
-    //     }
-
-    // })
-    // const tecno = await prisma.tics.findMany({
-    //     where: {
-    //         postulante_id: postulante.id
-    //     }
-
-    // })
-    // const aficion = await prisma.aficion.findMany({
-    //     where: {
-    //         postulante_id: postulante.id
-    //     }
-
-    // })
 
     return {
         props: {
             postulante,
 
-            // cargos,
-            // inves,
-            // capa,
-            // reco,
-            // tecno,
-            // aficion,
-            user
+
 
         }
     }

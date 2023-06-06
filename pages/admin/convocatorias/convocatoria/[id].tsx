@@ -5,7 +5,7 @@ import { PostContext } from '@/context';
 
 import { GetServerSideProps, NextPage } from "next";
 import { DataGrid, GridCellParams, GridCloseIcon, GridColDef, esES } from "@mui/x-data-grid";
-import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider } from '@mui/material';
+import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider, useMediaQuery } from '@mui/material';
 import { evaluacion_x_postulante, postulante } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
@@ -548,11 +548,11 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
 
 
-
+  const matches = useMediaQuery('(min-width:600px)');
   return (
     <Paperbase title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
       <ToastContainer />
-      <Box sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden', }} className="fadeIn" >
+      <Box sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} className="fadeIn" >
         <Box mb={2}>
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" onClick={() => router.push("/admin/convocatorias")} sx={{ cursor: 'pointer' }}>
@@ -563,10 +563,10 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
           </Breadcrumbs>
         </Box>
 
-        <Box display={'flex'} gap={3}>
+        <Box display={'flex'} gap={3} flexDirection={matches ? 'row' : 'column'}>
 
           <Grid container spacing={2}>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4} >
               <Item elevation={4}>
 
                 <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
@@ -580,7 +580,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
               </Item>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4}>
               <Item elevation={4}>
                 <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
                   <PeopleIcon sx={{ fontSize: 60 }} color={'primary'} />
@@ -591,7 +591,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
                 </Box>
               </Item>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4} >
               <Item elevation={4}>
                 <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
                   <SpellcheckIcon sx={{ fontSize: 60 }} color={'primary'} />
@@ -614,7 +614,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
                 </Box>
               </Item>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4}>
               <Item elevation={4}>
                 <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
                   <CategoryIcon sx={{ fontSize: 60 }} color={'primary'} />
@@ -625,7 +625,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
                 </Box>
               </Item>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4}>
               <Item elevation={4}>
                 <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
                   <HowToRegIcon sx={{ fontSize: 60 }} color={'primary'} />
@@ -637,7 +637,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
                 </Box>
               </Item>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4}>
               <Item elevation={4}>
                 <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
                   <PersonRemoveAlt1Icon sx={{ fontSize: 60 }} color={'primary'} />
@@ -651,37 +651,37 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
             </Grid>
 
           </Grid>
-          <Box>
+          <Box >
             <Item elevation={4}>
               <Button onClick={() => setJuradoModal(true)}>Asignar jurados</Button>
               <List dense>
                 {
                   juradosAsignados.map((j) =>
                   (
-                    <>
-                      <ListItem key={j.id}>
-                        <ListItemText
-                          primary={`${j.user.email}`}
 
-                        />
+                    <ListItem key={j.id}>
+                      <ListItemText
+                        primary={`${j.user.email}`}
 
-                        <IconButton size="small" aria-label="delete" onClick={() => deleteJurado(j.id)}>
-                          <GridCloseIcon fontSize="inherit" />
-                        </IconButton>
-                      </ListItem>
-                      <Divider component="li" />
-                    </>
+                      />
+
+                      <IconButton size="small" aria-label="delete" onClick={() => deleteJurado(j.id)}>
+                        <GridCloseIcon fontSize="inherit" />
+                      </IconButton>
+
+                    </ListItem>
 
                   )
                   )
                 }
-              </List></Item>
+              </List>
+            </Item>
 
           </Box>
         </Box>
         <Box mt={4}
         >
-          <Item elevation={4}>
+          <Item elevation={4} sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 400, margin: 'auto', overflow: 'visible' }}>
             <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
               <Typography>Listado de Postulantes</Typography>
 

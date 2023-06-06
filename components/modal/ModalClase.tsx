@@ -89,7 +89,7 @@ export const ModalClase: FC<ModalProps> = ({ title, children, open, handleClose,
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" scroll='body'>
             <DialogTitle id="form-dialog-title">{title}</DialogTitle>
             <DialogContent>
-                <Box sx={{ width: 500 }}>
+                <Box sx={{ width: 800 }}>
                     <Box display={'flex'} justifyContent={'end'}>
                         <Typography variant='subtitle1'>Puntaje Total: {tot}</Typography>
                     </Box>

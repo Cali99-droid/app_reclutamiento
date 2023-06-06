@@ -25,11 +25,9 @@ interface Props {
 
 const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
   const router = useRouter();
-  const url = `https://app-reclutamiento-xpma.vercel.app/${router.asPath}`;
+  const url = `https://app-reclutamiento-xpma.vercel.app${router.asPath}`;
 
   const [open, setOpen] = useState(false);
-
-
 
   return (
     <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion}>

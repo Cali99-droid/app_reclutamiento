@@ -9,7 +9,7 @@ import useSWR from 'swr';
 import { useEffect, } from 'react';
 
 
-import { Grid, Link, Box, Button, IconButton, Typography, Select, MenuItem, SelectChangeEvent, Paper, Tabs, Tab, TextField, Toolbar, AppBar } from '@mui/material';
+import { Grid, Link, Box, Button, IconButton, Typography, Select, MenuItem, SelectChangeEvent, Paper, Tabs, Tab, TextField, Toolbar, AppBar, useMediaQuery } from '@mui/material';
 import { DataGrid, GridColDef, esES } from '@mui/x-data-grid';
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -138,9 +138,10 @@ const UsersPage: NextPage<Props> = ({ users }) => {
     const navigateTo = (url: string) => {
         router.push(url);
     }
+    const matches = useMediaQuery('(min-width:600px)');
     return (
         <Paperbase title={"Administrar Usuarios "} subTitle={"Listado de convocatorias"}>
-            <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' }}>
+            <Paper sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }}>
                 <AppBar
                     position="static"
                     color="default"
@@ -168,27 +169,15 @@ const UsersPage: NextPage<Props> = ({ users }) => {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <Box className="fadeIn" padding={4}>
+                <Box className="fadeIn" padding={4} sx={{ height: 580 }} width={'100%'} textAlign={'center'}>
 
-                    <Grid
-                        container
-                        justifyContent={'end'}
 
-                    >
-                        <Grid item >
-
-                        </Grid >
-                        <Grid item xs={12} sx={{ height: 580, width: '100%' }}>
-
-                            <DataGrid
-                                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-                                rows={rows}
-                                columns={columns}
-                                rowHeight={45}
-                            />
-                        </Grid>
-                    </Grid>
-
+                    <DataGrid
+                        localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+                        rows={rows}
+                        columns={columns}
+                        rowHeight={45}
+                    />
 
                 </Box>
             </Paper>

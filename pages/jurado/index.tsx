@@ -1,7 +1,7 @@
 import { DashLayout, JobsLayout } from "@/components/layouts";
 import { prisma } from '@/server/db/client';
 
-import { AppBar, Box, Button, Chip, Grid, IconButton, Paper, Toolbar } from '@mui/material';
+import { AppBar, Box, Button, Chip, Grid, IconButton, Paper, Toolbar, useMediaQuery } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { postulante, convocatoria } from '@prisma/client';
@@ -25,7 +25,7 @@ interface Props {
 
 const JuradoPage: NextPage<Props> = ({ convocatorias }) => {
 
-    console.log(convocatorias)
+
     const { push } = useRouter();
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
@@ -77,10 +77,10 @@ const JuradoPage: NextPage<Props> = ({ convocatorias }) => {
 
 
     }))
-
+    const matches = useMediaQuery('(min-width:600px)');
     return (
         <Paperbase title={"Administrar convocatorias "} subTitle={"Listado de convocatorias"} >
-            <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' }}>
+            <Paper sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }}>
                 <AppBar
                     position="static"
                     color="default"

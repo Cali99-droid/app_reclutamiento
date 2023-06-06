@@ -31,7 +31,7 @@ interface Props {
 
 
 export const PostulantCard: FC<Props> = ({ postulant, index }) => {
-
+    console.log(postulant)
     const { data: session } = useSession()
 
     const { handleOpenClase } = useContext(PostContext)
