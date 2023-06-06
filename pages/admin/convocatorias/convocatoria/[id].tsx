@@ -5,7 +5,7 @@ import { PostContext } from '@/context';
 
 import { GetServerSideProps, NextPage } from "next";
 import { DataGrid, GridCellParams, GridCloseIcon, GridColDef, esES } from "@mui/x-data-grid";
-import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider, useMediaQuery } from '@mui/material';
+import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider, useMediaQuery, Backdrop, CircularProgress } from '@mui/material';
 import { evaluacion_x_postulante, postulante } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
@@ -14,7 +14,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { cyan, yellow } from '@mui/material/colors';
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
+
 import { IJob, IUser } from '@/interfaces';
 import { reclutApi } from '@/apies';
 import { ModalAptitud, ModalEntrevista } from '@/components/modal';
@@ -34,11 +34,12 @@ import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 import { Paperbase } from '@/components/dash';
 import { useSession } from 'next-auth/react';
 import Modal from '../../../../components/modal/Modal';
-import DeleteIcon from '@mui/icons-material/Delete';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import TextField from '@mui/material/TextField';
 import moment from 'moment';
 import 'moment/locale/es';
+import { usePostulantes } from '@/hooks';
+import { FullScreenLoading } from '@/components/ui';
 moment.locale('es');
 
 interface Props {
@@ -52,7 +53,7 @@ interface Props {
 const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
   const router = useRouter();
   const { id } = router.query
-  const { data, error } = useSWR<any[]>(`/api/admin/postulantes/${id}`);
+  const { pos, isLoading } = usePostulantes(`/admin/postulantes/${id}`);
 
   const [postulantes, setPostulantes] = useState<any[]>([]);
 
@@ -102,17 +103,17 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
   useEffect(() => {
 
 
-    if (data) {
+    if (pos) {
       // const newPost = data?.sort((x, y) => x.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje) - y.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)).reverse()
 
       refreshJurados()
-      const seleccionados = data.filter(d => d.estado_postulante_id === 6)
-      const descartados = data.filter(d => d.estado_postulante_id === 4)
+      const seleccionados = pos.filter(d => d.estado_postulante_id === 6)
+      const descartados = pos.filter(d => d.estado_postulante_id === 4)
       if (filtrando) {
-        const aptos = data.filter(d => d.estado_postulante_id !== 4)
+        const aptos = pos.filter(d => d.estado_postulante_id !== 4)
         setPostulantes(aptos);
       } else {
-        setPostulantes(data)
+        setPostulantes(pos)
       }
 
 
@@ -120,8 +121,9 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
       setDescartados(descartados);
     }
 
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, filtrando])
+  }, [pos, filtrando])
 
 
 
@@ -196,12 +198,13 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
             sx={{ width: '200px' }}
             disabled={convocatoria.estadoId === 3}
           >
-            <MenuItem value={1}> Inscrito </MenuItem>
-            <MenuItem value={2}> Apto a Entrevista</MenuItem>
-            <MenuItem value={3}> Apto a Evaluación</MenuItem>
-            <MenuItem value={4}> No Interesa </MenuItem>
-            <MenuItem value={5}> Interesante </MenuItem>
-            <MenuItem value={6}> Selecionado</MenuItem>
+
+            <MenuItem value='1'> Inscrito </MenuItem>
+            <MenuItem value='2'> Apto a Entrevista</MenuItem>
+            <MenuItem value='3'> Apto a Evaluación</MenuItem>
+            <MenuItem value='4'> No Interesa </MenuItem>
+            <MenuItem value='5'> Interesante </MenuItem>
+            <MenuItem value='6'> Selecionado</MenuItem>
 
           </Select>
         )
@@ -397,9 +400,9 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
   };
 
 
-
+  const [backd, setBackd] = useState(false)
   const onStatusUpdated = async (id: number, newStatus: string) => {
-    //TODO validar puntaje en entrevista */
+
 
     // if (!puntajeEntrevistaValido(id)) {
     const previosPostulantes = postulantes.map(p => ({ ...p }));
@@ -407,13 +410,15 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
       ...p,
       estado_postulante_id: id === p.id ? parseInt(newStatus) : p.id
     }));
+    setBackd(true)
+    Promise.resolve(setPostulantes(updatedPostulantes)).then(function () {
+      setBackd(false);
+    })
 
-
-    setPostulantes(updatedPostulantes);
 
     try {
 
-      await reclutApi.put('/admin/postulantes/1', { id, status: newStatus });
+      const res = await reclutApi.put('/admin/postulantes/1', { id, status: newStatus });
 
     } catch (error) {
       setPostulantes(previosPostulantes);
@@ -424,6 +429,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
 
   }
+
   const onStatusJobUpdated = async (id: number, newStatus: string) => {
 
     //TODO verificar cantidad de seleccionados antes de cambiar de estado
@@ -552,191 +558,206 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
   return (
     <Paperbase title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
       <ToastContainer />
-      <Box sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} className="fadeIn" >
-        <Box mb={2}>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link underline="hover" color="inherit" onClick={() => router.push("/admin/convocatorias")} sx={{ cursor: 'pointer' }}>
-              Convocatorias
-            </Link>
 
-            <Typography fontWeight={'bold'} color="text.primary">{convocatoria.titulo}</Typography>
-          </Breadcrumbs>
-        </Box>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={backd}
+        onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      {isLoading
+        ? <FullScreenLoading />
+        :
+        <Box sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} className="fadeIn" >
+          <Box mb={2}>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link underline="hover" color="inherit" onClick={() => router.push("/admin/convocatorias")} sx={{ cursor: 'pointer' }}>
+                Convocatorias
+              </Link>
 
-        <Box display={'flex'} gap={3} flexDirection={matches ? 'row' : 'column'}>
+              <Typography fontWeight={'bold'} color="text.primary">{convocatoria.titulo}</Typography>
+            </Breadcrumbs>
+          </Box>
 
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={4} >
-              <Item elevation={4}>
+          <Box display={'flex'} gap={3} flexDirection={matches ? 'row' : 'column'}>
 
-                <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                  <NumbersIcon sx={{ fontSize: 60 }} color={'primary'} />
-                  <Box>
-                    <Typography color={'#454555'} variant="body1" > Vacantes</Typography>
-                    <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoria.vacantes} </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={4} >
+                <Item elevation={4}>
 
+                  <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                    <NumbersIcon sx={{ fontSize: 60 }} color={'primary'} />
+                    <Box>
+                      <Typography color={'#454555'} variant="body1" > Vacantes</Typography>
+                      <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoria.vacantes} </Typography>
+
+                    </Box>
                   </Box>
-                </Box>
 
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Item elevation={4}>
-                <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                  <PeopleIcon sx={{ fontSize: 60 }} color={'primary'} />
-                  <Box>  <Typography color={'#454555'} variant="body1" > Postulantes</Typography>
-                    <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{postulantes.length} </Typography>
+                </Item>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Item elevation={4}>
+                  <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                    <PeopleIcon sx={{ fontSize: 60 }} color={'primary'} />
+                    <Box>  <Typography color={'#454555'} variant="body1" > Postulantes</Typography>
+                      <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{postulantes.length} </Typography>
 
+                    </Box>
                   </Box>
-                </Box>
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={4} >
-              <Item elevation={4}>
-                <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                  <SpellcheckIcon sx={{ fontSize: 60 }} color={'primary'} />
-                  <Box>
+                </Item>
+              </Grid>
+              <Grid item xs={12} sm={4} >
+                <Item elevation={4}>
+                  <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                    <SpellcheckIcon sx={{ fontSize: 60 }} color={'primary'} />
+                    <Box>
 
-                    <Typography color={'#454555'} variant="body1" > Estado </Typography>
-                    <Select
-                      value={convocatoria.estado.id}
-                      label="Estado"
-                      onChange={(e: SelectChangeEvent<number>) => onStatusJobUpdated(convocatoria.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
+                      <Typography color={'#454555'} variant="body1" > Estado </Typography>
+                      <Select
+                        value={convocatoria.estado.id}
+                        label="Estado"
+                        onChange={(e: SelectChangeEvent<number>) => onStatusJobUpdated(convocatoria.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
 
-                    >
-                      <MenuItem value={1}> Abierta </MenuItem>
-                      <MenuItem value={2}>En evaluación</MenuItem>
-                      <MenuItem value={3}> Cerrada</MenuItem>
+                      >
+                        <MenuItem value={1}> Abierta </MenuItem>
+                        <MenuItem value={2}>En evaluación</MenuItem>
+                        <MenuItem value={3}> Cerrada</MenuItem>
 
-                    </Select>
+                      </Select>
 
+                    </Box>
                   </Box>
-                </Box>
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Item elevation={4}>
-                <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                  <CategoryIcon sx={{ fontSize: 60 }} color={'primary'} />
-                  <Box><Typography color={'#454555'} variant="body1" > Categoria</Typography>
-                    <Typography color={'#454555'} fontWeight={'bold'} fontSize={37} textTransform={'capitalize'}>{convocatoria.categoria.nombre} </Typography>
+                </Item>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Item elevation={4}>
+                  <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                    <CategoryIcon sx={{ fontSize: 60 }} color={'primary'} />
+                    <Box><Typography color={'#454555'} variant="body1" > Categoria</Typography>
+                      <Typography color={'#454555'} fontWeight={'bold'} fontSize={37} textTransform={'capitalize'}>{convocatoria.categoria.nombre} </Typography>
 
+                    </Box>
                   </Box>
-                </Box>
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Item elevation={4}>
-                <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                  <HowToRegIcon sx={{ fontSize: 60 }} color={'primary'} />
-                  <Box>
-                    <Typography color={'#454555'} variant="body1" > Seleccionados</Typography>
-                    <Typography fontWeight={'bold'} color={'#454555'} variant="h3" textTransform={'uppercase'}>{seleccionados.length} </Typography>
+                </Item>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Item elevation={4}>
+                  <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                    <HowToRegIcon sx={{ fontSize: 60 }} color={'primary'} />
+                    <Box>
+                      <Typography color={'#454555'} variant="body1" > Seleccionados</Typography>
+                      <Typography fontWeight={'bold'} color={'#454555'} variant="h3" textTransform={'uppercase'}>{seleccionados.length} </Typography>
 
+                    </Box>
                   </Box>
-                </Box>
-              </Item>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Item elevation={4}>
-                <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                  <PersonRemoveAlt1Icon sx={{ fontSize: 60 }} color={'primary'} />
-                  <Box>
-                    <Typography color={'#454555'} variant="body1" > Descartados</Typography>
-                    <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{descartados.length} </Typography>
+                </Item>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Item elevation={4}>
+                  <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                    <PersonRemoveAlt1Icon sx={{ fontSize: 60 }} color={'primary'} />
+                    <Box>
+                      <Typography color={'#454555'} variant="body1" > Descartados</Typography>
+                      <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{descartados.length} </Typography>
 
+                    </Box>
                   </Box>
-                </Box>
-              </Item>
+                </Item>
+              </Grid>
+
             </Grid>
+            <Box >
+              <Item elevation={4}>
+                <Button onClick={() => setJuradoModal(true)}>Asignar jurados</Button>
+                <List dense>
+                  {
+                    juradosAsignados.map((j) =>
+                    (
 
-          </Grid>
-          <Box >
-            <Item elevation={4}>
-              <Button onClick={() => setJuradoModal(true)}>Asignar jurados</Button>
-              <List dense>
-                {
-                  juradosAsignados.map((j) =>
-                  (
+                      <ListItem key={j.id}>
+                        <ListItemText
+                          primary={`${j.user.email}`}
 
-                    <ListItem key={j.id}>
-                      <ListItemText
-                        primary={`${j.user.email}`}
+                        />
 
-                      />
+                        <IconButton size="small" aria-label="delete" onClick={() => deleteJurado(j.id)}>
+                          <GridCloseIcon fontSize="inherit" />
+                        </IconButton>
 
-                      <IconButton size="small" aria-label="delete" onClick={() => deleteJurado(j.id)}>
-                        <GridCloseIcon fontSize="inherit" />
-                      </IconButton>
+                      </ListItem>
 
-                    </ListItem>
+                    )
+                    )
+                  }
+                </List>
+              </Item>
 
-                  )
-                  )
-                }
-              </List>
+            </Box>
+          </Box>
+          <Box mt={4}
+          >
+            <Item elevation={4} sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 400, margin: 'auto', overflow: 'visible' }}>
+              <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                <Typography>Listado de Postulantes</Typography>
+
+                {filtrando ? (
+                  <Tooltip title={'Mostrar descartados'} >
+                    <IconButton onClick={() => setFiltrando(false)}>
+                      <RemoveRedEyeIcon />
+                    </IconButton>
+                  </Tooltip>
+
+                ) : (
+                  <Tooltip title={'Ocultar descartados'} >
+                    <IconButton onClick={() => setFiltrando(true)}>
+                      <VisibilityOffIcon />
+                    </IconButton>
+                  </Tooltip>
+                )}
+
+
+
+
+              </Box>
+              <Box
+                sx={{
+                  height: 400,
+                  width: '100%',
+                  '& .mal': {
+                    backgroundColor: '#ff5722',
+                    color: '#FFF',
+                  },
+                  '& .medio': {
+                    backgroundColor: '#ff943975',
+                    color: '#FFF',
+                  },
+                  '& .bien': {
+                    backgroundColor: '#4caf50',
+                    color: '#FFF',
+                  },
+                }} >
+
+                <DataGrid
+                  localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+                  rows={rows}
+                  columns={columns}
+                  getCellClassName={(params: GridCellParams<any, any, number>) => {
+                    if (params.field !== 'total' || params.value == null) {
+                      return '';
+                    }
+                    return params.value >= 75 ? 'bien' : 'mal';
+                  }}
+                />
+
+
+              </Box>
             </Item>
 
           </Box>
         </Box>
-        <Box mt={4}
-        >
-          <Item elevation={4} sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 400, margin: 'auto', overflow: 'visible' }}>
-            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-              <Typography>Listado de Postulantes</Typography>
-
-              {filtrando ? (
-                <Tooltip title={'Mostrar descartados'} >
-                  <IconButton onClick={() => setFiltrando(false)}>
-                    <RemoveRedEyeIcon />
-                  </IconButton>
-                </Tooltip>
-
-              ) : (
-                <Tooltip title={'Ocultar descartados'} >
-                  <IconButton onClick={() => setFiltrando(true)}>
-                    <VisibilityOffIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
-
-
-
-
-            </Box>
-            <Box
-              sx={{
-                height: 400,
-                width: '100%',
-                '& .mal': {
-                  backgroundColor: '#ff5722',
-                  color: '#FFF',
-                },
-                '& .medio': {
-                  backgroundColor: '#ff943975',
-                  color: '#FFF',
-                },
-                '& .bien': {
-                  backgroundColor: '#4caf50',
-                  color: '#FFF',
-                },
-              }} >
-              <DataGrid
-                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-                rows={rows}
-                columns={columns}
-                getCellClassName={(params: GridCellParams<any, any, number>) => {
-                  if (params.field !== 'total' || params.value == null) {
-                    return '';
-                  }
-                  return params.value >= 75 ? 'bien' : 'mal';
-                }}
-              />
-            </Box>
-          </Item>
-
-        </Box>
-      </Box>
+      }
       <Modal title={'Calificación'} open={modalCalificacion} handleClose={() => setModalCalificacion(false)}
         handleConfirm={() => setModalCalificacion(false)}>
 
@@ -882,15 +903,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     }
   })
 
-  // const juradosAser = await prisma.convocatoria_x_jurado.findMany({
-  //   where: {
-  //     convocatoria_id: parseInt(id.toString())
-  //   },
-  //   include:
-  //   {
-  //     user: true
-  //   }
-  // })
 
   await prisma.$disconnect()
 

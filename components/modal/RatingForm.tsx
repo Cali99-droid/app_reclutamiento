@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
 import { useState, useContext, useEffect } from 'react';
 import { PostContext } from '@/context';
-import { Divider } from '@mui/material';
+import { Divider, useMediaQuery } from '@mui/material';
 
 
 
@@ -51,11 +51,11 @@ export default function RatingFrom() {
     };
 
 
-
+    const matches = useMediaQuery('(min-width:600px)');
 
 
     return (
-        <Box sx={{ width: 500 }}>
+        <Box sx={matches ? { width: 500 } : { width: 250 }}>
             <Box display={'flex'} justifyContent={'end'}>
                 <Typography variant='subtitle1'>Puntaje Total: {tot}</Typography>
             </Box>

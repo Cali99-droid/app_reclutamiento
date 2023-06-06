@@ -27,26 +27,28 @@ export const JobCard: FC<Props> = ({ job }) => {
             sm={4}
 
         >
-            <Card>
+            <Card sx={{ bgcolor: '#0045AA' }} >
 
                 <NextLink href={`/convocatorias/${job.id}`} passHref prefetch={false} legacyBehavior>
 
                     <Link>
-                        <CardActionArea>
+                        <CardActionArea >
                             <CardMedia
                                 sx={{ height: 250 }}
-                                image="/img/work.svg"
+                                image="/img/img-2.jpg"
 
                             />
-                            <CardContent>
+                            <CardContent >
                                 <Box display={'flex'} gap={1}>
 
-                                    <Typography fontWeight={800} gutterBottom variant="h5" >
+                                    <Typography sx={{ color: '#FFF' }} fontWeight={800} gutterBottom variant="h5" >
                                         {job.titulo}
                                     </Typography>
 
                                     <Box>
-                                        <IconButton aria-label="share" size='small'>
+                                        <IconButton aria-label="share" size='small'
+                                            sx={{ color: '#FFF' }}
+                                        >
                                             <ShareIcon />
                                         </IconButton>
                                     </Box>
@@ -59,7 +61,7 @@ export const JobCard: FC<Props> = ({ job }) => {
                                 <ReqList job={job} />
                                 <Box mt={1}>
 
-                                    <span style={{ color: 'gray' }}>
+                                    <span style={{ color: '#EEEDFF' }}>
 
                                         Vigente hasta: {moment(job.vigencia).toDate().toLocaleDateString()}
                                     </span>
@@ -71,9 +73,9 @@ export const JobCard: FC<Props> = ({ job }) => {
                     </Link>
 
                 </NextLink>
-                <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }} >
 
-                    <Button color='info' startIcon={<PostAddIcon />} sx={{ mt: 3, width: '100%' }} size="large" href={`/postulant/postular/${job.id}`}>
+                    <Button color='primary' startIcon={<PostAddIcon />} sx={{ mt: 3, width: '100%' }} size="large" href={`/postulant/postular/${job.id}`}>
                         Postular
                     </Button>
 

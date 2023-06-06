@@ -1,6 +1,6 @@
 import { prisma } from '@/server/db/client';
 import { JobsLayout } from "@/components/layouts";
-import { Box, Button, Grid, IconButton } from '@mui/material';
+import { Box, Button, Grid, IconButton, useMediaQuery } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { IJob } from "@/interfaces";
@@ -28,27 +28,32 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
   const url = `https://app-reclutamiento-xpma.vercel.app${router.asPath}`;
 
   const [open, setOpen] = useState(false);
-
+  const matches = useMediaQuery('(min-width:600px)');
   return (
     <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion}>
 
-      <Box className="fadeIn" sx={{ mt: 10, padding: 6 }} display={'flex'}
+      <Box
+        className="fadeIn" sx={{ mt: 10, padding: 6 }} display={'flex'}
         gap={4}
-        alignItems="self-start" justifyContent={'center'} width={'80%'} margin={'auto'}>
+        alignItems="center" justifyContent={'center'} width={'80%'} margin={'auto'}
+
+        flexDirection={matches ? 'row' : 'column'}
+
+      >
 
         <Box>
-          <Image src={'/jobs/img-6.jpg'} alt={''} width={500} height={500} />
+          <Image src={'/img/img-2.jpg'} alt={''} width={matches ? 500 : 300} height={matches ? 500 : 300} />
         </Box>
 
-        <Box padding={3} borderRadius={10}>
-          <Box>
+        <Box borderRadius={4} bgcolor={'#0045AA'} padding={2}>
+          <Box >
             <Box display={'flex'} justifyContent={'space-between'}>
-              <Typography variant='h1' component='h1'>
-                {convocatoria.titulo}
+              <Typography variant='h1' component='h1' sx={{ color: '#FFF' }}>
+                {convocatoria.titulo.toLocaleUpperCase()}
 
               </Typography>
               <Box>
-                <IconButton aria-label="share" onClick={() => setOpen(true)}>
+                <IconButton sx={{ color: '#FFF' }} aria-label="share" onClick={() => setOpen(true)}>
                   <ShareIcon />
                 </IconButton>
 
@@ -58,7 +63,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
             </Box>
 
 
-            <Typography variant='subtitle1' component='p' sx={{ mt: 2, width: '100%' }} color={grey}>{convocatoria.descripcion}</Typography>
+            <Typography variant='body1' component='p' sx={{ mt: 2, width: '100%' }} color={'#F1F1E6'} >{convocatoria.descripcion}</Typography>
 
           </Box>
           <Divider variant="middle" />
@@ -69,7 +74,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
             <ReqList job={convocatoria} />
 
           </Box>
-          <Button startIcon={<PostAddIcon />} color='info' sx={{ mt: 6, width: '100%' }} size="large" href={`/postulant/postular/${convocatoria.id}`}>
+          <Button startIcon={<PostAddIcon />} color='primary' sx={{ mt: 6, width: '100%' }} size="large" href={`/postulant/postular/${convocatoria.id}`}>
             Postular
           </Button>
         </Box>
@@ -77,8 +82,8 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
 
       </Box>
 
-      <ModalAlert title={'Compartir en:'} open={open} handleClose={() => setOpen(false)} handleConfirm={() => setOpen(false)}>
-        <Box display={'flex'} justifyContent={'space-evenly'} width={300}>
+      <ModalAlert title={'Compartir en:'} open={open} handleClose={() => setOpen(false)} handleConfirm={() => setOpen(false)} >
+        <Box display={'flex'} justifyContent={'space-evenly'} width={matches ? 300 : 160}>
           <IconButton size='large' aria-label="add to shopping cart" target='_blank' href={`https://www.facebook.com/sharer/sharer.php?u=${url}`}>
             <FacebookOutlinedIcon fontSize="inherit" />
           </IconButton>

@@ -13,6 +13,7 @@ import { How } from "@/views/HomePage/How";
 import { Nosotros } from "@/views/HomePage/Nosotros";
 import { Dudas } from "@/views/HomePage/Dudas";
 import { Footer } from "@/views/HomePage/Footer";
+import { Convocatorias } from "@/views/HomePage/Convocatorias";
 
 
 export default function Home() {
@@ -25,6 +26,7 @@ export default function Home() {
       <Box maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18} >
         <Hero />
         <Partners />
+        <Convocatorias />
         <Beneficios />
       </Box>
 

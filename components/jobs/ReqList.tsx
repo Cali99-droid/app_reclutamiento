@@ -17,9 +17,9 @@ interface Props {
 export const ReqList: React.FC<Props> = ({ job }) => {
   return (
     < >
-      <Chip icon={<WorkIcon />} sx={{ ml: 1, mt: 1 }} label={`+ ${job.experiencia} Años de experiencia`} />
-      <Chip icon={<SchoolIcon />} sx={{ ml: 1, mt: 1 }} label={` ${job.grado.nombre} `} />
-      <Chip icon={<GroupIcon />} sx={{ ml: 1, mt: 1 }} label={`${job.vacantes} Vacantes`} />
+      <Chip variant='outlined' color='primary' icon={<WorkIcon />} sx={{ ml: 1, mt: 1 }} label={`+ ${job.experiencia} Años de experiencia`} />
+      <Chip variant='outlined' color='primary' icon={<SchoolIcon />} sx={{ ml: 1, mt: 1 }} label={` ${job.grado.nombre} `} />
+      <Chip variant='outlined' color='primary' icon={<GroupIcon />} sx={{ ml: 1, mt: 1 }} label={`${job.vacantes} Vacantes`} />
     </>
   );
 }

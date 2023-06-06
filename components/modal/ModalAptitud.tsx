@@ -84,12 +84,12 @@ export const ModalAptitud: FC<ModalProps> = ({ title, children, open, handleClos
         criterios.set('item10', newValue)
         setTot(calcularTotal)
     };
-
+    const matches = useMediaQuery('(min-width:600px)');
     return (
         <Dialog maxWidth={'xs'} open={open} onClose={handleClose} aria-labelledby="form-dialog-title" scroll='body'>
             <DialogTitle id="form-dialog-title">{title}</DialogTitle>
             <DialogContent>
-                <Box >
+                <Box sx={matches ? { width: 500 } : { width: 250 }}>
                     <Box display={'flex'} justifyContent={'end'}>
                         <Typography variant='subtitle1'>Puntaje Total: {tot}</Typography>
                     </Box>
