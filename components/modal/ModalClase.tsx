@@ -84,14 +84,15 @@ export const ModalClase: FC<ModalProps> = ({ title, children, open, handleClose,
         criterios.set('herramientas', newValue)
         setTot(calcularTotal)
     };
-
+    const matches = useMediaQuery('(min-width:600px)');
     return (
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" scroll='body'>
             <DialogTitle id="form-dialog-title">{title}</DialogTitle>
             <DialogContent>
-                <Box sx={{ width: 800 }}>
-                    <Box display={'flex'} justifyContent={'end'}>
-                        <Typography variant='subtitle1'>Puntaje Total: {tot}</Typography>
+                <Box sx={matches ? { width: 500 } : { width: 250 }}>
+                    <Box display={'flex'} justifyContent={'end'} mb={3} alignItems={'center'} gap={2}>
+                        <Typography variant='subtitle1'>Puntaje Total: </Typography>
+                        <Typography variant='body1' fontWeight={'bold'}> {tot}</Typography>
                     </Box>
 
                     <Grid container spacing={2} alignItems="center" >
@@ -113,6 +114,7 @@ export const ModalClase: FC<ModalProps> = ({ title, children, open, handleClose,
                                 marks
                                 min={0}
                                 max={10}
+
                             />
                         </Grid>
 
@@ -289,6 +291,10 @@ export const ModalClase: FC<ModalProps> = ({ title, children, open, handleClose,
                         </Grid>
 
                     </Grid>
+                    <Box display={'flex'} justifyContent={'end'} mb={3} alignItems={'center'} gap={2}>
+                        <Typography variant='subtitle1'>Puntaje Total: </Typography>
+                        <Typography variant='body1' fontWeight={'bold'}> {tot}</Typography>
+                    </Box>
                 </Box>
             </DialogContent>
             <DialogActions>
