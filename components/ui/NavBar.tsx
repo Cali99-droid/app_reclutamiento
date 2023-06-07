@@ -105,6 +105,7 @@ export const NavBar = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
     return (
         <ElevationScroll {...props}>
             <AppBar sx={{ borderBottom: '1px solid #e1eeee' }} >
@@ -221,7 +222,7 @@ export const NavBar = () => {
                                 <Box >
                                     <Tooltip title={`${user?.persona?.nombres}`}>
 
-                                        <Avatar sx={{ bgcolor: '#0045AA' }} src={user?.oAuthImg ? user?.oAuthImg : ''} />
+                                        <Avatar sx={{ bgcolor: '#0045AA' }} src={user?.oAuthImg ? user?.oAuthImg : user?.img} />
 
                                     </Tooltip>
 

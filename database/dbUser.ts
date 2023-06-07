@@ -72,8 +72,8 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
       })
     if(user){
         await prisma.$disconnect()
-        const {rol_id,email, id,persona,rol} = user;
-        return {rol_id,email, id,persona,rol}
+        const {rol_id,email, id,persona,rol,img} = user;
+        return {rol_id,email, id,persona,rol,img}
     }
 
     const persona = await prisma.persona.create({
@@ -86,6 +86,7 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
             create:{
                 email:oAuthEmail.toLocaleLowerCase() ,
                 password:'@',
+                img:oAuthImg,
                 confirmado:1,
                 rol:{
                     connect: {
@@ -128,7 +129,7 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
     const{email} = newUser ;
     const id = newUser.id.toString()
     const rol_id = newUser.rol_id.toString()
-    
+  
 
     return {id, rol_id,email,oAuthImg,oAuthName,rol,persona};
 }

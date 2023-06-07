@@ -177,15 +177,11 @@ const LoginPage = (error: string) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
-    let error = '';
     const session = await getSession({ req });
-    if (query.error) {
-        error = JSON.parse(JSON.stringify(query.error))
-        console.log('eror ssp')
-    }
-
+    // console.log({session});
 
     const { p = '/' } = query;
+
     if (session) {
         return {
             redirect: {
@@ -195,10 +191,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query }) => 
         }
     }
 
+
     return {
-        props: {
-            error
-        }
+        props: {}
     }
 }
 

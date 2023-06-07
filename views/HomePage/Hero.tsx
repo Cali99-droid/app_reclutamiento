@@ -23,7 +23,7 @@ export const Hero = () => {
 
             </Box>
             <Box >
-                <Image src={"/img/hero-image.svg"} alt={"imagen trabajo"} width={matches ? 500 : 400} height={matches ? 600 : 200} />
+                <Image priority src={"/img/hero-image.svg"} alt={"imagen trabajo"} width={matches ? 500 : 400} height={matches ? 600 : 200} />
             </Box>
         </Box>
     )

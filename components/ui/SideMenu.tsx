@@ -18,15 +18,7 @@ export const SideMenu = () => {
 
     const router = useRouter();
     const { isMenuOpen, toggleSideMenu } = useContext(UiContext);
-
     const { isLoggedIn, logout, user } = useContext(AuthContext);
-
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const onSearchTerm = () => {
-        if (searchTerm.trim().length === 0) return;
-        navigateTo(`/search/${searchTerm}`);
-    }
 
 
     const navigateTo = (url: string) => {

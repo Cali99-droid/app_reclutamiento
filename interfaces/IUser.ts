@@ -10,6 +10,7 @@ export interface IUser {
     persona_id :number
     persona    :IPersona
     oAuthImg?   :string
+    img?   :string
     rol        :IRol
 
       

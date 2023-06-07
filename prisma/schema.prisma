@@ -21,6 +21,7 @@ model user {
   create_time             DateTime?                 @default(now()) @db.Timestamp(0)
   token                   String?                   @db.VarChar(100)
   confirmado              Int?                      @default(0) @db.TinyInt
+  img                     String?                   @db.LongText
   rol_id                  Int
   persona_id              Int
   convocatoria_x_jurado   convocatoria_x_jurado[]

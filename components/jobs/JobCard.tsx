@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react';
 
-import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, Chip, CardContent, Button, CardActionArea, IconButton, ListItemAvatar, ListItemText, ListItem, styled } from '@mui/material';
+import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, Button, CardActionArea, IconButton } from '@mui/material';
 
 
 
@@ -45,14 +45,6 @@ export const JobCard: FC<Props> = ({ job }) => {
                                         {job.titulo}
                                     </Typography>
 
-                                    <Box>
-                                        <IconButton aria-label="share" size='small'
-                                            sx={{ color: '#FFF' }}
-                                        >
-                                            <ShareIcon />
-                                        </IconButton>
-                                    </Box>
-
                                 </Box>
 
                                 {/* <Typography variant="body2" color="text.secondary">
@@ -73,7 +65,7 @@ export const JobCard: FC<Props> = ({ job }) => {
                     </Link>
 
                 </NextLink>
-                <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }} >
+                <CardActions sx={{ display: 'flex', justifyContent: 'space-around' }} >
 
                     <Button color='primary' startIcon={<PostAddIcon />} sx={{ mt: 3, width: '100%' }} size="large" href={`/postulant/postular/${job.id}`}>
                         Postular
