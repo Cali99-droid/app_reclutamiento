@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
 
-import { Edit } from '@mui/icons-material';
+import { Edit, UploadFile, UploadFileOutlined } from '@mui/icons-material';
 const Step2 = () => {
 
     const { data }: any = useSession();
@@ -151,12 +151,14 @@ const Step2 = () => {
                                     <TableCell align="right">{e.grado}</TableCell>
                                     <TableCell align="right">{e.year}</TableCell>
                                     <TableCell align="right">
+
                                         <IconButton onClick={() => handleEdit(e.id, e.profesion, e.institucion, e.grado, e.year)} >
                                             <Edit />
                                         </IconButton>
                                         <IconButton onClick={() => handleDelete(e.id)} color='error'>
                                             <DeleteForeverIcon />
                                         </IconButton>
+
 
 
                                     </TableCell>
@@ -251,7 +253,10 @@ const Step2 = () => {
                             min: 1950
                         }}
 
-                    />
+                    /> <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
+                    <Button variant="outlined" startIcon={<UploadFileOutlined />}>
+                        Subir Certificado
+                    </Button>
 
                 </Box>
 

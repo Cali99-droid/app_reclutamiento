@@ -1,4 +1,4 @@
-import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses } from '@mui/material';
+import { Box, Button, Divider, FormHelperText, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses } from '@mui/material';
 import React from 'react';
 import { DatosContext } from '@/context';
 import { useContext, ChangeEvent } from 'react';
@@ -8,7 +8,7 @@ import Modal from '../modal/Modal';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
-import { Edit } from '@mui/icons-material';
+import { Edit, UploadFileOutlined } from '@mui/icons-material';
 const Step4 = () => {
     const { capacitaciones, agregarCapacitacion, editarCapacitacion, quitarCapacitacion, reconocimientos, agregarReconocimiento, editarReconocimiento, quitarReconocimiento } = useContext(DatosContext)
     const { data }: any = useSession();
@@ -324,7 +324,10 @@ const Step4 = () => {
                             value={descripcion}
                             onChange={onDescripcionChange}
                         />
-
+                        <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
+                        <Button variant="outlined" startIcon={<UploadFileOutlined />}>
+                            Subir Certificado
+                        </Button>
                     </Box>
 
 

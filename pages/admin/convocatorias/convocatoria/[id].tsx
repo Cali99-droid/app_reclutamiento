@@ -60,6 +60,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
   const { calcularTotal, limpiarCriterios, juradosAsignados, addNewJurado, deleteJurado, refreshJurados } = useContext(PostContext);
 
   const [seleccionados, setSeleccionados] = useState<any[]>([])
+  const [contratados, setContratados] = useState<any[]>([])
   const [descartados, setDescartados] = useState<any[]>([])
 
   const [calificacion, setCalificacion] = useState<any[]>([])
@@ -104,10 +105,11 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
 
     if (pos) {
-      // const newPost = data?.sort((x, y) => x.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje) - y.postulante.evaluacion_x_postulante.map((ps: any) => ps.puntaje)).reverse()
+
 
       refreshJurados()
       const seleccionados = pos.filter(d => d.estado_postulante_id === 6)
+      const contratados = pos.filter(d => d.estado_postulante_id === 7)
       const descartados = pos.filter(d => d.estado_postulante_id === 4)
       if (filtrando) {
         const aptos = pos.filter(d => d.estado_postulante_id !== 4)
@@ -119,6 +121,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
       setSeleccionados(seleccionados);
       setDescartados(descartados);
+      setContratados(contratados);
     }
 
 
@@ -205,6 +208,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
             <MenuItem value='4'> No Interesa </MenuItem>
             <MenuItem value='5'> Interesante </MenuItem>
             <MenuItem value='6'> Seleccionado</MenuItem>
+            <MenuItem value='7'> Contratado</MenuItem>
+
 
           </Select>
         )
@@ -432,11 +437,12 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
   const onStatusJobUpdated = async (id: number, newStatus: string) => {
 
-    //TODO verificar cantidad de seleccionados antes de cambiar de estado
-    if (convocatoria.vacantes !== seleccionados.length && parseInt(newStatus) === 3) {
-      toast.error('No se puede cerrar la convocatoria, la cantidad de vacantes no coincide con los seleccionados')
+    // verificar cantidad de seleccionados antes de cambiar de estado
+    if (convocatoria.vacantes !== contratados.length && parseInt(newStatus) === 3) {
+      toast.error('No se puede cerrar la convocatoria, la cantidad de vacantes no coincide con los postulantes contratados')
       return;
     }
+    console.log(postulantes)
     try {
 
       await reclutApi.put('/admin/job', { id, status: newStatus });
@@ -590,7 +596,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
                     <NumbersIcon sx={{ fontSize: 60 }} color={'primary'} />
                     <Box>
                       <Typography color={'#454555'} variant="body1" > Vacantes</Typography>
-                      <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoria.vacantes} </Typography>
+                      <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoria.vacantes - contratados.length} </Typography>
 
                     </Box>
                   </Box>

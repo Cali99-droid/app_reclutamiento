@@ -478,7 +478,7 @@ const Step5 = () => {
 
 
             </Box>
-            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2} mt={3}>
+            {/* <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2} mt={3}>
                 <Box display={'flex'} justifyContent={'space-between'} mb={1}>
                     <Typography fontWeight={'bold'} >Documentos de sustento</Typography>
 
@@ -519,7 +519,7 @@ const Step5 = () => {
 
 
                 <Divider />
-            </Box>
+            </Box> */}
 
 
         </Box >

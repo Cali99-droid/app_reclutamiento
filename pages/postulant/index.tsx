@@ -1,7 +1,7 @@
 import { prisma } from '@/server/db/client';
 import { JobsLayout } from "@/components/layouts";
 
-import { Box } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 import { IGrado, IPersona } from "@/interfaces";
@@ -10,13 +10,13 @@ import { getSession } from 'next-auth/react';
 import { apiCon } from '@/apies';
 
 import { postulante } from '@prisma/client';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import { useState, useContext, useEffect } from 'react';
+import { useContext } from 'react';
 
 import { FormDatos } from '../../components/postulants/FormDatos';
 import Form from '@/components/pasos/Form';
-import { AuthContext, DatosContext } from '@/context';
+import { DatosContext } from '@/context';
 
 
 interface Props {
@@ -34,8 +34,11 @@ const PostulantPage: NextPage<Props> = ({ persona, grados, postulante }) => {
     <JobsLayout title={"AE | Postulante "} pageDescription={"Postular a un empleo"}>
       <ToastContainer />
 
-      <Box mb={2} mt={15} padding={4}>
+      <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingLeft={4} paddingRight={4} paddingTop={15} paddingBottom={4}  >
+        <Paper sx={{ bgcolor: '#0045AA', padding: 2, mb: 2 }} >
+          <Typography variant="h2" color={'#FFF'}>Actualizar mis datos</Typography>
 
+        </Paper>
         <Form />
         {
           activeStep === 0 && (

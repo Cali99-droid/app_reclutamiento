@@ -1,4 +1,4 @@
-import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, FormHelperText } from '@mui/material';
 import React, { useEffect } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useContext, ChangeEvent } from 'react';
@@ -10,7 +10,7 @@ import { useSession } from 'next-auth/react';
 import AddIcon from '@mui/icons-material/Add';
 import { toast } from 'react-toastify';
 import { validations } from '@/helpers';
-import { Edit } from '@mui/icons-material';
+import { Edit, UploadFileOutlined } from '@mui/icons-material';
 
 const inputProps = {
     max: '50',
@@ -267,7 +267,6 @@ const Step3 = () => {
     return (
         <Box padding={4} mt={3} className="fadeIn" >
 
-            <Divider />
             <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2} >
                 <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} mb={2}  >
 
@@ -585,7 +584,10 @@ const Step3 = () => {
                         }}
                     />
 
-
+                    <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
+                    <Button variant="outlined" startIcon={<UploadFileOutlined />}>
+                        Subir Certificado
+                    </Button>
                 </Box>
 
 

@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { useEffect, } from 'react';
 
 
-import { Grid, Link, Box, Button, IconButton, Typography, Select, MenuItem, SelectChangeEvent, Paper, Tabs, Tab, TextField, Toolbar, AppBar } from '@mui/material';
+import { Grid, Link, Box, Button, IconButton, Typography, Select, MenuItem, SelectChangeEvent, Paper, Tabs, Tab, TextField, Toolbar, AppBar, Chip } from '@mui/material';
 import { DataGrid, GridColDef, esES } from '@mui/x-data-grid';
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -24,21 +24,23 @@ import Modal from '@/components/modal/Modal';
 import axios from 'axios';
 import { Paperbase } from '@/components/dash';
 import moment from 'moment';
+import { GetStaticProps, NextPage } from 'next';
+import { prisma } from '../../../server/db/client';
+import { convocatoria } from '@prisma/client';
+interface Props {
+
+  convos: IJob[]
+}
 
 
 
+const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
 
-const ConvocatoriasPage = () => {
+  const [convocatorias, setConvocatorias] = useState(convos)
 
-  const { data, error } = useSWR<IJob[]>('/api/admin/convocatorias');
-  const [convocatorias, setConvocatorias] = useState<IJob[]>([]);
   const matches = useMediaQuery('(min-width:600px)');
 
-  useEffect(() => {
-    if (data) {
-      setConvocatorias(data);
-    }
-  }, [data])
+
 
 
 
@@ -94,7 +96,7 @@ const ConvocatoriasPage = () => {
     handleClose()
 
   }
-  if (!data && !error) return (<></>);
+
   const onStatusUpdated = async (id: number, newStatus: string) => {
 
     const previosConvocatorias = convocatorias.map(convocatoria => ({ ...convocatoria }));
@@ -147,18 +149,8 @@ const ConvocatoriasPage = () => {
 
         return (
 
+          <Chip label={`${params.row.estado}`} color={params.row.estado === 'abierta' ? 'success' : 'warning'} variant="outlined" />
 
-          <Select
-            value={parseInt(params.row.estado)}
-            label="Rol"
-            onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
-            sx={{ width: '200px', padding: 1 }}
-          >
-            <MenuItem value={1}> Abierta </MenuItem>
-            <MenuItem value={2}>En evaluación</MenuItem>
-            <MenuItem value={3}> Cerrada</MenuItem>
-
-          </Select>
 
         )
       }
@@ -192,7 +184,7 @@ const ConvocatoriasPage = () => {
     id: job.id,
     titulo: job.titulo,
     vacantes: job.vacantes,
-    estado: job.estado.id,
+    estado: job.estado.nombre,
     jobId: job.id,
     vigencia: moment(job.vigencia).toDate().toLocaleDateString(),
     postulantes: job._count.postulante_x_convocatoria,
@@ -272,32 +264,32 @@ const ConvocatoriasPage = () => {
   )
 }
 
-// export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
 
 
-//   // const convocatorias = await apiCon('/admin/convocatorias')
-//   const convocatorias = await prisma.convocatoria.findMany({
-//     include: {
-//       estado: {
-//         select: { id: true, nombre: true },
-//       },
-//       grado: {
-//         select: { nombre: true },
-//       },
-//       _count: {
-//         select: { postulante_x_convocatoria: true }
-//       }
-//     },
-//   });
+  // const convocatorias = await apiCon('/admin/convocatorias')
+  const convocatorias = await prisma.convocatoria.findMany({
+    include: {
+      estado: {
+        select: { id: true, nombre: true },
+      },
+      grado: {
+        select: { nombre: true },
+      },
+      _count: {
+        select: { postulante_x_convocatoria: true }
+      }
+    },
+  });
 
-//   await prisma.$disconnect()
+  await prisma.$disconnect()
+  const convos = JSON.parse(JSON.stringify(convocatorias))
+  return {
+    props: {
+      convos
 
-//   return {
-//     props: {
-//       convocatorias
-
-//     }
-//   }
-// }
+    }
+  }
+}
 
 export default ConvocatoriasPage
