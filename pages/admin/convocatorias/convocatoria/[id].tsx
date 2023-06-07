@@ -200,11 +200,11 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
           >
 
             <MenuItem value='1'> Inscrito </MenuItem>
-            <MenuItem value='2'> Apto a Entrevista</MenuItem>
-            <MenuItem value='3'> Apto a Evaluación</MenuItem>
+            <MenuItem value='2'> Pasa a Entrevista</MenuItem>
+            <MenuItem value='3'> Pasa a Evaluación</MenuItem>
             <MenuItem value='4'> No Interesa </MenuItem>
             <MenuItem value='5'> Interesante </MenuItem>
-            <MenuItem value='6'> Selecionado</MenuItem>
+            <MenuItem value='6'> Seleccionado</MenuItem>
 
           </Select>
         )

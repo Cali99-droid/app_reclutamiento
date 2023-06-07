@@ -13,14 +13,12 @@ export const Hero = () => {
                 <Box display={'flex'} gap={4}>
                     <Button size={matches ? 'large' : 'medium'} sx={{ mt: 5 }} endIcon={<ArrowRight />}>
                         CONOCER MAS
-
                     </Button>
                     <Button color="inherit" size={matches ? 'large' : 'medium'} sx={{ mt: 5 }} endIcon={<ArrowRight />} href="/auth/register">
                         REGISTRARME
 
                     </Button>
                 </Box>
-
             </Box>
             <Box >
                 <Image priority src={"/img/hero-image.svg"} alt={"imagen trabajo"} width={matches ? 500 : 400} height={matches ? 600 : 200} />

@@ -210,7 +210,7 @@ export const NavBar = () => {
 
                     {!isLoggedIn && (
                         <Box sx={{ padding: 1 }}>
-                            <Button variant='outlined' onClick={() => push('/auth/login')}>Acceder</Button>
+                            <Button variant='outlined' href='/auth/login'>Acceder</Button>
                         </Box>
                     )}
 
