@@ -27,12 +27,12 @@ const LoginPage = (error: string) => {
     const [showError, setShowError] = useState(false);
 
     const { verificarConfirmacion, noConfirm } = useContext(AuthContext)
-    const [providers, setProviders] = useState<any>({})
-    useEffect(() => {
-        getProviders().then(prov => {
-            setProviders(prov)
-        })
-    }, [])
+    // const [providers, setProviders] = useState<any>({})
+    // useEffect(() => {
+    //     getProviders().then(prov => {
+    //         setProviders(prov)
+    //     })
+    // }, [])
 
 
 
@@ -151,20 +151,20 @@ const LoginPage = (error: string) => {
                             <Grid item xs={12} display='flex' justifyContent='end' flexDirection={'column'}>
                                 <Divider sx={{ width: '100%', mb: 2 }} />
                                 {
-                                    Object.values(providers).map((provider: any) => {
-                                        if (provider.id === 'credentials') return (<div key={'credentials'}></div>)
-                                        return (
-                                            <Button
-                                                key={provider.id}
-                                                variant='outlined'
-                                                fullWidth
-                                                size='medium'
-                                                startIcon={<GoogleIcon />}
-                                                onClick={() => signIn(provider.id)}
-                                            >{`Entrar con ${provider.name}`}
-                                            </Button>
-                                        )
-                                    })
+                                    // Object.values(providers).map((provider: any) => {
+                                    //     if (provider.id === 'credentials') return (<div key={'credentials'}></div>)
+                                    //     return (
+                                    //         <Button
+                                    //             key={provider.id}
+                                    //             variant='outlined'
+                                    //             fullWidth
+                                    //             size='medium'
+                                    //             startIcon={<GoogleIcon />}
+                                    //             onClick={() => signIn(provider.id)}
+                                    //         >{`Entrar con ${provider.name}`}
+                                    //         </Button>
+                                    //     )
+                                    // })
                                 }
 
                             </Grid>
