@@ -89,7 +89,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
       setLastMessage(data.p.comentario)
       setFechaComennt(data.p.fecha_comentario)
       setMessage('');
-      toast.success('🦄 Mensage enviado asignado correctamente!')
+      toast.success('🦄 Mensage enviado correctamente!')
 
     } catch (error) {
       console.log(error)
@@ -111,6 +111,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
       const seleccionados = pos.filter(d => d.estado_postulante_id === 6)
       const contratados = pos.filter(d => d.estado_postulante_id === 7)
       const descartados = pos.filter(d => d.estado_postulante_id === 4)
+
       if (filtrando) {
         const aptos = pos.filter(d => d.estado_postulante_id !== 4)
         setPostulantes(aptos);
@@ -130,17 +131,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
 
 
-  const comprobarEntrevista = (puntajes: evaluacion_x_postulante[]) => {
-    puntajes.forEach(p => {
-      if (p.evaluacion_id === 1) {
-        return true;
-      } else {
-        return false;
-      }
 
-    });
-
-  }
 
 
   const columns: GridColDef[] = [
@@ -257,17 +248,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
                         < StarsIcon />
                       </IconButton>
                     </Tooltip>
-                    {/* <Tooltip title="Evaluar Clase" placement="right-start" >
-                      <IconButton
-                        sx={{ color: cyan[600] }}
-                        aria-label="evaluar"
-                        onClick={() => { handleOpenClase(params.row.id,) }}
-                        disabled={params.row.estado !== 3 || params.row.puntajeJur > 0}
 
-                      >
-                        < TaskTwoToneIcon />
-                      </IconButton>
-                    </Tooltip> */}
                   </>
 
                 ) : (convocatoria.estado.id !== 3 && convocatoria.categoria_id == 1) ? (
@@ -282,13 +263,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
                     </IconButton>
 
 
-                    {/* <IconButton
-                      sx={{ color: cyan[600] }}
-                      aria-label="evaluar"
-                      onClick={() => { handleOpenAptitud(params.row.id) }}
-                      disabled={params.row.estado !== 3 || params.row.puntajeJur > 0}>
-                      <TaskTwoToneIcon />
-                    </IconButton> */}
+
 
                   </>
 
@@ -415,10 +390,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
       ...p,
       estado_postulante_id: id === p.id ? parseInt(newStatus) : p.id
     }));
-    setBackd(true)
-    Promise.resolve(setPostulantes(updatedPostulantes)).then(function () {
-      setBackd(false);
-    })
+    setPostulantes(updatedPostulantes);
 
 
     try {
@@ -439,93 +411,32 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
     // verificar cantidad de seleccionados antes de cambiar de estado
     if (convocatoria.vacantes !== contratados.length && parseInt(newStatus) === 3) {
-      toast.error('No se puede cerrar la convocatoria, la cantidad de vacantes no coincide con los postulantes contratados')
+      toast.error('No se puede cerrar la convocatoria aún hay vacantes disponibles')
       return;
     }
-    console.log(postulantes)
+
+
     try {
 
       await reclutApi.put('/admin/job', { id, status: newStatus });
       refreshData()
+
     } catch (error) {
 
       console.log(error);
       alert('No se pudo actualizar el role del usuario');
     }
 
+
   }
   const refreshData = () => {
     router.replace(router.asPath)
   }
   //-----------------------------------------------------------------------------------------
-  const [openClase, setOpenClase] = useState(false)
-  const handleOpenClase = (id: number) => {
-    setOpenClase(true);
-    setIdPos(id)
-    setIdEv(2)
-  };
 
-  const handleCloseClase = () => {
-    setOpenClase(false);
-  };
-
-
-
-  const handleConfirmClase = async () => {
-    const puntaje = calcularTotal();
-    try {
-
-      const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 100 });
-
-      toast.success('🦄 Puntaje asignado correctamente!'),
-        handleCloseClase()
-      limpiarCriterios()
-
-    } catch (error) {
-
-      console.log(error);
-      alert('El postulante ya tiene puntaje');
-    }
-
-
-
-
-
-  };
 
   //-------------------------------------------------------------------
-  const [openAptitud, setOpenAptitud] = useState(false)
-  const handleOpenAptitud = (id: number) => {
-    setOpenAptitud(true);
-    setIdPos(id)
-    setIdEv(2)
-  };
 
-  const handleCloseAptitud = () => {
-    setOpenAptitud(false);
-  };
-  const handleConfirmAptitud = async () => {
-
-
-
-    const puntaje = calcularTotal();
-
-
-    try {
-
-      const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 100 });
-      console.log(resp)
-      toast.success('🦄 Puntaje asignado correctamente!'),
-        handleCloseAptitud()
-      limpiarCriterios()
-
-    } catch (error) {
-
-      console.log(error);
-      alert('El postulante ya tiene puntaje');
-    }
-
-  };
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -831,8 +742,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
           </DialogActions>
         </form>
       </ModalEntrevista>
-      <ModalClase title={'Evaluar Clase Modelo'} open={openClase} handleClose={handleCloseClase} handleConfirm={handleConfirmClase} />
-      <ModalAptitud title={'Evaluar aptitudes'} open={openAptitud} handleClose={handleCloseAptitud} handleConfirm={handleConfirmAptitud} />
+
 
       <Modal title={'Agregar comentario'} open={messageModal} handleClose={() => setMessageModal(false)} handleConfirm={sendMessage}>
         <Box mt={1} width={300}>
