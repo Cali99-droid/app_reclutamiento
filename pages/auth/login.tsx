@@ -177,8 +177,12 @@ const LoginPage = (error: string) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+    let error = '';
     const session = await getSession({ req });
-    // console.log({session});
+    if (query.error) {
+        error = JSON.parse(JSON.stringify(query.error))
+        console.log('eror ssp')
+    }
 
     const { p = '/' } = query;
 
