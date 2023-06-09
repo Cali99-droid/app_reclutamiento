@@ -1,18 +1,17 @@
 import { Paperbase } from '@/components/dash'
 import { FullScreenLoading } from '@/components/ui';
-import { Box, Breadcrumbs, CardMedia, Grid, Link, Paper, Typography, styled, useMediaQuery } from '@mui/material';
+import { Box, Breadcrumbs, Card, CardMedia, Grid, Link, Paper, Typography, styled, useMediaQuery } from '@mui/material';
 import { DataGrid, GridColDef, esES } from '@mui/x-data-grid';
 import { GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React from 'react'
 import { prisma } from '../../../server/db/client';
-import { postulante, convocatoria } from '@prisma/client';
-import HelpIcon from '@mui/icons-material/Help';
-
+import HailIcon from '@mui/icons-material/Hail';
+import DvrIcon from '@mui/icons-material/Dvr';
 
 interface Props {
-    postulantes: any[]
-
+    contratados: any[]
+    convocatoriasAbiertas: number
     // juradosAsignados: any[]
 }
 const Item = styled(Paper)(({ theme }) => ({
@@ -22,6 +21,7 @@ const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
     borderRadius: 10
+
 
 }));
 const columns: GridColDef[] = [
@@ -84,12 +84,12 @@ function generateRandom() {
     }
     return retVal;
 }
-const DashdoardPage: NextPage<Props> = ({ postulantes }) => {
+const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas }) => {
 
-    const router = useRouter();
+    const { push } = useRouter();
     const matches = useMediaQuery('(min-width:600px)');
 
-    const rows = postulantes.map((p, index) => ({
+    const rows = contratados.map((p, index) => ({
         id: index + 1,
         img: p.postulante.image,
         nombres: p.postulante.persona.nombres + ' ' + p.postulante.persona.apellido_pat + ' ' + p.postulante.persona.apellido_mat,
@@ -104,15 +104,6 @@ const DashdoardPage: NextPage<Props> = ({ postulantes }) => {
                 ? <FullScreenLoading />
                 :
                 <Box sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} className="fadeIn" >
-                    <Box mb={2}>
-                        <Breadcrumbs aria-label="breadcrumb">
-                            <Link underline="hover" color="inherit" onClick={() => router.push("/admin/convocatorias")} sx={{ cursor: 'pointer' }}>
-                                Convocatorias
-                            </Link>
-
-                            <Typography fontWeight={'bold'} color="text.primary">Hola</Typography>
-                        </Breadcrumbs>
-                    </Box>
 
                     <Box display={'flex'} gap={3} flexDirection={matches ? 'row' : 'column'}>
 
@@ -121,10 +112,11 @@ const DashdoardPage: NextPage<Props> = ({ postulantes }) => {
                                 <Item elevation={4}>
 
                                     <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-
+                                        <HailIcon sx={{ fontSize: 60 }} color={'primary'} />
                                         <Box>
-                                            <Typography color={'#454555'} variant="body1" > Vacantes</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >Item </Typography>
+
+                                            <Typography color={'#454555'} variant="body1" >  Contratados - {new Date().getFullYear()}</Typography>
+                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{contratados.length} </Typography>
 
                                         </Box>
                                     </Box>
@@ -132,63 +124,32 @@ const DashdoardPage: NextPage<Props> = ({ postulantes }) => {
                                 </Item>
                             </Grid>
                             <Grid item xs={12} sm={4}>
-                                <Item elevation={4}>
-                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                                <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
+                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'} >
 
-                                        <Box>  <Typography color={'#454555'} variant="body1" > Postulantes</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >item 2 </Typography>
-
-                                        </Box>
-                                    </Box>
-                                </Item>
-                            </Grid>
-                            <Grid item xs={12} sm={4} >
-                                <Item elevation={4}>
-                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-
+                                        <DvrIcon sx={{ fontSize: 60 }} color={'primary'} />
                                         <Box>
-
-                                            <Typography color={'#454555'} variant="body1" > Estado </Typography>
+                                            <Typography color={'#454555'} variant="body1" > Convocatorias Abiertas</Typography>
+                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoriasAbiertas} </Typography>
 
                                         </Box>
                                     </Box>
                                 </Item>
                             </Grid>
                             <Grid item xs={12} sm={4}>
-                                <Item elevation={4}>
-                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                                <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
+                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'} >
 
-                                        <Box><Typography color={'#454555'} variant="body1" > Categoria</Typography>
-                                            <Typography color={'#454555'} fontWeight={'bold'} fontSize={37} textTransform={'capitalize'}>number</Typography>
-
-                                        </Box>
-                                    </Box>
-                                </Item>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <Item elevation={4}>
-                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-
+                                        <DvrIcon sx={{ fontSize: 60 }} color={'primary'} />
                                         <Box>
-                                            <Typography color={'#454555'} variant="body1" > Seleccionados</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h3" textTransform={'uppercase'}>number</Typography>
+                                            <Typography color={'#454555'} variant="body1" > Convocatorias Abiertas</Typography>
+                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoriasAbiertas} </Typography>
 
                                         </Box>
                                     </Box>
                                 </Item>
                             </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <Item elevation={4}>
-                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
 
-                                        <Box>
-                                            <Typography color={'#454555'} variant="body1" > Descartados</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >item</Typography>
-
-                                        </Box>
-                                    </Box>
-                                </Item>
-                            </Grid>
 
                         </Grid>
 
@@ -196,7 +157,7 @@ const DashdoardPage: NextPage<Props> = ({ postulantes }) => {
                     <Box mt={4}
                     >
                         <Item elevation={4} sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 400, margin: 'auto', overflow: 'visible' }}>
-
+                            <Typography>Lista de Contratados</Typography>
                             <Box
                                 sx={{
                                     height: 400,
@@ -215,23 +176,17 @@ const DashdoardPage: NextPage<Props> = ({ postulantes }) => {
                     </Box>
                 </Box>
             }
-
-
-
-
-
-
-
-
-
-
         </Paperbase>
 
     )
 }
 export const getStaticProps: GetStaticProps = async () => {
 
-
+    const convocatorias = await prisma.convocatoria.findMany({
+        where: {
+            estadoId: 1
+        }
+    })
     const listaPostulantes = await prisma.postulante_x_convocatoria.findMany({
         where: {
             estado_postulante_id: 7
@@ -256,13 +211,16 @@ export const getStaticProps: GetStaticProps = async () => {
             }
         },
     });
-    const postulantes = JSON.parse(JSON.stringify(listaPostulantes))
-
     await prisma.$disconnect()
+    const contratados = JSON.parse(JSON.stringify(listaPostulantes))
+    const convocatoriasAbiertas = convocatorias.length;
+
+
 
     return {
         props: {
-            postulantes
+            contratados,
+            convocatoriasAbiertas
 
         }
     }

@@ -23,7 +23,7 @@ import RatingFrom from '@/components/modal/RatingForm';
 import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
-import ModalClase from '../../../../components/modal/ModalClase';
+
 import NumbersIcon from '@mui/icons-material/Numbers';
 import PeopleIcon from '@mui/icons-material/People';
 import SpellcheckIcon from '@mui/icons-material/Spellcheck';
