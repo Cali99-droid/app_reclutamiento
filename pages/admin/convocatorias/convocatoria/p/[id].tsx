@@ -104,7 +104,7 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
                         <Item elevation={1}>
                             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Image
-
+                                    priority
                                     src={(postulante.image === null ? '/avatar.jpg' : postulante.image)}
                                     width={150}
                                     height={150}

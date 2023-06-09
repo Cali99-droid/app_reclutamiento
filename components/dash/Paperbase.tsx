@@ -10,6 +10,9 @@ import Link from '@mui/material/Link';
 import Navigator from './Navigator';
 
 import Header from './Header';
+import { useState } from 'react';
+import { InView } from 'react-intersection-observer';
+import { FullScreenLoading } from '../ui';
 
 
 function Copyright() {
@@ -183,42 +186,53 @@ export const Paperbase: FC<Props> = ({ children, title, subTitle, icon, navigate
         setMobileOpen(!mobileOpen);
     };
 
+
+    const [showLoadingMessage, setShowLoadingMessage] = useState(true);
+    const handleIntersection = (inView: boolean) => {
+        if (inView) {
+            setShowLoadingMessage(false);
+        }
+    };
     return (
-        <ThemeProvider theme={theme}>
-            <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-                <CssBaseline />
-                <Box
-                    component="nav"
-                    sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-                >
-                    {isSmUp ? null : (
+        <InView onChange={handleIntersection}>
+            <ThemeProvider theme={theme}>
+                {showLoadingMessage && <FullScreenLoading />}
+
+                <Box sx={{ display: 'flex', minHeight: '100vh' }} className='fade-in'>
+                    <CssBaseline />
+                    <Box
+                        component="nav"
+                        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                    >
+                        {isSmUp ? null : (
+                            <Navigator
+                                PaperProps={{ style: { width: drawerWidth } }}
+                                variant="temporary"
+                                open={mobileOpen}
+                                onClose={handleDrawerToggle}
+                            />
+                        )}
                         <Navigator
                             PaperProps={{ style: { width: drawerWidth } }}
-                            variant="temporary"
-                            open={mobileOpen}
-                            onClose={handleDrawerToggle}
+                            sx={{ display: { sm: 'block', xs: 'none' } }}
                         />
-                    )}
-                    <Navigator
-                        PaperProps={{ style: { width: drawerWidth } }}
-                        sx={{ display: { sm: 'block', xs: 'none' } }}
-                    />
-                </Box>
-                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <Header onDrawerToggle={handleDrawerToggle} titulo={title}
-                    >
-                        {navigate}
-                    </Header>
-                    <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-                        {children}
                     </Box>
-                    <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
-                        <Copyright />
+                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        <Header onDrawerToggle={handleDrawerToggle} titulo={title}
+                        >
+                            {navigate}
+                        </Header>
+                        <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
+                            {children}
+                        </Box>
+                        <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
+                            <Copyright />
+                        </Box>
                     </Box>
                 </Box>
-            </Box>
-        </ThemeProvider>
 
+            </ThemeProvider>
+        </InView>
 
     );
 }

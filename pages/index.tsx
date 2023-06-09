@@ -1,11 +1,6 @@
 import { JobsLayout } from "@/components/layouts";
-import { Box, Card, CardActions, CardContent, CardMedia, Chip, Grid, IconButton, Link, Paper, useMediaQuery, } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import { Facebook, Twitter } from "@mui/icons-material";
-import Image from 'next/image';
-import SquareIcon from '@mui/icons-material/Square';
-import VerticalTabs from "@/views/HomePage/VerticalTabs";
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import { Box, useMediaQuery, } from '@mui/material';
+
 import { Hero } from '../views/HomePage/Hero';
 import { Partners } from "@/views/HomePage/Partners";
 import { Beneficios } from '../views/HomePage/Beneficios';

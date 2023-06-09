@@ -1,11 +1,20 @@
 import { Paperbase } from '@/components/dash'
 import { FullScreenLoading } from '@/components/ui';
-import { Box, Breadcrumbs, Grid, Link, Paper, Typography, styled, useMediaQuery } from '@mui/material';
-import { DataGrid, esES } from '@mui/x-data-grid';
+import { Box, Breadcrumbs, CardMedia, Grid, Link, Paper, Typography, styled, useMediaQuery } from '@mui/material';
+import { DataGrid, GridColDef, esES } from '@mui/x-data-grid';
+import { GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React from 'react'
+import { prisma } from '../../../server/db/client';
+import { postulante, convocatoria } from '@prisma/client';
+import HelpIcon from '@mui/icons-material/Help';
 
 
+interface Props {
+    postulantes: any[]
+
+    // juradosAsignados: any[]
+}
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -15,14 +24,79 @@ const Item = styled(Paper)(({ theme }) => ({
     borderRadius: 10
 
 }));
-const DashdoardPage = () => {
+const columns: GridColDef[] = [
+    {
+        field: 'id',
+        headerName: 'Cod',
+        width: 100,
+
+    },
+    {
+        field: 'img',
+        headerName: 'Foto',
+
+        renderCell: ({ row }) => {
+            return (
+
+                <CardMedia
+                    component='img'
+                    alt={row.title}
+                    className='fadeIn'
+                    image={row.img}
+                />
+
+            )
+        }
+    },
+
+    {
+        field: 'nombres',
+        headerName: 'Nombres',
+        width: 250,
+
+    },
+
+
+    {
+        field: 'puesto',
+        headerName: 'Puesto',
+        width: 300,
+    },
+    {
+        field: 'actions',
+        headerName: ' Acciones',
+        width: 150,
+
+    },
+
+
+
+
+
+
+];
+function generateRandom() {
+    var length = 8,
+        charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        retVal = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return retVal;
+}
+const DashdoardPage: NextPage<Props> = ({ postulantes }) => {
 
     const router = useRouter();
     const matches = useMediaQuery('(min-width:600px)');
 
-
+    const rows = postulantes.map((p, index) => ({
+        id: index + 1,
+        img: p.postulante.image,
+        nombres: p.postulante.persona.nombres + ' ' + p.postulante.persona.apellido_pat + ' ' + p.postulante.persona.apellido_mat,
+        puesto: p.convocatoria.titulo
+    }))
     return (
-        <Paperbase title={`Daashboard `} subTitle={"Resumen"}>
+        <Paperbase title={`Dashboard `} subTitle={"Resumen"}>
 
 
 
@@ -126,23 +200,13 @@ const DashdoardPage = () => {
                             <Box
                                 sx={{
                                     height: 400,
-                                    width: '100%',
-                                    '& .mal': {
-                                        backgroundColor: '#ff5722',
-                                        color: '#FFF',
-                                    },
-                                    '& .medio': {
-                                        backgroundColor: '#ff943975',
-                                        color: '#FFF',
-                                    },
-                                    '& .bien': {
-                                        backgroundColor: '#4caf50',
-                                        color: '#FFF',
-                                    },
+
                                 }} >
 
                                 <DataGrid
-                                    localeText={esES.components.MuiDataGrid.defaultProps.localeText} columns={[]} rows={[]} />
+                                    getRowHeight={() => 'auto'}
+                                    getRowId={(row: any) => generateRandom()}
+                                    localeText={esES.components.MuiDataGrid.defaultProps.localeText} columns={columns} rows={rows} />
 
 
                             </Box>
@@ -164,5 +228,43 @@ const DashdoardPage = () => {
         </Paperbase>
 
     )
+}
+export const getStaticProps: GetStaticProps = async () => {
+
+
+    const listaPostulantes = await prisma.postulante_x_convocatoria.findMany({
+        where: {
+            estado_postulante_id: 7
+
+        },
+
+        select: {
+
+            postulante: {
+                select: {
+                    persona: true,
+                    image: true
+                }
+
+
+            },
+            convocatoria: {
+                select: {
+                    titulo: true
+                }
+
+            }
+        },
+    });
+    const postulantes = JSON.parse(JSON.stringify(listaPostulantes))
+
+    await prisma.$disconnect()
+
+    return {
+        props: {
+            postulantes
+
+        }
+    }
 }
 export default DashdoardPage

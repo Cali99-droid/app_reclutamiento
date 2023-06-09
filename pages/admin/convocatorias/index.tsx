@@ -27,6 +27,8 @@ import moment from 'moment';
 import { GetStaticProps, NextPage } from 'next';
 import { prisma } from '../../../server/db/client';
 import { convocatoria } from '@prisma/client';
+import { InView } from 'react-intersection-observer';
+import { FullScreenLoading } from '@/components/ui';
 interface Props {
 
   convos: IJob[]
@@ -190,16 +192,6 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
     postulantes: job._count.postulante_x_convocatoria,
   }))
 
-  const Navigate = () => {
-    return (
-      <Tabs value={0} textColor="inherit">
-        <Tab label="Users" />
-        <Tab label="Sign-in method" />
-        <Tab label="Templates" />
-        <Tab label="Usage" />
-      </Tabs>
-    );
-  }
 
   const navigateTo = (url: string) => {
     router.push(url);
@@ -208,6 +200,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
   return (
 
     <Paperbase title={"Administrar convocatorias "} subTitle={"Listado de convocatorias"} >
+
       <Paper sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }}>
         <AppBar
           position="static"
@@ -256,7 +249,6 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
           </Modal>
         </Box>
       </Paper>
-
 
     </Paperbase >
 
