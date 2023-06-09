@@ -36,7 +36,7 @@ type FormData = {
 
 
 const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
-
+    console.log(job)
     if (job.vigencia) {
         job.vigencia = moment(job.vigencia).toDate().toISOString().substring(0, 10)
     }

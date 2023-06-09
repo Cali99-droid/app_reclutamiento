@@ -6,7 +6,7 @@ import { PostContext } from '@/context';
 import { GetServerSideProps, NextPage } from "next";
 import { DataGrid, GridCellParams, GridCloseIcon, GridColDef, esES } from "@mui/x-data-grid";
 import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider, useMediaQuery, Backdrop, CircularProgress } from '@mui/material';
-import { evaluacion_x_postulante, postulante } from '@prisma/client';
+import { evaluacion_x_postulante, postulante, categoria } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -38,22 +38,23 @@ import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import TextField from '@mui/material/TextField';
 import moment from 'moment';
 import 'moment/locale/es';
-import { usePostulantes } from '@/hooks';
-import { FullScreenLoading } from '@/components/ui';
 moment.locale('es');
 
+import { usePostulantes } from '@/hooks';
+import { FullScreenLoading } from '@/components/ui';
 interface Props {
   postulantes: postulante[]
   convocatoria: IJob
 
   jurados: IUser[];
-  // juradosAsignados: any[]
+
 }
 
 const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
+
   const router = useRouter();
   const { id } = router.query
-  const { pos, isLoading } = usePostulantes(`/admin/postulantes/${id}`);
+  const { pos, isLoading } = usePostulantes(`/admin/postulantes/${convocatoria.id}`);
 
   const [postulantes, setPostulantes] = useState<any[]>([]);
 
@@ -128,10 +129,6 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pos, filtrando])
-
-
-
-
 
 
   const columns: GridColDef[] = [
@@ -363,7 +360,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
     try {
 
       const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 50, idUser });
-      console.log(resp)
+
       toast.success('🦄 Puntaje asignado correctamente!'),
         limpiarCriterios()
       handleClose()
@@ -589,13 +586,14 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
               <Item elevation={4}>
                 <Button onClick={() => setJuradoModal(true)}>Asignar jurados</Button>
                 <List dense>
+                  <Typography fontWeight={'bold'}>Jurados</Typography>
                   {
                     juradosAsignados.map((j) =>
                     (
 
                       <ListItem key={j.id}>
                         <ListItemText
-                          primary={`${j.user.email}`}
+                          primary={`${j.user.persona.nombres + ' ' + j.user.persona.apellido_pat + ' ' + j.user.persona.apellido_mat}`}
 
                         />
 
@@ -776,7 +774,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
               <MenuItem value={0} disabled></MenuItem>
               {
                 jurados.map(jurado => (
-                  <MenuItem key={jurado.id} value={jurado.id}>{jurado.email.toLocaleUpperCase()}</MenuItem>
+                  <MenuItem key={jurado.id} value={jurado.id}>{jurado.persona.nombres.toLocaleUpperCase() + ' ' + jurado.persona.apellido_pat.toLocaleUpperCase() + ' ' + jurado.persona.apellido_mat.toLocaleUpperCase()}</MenuItem>
                 ))
               }
 
@@ -793,11 +791,22 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { id = '' } = query;
+  if (isNaN(parseInt(id.toString()))) {
+    return {
+      redirect: {
+        destination: '/admin/convocatorias',
+        permanent: false
+      }
+    }
+  }
   const resConvocatoria = await prisma.convocatoria.findUnique({
     where: {
       id: parseInt(id.toString())
     },
-    include: {
+    select: {
+      id: true,
+      titulo: true,
+      vacantes: true,
       estado: {
         select: { id: true, nombre: true },
       },
@@ -812,12 +821,25 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       }
     },
   })
-
+  if (!resConvocatoria) {
+    return {
+      redirect: {
+        destination: '/admin/convocatorias',
+        permanent: false
+      }
+    }
+  }
   const juradosSer = await prisma.user.findMany({
     where: {
       rol_id: 3
+    },
+    select: {
+      id: true,
+      persona: true
     }
   })
+
+
 
 
   await prisma.$disconnect()

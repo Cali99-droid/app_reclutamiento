@@ -1,49 +1,37 @@
-import useSWR from 'swr';
-import { useEffect, } from 'react';
+import { reclutApi } from '@/apies';
+import { prisma } from '../../../server/db/client';
+import axios from 'axios';
+import moment from 'moment';
 
+import { Paperbase } from '@/components/dash';
+import Modal from '@/components/modal/Modal';
 
-import { Grid, Link, Box, Button, IconButton, Typography, Select, MenuItem, SelectChangeEvent, Paper, Tabs, Tab, TextField, Toolbar, AppBar, Chip } from '@mui/material';
-import { DataGrid, GridColDef, esES } from '@mui/x-data-grid';
-
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
-;
+import NextLink from 'next/link';
+import { useState } from 'react';
+
 import { IJob } from '@/interfaces';
 
-
-import * as React from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
+import { Grid, Link, Box, Button, IconButton, Typography, Paper, Toolbar, AppBar, Chip } from '@mui/material';
+import { DataGrid, GridColDef, esES } from '@mui/x-data-grid';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import 'moment/locale/es';
 
-import { useState } from 'react';
-import { reclutApi } from '@/apies';
-import NextLink from 'next/link';
-import Modal from '@/components/modal/Modal';
-import axios from 'axios';
-import { Paperbase } from '@/components/dash';
-import moment from 'moment';
-import { GetStaticProps, NextPage } from 'next';
-import { prisma } from '../../../server/db/client';
-import { convocatoria } from '@prisma/client';
-import { InView } from 'react-intersection-observer';
-import { FullScreenLoading } from '@/components/ui';
+moment.locale('es');
 interface Props {
 
   convos: IJob[]
 }
 
 
-
 const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
 
   const [convocatorias, setConvocatorias] = useState(convos)
-
   const matches = useMediaQuery('(min-width:600px)');
-
-
-
 
 
   {/*---------------------------------------* */ }
@@ -62,7 +50,8 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
 
   const handleConfirm = async () => {
     const datos = await deleteJob();
-    console.log(datos)
+
+
 
   };
   const refreshData = () => {
@@ -77,56 +66,38 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
         method: 'DELETE',
         data: id
       }).then(() => {
-        refreshData()
+        const newConvos = convocatorias.filter(c => c.id !== id);
+        setConvocatorias(newConvos);
       });
+
 
 
     } catch (error) {
       console.log(error);
       if (axios.isAxiosError(error)) {
+        setConvocatorias(convocatorias)
         return {
           hasError: true,
           message: error.response?.data.message
         }
       }
-
+      setConvocatorias(convocatorias)
       return {
         hasError: true,
-        message: 'No se pudo crear el usuario - intente de nuevo'
+        message: 'No se pudo eliminar la convocatoria - intente de nuevo'
+
       }
+
     }
     handleClose()
 
   }
 
-  const onStatusUpdated = async (id: number, newStatus: string) => {
-
-    const previosConvocatorias = convocatorias.map(convocatoria => ({ ...convocatoria }));
-    const updatedConvocatorias = convocatorias.map(convocatoria => ({
-      ...convocatoria,
-      estadoId: id === convocatoria.id ? parseInt(newStatus) : convocatoria.id
-    }));
-
-
-    setConvocatorias(updatedConvocatorias);
-
-    try {
-
-      await reclutApi.put('/admin/job', { id, status: newStatus });
-
-    } catch (error) {
-      setConvocatorias(previosConvocatorias);
-      console.log(error);
-      alert('No se pudo actualizar el role del usuario');
-    }
-
-  }
-
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 50 },
+    { field: 'id', headerName: 'N°', width: 50 },
     {
-      field: 'titulo', headerName: 'Convocatoria', width: 350,
+      field: 'titulo', headerName: 'Convocatoria', width: 320,
       renderCell: ({ row }) => {
         return (
           <NextLink href={`/admin/convocatorias/convocatoria/${row.id}`} passHref legacyBehavior>
@@ -138,7 +109,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
       }
 
     },
-    { field: 'vigencia', headerName: 'Vigente hasta ', width: 120 },
+    { field: 'vigencia', headerName: 'Vigente hasta ', width: 160 },
     { field: 'vacantes', headerName: '# Vacantes ', width: 120 },
     { field: 'postulantes', headerName: ' # Postulantes', width: 120 },
 
@@ -151,7 +122,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
 
         return (
 
-          <Chip label={`${params.row.estado}`} color={params.row.estado === 'abierta' ? 'success' : 'warning'} variant="outlined" />
+          <Chip label={`${params.row.estado}`} color={params.row.estado === 'abierta' ? 'success' : params.row.estado === 'cerrada' ? 'error' : 'warning'} variant="outlined" />
 
 
         )
@@ -182,13 +153,13 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
   ];
 
 
-  const rows = convocatorias.map(job => ({
+  const rows = convocatorias.map((job, index) => ({
     id: job.id,
     titulo: job.titulo,
     vacantes: job.vacantes,
     estado: job.estado.nombre,
     jobId: job.id,
-    vigencia: moment(job.vigencia).toDate().toLocaleDateString(),
+    vigencia: moment(job.vigencia).add(1, 'days').format('LL'),
     postulantes: job._count.postulante_x_convocatoria,
   }))
 
@@ -234,11 +205,10 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
 
 
           <DataGrid
-
+            getRowHeight={() => 'auto'}
             localeText={esES.components.MuiDataGrid.defaultProps.localeText}
             rows={rows}
             columns={columns}
-            rowHeight={45}
 
           />
 
@@ -261,7 +231,11 @@ export const getStaticProps: GetStaticProps = async () => {
 
   // const convocatorias = await apiCon('/admin/convocatorias')
   const convocatorias = await prisma.convocatoria.findMany({
-    include: {
+    select: {
+      id: true,
+      titulo: true,
+      vacantes: true,
+      vigencia: true,
       estado: {
         select: { id: true, nombre: true },
       },
@@ -272,6 +246,10 @@ export const getStaticProps: GetStaticProps = async () => {
         select: { postulante_x_convocatoria: true }
       }
     },
+
+    orderBy: {
+      id: 'desc'
+    }
   });
 
   await prisma.$disconnect()

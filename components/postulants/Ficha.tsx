@@ -47,7 +47,7 @@ const imageStyle = {
 };
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-
+        backgroundColor: '#FFFADE',
         color: theme.palette.common.black,
         fontWeight: 700
 
@@ -64,7 +64,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
     const router = useRouter();
     const matches = useMediaQuery('(min-width:600px)');
     return (
-        <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} >
+        <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} bgcolor={'#eeeeee'} padding={2} >
 
             <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -140,19 +140,19 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
 
                 <Grid item xs={12}>
                     <Item>
-                        <Box padding={3}>
+                        <Box padding={1}>
                             <Box display={'flex'} alignItems={'center'} gap={1}>
                                 <SchoolIcon sx={{ color: '#001C75' }} />
                                 <Typography fontWeight={'bold'} >ESTUDIOS / PROFESIONES</Typography>
                             </Box>
-                            <Box>
-                                <TableContainer  >
-                                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                            <Box maxWidth={matches ? '100%' : 400}>
+                                <TableContainer >
+                                    <Table aria-label="simple table" >
 
                                         <TableHead >
                                             <TableRow>
-                                                <StyledTableCell >Profesión</StyledTableCell>
-                                                <StyledTableCell align="right">Institución</StyledTableCell>
+                                                <StyledTableCell align="left">Profesión</StyledTableCell>
+                                                <StyledTableCell align="left">Institución</StyledTableCell>
                                                 <StyledTableCell align="right">Grado</StyledTableCell>
                                                 <StyledTableCell align="right">Año</StyledTableCell>
 
@@ -164,10 +164,10 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                                                     key={e.id}
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                 >
-                                                    <TableCell component="th" scope="row">
+                                                    <TableCell align="left" component="th" scope="row">
                                                         {e.profesion}
                                                     </TableCell>
-                                                    <TableCell align="right">{e.institucion}</TableCell>
+                                                    <TableCell align="left">{e.institucion}</TableCell>
                                                     <TableCell align="right">{e.grado}</TableCell>
                                                     <TableCell align="right">{e.year}</TableCell>
 
@@ -188,15 +188,15 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                 </Grid>
                 <Grid item xs={12}>
                     <Item>
-                        <Box padding={3}>
+                        <Box padding={1}>
                             <Box display={'flex'} alignItems={'center'} gap={1}>
                                 <WorkIcon sx={{ color: '#001C75' }} />
                                 <Typography fontWeight={'bold'} >CARGOS DE RESPONSABILIDAD O DE CONFIANZA DESEMPEÑADOS</Typography>
                             </Box>
-                            <Box>
+                            <Box maxWidth={matches ? '100%' : 400}>
                                 <TableContainer   >
 
-                                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                    <Table aria-label="simple table" >
                                         <TableHead>
                                             <TableRow>
                                                 <StyledTableCell >Año</StyledTableCell>
@@ -241,16 +241,16 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
 
                             </Box>
                         </Box>
-                        <Box padding={3}>
+                        <Box padding={1}>
                             <Box display={'flex'} alignItems={'center'} gap={1}>
                                 <BiotechIcon sx={{ color: '#001C75' }} />
                                 <Typography fontWeight={'bold'} >INVESTIGACIONES, PROYECTOS U OTROS TRABAJOS ACADÉMICOS REALIZADOS COMO EXPERIENCIA</Typography>
                             </Box>
-                            <Box>
+                            <Box maxWidth={matches ? '100%' : 400}>
 
                                 <TableContainer   >
 
-                                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                    <Table aria-label="simple table" >
                                         <TableHead>
                                             <TableRow>
                                                 <StyledTableCell>Investigación</StyledTableCell>
@@ -290,15 +290,15 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
 
                 <Grid item xs={12}>
                     <Item>
-                        <Box padding={3}>
+                        <Box padding={1}>
                             <Box display={'flex'} alignItems={'center'} gap={1}>
                                 <MilitaryTechIcon sx={{ color: '#001C75' }} />
-                                <Typography fontWeight={'bold'} textTransform={'uppercase'} >Capacitaciones/Cursos</Typography>
+                                <Typography fontWeight={'bold'} textTransform={'uppercase'} >Capacitaciones / Cursos</Typography>
                             </Box>
-                            <Box>
+                            <Box maxWidth={matches ? '100%' : 400}>
                                 <TableContainer   >
 
-                                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                    <Table aria-label="simple table" >
                                         <TableHead>
                                             <TableRow>
                                                 <StyledTableCell>Titulo</StyledTableCell>
@@ -339,12 +339,12 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                             </Box>
                         </Box>
 
-                        <Box padding={3}>
+                        <Box padding={1}>
                             <Box display={'flex'} alignItems={'center'} gap={1}>
                                 <EmojiEventsIcon sx={{ color: '#001C75' }} />
                                 <Typography fontWeight={'bold'} textTransform={'uppercase'} >PRINCIPALES RECONOCIMIENTOS, DIPLOMAS, PREMIOS U OTROS RECIBIDOS EN SU VIDA LABORAL</Typography>
                             </Box>
-                            <Box>
+                            <Box maxWidth={matches ? '100%' : 400}>
                                 <TableContainer   >
 
                                     <Table sx={{ minWidth: 650 }} aria-label="simple table" >
@@ -389,12 +389,12 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
 
                 <Grid item xs={12}>
                     <Item>
-                        <Box padding={3}>
+                        <Box padding={1}>
                             <Box display={'flex'} alignItems={'center'} gap={1}>
                                 <DevicesIcon sx={{ color: '#001C75' }} />
                                 <Typography fontWeight={'bold'} textTransform={'uppercase'} >USO DE  TECNOLOGÍAS </Typography>
                             </Box>
-                            <Box>
+                            <Box maxWidth={matches ? '100%' : 200}>
                                 <TableContainer   >
 
                                     <Table sx={{ minWidth: 650 }} aria-label="simple table" >
@@ -434,12 +434,12 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                             </Box>
                         </Box>
 
-                        <Box padding={3}>
+                        <Box padding={1}>
                             <Box display={'flex'} alignItems={'center'} gap={1}>
                                 <NaturePeopleIcon sx={{ color: '#001C75' }} />
                                 <Typography fontWeight={'bold'} textTransform={'uppercase'} >OTRAS ACTIVIDADES, AFICIONES O HABILIDADES APRENDIDAS Y/O ESTUDIADAS </Typography>
                             </Box>
-                            <Box>
+                            <Box maxWidth={matches ? '100%' : 400}>
                                 <TableContainer   >
 
                                     <Table sx={{ minWidth: 650 }} aria-label="simple table" >

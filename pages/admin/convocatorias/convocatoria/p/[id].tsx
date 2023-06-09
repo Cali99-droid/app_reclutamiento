@@ -1,7 +1,7 @@
 import { prisma } from '@/server/db/client';
 
 import { IEstudio } from "@/interfaces";
-import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery } from '@mui/material';
+import { Box, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 
@@ -20,18 +20,13 @@ import BiotechIcon from '@mui/icons-material/Biotech';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DevicesIcon from '@mui/icons-material/Devices';
 import { Paperbase } from '@/components/dash';
-import { cargo, investigacion, capacitacion, reconocimiento, tics, aficion, evaluacion_x_postulante, evaluacion, persona } from '@prisma/client';
+import { cargo, investigacion, capacitacion, reconocimiento, tics, aficion } from '@prisma/client';
 import moment from 'moment';
+import 'moment/locale/es';
+moment.locale('es');
 interface Props {
     postulante: any
 
-    // estudios: IEstudio[]
-    // cargos: ICargo[]
-    // inves: IInvestigacion[]
-    // capa: ICapacitacion[]
-    // reco: IReconocimiento[]
-    // tecno: ITics[]
-    // aficion: IAficion[]
 
 }
 export const config = {
@@ -69,6 +64,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const PostulantePage: NextPage<Props> = ({ postulante }) => {
+    console.log(postulante)
     const router = useRouter();
     const matches = useMediaQuery('(min-width:600px)');
     return (
@@ -551,18 +547,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             capacitacion: true,
             aficion: true,
             reconocimiento: true,
-            tics: true,
-            evaluacion_x_postulante: {
-                where: {
-                    convocatoria_id: parseInt(id.toString()),
-
-
-
-                },
-                include: {
-                    user: true
-                }
-            }
+            tics: true
         }
     })
 

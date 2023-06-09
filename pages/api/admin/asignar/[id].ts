@@ -1,7 +1,7 @@
 import { IJob } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
-import { convocatoria, postulante, user } from '@prisma/client';
+import { convocatoria, postulante, user, persona } from '@prisma/client';
 import { getSession } from 'next-auth/react';
 
 
@@ -44,8 +44,13 @@ const getJurados = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
          
         },
         
-        include:{
-            user:true
+        select:{
+            id:true,
+            user:{
+                select:{
+                    persona:true
+                }
+            }
         }
         
       });

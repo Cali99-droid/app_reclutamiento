@@ -4,7 +4,7 @@ import { prisma } from '@/server/db/client';
 import { JobsLayout } from "@/components/layouts";
 
 import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics } from "@/interfaces";
-import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses } from '@mui/material';
+import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, useMediaQuery } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 import { getSession } from 'next-auth/react';
@@ -25,15 +25,6 @@ import DevicesIcon from '@mui/icons-material/Devices';
 import moment from 'moment';
 interface Props {
     postulante: any
-    user: any
-    estudios: IEstudio[]
-    cargos: ICargo[]
-    inves: IInvestigacion[]
-    capa: ICapacitacion[]
-    reco: IReconocimiento[]
-    tecno: ITics[]
-    aficion: IAficion[]
-
 }
 export const config = {
     api: {
@@ -57,8 +48,8 @@ const imageStyle = {
 };
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-
-        color: theme.palette.common.black,
+        backgroundColor: '#4240A1',
+        color: theme.palette.common.white,
         fontWeight: 700
 
 
@@ -68,24 +59,24 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves, capa, reco, tecno, aficion }) => {
-    const router = useRouter();
+const FichaPage: NextPage<Props> = ({ postulante }) => {
 
+
+
+    const matches = useMediaQuery('(min-width:600px)');
     return (
         <JobsLayout title={"Postulante "} pageDescription={'Ficha'} >
 
 
-            <Box borderRadius={5} className="fadeIn" padding={3} bgcolor={'#eeeeee'} maxWidth={1500} margin={'auto'} mt={15}>
-                <Box maxWidth={1500} margin={'auto'} >
-                    <Item elevation={1} >
-                        <Typography fontWeight={'bold'}>Ficha del Postulante</Typography>
-                    </Item>
-                </Box>
+            <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} bgcolor={'#eeeeee'} padding={2} paddingTop={18}>
+
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-
+                        <Item elevation={1} sx={{ bgcolor: '#4240A1' }}>
+                            <Typography fontWeight={'bold'} color={'#FFF'}>Ficha del Postulante</Typography>
+                        </Item>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} sm={3}>
                         <Item elevation={1}>
                             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Image
@@ -111,7 +102,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                     </Box>
                                     <Box display={'flex'} gap={1}>
 
-                                        <MailIcon /> <Typography fontSize={12}>  {user.email}</Typography>
+                                        <MailIcon /> <Typography fontSize={12}>  {postulante.persona.user[0].email}</Typography>
                                     </Box>
                                 </Box>
 
@@ -122,7 +113,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                             </Box>
                         </Item>
                     </Grid>
-                    <Grid item xs={9} >
+                    <Grid item xs={12} sm={9}  >
                         <Item sx={{ height: 320 }}>
                             {/* <Typography variant='h2'>Mis datos</Typography> */}
                             <Box display={'flex'} justifyContent={'space-between'} padding={2}>
@@ -138,7 +129,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                     <Typography fontWeight={'bold'}>Persona con discapacidad: </Typography>{postulante.discapacidad === 0 ? 'No' : 'Si'}
                                     <Typography fontWeight={'bold'}>Exalumno: </Typography>{postulante.exalumno === 0 ? 'No' : 'Si'}
                                 </Box>
-                                <Box display={'flex'} flexDirection={'column'} gap={2}>
+                                {/* <Box display={'flex'} flexDirection={'column'} gap={2}>
                                     <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary">
                                         Editar
                                     </Button>
@@ -146,21 +137,21 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                     <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary" >
                                         Exportar PDF
                                     </Button>
-                                </Box>
+                                </Box> */}
                             </Box>
                         </Item>
                     </Grid>
 
                     <Grid item xs={12}>
                         <Item>
-                            <Box padding={3}>
+                            <Box padding={1}>
                                 <Box display={'flex'} alignItems={'center'} gap={1}>
                                     <SchoolIcon sx={{ color: '#001C75' }} />
                                     <Typography fontWeight={'bold'} >ESTUDIOS / PROFESIONES</Typography>
                                 </Box>
-                                <Box>
+                                <Box maxWidth={matches ? '100%' : 400} mt={1}>
                                     <TableContainer  >
-                                        <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                        <Table aria-label="simple table" >
 
                                             <TableHead >
                                                 <TableRow>
@@ -172,7 +163,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {estudios.map((e) => (
+                                                {postulante.estudios.map((e: IEstudio) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -190,7 +181,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                         </Table>
                                     </TableContainer>
                                     {
-                                        estudios.length === 0 && (
+                                        postulante.estudios.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -201,12 +192,12 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                     </Grid>
                     <Grid item xs={12}>
                         <Item>
-                            <Box padding={3}>
+                            <Box padding={1}>
                                 <Box display={'flex'} alignItems={'center'} gap={1}>
                                     <WorkIcon sx={{ color: '#001C75' }} />
                                     <Typography fontWeight={'bold'} >CARGOS DE RESPONSABILIDAD O DE CONFIANZA DESEMPEÑADOS</Typography>
                                 </Box>
-                                <Box>
+                                <Box maxWidth={matches ? '100%' : 400} mt={1}>
                                     <TableContainer   >
 
                                         <Table sx={{ minWidth: 650 }} aria-label="simple table" >
@@ -224,7 +215,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {cargos.map((e) => (
+                                                {postulante.cargo.map((e: ICargo) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -246,7 +237,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                         </Table>
                                     </TableContainer>
                                     {
-                                        cargos.length === 0 && (
+                                        postulante.cargo.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -254,12 +245,17 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
 
                                 </Box>
                             </Box>
-                            <Box padding={3}>
+
+                        </Item>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Item>
+                            <Box padding={1}>
                                 <Box display={'flex'} alignItems={'center'} gap={1}>
                                     <BiotechIcon sx={{ color: '#001C75' }} />
                                     <Typography fontWeight={'bold'} >INVESTIGACIONES, PROYECTOS U OTROS TRABAJOS ACADÉMICOS REALIZADOS COMO EXPERIENCIA</Typography>
                                 </Box>
-                                <Box>
+                                <Box maxWidth={matches ? '100%' : 400} mt={1}>
 
                                     <TableContainer   >
 
@@ -273,7 +269,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {inves.map((e) => (
+                                                {postulante.investigacion.map((e: IInvestigacion) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -291,7 +287,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                         </Table>
                                     </TableContainer>
                                     {
-                                        inves.length === 0 && (
+                                        postulante.investigacion.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -300,15 +296,14 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                             </Box>
                         </Item>
                     </Grid>
-
                     <Grid item xs={12}>
                         <Item>
-                            <Box padding={3}>
+                            <Box padding={1}>
                                 <Box display={'flex'} alignItems={'center'} gap={1}>
                                     <MilitaryTechIcon sx={{ color: '#001C75' }} />
                                     <Typography fontWeight={'bold'} textTransform={'uppercase'} >Capacitaciones/Cursos</Typography>
                                 </Box>
-                                <Box>
+                                <Box maxWidth={matches ? '100%' : 400} mt={1}>
                                     <TableContainer   >
 
                                         <Table sx={{ minWidth: 650 }} aria-label="simple table" >
@@ -323,7 +318,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {capa.map((e) => (
+                                                {postulante.capacitacion.map((e: ICapacitacion) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -343,7 +338,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                         </Table>
                                     </TableContainer>
                                     {
-                                        capa.length === 0 && (
+                                        postulante.capacitacion.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -351,13 +346,19 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
 
                                 </Box>
                             </Box>
+                        </Item>
+                    </Grid>
 
-                            <Box padding={3}>
+                    <Grid item xs={12}>
+                        <Item>
+
+
+                            <Box padding={1}>
                                 <Box display={'flex'} alignItems={'center'} gap={1}>
                                     <EmojiEventsIcon sx={{ color: '#001C75' }} />
                                     <Typography fontWeight={'bold'} textTransform={'uppercase'} >PRINCIPALES RECONOCIMIENTOS, DIPLOMAS, PREMIOS U OTROS RECIBIDOS EN SU VIDA LABORAL</Typography>
                                 </Box>
-                                <Box>
+                                <Box maxWidth={matches ? '100%' : 400} mt={1}>
                                     <TableContainer   >
 
                                         <Table sx={{ minWidth: 650 }} aria-label="simple table" >
@@ -371,7 +372,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {reco.map((e) => (
+                                                {postulante.reconocimiento.map((e: IReconocimiento) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -390,7 +391,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                         </Table>
                                     </TableContainer>
                                     {
-                                        reco.length === 0 && (
+                                        postulante.reconocimiento.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -399,15 +400,14 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                             </Box>
                         </Item>
                     </Grid>
-
                     <Grid item xs={12}>
                         <Item>
-                            <Box padding={3}>
+                            <Box padding={1}>
                                 <Box display={'flex'} alignItems={'center'} gap={1}>
                                     <DevicesIcon sx={{ color: '#001C75' }} />
                                     <Typography fontWeight={'bold'} textTransform={'uppercase'} >USO DE  TECNOLOGÍAS </Typography>
                                 </Box>
-                                <Box>
+                                <Box maxWidth={matches ? '100%' : 400} mt={1}>
                                     <TableContainer   >
 
                                         <Table sx={{ minWidth: 650 }} aria-label="simple table" >
@@ -421,7 +421,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {tecno.map((e) => (
+                                                {postulante.tics.map((e: ITics) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -439,20 +439,25 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                         </Table>
                                     </TableContainer>
                                     {
-                                        tecno.length === 0 && (
+                                        postulante.tics.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
                                     }
                                 </Box>
                             </Box>
+                        </Item>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Item>
 
-                            <Box padding={3}>
+
+                            <Box padding={1}>
                                 <Box display={'flex'} alignItems={'center'} gap={1}>
                                     <NaturePeopleIcon sx={{ color: '#001C75' }} />
                                     <Typography fontWeight={'bold'} textTransform={'uppercase'} >OTRAS ACTIVIDADES, AFICIONES O HABILIDADES APRENDIDAS Y/O ESTUDIADAS </Typography>
                                 </Box>
-                                <Box>
+                                <Box maxWidth={matches ? '100%' : 400} mt={1}>
                                     <TableContainer   >
 
                                         <Table sx={{ minWidth: 650 }} aria-label="simple table" >
@@ -467,7 +472,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {aficion.map((e) => (
+                                                {postulante.aficion.map((e: IAficion) => (
                                                     <TableRow
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -487,7 +492,7 @@ const FichaPage: NextPage<Props> = ({ postulante, user, estudios, cargos, inves,
                                         </Table>
                                     </TableContainer>
                                     {
-                                        aficion.length === 0 && (
+                                        postulante.aficion.length === 0 && (
                                             <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
                                         )
@@ -525,7 +530,23 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
             persona_id: parseInt(user.persona.id)
         },
         include: {
-            persona: true
+            persona: {
+                include: {
+                    user: {
+                        select: {
+                            email: true
+                        }
+                    }
+                }
+            },
+            estudios: true,
+            cargo: true,
+            investigacion: true,
+            capacitacion: true,
+            aficion: true,
+            reconocimiento: true,
+            tics: true
+
         }
     })
 
@@ -533,62 +554,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const postulante = JSON.parse(JSON.stringify(post))
 
 
-    const estudios = await prisma.estudios.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
-
-    })
-    const cargos = await prisma.cargo.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
-
-    })
-
-    const inves = await prisma.investigacion.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
-
-    })
-
-    const capa = await prisma.capacitacion.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
-
-    })
-    const reco = await prisma.reconocimiento.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
-
-    })
-    const tecno = await prisma.tics.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
-
-    })
-    const aficion = await prisma.aficion.findMany({
-        where: {
-            postulante_id: postulante.id
-        }
-
-    })
 
     return {
         props: {
             postulante,
-            user,
-            estudios,
-            cargos,
-            inves,
-            capa,
-            reco,
-            tecno,
-            aficion
+
 
 
         }

@@ -13,9 +13,9 @@ interface ModalProps extends PropsWithChildren {
 }
 
 export const ModalClase: FC<ModalProps> = ({ title, children, open, handleClose, handleConfirm }) => {
-    const { criterios, calcularTotal } = useContext(PostContext);
-    const [tot, setTot] = useState(calcularTotal)
+    const { criterios, calcularTotal, total } = useContext(PostContext);
 
+    const [tot, setTot] = useState(calcularTotal)
     useEffect(() => {
         criterios.set('presentacion', 0)
         criterios.set('planificacion', 0)
@@ -27,6 +27,7 @@ export const ModalClase: FC<ModalProps> = ({ title, children, open, handleClose,
         criterios.set('respuesta', 0)
         criterios.set('pres', 0)
         criterios.set('herramientas', 0)
+
     }, [criterios])
 
 
@@ -84,6 +85,11 @@ export const ModalClase: FC<ModalProps> = ({ title, children, open, handleClose,
         criterios.set('herramientas', newValue)
         setTot(calcularTotal)
     };
+
+    const handleCloseTotal = () => {
+        handleClose();
+        setTot(0)
+    }
     const matches = useMediaQuery('(min-width:600px)');
     return (
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" scroll='body'>
@@ -298,12 +304,12 @@ export const ModalClase: FC<ModalProps> = ({ title, children, open, handleClose,
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color='error' sx={{ textTransform: 'uppercase', mt: 1, mr: 1 }} variant="outlined">
+                <Button onClick={handleCloseTotal} color='error' sx={{ textTransform: 'uppercase', mt: 1, mr: 1 }} variant="outlined">
                     Cancelar
                 </Button>
 
                 <Button onClick={handleConfirm} sx={{ mt: 1, mr: 1, textTransform: 'uppercase' }} variant="outlined">
-                    Finalizar
+                    Calificar
                 </Button>
             </DialogActions>
 

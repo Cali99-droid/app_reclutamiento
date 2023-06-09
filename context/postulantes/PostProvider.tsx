@@ -35,7 +35,7 @@ export const PostProvider: FC<Props> = ({ children }) => {
       const criterios = new Map()
       const router = useRouter();
       const { id } = router.query
-
+      const [total, setTotal] = useState(0)
       const addNewJurado = async (jurado: string) => {
 
             const { data } = await reclutApi.post('/admin/asignar/jurado', { id, jurado });
@@ -125,6 +125,7 @@ export const PostProvider: FC<Props> = ({ children }) => {
 
       const handleCloseClase = () => {
             setOpenClase(false);
+
       };
 
       const { data }: any = useSession();
@@ -204,6 +205,7 @@ export const PostProvider: FC<Props> = ({ children }) => {
                   calcularTotal,
                   limpiarCriterios,
                   idUser,
+                  total,
 
                   //Modales
                   handleOpenClase,

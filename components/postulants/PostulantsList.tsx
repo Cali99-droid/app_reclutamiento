@@ -19,7 +19,7 @@ export const PostulantsList: FC<Props> = ({ postulants }) => {
         postulants.length < 1
           ?
           <Box padding={5} width={'100%'} textAlign={'center'}>
-            <Typography >No hay postulantes en esta fase</Typography>
+            <Typography >No hay postulantes en esta fase, si existe un error contacte con el administrador</Typography>
           </Box>
           : postulants.map((postulant, index) => (
             <PostulantCard key={postulant.postulante.id} postulant={postulant.postulante} index={index} />

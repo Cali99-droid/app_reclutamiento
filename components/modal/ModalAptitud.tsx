@@ -84,6 +84,10 @@ export const ModalAptitud: FC<ModalProps> = ({ title, children, open, handleClos
         criterios.set('item10', newValue)
         setTot(calcularTotal)
     };
+    const handleCloseTotal = () => {
+        handleClose();
+        setTot(0)
+    }
     const matches = useMediaQuery('(min-width:600px)');
     return (
         <Dialog maxWidth={'xs'} open={open} onClose={handleClose} aria-labelledby="form-dialog-title" scroll='body'>

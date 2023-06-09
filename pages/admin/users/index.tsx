@@ -1,42 +1,25 @@
-import { prisma } from '@/server/db/client';
-
-
-import { GetStaticProps, NextPage } from "next";
-
-
 
 import useSWR from 'swr';
 import { useEffect, } from 'react';
 
 
-import { Grid, Link, Box, Button, IconButton, Typography, Select, MenuItem, SelectChangeEvent, Paper, Tabs, Tab, TextField, Toolbar, AppBar, useMediaQuery } from '@mui/material';
+import { Grid, Box, Typography, Select, MenuItem, SelectChangeEvent, Paper, Tabs, Tab, Toolbar, AppBar, useMediaQuery } from '@mui/material';
 import { DataGrid, GridColDef, esES } from '@mui/x-data-grid';
 
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useRouter } from 'next/router';
 ;
-import { IJob } from '@/interfaces';
 
-
-
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 
 import { useState } from 'react';
 import { reclutApi } from '@/apies';
-import NextLink from 'next/link';
-import Modal from '@/components/modal/Modal';
-import axios from 'axios';
+
+
 import { Paperbase } from '@/components/dash';
-import { user, persona } from '@prisma/client';
-import { CloudDone } from '@mui/icons-material';
 
 
-interface Props {
-    users: any[]
-}
 
-const UsersPage: NextPage<Props> = ({ users }) => {
+
+const UsersPage = () => {
 
     const { data, error } = useSWR<any[]>('/api/admin/users');
     const [usersList, setUsersList] = useState<any[]>([]);
@@ -189,25 +172,5 @@ const UsersPage: NextPage<Props> = ({ users }) => {
     )
 }
 
-// export const getStaticProps: GetStaticProps = async () => {
-
-
-//     // const convocatorias = await apiCon('/admin/convocatorias')
-//     const users = await prisma.user.findMany({
-//         include: {
-//             persona: true,
-//         },
-//     });
-//     // const users = JSON.parse(JSON.stringify(ListUsers))
-//     await prisma.$disconnect()
-
-
-//     return {
-//         props: {
-//             users
-
-//         }
-//     }
-// }
 
 export default UsersPage

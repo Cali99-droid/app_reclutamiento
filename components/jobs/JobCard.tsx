@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
 import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, Button, CardActionArea, IconButton } from '@mui/material';
 
@@ -6,7 +6,6 @@ import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent,
 
 
 import { IJob } from '@/interfaces';
-import ShareIcon from '@mui/icons-material/Share';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { ReqList } from './ReqList';
 import NextLink from 'next/link';
@@ -55,7 +54,7 @@ export const JobCard: FC<Props> = ({ job }) => {
 
                                     <span style={{ color: '#EEEDFF' }}>
 
-                                        Vigente hasta: {moment(job.vigencia).toDate().toLocaleDateString()}
+                                        Vigente hasta: {moment(job.vigencia).add(1, 'days').toDate().toLocaleDateString()}
                                     </span>
                                 </Box>
                             </CardContent>

@@ -3,6 +3,7 @@ import { createContext } from 'react';
 
 
 interface ContextProps {
+      total: number
       criterios: any,
       calcularTotal: () => number
       limpiarCriterios: () => void

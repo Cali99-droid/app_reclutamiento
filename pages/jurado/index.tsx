@@ -26,6 +26,9 @@ interface Props {
 const JuradoPage: NextPage<Props> = ({ convocatorias }) => {
 
 
+    const convocatoriasAsignadas = convocatorias.filter(c => c.convocatoria.estado.id === 2)
+
+
     const { push } = useRouter();
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
@@ -70,7 +73,7 @@ const JuradoPage: NextPage<Props> = ({ convocatorias }) => {
     ];
 
 
-    const rows = convocatorias.map((c) => ({
+    const rows = convocatoriasAsignadas.map((c) => ({
         id: c.convocatoria.id,
         convocatoria: c.convocatoria.titulo,
         estado: c.convocatoria.estado.nombre,
@@ -150,13 +153,15 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
         where: {
             user_id: parseInt(user.id)
         },
-        include: {
+        select: {
             convocatoria: {
-
-                include: {
+                select: {
+                    id: true,
+                    titulo: true,
                     estado: true
                 }
             },
+
         }
 
     });
