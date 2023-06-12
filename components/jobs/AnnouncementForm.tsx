@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material'
+import { Box, Button, FormControl, FormHelperText, FormLabel, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material'
 
 import SaveIcon from '@mui/icons-material/Save';
 import { useRouter } from 'next/router';
@@ -7,13 +7,14 @@ import { NextPage } from 'next';
 import { IGrado, IJob } from '@/interfaces';
 
 import { reclutApi } from '@/apies';
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 
 import { ModalAlert } from '../modal/ModalAlert';
 
 import { convocatoria } from '@prisma/client';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import moment from 'moment';
+import { useRef } from 'react';
 
 
 interface Props {
@@ -32,8 +33,8 @@ type FormData = {
     gradoId: number;
     estadoId: number;
     categoria_id: number | null;
+    image: string;
 };
-
 
 const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
     console.log(job)
@@ -41,7 +42,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
         job.vigencia = moment(job.vigencia).toDate().toISOString().substring(0, 10)
     }
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, getValues, setValue } = useForm<FormData>({
         defaultValues: job
     })
     const router = useRouter();
@@ -51,7 +52,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
     const [open, setOpen] = useState(false)
 
-
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleClose = () => {
         setOpen(false);
@@ -76,6 +77,28 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
         }
     }
+    const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+        if (!target.files || target.files.length === 0) {
+            return;
+        }
+
+        try {
+
+            // console.log( file );
+            for (const file of target.files) {
+                const formData = new FormData();
+                formData.append('file', file);
+                const { data } = await reclutApi.post<{ message: string }>('/postulants/upload', formData);
+                setValue('image', data.message, { shouldValidate: true });
+                console.log(data)
+            }
+
+
+        } catch (error) {
+            console.log({ error });
+        }
+    }
+
 
     return (
         <>
@@ -246,7 +269,30 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                             </FormControl>
                         </Grid>
 
+                        <Grid item xs={12} md={4}>
+                            <Box>
+                                <FormLabel >Imagen</FormLabel>
+                                <Button
+                                    color="secondary"
+                                    fullWidth
+                                    variant='outlined'
+                                    // startIcon={ <UploadOutlined /> }
 
+                                    onClick={() => fileInputRef.current?.click()}
+                                >
+                                    Cargar imagen
+                                </Button>
+                                <FormHelperText>*Imagen de la convocatoria</FormHelperText>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+
+                                    accept='image/png, image/gif, image/jpeg'
+                                    style={{ display: 'none' }}
+                                    onChange={onFilesSelected}
+                                />
+                            </Box>
+                        </Grid>
                     </Grid>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                         <Box width={'50%'} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 5 }}>

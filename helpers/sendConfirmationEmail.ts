@@ -11,6 +11,9 @@ const sendConfirmationEmail = async (email: string, confirmationCode: string) =>
         auth: {
           user: process.env.MAIL_USERNAME,
           pass: process.env.SMTP_PASSWORD
+        },
+        tls: {
+            ciphers:'SSLv3'
         }
      
     });
