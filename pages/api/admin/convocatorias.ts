@@ -3,7 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
 import { convocatoria } from '@prisma/client';
 
-
+import { v2 as cloudinary } from 'cloudinary';
+cloudinary.config( process.env.CLOUDINARY_URL || '' );
 
 
 type Data = 
@@ -91,6 +92,35 @@ const getConvocatorias = async(req: NextApiRequest, res: NextApiResponse<Data>) 
 const updateConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
     const convo = req.body as IJob;
+    if ( convo.img.length <= 0 ) {
+      return res.status(400).json({ message: 'Es Necesario que suba una imagen' });
+    }
+  
+        // Borrar de cloudinary
+        const [ fileId, extension ] = convo.img.substring( convo.img.lastIndexOf('/') + 1 ).split('.')
+        console.log({  fileId, extension });
+        await cloudinary.uploader.destroy( fileId );
+ 
+
+
+      const c = await prisma.convocatoria.findUnique({
+        where: {
+          id: parseInt(convo.id.toString()) 
+        }
+        
+      
+        })
+        if(c === null){
+          return;
+      }
+      if(c.img ){
+          if ( c.img !== convo.img) {
+          // Borrar de cloudinary
+          const [ fileId, extension ] = convo.img.substring( convo.img.lastIndexOf('/') + 1 ).split('.')
+       
+          await cloudinary.uploader.destroy( fileId );
+      }
+    }
     try {
       const  convocatoria = await prisma.convocatoria.update({
         where: {
@@ -105,6 +135,7 @@ const updateConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
             estadoId:        1,
             gradoId:         parseInt(convo.gradoId.toString()),
             vigencia:  new Date(convo.vigencia),
+            img:convo.img
         },
       })
 
@@ -122,6 +153,10 @@ const updateConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
 const createConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
     const convo = req.body as IJob;
+   
+    if ( convo.img.length <= 0 ) {
+      return res.status(400).json({ message: 'Es Necesario que suba una imagen' });
+  }
 
     try {
         const  convocatoria = await prisma.convocatoria.create({
@@ -135,7 +170,7 @@ const createConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
                 estadoId:         1,
                 gradoId:           parseInt(convo.gradoId.toString()),
                 categoria_id:           parseInt(convo.categoria_id.toString()),
-
+                img:convo.img
             },
         })
 

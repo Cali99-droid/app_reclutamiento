@@ -119,10 +119,16 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
       headerName: 'Estado',
       width: 200,
       renderCell: (params) => {
-
+        const fechaHoy = new Date();
         return (
+          params.row.vigenciad >= fechaHoy ?
+            (<Chip label={`${params.row.estado}`} color={params.row.estado === 'abierta' ? 'success' : params.row.estado === 'cerrada' ? 'error' : 'warning'} variant="outlined" />)
 
-          <Chip label={`${params.row.estado}`} color={params.row.estado === 'abierta' ? 'success' : params.row.estado === 'cerrada' ? 'error' : 'warning'} variant="outlined" />
+
+            :
+            params.row.estado === 'abierta' ? (<Chip label={`Vencido`} color={'error'} variant="outlined" />)
+              : (<Chip label={`${params.row.estado}`} color={params.row.estado === 'abierta' ? 'success' : params.row.estado === 'cerrada' ? 'error' : 'warning'} variant="outlined" />)
+
 
 
         )
@@ -160,6 +166,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
     estado: job.estado.nombre,
     jobId: job.id,
     vigencia: moment(job.vigencia).add(1, 'days').format('LL'),
+    vigenciad: moment(job.vigencia).add(1, 'days'),
     postulantes: job._count.postulante_x_convocatoria,
   }))
 

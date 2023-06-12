@@ -33,7 +33,7 @@ type FormData = {
     gradoId: number;
     estadoId: number;
     categoria_id: number | null;
-    image: string;
+    img: string;
 };
 
 const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
@@ -89,8 +89,8 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                 const formData = new FormData();
                 formData.append('file', file);
                 const { data } = await reclutApi.post<{ message: string }>('/postulants/upload', formData);
-                setValue('image', data.message, { shouldValidate: true });
-                console.log(data)
+                setValue('img', data.message, { shouldValidate: true });
+
             }
 
 
@@ -102,7 +102,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
     const onDeleteImage = () => {
         // console.log(getValues('image'))
         setValue(
-            'image',
+            'img',
             '', { shouldValidate: true }
         );
         // console.log(getValues('image'))
@@ -282,14 +282,14 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
 
                             {
-                                getValues('image') && (
+                                getValues('img') && (
                                     <Box width={150} margin={'auto'}>
                                         <Card>
                                             <CardMedia
                                                 component='img'
                                                 className='fadeIn'
-                                                image={getValues('image')}
-                                                alt={getValues('image')}
+                                                image={getValues('img')}
+                                                alt={getValues('img')}
 
                                             />
                                             <CardActions>

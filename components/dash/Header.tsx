@@ -15,6 +15,9 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useContext } from 'react';
 import { AuthContext } from '@/context';
+import { Divider, ListItemIcon, Menu, MenuItem } from '@mui/material';
+import { Logout, PersonAdd, Settings } from '@mui/icons-material';
+import { useRouter } from 'next/router';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -25,7 +28,16 @@ interface HeaderProps extends React.PropsWithChildren {
 
 export default function Header(props: HeaderProps) {
     const { onDrawerToggle } = props;
-    const { isLoggedIn, user } = useContext(AuthContext);
+    const { isLoggedIn, user, logout } = useContext(AuthContext);
+    const { push } = useRouter();
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     return (
         <React.Fragment>
@@ -70,10 +82,71 @@ export default function Header(props: HeaderProps) {
                         </Grid>
                         <Grid item>
                             <Tooltip title={`${user?.persona?.nombres}`}>
-                                <IconButton color="inherit" sx={{ p: 0.5 }}>
-                                    <Avatar alt="My Avatar" />
+                                <IconButton color="inherit" sx={{ p: 0.5 }} onClick={handleClick}>
+                                    <Avatar alt="My Avatar" src={user?.oAuthImg ? user?.oAuthImg : user?.img} />
                                 </IconButton>
                             </Tooltip>
+                            <Menu
+                                anchorEl={anchorEl}
+                                id="account-menu"
+                                open={open}
+                                onClose={handleClose}
+                                onClick={handleClose}
+                                PaperProps={{
+                                    elevation: 0,
+                                    sx: {
+                                        overflow: 'visible',
+                                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                        mt: 1.5,
+                                        '& .MuiAvatar-root': {
+                                            width: 32,
+                                            height: 32,
+                                            ml: -0.5,
+                                            mr: 1,
+                                        },
+                                        '&:before': {
+                                            content: '""',
+                                            display: 'block',
+                                            position: 'absolute',
+                                            top: 0,
+                                            right: 14,
+                                            width: 10,
+                                            height: 10,
+                                            bgcolor: 'background.paper',
+                                            transform: 'translateY(-50%) rotate(45deg)',
+                                            zIndex: 0,
+                                        },
+                                    },
+                                }}
+                                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                            >
+                                <MenuItem onClick={() => push('/perfil')}>
+                                    <Avatar src={user?.oAuthImg ? user?.oAuthImg : user?.img} /> Mi perfil
+                                </MenuItem>
+                                {/* <MenuItem onClick={() => push('/perfil')}>
+                                    <Avatar /> My account
+                                </MenuItem> */}
+                                <Divider />
+                                {/* <MenuItem onClick={handleClose}>
+                                    <ListItemIcon>
+                                        <PersonAdd fontSize="small" />
+                                    </ListItemIcon>
+                                    Add another account
+                                </MenuItem> */}
+                                <MenuItem onClick={() => push('/perfil')}>
+                                    <ListItemIcon>
+                                        <Settings fontSize="small" />
+                                    </ListItemIcon>
+                                    Config
+                                </MenuItem>
+                                <MenuItem onClick={logout}>
+                                    <ListItemIcon>
+                                        <Logout fontSize="small" />
+                                    </ListItemIcon>
+                                    Salir
+                                </MenuItem>
+                            </Menu>
                         </Grid>
                     </Grid>
                 </Toolbar>

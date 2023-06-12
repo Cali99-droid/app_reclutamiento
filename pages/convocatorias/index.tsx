@@ -6,8 +6,24 @@ import Typography from '@mui/material/Typography';
 import { useJobs } from '../../hooks';
 import { grey } from "@mui/material/colors";
 import { FullScreenLoading } from "@/components/ui";
+import { IJob } from "@/interfaces";
+import moment from "moment";
+function filtrarPorFecha(datos: IJob) {
+
+  const fechaHoy = new Date();
+  const fechaConvo = moment(datos.vigencia).add(1, 'days').toDate();
+
+  if (fechaConvo >= fechaHoy) {
+    return datos;
+  }
+
+}
+
 export default function ConvocatoriasPage() {
   const { jobs, isLoading } = useJobs('/convocatorias')
+
+  const convos = jobs.filter((job) => filtrarPorFecha(job))
+
   return (
     <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatorias a trabajos en Ancash"}>
       <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18} >
@@ -21,7 +37,7 @@ export default function ConvocatoriasPage() {
           {isLoading
             ? <FullScreenLoading />
             :
-            <JobList jobs={jobs} />
+            <JobList jobs={convos} />
           }
           {jobs.length === 0 && (
             <Box bgcolor={grey[50]} padding={3} borderRadius={2} width={'100%'} >

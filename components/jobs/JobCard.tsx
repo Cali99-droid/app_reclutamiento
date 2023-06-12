@@ -34,7 +34,7 @@ export const JobCard: FC<Props> = ({ job }) => {
                         <CardActionArea >
                             <CardMedia
                                 sx={{ height: 250 }}
-                                image="/img/img-2.jpg"
+                                image={`${job.img}`}
 
                             />
                             <CardContent >
