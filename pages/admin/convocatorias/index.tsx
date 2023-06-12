@@ -141,7 +141,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
         return (
 
           <Box display={'flex'} justifyContent={'end'} width={'100%'}>
-            <IconButton disabled={params.row.estado > 1} aria-label="evaluar" color='info' onClick={() => { router.push(`/admin/convocatorias/${params.row.id}`) }}  >
+            <IconButton disabled={params.row.postulantes > 0} aria-label="evaluar" color='info' onClick={() => { router.push(`/admin/convocatorias/${params.row.id}`) }}  >
               <EditIcon />
             </IconButton>
 
