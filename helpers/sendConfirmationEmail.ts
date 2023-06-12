@@ -5,11 +5,12 @@ const sendConfirmationEmail = async (email: string, confirmationCode: string) =>
     
     // Crea un objeto de transporte SMTP
     const transporter = nodemailer.createTransport({
-        host: "sandbox.smtp.mailtrap.io",
-        port: 2525,
+        host: process.env.MAIL_HOST,
+        port: Number(process.env.MAIL_PORT),
+        secure: Boolean(process.env.SMTP_SECURE),
         auth: {
-          user: "8f33af5854a61e",
-          pass: "c3f5a700a891b2"
+          user: process.env.MAIL_USERNAME,
+          pass: process.env.SMTP_PASSWORD
         }
      
     });
@@ -23,7 +24,7 @@ const sendConfirmationEmail = async (email: string, confirmationCode: string) =>
 
     // Envía el correo electrónico
     await transporter.sendMail({
-      from: 'micorreo@dominio.com',
+      from: process.env.MAIL_USERNAME,
       to: email,
       subject: 'Confirma tu cuenta de usuario',
       text: `Por favor, haz clic en este enlace para confirmar tu cuenta:  ${process.env.BASE_URL}/auth/confirmar-cuenta?token=${confirmationCode}`,

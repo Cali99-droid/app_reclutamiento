@@ -1,13 +1,13 @@
 import { prisma } from '@/server/db/client';
 
-import { apiCon, reclutApi } from "@/apies";
+import { apiCon } from "@/apies";
 import AnnouncementForm from "@/components/jobs/AnnouncementForm";
-import { AdminLayout } from "@/components/layouts";
+
 
 import { IGrado, IJob } from "@/interfaces";
 import { Box } from "@mui/material";
 import { convocatoria } from "@prisma/client";
-import { GetServerSideProps, GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { Paperbase } from '@/components/dash';
 
 
