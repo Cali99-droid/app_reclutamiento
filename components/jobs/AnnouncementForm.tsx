@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormHelperText, FormLabel, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material'
+import { Box, Button, Card, CardActions, CardMedia, FormControl, FormHelperText, FormLabel, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material'
 
 import SaveIcon from '@mui/icons-material/Save';
 import { useRouter } from 'next/router';
@@ -37,7 +37,7 @@ type FormData = {
 };
 
 const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
-    console.log(job)
+
     if (job.vigencia) {
         job.vigencia = moment(job.vigencia).toDate().toISOString().substring(0, 10)
     }
@@ -97,6 +97,16 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
         } catch (error) {
             console.log({ error });
         }
+    }
+
+    const onDeleteImage = () => {
+        // console.log(getValues('image'))
+        setValue(
+            'image',
+            '', { shouldValidate: true }
+        );
+        // console.log(getValues('image'))
+
     }
 
 
@@ -267,6 +277,36 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                 </Select>
 
                             </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+
+
+                            {
+                                getValues('image') && (
+                                    <Box width={150} margin={'auto'}>
+                                        <Card>
+                                            <CardMedia
+                                                component='img'
+                                                className='fadeIn'
+                                                image={getValues('image')}
+                                                alt={getValues('image')}
+
+                                            />
+                                            <CardActions>
+                                                <Button
+                                                    fullWidth
+                                                    color="error"
+                                                    onClick={() => onDeleteImage()}
+                                                >
+                                                    Borrar
+                                                </Button>
+                                            </CardActions>
+                                        </Card>
+                                    </Box>)
+
+                            }
+
+
                         </Grid>
 
                         <Grid item xs={12} md={4}>

@@ -2,19 +2,19 @@ import nodemailer from 'nodemailer';
 
 const sendConfirmationEmail = async (email: string, confirmationCode: string) => {
   try {
-    
+
     // Crea un objeto de transporte SMTP
     const transporter = nodemailer.createTransport({
         host: process.env.MAIL_HOST,
         port: Number(process.env.MAIL_PORT),
-        secure: Boolean(process.env.SMTP_SECURE),
+        secure:true,
         auth: {
           user: process.env.MAIL_USERNAME,
           pass: process.env.SMTP_PASSWORD
-        },
-        tls: {
-            ciphers:'SSLv3'
-        }
+         },
+        // tls: {
+        //     ciphers:'SSLv3'
+        // }
      
     });
     transporter.verify(function (error, success) {

@@ -13,7 +13,7 @@ async function main() {
    
   })
 
-  const categorias = await prisma.estado.createMany({
+  const categorias = await prisma.categoria.createMany({
     data: [
       { nombre: 'administrativo' },
       { nombre: 'docente' },

@@ -46,9 +46,9 @@ export const AuthProvider: FC<Props> = ({ children }) => {
         try {
             const { data } = await reclutApi.post('/user/register', { nombre, apellidoPat, apellidoMat, email, password, fechaNac, tipoId, numeroDocumento });
 
-            const { token, user } = data;
-            Cookies.set('token', token);
-            dispatch({ type: '[Auth] - Login', payload: user });
+            // const { token, user } = data;
+            // Cookies.set('token', token);
+            // dispatch({ type: '[Auth] - Login', payload: user });
 
             return {
                 hasError: false
