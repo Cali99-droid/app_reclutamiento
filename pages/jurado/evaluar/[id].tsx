@@ -50,13 +50,6 @@ const EvaluarPage: NextPage<Props> = ({ convocatoria }) => {
         }
 
     }, [data, idUser])
-
-
-
-
-
-
-
     return (
         <Paperbase title={`Administrar convocatoria: ${convocatoria.convocatoria.titulo} `} subTitle={"Resumen"}>
             <ToastContainer />

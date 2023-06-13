@@ -44,7 +44,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
       >
 
         <Box>
-          <Image src={'/img/img-2.jpg'} alt={''} width={matches ? 500 : 280} height={matches ? 500 : 280} />
+          <Image src={`${convocatoria.img}`} alt={''} width={matches ? 500 : 280} height={matches ? 500 : 280} />
         </Box>
 
         <Box borderRadius={4} padding={2}>
