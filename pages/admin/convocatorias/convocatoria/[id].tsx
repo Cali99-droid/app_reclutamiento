@@ -221,7 +221,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
             {
 
-              (convocatoria.estado.id !== 3 && convocatoria.categoria_id == 2) ?
+              (convocatoria.estado.id !== 3) ?
                 (
 
 
@@ -367,7 +367,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
     } catch (error) {
 
       console.log(error);
-      alert('El postulante ya tiene puntaje');
+
     }
 
 
@@ -831,7 +831,14 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
   const juradosSer = await prisma.user.findMany({
     where: {
-      rol_id: 3
+      OR: [
+        {
+          rol_id: 3
+        },
+        {
+          rol_id: 4
+        }
+      ],
     },
     select: {
       id: true,

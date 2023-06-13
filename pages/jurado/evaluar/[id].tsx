@@ -28,7 +28,7 @@ import { PostulantsList } from '../../../components/postulants/PostulantsList';
 import { getSession } from 'next-auth/react';
 interface Props {
     postulantes: postulante[]
-    convocatoria: IJob
+    convocatoria: any
 
 
 }
@@ -58,7 +58,7 @@ const EvaluarPage: NextPage<Props> = ({ convocatoria }) => {
 
 
     return (
-        <Paperbase title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
+        <Paperbase title={`Administrar convocatoria: ${convocatoria.convocatoria.titulo} `} subTitle={"Resumen"}>
             <ToastContainer />
             <Box sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden', }} className="fadeIn" >
                 <Box mb={2}>
@@ -67,7 +67,7 @@ const EvaluarPage: NextPage<Props> = ({ convocatoria }) => {
                             Convocatorias
                         </Link>
 
-                        <Typography fontWeight={'bold'} color="text.primary">{convocatoria.titulo}</Typography>
+                        <Typography fontWeight={'bold'} color="text.primary">{convocatoria.convocatoria.titulo}</Typography>
                     </Breadcrumbs>
                 </Box>
                 <Box>
@@ -86,28 +86,47 @@ const EvaluarPage: NextPage<Props> = ({ convocatoria }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ query, req }) => {
     const { id = '' } = query;
-    const convocatoriaSer = await prisma.convocatoria.findUnique({
+    const session: any = await getSession({ req });
+
+    const { user } = session;
+    const convocatoriaSer = await prisma.convocatoria_x_jurado.findFirst({
         where: {
-            id: parseInt(id.toString())
+            convocatoria_id: parseInt(id.toString())
         },
-        include: {
-            estado: {
-                select: { id: true, nombre: true },
+        select: {
+            user_id: true,
+            convocatoria: {
+                select: {
+                    id: true,
+                    titulo: true,
+                    estado: true
+                }
             },
-            grado: {
-                select: { nombre: true },
-            },
-            categoria: {
-                select: { nombre: true }
-            },
-            _count: {
-                select: { postulante_x_convocatoria: true }
-            }
-        },
+
+        }
+
     })
 
+    if (convocatoriaSer) {
+        if (convocatoriaSer.convocatoria.estado.id === 3 || convocatoriaSer.user_id !== parseInt(user.id)) {
+            return {
+                redirect: {
+                    destination: '/jurado',
+                    permanent: false
+                }
+            }
+        }
+    } else {
+        return {
+            redirect: {
+                destination: '/jurado',
+                permanent: false
+            }
+        }
+    }
 
 
+    console.log(convocatoriaSer)
 
 
 

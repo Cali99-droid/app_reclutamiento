@@ -90,17 +90,18 @@ export const ModalAptitud: FC<ModalProps> = ({ title, children, open, handleClos
     }
     const matches = useMediaQuery('(min-width:600px)');
     return (
-        <Dialog maxWidth={'xs'} open={open} onClose={handleClose} aria-labelledby="form-dialog-title" scroll='body'>
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" scroll='body'>
             <DialogTitle id="form-dialog-title">{title}</DialogTitle>
             <DialogContent>
                 <Box sx={matches ? { width: 500 } : { width: 250 }}>
-                    <Box display={'flex'} justifyContent={'end'}>
-                        <Typography variant='subtitle1'>Puntaje Total: {tot}</Typography>
+                    <Box display={'flex'} justifyContent={'end'} mb={3} alignItems={'center'} gap={2}>
+                        <Typography variant='subtitle1'>Puntaje Total: </Typography>
+                        <Typography variant='body1' fontWeight={'bold'}> {tot}</Typography>
                     </Box>
 
                     <Grid container spacing={2} alignItems="center" >
 
-                        <Grid item xs={2}>
+                        <Grid item xs={12}>
                             <Box mb={3}>
                                 <Typography id="input-slider" gutterBottom>
                                     1. Item 1
@@ -120,7 +121,7 @@ export const ModalAptitud: FC<ModalProps> = ({ title, children, open, handleClos
                             />
                         </Grid>
 
-                        <Grid item xs>
+                        <Grid item xs={12}>
                             <Box mb={3}>
                                 <Typography id="input-slider" gutterBottom>
                                     2. Item 2
@@ -139,7 +140,7 @@ export const ModalAptitud: FC<ModalProps> = ({ title, children, open, handleClos
                                 max={10}
                             />
                         </Grid>
-                        <Grid item xs={2} >
+                        <Grid item xs={12} >
                             <Box mb={3}>
                                 <Typography id="input-slider" gutterBottom>
                                     3. item 3
@@ -293,6 +294,10 @@ export const ModalAptitud: FC<ModalProps> = ({ title, children, open, handleClos
                         </Grid>
 
                     </Grid>
+                    <Box display={'flex'} justifyContent={'end'} mb={3} alignItems={'center'} gap={2}>
+                        <Typography variant='subtitle1'>Puntaje Total: </Typography>
+                        <Typography variant='body1' fontWeight={'bold'}> {tot}</Typography>
+                    </Box>
                 </Box>
             </DialogContent>
             <DialogActions>

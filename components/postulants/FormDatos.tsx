@@ -16,7 +16,7 @@ import { useContext, ChangeEvent } from 'react';
 import { DatosContext } from '@/context';
 interface Props {
 
-    grados: IGrado[]
+
     persona: IPersona;
     postulante: postulante
 }
@@ -47,7 +47,7 @@ type FormData = {
 };
 
 
-export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
+export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
 
     const [isSaving, setIsSaving] = useState(false);
     const [showError, setShowError] = useState(false);
@@ -166,13 +166,13 @@ export const FormDatos: NextPage<Props> = ({ persona, grados, postulante }) => {
 
     }
     return (
-        <Box className="fadeIn" marginTop={-10}>
+        <Box className="fadeIn" marginTop={-10} >
             <form onSubmit={handleSubmit(onRegisterForm)} noValidate >
                 <Box width={'100%'} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }} >
 
                     <Button disabled={isSaving} type='submit' size="large" sx={{ marginTop: 2, textAlign: 'end' }} endIcon={<EastIcon />} >Continuar</Button>
                 </Box>
-                <Box padding={4} border={'solid 1px #AAAABC'} borderRadius={4} >
+                <Box padding={4} borderRadius={4} bgcolor={'#FFF'}>
                     <Grid container spacing={2} >
 
                         <Grid item xs={12} md={4}>

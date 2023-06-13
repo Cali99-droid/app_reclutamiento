@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, Button, CardActionArea, IconButton } from '@mui/material';
+import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, Button, CardActionArea, IconButton, Divider } from '@mui/material';
 
 
 
@@ -26,7 +26,7 @@ export const JobCard: FC<Props> = ({ job }) => {
             sm={4}
 
         >
-            <Card sx={{ bgcolor: '#0045AA' }} >
+            <Card sx={{ bgcolor: '#eeeeee' }} >
 
                 <NextLink href={`/convocatorias/${job.id}`} passHref prefetch={false} legacyBehavior>
 
@@ -38,10 +38,14 @@ export const JobCard: FC<Props> = ({ job }) => {
 
                             />
                             <CardContent >
-                                <Box display={'flex'} gap={1}>
+                                <Box >
 
-                                    <Typography sx={{ color: '#FFF' }} fontWeight={800} gutterBottom variant="h5" >
+                                    <Typography sx={{ color: '#000' }} fontWeight={800} gutterBottom variant="h5" >
                                         {job.titulo}
+                                    </Typography>
+
+                                    <Typography sx={{ color: '#767687' }} fontWeight={800} gutterBottom variant='body2'  >
+                                        {job.descripcion}
                                     </Typography>
 
                                 </Box>
@@ -49,6 +53,7 @@ export const JobCard: FC<Props> = ({ job }) => {
                                 {/* <Typography variant="body2" color="text.secondary">
                                     {job.descripcion}
                                 </Typography> */}
+                                <Divider />
                                 <ReqList job={job} />
                                 <Box mt={1}>
 
@@ -66,7 +71,7 @@ export const JobCard: FC<Props> = ({ job }) => {
                 </NextLink>
                 <CardActions sx={{ display: 'flex', justifyContent: 'space-around' }} >
 
-                    <Button color='primary' startIcon={<PostAddIcon />} sx={{ mt: 3, width: '100%' }} size="large" href={`/postulant/postular/${job.id}`}>
+                    <Button color='secondary' startIcon={<PostAddIcon />} sx={{ mt: 3, width: '100%' }} size="large" href={`/postulant/postular/${job.id}`}>
                         Postular
                     </Button>
 

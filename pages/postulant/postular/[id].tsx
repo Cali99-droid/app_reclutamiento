@@ -4,7 +4,7 @@ import { JobsLayout } from '@/components/layouts'
 import { GetServerSideProps, NextPage } from 'next'
 import React, { useState } from 'react'
 
-import { Box, Button, Chip, Paper, Typography, styled } from '@mui/material';
+import { Box, Button, Chip, FormHelperText, Paper, Typography, styled, useMediaQuery } from '@mui/material';
 
 import { green, grey, } from '@mui/material/colors';
 import { ReqList } from '@/components/jobs';
@@ -15,6 +15,9 @@ import { reclutApi } from '@/apies';
 import { getSession } from 'next-auth/react';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
 import CheckIcon from '@mui/icons-material/Check';
+import NextLink from 'next/link';
+import { Link } from 'react-router-dom';
+import { Footer } from '@/views/HomePage/Footer';
 
 interface Props {
 
@@ -57,31 +60,39 @@ const PostularPage: NextPage<Props> = ({ convocatoria, persona, postulo }) => {
 
   }
   const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#FFF',
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#eeeeee',
     ...theme.typography.body2,
     padding: theme.spacing(3),
 
     color: theme.palette.text.secondary,
     borderRadius: 10
 
+
   }));
+
+  const matches = useMediaQuery('(min-width:600px)');
   return (
     <JobsLayout title={"Postular "} pageDescription={'postular a un trabajo'} >
-      <Box display='flex' justifyContent='center' mt={15} width={'100%'} padding={10}>
+      <Box display='flex' justifyContent='center' mt={15} width={'100%'} padding={5}>
 
         <Item sx={{ margin: '0 auto' }}>
-          <Box display={'flex'} gap={1} justifyContent={'center'}>
+          <Box display={'flex'} gap={1} justifyContent={'center'} flexDirection={matches ? 'row' : 'column'}>
             <Typography fontSize={20} fontWeight={500} sx={{ color: grey[800] }}>{`Confirme su postulación a: `}</Typography >
             <Typography fontSize={20} fontWeight={800} sx={{ color: '#001C75' }}>{` ${convocatoria.titulo} `}</Typography >
-          </Box>
-          {/* <Box mt={2}>
-            <Typography>Detalles de la convocatoria</Typography>
-           
-            <ReqList job={convocatoria} />
-          </Box> */}
-          <Item sx={{ padding: 2, borderRadius: 4, mt: 2 }} >
 
-            <Box display={'flex'} gap={4}>
+          </Box>
+          <Box width={'70%'} sx={{ margin: '0 auto' }}>
+            <FormHelperText>*Asegurece de haber llenado correctamente su ficha,
+              si no no hizo, puede actualizarlo en cualquier momento <a href={'/postulant'} target='_blank'>
+                desde aqui
+              </a></FormHelperText>
+          </Box>
+
+
+
+          <Item sx={{ padding: 2, borderRadius: 4, mt: 2, bgcolor: '#FFF' }} >
+
+            <Box display={'flex'} gap={4} flexDirection={matches ? 'row' : 'column'} justifyContent={'center'}>
               <Button
                 startIcon={<FilePresentIcon />}
                 size='medium'
@@ -90,7 +101,7 @@ const PostularPage: NextPage<Props> = ({ convocatoria, persona, postulo }) => {
                 onClick={() => {
                   router.push('/postulant/ficha')
                 }}>
-                Revisar mi ficha
+                Ver mi ficha
               </Button>
               {
                 postulo ? (
@@ -107,22 +118,25 @@ const PostularPage: NextPage<Props> = ({ convocatoria, persona, postulo }) => {
                 color='error'
                 variant='outlined'
                 onClick={() => { history.go(-1); return false; }}>
-                Cancelar
+                Volver
               </Button>
             </Box>
           </Item>
         </Item>
-        <Box display={'flex'} justifyContent={'space-around'} >
 
 
 
 
 
 
-        </Box>
+
+
 
       </Box>
-
+      <Box padding={4} display='flex' justifyContent='center'>
+        <FormHelperText>*Si tienes dudas de cómo postular, puedes consultar en <a href={'/docentes'} target='_blank'> ¿Cómo postular?
+        </a></FormHelperText>
+      </Box>
 
     </JobsLayout>
   )

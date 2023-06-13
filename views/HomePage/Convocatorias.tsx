@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 
 export const Convocatorias = () => {
     const { jobs, isLoading } = useJobs('/convocatorias')
-    const convocatorias = jobs.slice(1, 4)
+    const convocatorias = jobs.slice(0, 3)
     const matches = useMediaQuery('(min-width:600px)');
     const { push } = useRouter();
     return (

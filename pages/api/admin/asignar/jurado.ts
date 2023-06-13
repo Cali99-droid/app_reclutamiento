@@ -48,8 +48,13 @@ const setJuradoConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Da
                         user_id:jurado,
 
                     },
-                    include:{
-                        user:true
+                    select:{
+                        id:true,
+                        user:{
+                            select:{
+                                persona:true
+                            }
+                        }
                     }
                     
                 })

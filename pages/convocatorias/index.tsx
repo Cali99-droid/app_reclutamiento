@@ -8,6 +8,7 @@ import { grey } from "@mui/material/colors";
 import { FullScreenLoading } from "@/components/ui";
 import { IJob } from "@/interfaces";
 import moment from "moment";
+import { Footer } from "@/views/HomePage/Footer";
 function filtrarPorFecha(datos: IJob) {
 
   const fechaHoy = new Date();
@@ -47,7 +48,7 @@ export default function ConvocatoriasPage() {
         </Box>
       </Box>
 
-
+      <Footer />
 
     </JobsLayout>
 

@@ -1,4 +1,4 @@
-
+import { useRouter } from 'next/router';
 import Divider from '@mui/material/Divider';
 import Drawer, { DrawerProps } from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -8,24 +8,19 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
-import PeopleIcon from '@mui/icons-material/People';
-import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
-import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import PublicIcon from '@mui/icons-material/Public';
-import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet';
-import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
-import TimerIcon from '@mui/icons-material/Timer';
 import SettingsIcon from '@mui/icons-material/Settings';
-import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
-import { useRouter } from 'next/router';
-import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, LoginOutlined, SearchOutlined, SupervisedUserCircle, SupervisedUserCircleOutlined, VpnKeyOutlined } from "@mui/icons-material"
+
+
+import { LoginOutlined } from "@mui/icons-material"
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import GroupIcon from '@mui/icons-material/Group';
 import { Typography } from '@mui/material';
 import { useState, useContext } from 'react';
 import { AuthContext } from '@/context';
-import QuizIcon from '@mui/icons-material/Quiz';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
+
+
 const categories = [
     {
         id: 'Administrador',
@@ -41,12 +36,6 @@ const categories = [
                 icon: <PublicIcon />,
                 active: true,
                 dir: '/admin/convocatorias'
-            },
-            {
-                id: 'Evaluaciones',
-                icon: <QuizIcon />,
-                active: false,
-                dir: '/admin/evaluaciones'
             },
             {
                 id: 'Usuarios',

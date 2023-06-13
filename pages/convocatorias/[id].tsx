@@ -38,22 +38,24 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
         alignItems="center" justifyContent={'center'} width={'80%'} margin={'auto'}
 
         flexDirection={matches ? 'row' : 'column'}
-
+        bgcolor={'#F1F1F1'}
+        padding={2}
+        borderRadius={4}
       >
 
         <Box>
-          <Image src={'/img/img-2.jpg'} alt={''} width={matches ? 500 : 300} height={matches ? 500 : 300} />
+          <Image src={'/img/img-2.jpg'} alt={''} width={matches ? 500 : 280} height={matches ? 500 : 280} />
         </Box>
 
-        <Box borderRadius={4} bgcolor={'#0045AA'} padding={2}>
+        <Box borderRadius={4} padding={2}>
           <Box >
             <Box display={'flex'} justifyContent={'space-between'}>
-              <Typography variant='h1' component='h1' sx={{ color: '#FFF' }}>
+              <Typography variant='h1' component='h1' >
                 {convocatoria.titulo.toLocaleUpperCase()}
 
               </Typography>
               <Box>
-                <IconButton sx={{ color: '#FFF' }} aria-label="share" onClick={() => setOpen(true)}>
+                <IconButton aria-label="share" onClick={() => setOpen(true)}>
                   <ShareIcon />
                 </IconButton>
 
@@ -63,7 +65,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
             </Box>
 
 
-            <Typography variant='body1' component='p' sx={{ mt: 2, width: '100%' }} color={'#F1F1E6'} >{convocatoria.descripcion}</Typography>
+            <Typography variant='body1' component='p' sx={{ mt: 2, width: '100%' }} color={'#767687'}  >{convocatoria.descripcion}</Typography>
 
           </Box>
           <Divider variant="middle" />
@@ -74,16 +76,14 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
             <ReqList job={convocatoria} />
 
           </Box>
-          <Button startIcon={<PostAddIcon />} color='primary' sx={{ mt: 6, width: '100%' }} size="large" href={`/postulant/postular/${convocatoria.id}`}>
+          <Button startIcon={<PostAddIcon />} color='secondary' sx={{ mt: 6, width: '100%' }} size="large" href={`/postulant/postular/${convocatoria.id}`}>
             Postular
           </Button>
         </Box>
 
 
       </Box>
-      <Box>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#0045aa" fillOpacity="1" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,250.7C1248,256,1344,288,1392,304L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
-      </Box>
+
       <ModalAlert title={'Compartir en:'} open={open} handleClose={() => setOpen(false)} handleConfirm={() => setOpen(false)} >
         <Box display={'flex'} justifyContent={'space-evenly'} width={matches ? 300 : 160}>
           <IconButton size='large' aria-label="add to shopping cart" target='_blank' href={`https://www.facebook.com/sharer/sharer.php?u=${url}`}>

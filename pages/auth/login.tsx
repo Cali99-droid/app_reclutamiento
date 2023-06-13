@@ -56,9 +56,12 @@ const LoginPage = (error: string) => {
             }
         }
     }
+
+
     const matches = useMediaQuery('(min-width:600px)');
     return (
         <AuthLayout title={"Iniciar Sesion "} >
+
             <Box bgcolor={'#FFF'} padding={4} >
                 <Chip
                     label={'La cuenta aún no ha sido confirmada, revisa tu email'}

@@ -1,7 +1,7 @@
 import { prisma } from '@/server/db/client';
 import { JobsLayout } from "@/components/layouts";
 
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper, Typography, useMediaQuery } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 import { IGrado, IPersona } from "@/interfaces";
@@ -21,20 +21,20 @@ import { DatosContext } from '@/context';
 
 interface Props {
 
-  grados: IGrado[]
+
   persona: IPersona;
   postulante: postulante
 }
 
 
-const PostulantPage: NextPage<Props> = ({ persona, grados, postulante }) => {
+const PostulantPage: NextPage<Props> = ({ persona, postulante }) => {
   const { activeStep } = useContext(DatosContext)
 
   return (
     <JobsLayout title={"AE | Postulante "} pageDescription={"Postular a un empleo"}>
       <ToastContainer />
 
-      <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingLeft={4} paddingRight={4} paddingTop={15} paddingBottom={4}  >
+      <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingLeft={4} paddingRight={4} paddingTop={18} paddingBottom={4} bgcolor={'#E1E1E1'}>
         <Paper sx={{ bgcolor: '#0045AA', padding: 2, mb: 2 }} >
           <Typography variant="h2" color={'#FFF'}>Actualizar mis datos</Typography>
 
@@ -42,7 +42,7 @@ const PostulantPage: NextPage<Props> = ({ persona, grados, postulante }) => {
         <Form />
         {
           activeStep === 0 && (
-            <FormDatos grados={grados} persona={persona} postulante={postulante} />
+            <FormDatos persona={persona} postulante={postulante} />
           )
         }
 
@@ -59,8 +59,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
   let postulante
   const session: any = await getSession({ req });
-  const grados = await apiCon('/grados')
-
 
   const { user } = session;
 
@@ -104,16 +102,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     postulante = JSON.parse(JSON.stringify(person.postulante[0]))
   }
 
-
-
-  // const convocatorias = await apiCon('/admin/convocatorias')
-
   return {
     props: {
       persona,
       postulante,
-      grados,
-
     }
   }
 }

@@ -23,6 +23,7 @@ import BiotechIcon from '@mui/icons-material/Biotech';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DevicesIcon from '@mui/icons-material/Devices';
 import moment from 'moment';
+import { ArrowBack, Edit } from '@mui/icons-material';
 interface Props {
     postulante: any
 }
@@ -48,7 +49,7 @@ const imageStyle = {
 };
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: '#4240A1',
+        backgroundColor: '#767687',
         color: theme.palette.common.white,
         fontWeight: 700
 
@@ -61,7 +62,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const FichaPage: NextPage<Props> = ({ postulante }) => {
 
-
+    const { push } = useRouter()
 
     const matches = useMediaQuery('(min-width:600px)');
     return (
@@ -69,12 +70,35 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
 
 
             <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} bgcolor={'#eeeeee'} padding={2} paddingTop={18}>
+                <Paper sx={{ bgcolor: '#0045AA', padding: 2, mb: 2 }} >
+                    <Typography variant="h2" color={'#FFF'}>Mi Ficha</Typography>
 
+                </Paper>
+                <Box mb={2}>
+                    <Button
+                        startIcon={<ArrowBack />}
+                        size='medium'
+                        color='secondary'
+
+                        onClick={() => { history.go(-1); return false; }}>
+                        Volver
+                    </Button>
+                </Box>
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <Item elevation={1} sx={{ bgcolor: '#4240A1' }}>
+                    <Grid item xs={12} sm={10}>
+                        <Item elevation={1} sx={{ bgcolor: '#767687' }}>
                             <Typography fontWeight={'bold'} color={'#FFF'}>Ficha del Postulante</Typography>
                         </Item>
+                    </Grid>
+                    <Grid item xs={12} sm={2} >
+                        <Button
+                            startIcon={<Edit />}
+                            size='medium'
+                            color='secondary'
+                            sx={{ width: '100%' }}
+                            onClick={() => push('/postulant')}>
+                            Editar
+                        </Button>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <Item elevation={1}>
@@ -94,11 +118,11 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
 
                                     <Box display={'flex'} gap={1}>
 
-                                        <FmdGoodIcon /> <Typography fontSize={12} >  {postulante.direccion}</Typography>
+                                        <FmdGoodIcon /> <Typography fontSize={12} >  {postulante.direccion.length > 0 ? postulante.direccion : 'Sin datos'}</Typography>
                                     </Box>
                                     <Box display={'flex'} gap={1}>
 
-                                        <PhoneIcon /> <Typography fontSize={12}>  {postulante.telefono}</Typography>
+                                        <PhoneIcon /> <Typography fontSize={12}>  {postulante.telefono.length > 0 ? postulante.telefono : 'Sin datos'}</Typography>
                                     </Box>
                                     <Box display={'flex'} gap={1}>
 
@@ -558,9 +582,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     return {
         props: {
             postulante,
-
-
-
         }
     }
 }

@@ -92,30 +92,32 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
 
     return (
         <JobsLayout title={"Mis postulaciones"} pageDescription={"Lista de postulacioes"}>
-            <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18}  >
-                <Paper sx={{ bgcolor: '#0045AA' }} >
-                    <Grid container spacing={2} alignItems="center" mb={1} padding={2}>
-                        <Grid item>
-                            <span color="inherit" />
+            <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18} bgcolor={'#E1E1E1'} >
+                <Box padding={4}>
+                    <Paper sx={{ bgcolor: '#0045AA' }} >
+                        <Grid container spacing={2} alignItems="center" mb={1} padding={2}>
+                            <Grid item>
+                                <span color="inherit" />
+                            </Grid>
+                            <Grid item xs>
+                                <Typography variant="h2" color={'#FFF'}>Mis postulaciones</Typography>
+                            </Grid>
+
                         </Grid>
-                        <Grid item xs>
-                            <Typography variant="h2" color={'#FFF'}>Mis postulaciones</Typography>
-                        </Grid>
+                    </Paper>
+                    <Paper sx={{ bgcolor: '#eeeeee' }}>
 
-                    </Grid>
-                </Paper>
-                <Paper sx={{ bgcolor: '#eeeeee' }}>
+                        <Box sx={{ height: 400, width: '100%', padding: 2 }}>
+                            <DataGrid
+                                rows={rows}
+                                columns={columns}
+                                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+                                sx={{ bgcolor: '#FFF' }}
+                            />
+                        </Box>
 
-                    <Box sx={{ height: 400, width: '100%', padding: 2 }}>
-                        <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-                            sx={{ bgcolor: '#FFF' }}
-                        />
-                    </Box>
-
-                </Paper>
+                    </Paper>
+                </Box>
             </Box>
 
 

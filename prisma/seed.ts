@@ -24,6 +24,7 @@ async function main() {
 
   const estadoPostulante = await prisma.estado_postulante.createMany({
     data: [
+      {nombre:'Inscrito'},
       { nombre: 'Apto entrevista' },
       { nombre: 'Apto evaluación' },
       { nombre: 'No interesa' },

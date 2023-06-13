@@ -13,6 +13,7 @@ import Header from './Header';
 import { useState } from 'react';
 import { InView } from 'react-intersection-observer';
 import { FullScreenLoading } from '../ui';
+import { ToastContainer } from 'react-toastify';
 
 
 function Copyright() {
@@ -195,6 +196,7 @@ export const Paperbase: FC<Props> = ({ children, title, subTitle, icon, navigate
 
 
             <Box sx={{ display: 'flex', minHeight: '100vh' }} className='fade-in'>
+                <ToastContainer />
                 <CssBaseline />
                 <Box
                     component="nav"

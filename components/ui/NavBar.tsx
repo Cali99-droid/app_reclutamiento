@@ -2,13 +2,14 @@ import React, { useContext, useState } from 'react';
 import NextLink from 'next/link';
 import { Router, useRouter } from 'next/router';
 
-import { AppBar, Avatar, Box, Button, Divider, IconButton, Input, InputAdornment, Link, Menu, MenuItem, MenuProps, Slide, Toolbar, Tooltip, Typography, alpha, styled, useScrollTrigger } from '@mui/material';
-import { ClearOutlined, ConfirmationNumberOutlined, SearchOutlined } from '@mui/icons-material';
+import { AppBar, Avatar, Box, Button, Divider, IconButton, Input, InputAdornment, Link, ListItemIcon, Menu, MenuItem, MenuProps, Slide, Toolbar, Tooltip, Typography, alpha, styled, useScrollTrigger } from '@mui/material';
+import { AccountBalance, AccountCircleSharp, ArticleOutlined, BorderColor, Checklist, ClearOutlined, ConfirmationNumberOutlined, Logout, SearchOutlined } from '@mui/icons-material';
 
 import { AuthContext, UiContext } from '@/context';
 import EditIcon from '@mui/icons-material/Edit';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
+import MenuIcon from '@mui/icons-material/Menu';
 interface Props {
     /**
      * Injected by the documentation to work in an iframe.
@@ -90,21 +91,11 @@ export const NavBar = () => {
 
     const [isSearchVisible, setIsSearchVisible] = useState(false);
 
-    const onSearchTerm = () => {
-        if (searchTerm.trim().length === 0) return;
-        push(`/search/${searchTerm}`);
-    }
-
     const { isLoggedIn, user, logout } = useContext(AuthContext);
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+
 
     const handleMenuUser = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -118,7 +109,7 @@ export const NavBar = () => {
         <ElevationScroll {...props}>
             <AppBar sx={{ borderBottom: '1px solid #e1eeee' }} >
                 <Toolbar >
-
+                    <Box flex={1} />
                     <NextLink href='/' passHref legacyBehavior>
                         <Link color={'secondary'} display='flex' alignItems='end'>
                             <Typography variant='h5' fontWeight={'bold'} >AE  </Typography>
@@ -181,7 +172,7 @@ export const NavBar = () => {
 
                     {!isLoggedIn && (
                         <Box sx={{ padding: 1 }}>
-                            <Button variant='outlined' href='/auth/login'>Acceder</Button>
+                            <Button href='/auth/login'>Acceder</Button>
                         </Box>
                     )}
 
@@ -202,6 +193,7 @@ export const NavBar = () => {
                                         >
 
                                             <Avatar sx={{ bgcolor: '#0045AA' }} src={user?.oAuthImg ? user?.oAuthImg : user?.img} />
+
                                         </IconButton>
                                     </Tooltip>
                                     <Menu
@@ -242,29 +234,46 @@ export const NavBar = () => {
                                         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                                     >
-                                        <MenuItem onClick={handleCloseUser}>Perfil</MenuItem>
-                                        <MenuItem onClick={handleCloseUser}>Mi cuenta</MenuItem>
+
+                                        <MenuItem onClick={handleCloseUser}>
+                                            <ListItemIcon>
+                                                <Avatar src={user?.oAuthImg ? user?.oAuthImg : user?.img} />
+                                            </ListItemIcon>
+                                            Mi cuenta
+                                        </MenuItem>
+                                        <Divider />
                                         {isLoggedIn && user?.rol.name === 'jurado1' && (
                                             <MenuItem onClick={() => push('/jurado')}>Calificar</MenuItem>
                                         )}
                                         {isLoggedIn && user?.rol.name === 'postulante' && (
                                             <Box>
                                                 <MenuItem onClick={() => push('/postulant/ficha')} disableRipple>
-
+                                                    <ListItemIcon>
+                                                        <ArticleOutlined fontSize="small" />
+                                                    </ListItemIcon>
                                                     Ver mi ficha
                                                 </MenuItem>
                                                 <MenuItem onClick={() => push('/postulant')} >
-
+                                                    <ListItemIcon>
+                                                        <BorderColor fontSize="small" />
+                                                    </ListItemIcon>
                                                     Actualizar mi ficha
                                                 </MenuItem>
 
                                                 <MenuItem onClick={() => push('/postulant/postulaciones')} disableRipple>
-
+                                                    <ListItemIcon>
+                                                        <Checklist fontSize="small" />
+                                                    </ListItemIcon>
                                                     Ver mis postulaciones
                                                 </MenuItem>
                                             </Box>
                                         )}
-                                        <MenuItem onClick={logout}>Salir</MenuItem>
+                                        <MenuItem onClick={logout}>
+                                            <ListItemIcon>
+                                                <Logout fontSize="small" />
+                                            </ListItemIcon>
+                                            Salir
+                                        </MenuItem>
                                     </Menu>
 
 
@@ -285,12 +294,15 @@ export const NavBar = () => {
                     }
 
 
+                    <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
 
-                    <Button onClick={toggleSideMenu}>
-                        Menú
-                    </Button>
+                        <IconButton aria-label="delete" onClick={toggleSideMenu} size="large">
+                            <MenuIcon fontSize="inherit" />
+                        </IconButton>
+                    </Box>
 
 
+                    <Box flex={1} />
 
 
                 </Toolbar>

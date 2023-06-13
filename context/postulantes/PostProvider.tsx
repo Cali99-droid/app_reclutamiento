@@ -171,7 +171,7 @@ export const PostProvider: FC<Props> = ({ children }) => {
 
 
             const puntaje = calcularTotal();
-
+            console.log(puntaje)
 
             try {
 

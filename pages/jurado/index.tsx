@@ -13,6 +13,7 @@ import { Paperbase } from '../../components/dash/Paperbase';
 import { useRouter } from "next/router";
 import { useContext } from 'react';
 import { parse } from "path";
+import { ToastContainer } from "react-toastify";
 
 
 interface Props {
@@ -26,7 +27,7 @@ interface Props {
 const JuradoPage: NextPage<Props> = ({ convocatorias }) => {
 
 
-    const convocatoriasAsignadas = convocatorias.filter(c => c.convocatoria.estado.id === 2)
+    const convocatoriasAsignadas = convocatorias.filter(c => c.convocatoria.estado.id !== 3)
 
 
     const { push } = useRouter();
@@ -83,6 +84,7 @@ const JuradoPage: NextPage<Props> = ({ convocatorias }) => {
     const matches = useMediaQuery('(min-width:600px)');
     return (
         <Paperbase title={"Administrar convocatorias "} subTitle={"Listado de convocatorias"} >
+            <ToastContainer />
             <Paper sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }}>
                 <AppBar
                     position="static"
