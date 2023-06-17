@@ -142,19 +142,43 @@ export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
 
         try {
 
-            // console.log( file );
-            for (const file of target.files) {
-                const formData = new FormData();
-                formData.append('file', file);
-                const { data } = await reclutApi.post<{ message: string }>('/postulants/upload', formData);
-                setValue('image', data.message, { shouldValidate: true });
-                console.log(data)
-            }
+
+            const { data } = await reclutApi.post<{ message: string }>('/postulants/awsupload', {
+                name: target.files[0].name,
+                type: target.files[0].type
+            });
+
+            const url = data.message;
+            const res = await reclutApi.put(url, target.files[0], {
+                headers: {
+                    "Content-type": target.files[0].type,
+                    "Access-Control-Allow-Origin": "*"
+                }
+            })
+            console.log(res)
+            const urlimg = 'https://plataforma-virtual.s3.us-west-2.amazonaws.com/' + target.files[0].name;
+            setValue('image', urlimg, { shouldValidate: true });
+            console.log(data)
 
 
         } catch (error) {
             console.log({ error });
         }
+        // try {
+
+        //     // console.log( file );
+        //     for (const file of target.files) {
+        //         const formData = new FormData();
+        //         formData.append('file', file);
+        //         const { data } = await reclutApi.post<{ message: string }>('/postulants/upload', formData);
+        //         setValue('image', data.message, { shouldValidate: true });
+        //         console.log(data)
+        //     }
+
+
+        // } catch (error) {
+        //     console.log({ error });
+        // }
     }
     const onDeleteImage = () => {
         // console.log(getValues('image'))

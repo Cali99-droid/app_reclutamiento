@@ -11,6 +11,8 @@ import { generarId } from '@/helpers/functions';
 import sendConfirmationEmail from '@/helpers/sendConfirmationEmail';
 import { prisma } from '../../../server/db/client';
 import { checkUserEmailPassword } from '../../../database/dbUser';
+import sendEmail from '@/helpers/mauticApi';
+import crearContacto from '@/helpers/mauticApi';
 
 
 type Data = 
@@ -136,6 +138,15 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
       })
       /**Enviar email de confirmacion */
      await sendConfirmationEmail(email, tokenEmail)
+
+     const nombreCompleto = nombre + ' ' + apellidoPat + ' '+apellidoMat;
+     crearContacto(nombreCompleto, email)
+     .then(() => {
+       console.log('Contacto creado exitosamente');
+     })
+     .catch((error) => {
+       console.error('Error al crear el contacto:', error);
+     });
     //  console.log(tokenEmail)
     await prisma.$disconnect()
     const newUser = persona.user[0];
