@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-
+import { v4 as uuidv4 } from 'uuid';
 
 import AWS from '../../../aws-config';
 
@@ -33,8 +33,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 
 const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const s3 = new S3({
-      
+    let {name,type} = req.body;
+       // Genera un nombre único para el archivo
+       const uniqueFileName = `${uuidv4()}.${name.split('.').pop()}`;
+       const folder = 'img/';
+       const fileName = `${folder}${uniqueFileName}`;
+    const s3 = new S3({     
         region:"us-west-2",
         accessKeyId: process.env.ACCESS_KEY_ID,
         secretAccessKey: process.env.SECRET_ACCESS_KEY,
@@ -43,19 +47,18 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
     try {
 
-        let {name,type} = req.body;
+        
         const fileParams = {
             Bucket: process.env.BUCKET_NAME,
-            Key:name,
+            Key:fileName,
             Expires:600,
             ContentType:type,
-            
             ACL:"public-read",
         };
         
         const url = await s3.getSignedUrlPromise('putObject', fileParams)
         console.log(url)
-        return res.status(200).json({ message: url});
+        return res.status(200).json({ url: url,message:uniqueFileName});
      } catch (error) {
         console.log(error)
      }

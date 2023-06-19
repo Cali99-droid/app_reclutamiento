@@ -10,8 +10,11 @@ import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
 
 import { Edit, UploadFile, UploadFileOutlined } from '@mui/icons-material';
+import { useRef } from 'react';
+import { reclutApi } from '@/apies';
+import { useRouter } from 'next/router';
 const Step2 = () => {
-
+    const router = useRouter()
     const { data }: any = useSession();
     // ** console.log(data?.user.persona.postulante[0].id);
     const IdPos = data?.user.persona.postulante[0].id;
@@ -66,8 +69,11 @@ const Step2 = () => {
         setInstitucion('')
         setGrado('')
         setyear('')
+        setDoc(null)
         setId(null)
+        setEstudios()
     }
+    const [doc, setDoc] = useState<string | null>(null);
     const handleConfirm = () => {
 
 
@@ -83,10 +89,10 @@ const Step2 = () => {
         }
 
         if (id) {
-            editarEstudio(id, profesion, institucion, grado, year, IdPos)
+            editarEstudio(id, profesion, institucion, grado, year, IdPos, doc)
             toast.success('Actualizado con éxito')
         } else {
-            agregarEstudio(profesion, institucion, grado, year, IdPos)
+            agregarEstudio(profesion, institucion, grado, year, IdPos, doc)
             toast.success('Agregado con éxito')
         }
 
@@ -111,15 +117,69 @@ const Step2 = () => {
         },
     }));
 
-    function handleEdit(id: number, profesion: string, institucion: string, grado: string, year: string): void {
+    function handleEdit(id: number, profesion: string, institucion: string, grado: string, year: string, doc: any): void {
+        console.log(doc)
         handleOpen();
         setId(id)
         setProfesion(profesion)
         setInstitucion(institucion)
         setGrado(grado)
         setyear(year)
+        setDoc(doc)
     }
+    const fileInputRef = useRef<HTMLInputElement>(null)
+    const [file, setFile] = useState<File | null>(null);
 
+    const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+        if (!target.files || target.files.length === 0) {
+            return;
+        }
+        const selectedFile = target.files[0];
+
+        // setFile(selectedFile);
+        // if (selectedFile) {
+        //     const fileReader = new FileReader();
+        //     fileReader.onload = () => {
+        //         setDoc(fileReader.result as string);
+        //     };
+        //     fileReader.readAsDataURL(selectedFile);
+        // } else {
+        //     setDoc(null);
+        // }
+        try {
+
+
+            const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/docupload', {
+                name: target.files[0].name,
+                type: target.files[0].type
+            });
+
+            const url = data.url;
+            const res = await reclutApi.put(url, target.files[0], {
+                headers: {
+                    "Content-type": target.files[0].type,
+                    "Access-Control-Allow-Origin": "*"
+                }
+            })
+
+            console.log(data.message)
+
+
+            setDoc(data.message);
+
+            console.log(data)
+
+
+        } catch (error) {
+            console.log({ error });
+        }
+
+
+    }
+    const handleReplaceFile = () => {
+        setFile(null);
+        setDoc(null);
+    };
     return (
         <Box padding={4} mt={3} bgcolor={'#FFF'} className="fadeIn">
             <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2}>
@@ -152,7 +212,7 @@ const Step2 = () => {
                                     <TableCell align="right">{e.year}</TableCell>
                                     <TableCell align="right">
 
-                                        <IconButton onClick={() => handleEdit(e.id, e.profesion, e.institucion, e.grado, e.year)} >
+                                        <IconButton onClick={() => handleEdit(e.id, e.profesion, e.institucion, e.grado, e.year, e.doc)} >
                                             <Edit />
                                         </IconButton>
                                         <IconButton onClick={() => handleDelete(e.id)} color='error'>
@@ -254,10 +314,32 @@ const Step2 = () => {
                         }}
 
                     /> <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
-                    <Button variant="outlined" startIcon={<UploadFileOutlined />}>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+
+                        accept='.pdf'
+                        style={{ display: 'none' }}
+                        onChange={onFilesSelected}
+                    />
+                    <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRef.current?.click()} disabled={doc ? true : false}>
                         Subir Certificado
                     </Button>
+                    {/* <input accept='.pdf' type="file" onChange={onFilesSelected} /> */}
+                    {doc && (
+                        <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
+                            <Box >
+                                <h3>Vista Previa</h3>
+                                <object data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
+                                    <p>No se puede previsualizar</p>
+                                </object>
 
+                            </Box>
+                            <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
+                                Quitar
+                            </Button>
+                        </Box>
+                    )}
                 </Box>
 
 

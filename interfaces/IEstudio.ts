@@ -4,6 +4,7 @@ export interface IEstudio {
     institucion: string
     profesion: string
     grado: string,
-    year: string
+    year: string,
+    doc?: string
  
 }

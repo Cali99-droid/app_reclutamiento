@@ -137,19 +137,12 @@ export const DatosProvider: FC<Props> = ({ children }) => {
         setActiveStep(prevActiveStep => prevActiveStep - 1);
     };
     //-----------------estudios..................
-    const agregarEstudio = async (profesion: string, institucion: string, grado: string, year: string, idPos: number) => {
-        const { data } = await reclutApi.post<IEstudio>('/postulants/estudios', { profesion, institucion, grado, year, idPos });
-        // const nuevoEstudio: IEstudio = {
-        //     id: 0,
-        //     profesion,
-        //     institucion,
-        //     grado,
-        //     year
-        // }
+    const agregarEstudio = async (profesion: string, institucion: string, grado: string, year: string, idPos: number, doc: any) => {
+        const { data } = await reclutApi.post<IEstudio>('/postulants/estudios', { profesion, institucion, grado, year, idPos, doc });
         dispatch({ type: 'Add-Estudio', payload: data });
     }
-    const editarEstudio = async (id: number, profesion: string, institucion: string, grado: string, year: string, idPos: number) => {
-        const { data } = await reclutApi.put<IEstudio>('/postulants/estudios', { id, profesion, institucion, grado, year, idPos });
+    const editarEstudio = async (id: number, profesion: string, institucion: string, grado: string, year: string, idPos: number, doc: any) => {
+        const { data } = await reclutApi.put<IEstudio>('/postulants/estudios', { id, profesion, institucion, grado, year, idPos, doc });
 
         dispatch({ type: 'Update-Estudio', payload: data });
     }

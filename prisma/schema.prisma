@@ -27,6 +27,7 @@ model capacitacion {
   descripcion   String     @db.LongText
   institucion   String     @db.VarChar(200)
   postulante_id Int
+  doc           String?    @db.VarChar(225)
   postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_capacitacion_postulante1")
 
   @@index([postulante_id], map: "fk_capacitacion_postulante1_idx1")
@@ -35,7 +36,7 @@ model capacitacion {
 model cargo {
   id            Int        @id @default(autoincrement())
   institucion   String     @db.VarChar(150)
-  referencia    String?    @db.Char(9)
+  referencia    String?    @db.Char(1)
   remuneracion  Float
   nivel         String     @db.VarChar(45)
   cantidadCargo Int?       @default(0) @map("cantidad_cargo")
@@ -44,6 +45,7 @@ model cargo {
   contacto      String?    @db.VarChar(200)
   desde         DateTime?  @db.Date
   hasta         DateTime?  @db.Date
+  doc           String?    @db.VarChar(225)
   postulante_id Int
   postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cargo_postulante1")
 
@@ -65,9 +67,9 @@ model convocatoria {
   estadoId                  Int                         @map("estado_id")
   sueldoOfertado            Float                       @map("sueldo_ofertado")
   vacantes                  Int
+  img                       String?                     @db.VarChar(225)
   vigencia                  DateTime?                   @db.Date
   categoria_id              Int?
-  img                       String?                     @db.VarChar(225)
   categoria                 categoria?                  @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_convocatoria_categoria1")
   estado                    estado                      @relation(fields: [estadoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_convocatoria_estado1")
   grado                     grado                       @relation(fields: [gradoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_convocatoria_grado1")
@@ -129,6 +131,7 @@ model estudios {
   institucion   String     @db.VarChar(200)
   grado         String     @db.VarChar(200)
   year          Int
+  doc           String?    @db.VarChar(225)
   postulante_id Int
   postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_estudios_postulante1")
 

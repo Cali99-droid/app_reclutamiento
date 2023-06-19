@@ -2,8 +2,10 @@ import { IJob, IPostulant } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
 import { getSession } from 'next-auth/react';
-
+import aws from 'aws-sdk';
 import { v2 as cloudinary } from 'cloudinary';
+import { S3 } from 'aws-sdk';
+import { parse } from 'path';
 cloudinary.config( process.env.CLOUDINARY_URL || '' );
 
 
@@ -219,19 +221,25 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
         discapacidad:number,
         nivel:string,
         image:string,
-       idPersona:number
+        idPersona:number
         idPostulante:number
     };
 
     if ( image.length <= 0 ) {
       return res.status(400).json({ message: 'Es Necesario que suba una imagen' });
-  }
+    }
 
-
+    const s3 = new S3({     
+      region:"us-west-2",
+      accessKeyId: process.env.ACCESS_KEY_ID,
+      secretAccessKey: process.env.SECRET_ACCESS_KEY,
+      signatureVersion:'v4',
+  });
+ 
         // Borrar de cloudinary
-        const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
-        console.log({ image, fileId, extension });
-        await cloudinary.uploader.destroy( fileId );
+        // const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
+        // console.log({ image, fileId, extension });
+        // await cloudinary.uploader.destroy( fileId );
  
 
 
@@ -247,11 +255,20 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
       }
       if(p.image ){
           if ( p.image !== image) {
-          // Borrar de cloudinary
-          const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
+            
+            const deleteParams: aws.S3.DeleteObjectRequest = {
+              Bucket: process.env.BUCKET_NAME!,
+              Key: 'img/'+ p.image,
+            };
+            const resp = await s3.deleteObject(deleteParams).promise();
+            console.log('se elimino la img', resp)
+          // // Borrar de cloudinary
+          // const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
        
-          await cloudinary.uploader.destroy( fileId );
+          // await cloudinary.uploader.destroy( fileId );
       }
+
+      
     }
    
     

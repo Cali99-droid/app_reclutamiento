@@ -2,7 +2,7 @@ import { reclutApi } from '@/apies';
 import { validations } from '@/helpers';
 import { IGrado, IPersona, IUser } from '@/interfaces';
 import { ErrorOutline } from '@mui/icons-material';
-import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, SelectChangeEvent, FormLabel, Card, CardMedia, CardActions } from '@mui/material';
+import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, SelectChangeEvent, FormLabel, Card, CardMedia, CardActions, CircularProgress, LinearProgress } from '@mui/material';
 import { postulante } from '@prisma/client';
 import axios from 'axios';
 import moment from 'moment';
@@ -14,6 +14,8 @@ import { toast } from 'react-toastify';
 import EastIcon from '@mui/icons-material/East';
 import { useContext, ChangeEvent } from 'react';
 import { DatosContext } from '@/context';
+import { FullScreenLoading } from '../ui';
+import { InView } from 'react-intersection-observer';
 interface Props {
 
 
@@ -87,6 +89,7 @@ export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
 
         }
     })
+    const [loadImg, setLoadImg] = useState(false)
     const onRegisterForm = async (form: FormData) => {
         //setIsSaving(true);
 
@@ -134,30 +137,33 @@ export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
         }
         setEx(true)
     }
-
+    const [file, setFile] = useState<File | null>(null);
     const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         if (!target.files || target.files.length === 0) {
             return;
         }
-
+        setLoadImg(true)
         try {
 
 
-            const { data } = await reclutApi.post<{ message: string }>('/postulants/awsupload', {
+            const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/awsupload', {
                 name: target.files[0].name,
                 type: target.files[0].type
             });
 
-            const url = data.message;
+            const url = data.url;
             const res = await reclutApi.put(url, target.files[0], {
                 headers: {
                     "Content-type": target.files[0].type,
                     "Access-Control-Allow-Origin": "*"
                 }
             })
-            console.log(res)
-            const urlimg = 'https://plataforma-virtual.s3.us-west-2.amazonaws.com/' + target.files[0].name;
-            setValue('image', urlimg, { shouldValidate: true });
+
+
+            const urlimg = 'https://plataforma-virtual.s3.us-west-2.amazonaws.com/' + data.message;
+
+            setValue('image', data.message, { shouldValidate: true });
+
             console.log(data)
 
 
@@ -180,6 +186,7 @@ export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
         //     console.log({ error });
         // }
     }
+
     const onDeleteImage = () => {
         // console.log(getValues('image'))
         setValue(
@@ -189,6 +196,7 @@ export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
         // console.log(getValues('image'))
 
     }
+
     return (
         <Box className="fadeIn" marginTop={-10} >
             <form onSubmit={handleSubmit(onRegisterForm)} noValidate >
@@ -530,7 +538,7 @@ export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
                                     color="secondary"
                                     fullWidth
                                     // startIcon={ <UploadOutlined /> }
-
+                                    disabled={getValues('image') ? true : false}
                                     onClick={() => fileInputRef.current?.click()}
                                 >
                                     Cargar imagen
@@ -548,24 +556,28 @@ export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
                         </Grid>
 
                         <Grid item xs={12} md={4}>
-
+                            <Typography sx={{ display: loadImg ? 'block' : 'none' }} >Subiendo...</Typography>
+                            <LinearProgress sx={{ display: loadImg ? 'block' : 'none' }} />
 
                             {
                                 getValues('image') && (
                                     <Box width={150} margin={'auto'}>
+
                                         <Card>
+
                                             <CardMedia
                                                 component='img'
                                                 className='fadeIn'
-                                                image={getValues('image')}
+                                                image={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${getValues('image')}`}
                                                 alt={getValues('image')}
-
+                                                onLoad={() => setLoadImg(false)}
                                             />
                                             <CardActions>
                                                 <Button
                                                     fullWidth
                                                     color="error"
                                                     onClick={() => onDeleteImage()}
+                                                    onLoad={() => setLoadImg(false)}
                                                 >
                                                     Borrar
                                                 </Button>
