@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
- import formidable from 'formidable';
- import fs from 'fs';
+
 
  import { v4 as uuidv4 } from 'uuid';
-import { v2 as cloudinary } from 'cloudinary';
-import { S3 } from 'aws-sdk';
-cloudinary.config( process.env.CLOUDINARY_URL || '' );
+// import { v2 as cloudinary } from 'cloudinary';
+import AWS from '../../../aws-config';
+
+// cloudinary.config( process.env.CLOUDINARY_URL || '' );
 
 
 type Data = {
@@ -35,19 +35,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 
 const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
-    console.log(req.body)
+
     let {name,type} = req.body;
     
     // Genera un nombre único para el archivo
     const uniqueFileName = `${uuidv4()}.${name.split('.').pop()}`;
     const folder = 'docs/';
     const fileName = `${folder}${uniqueFileName}`;
-    const s3 = new S3({     
-        region:"us-west-2",
-        accessKeyId: process.env.ACCESS_KEY_ID,
-        secretAccessKey: process.env.SECRET_ACCESS_KEY,
-        signatureVersion:'v4',
-    });
+    const s3 = new AWS.S3();
  
  try {
 

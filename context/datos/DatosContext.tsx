@@ -41,14 +41,14 @@ interface ContextProps {
 
 
     setCargos: () => Promise<void>
-    agregarCargo: (referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => void,
-    editarCargo: (id: number, referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => Promise<void>
+    agregarCargo: (referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number, doc: any) => Promise<void>
+    editarCargo: (id: number, referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number, doc: any) => Promise<void>
     quitarCargo: (id: number) => void
 
 
     setCapacitacion: () => Promise<void>
-    agregarCapacitacion: (titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number) => void,
-    editarCapacitacion: (id: number, titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number) => Promise<void>
+    agregarCapacitacion: (titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number, doc: any) => void,
+    editarCapacitacion: (id: number, titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number, doc: any) => Promise<void>
     quitarCapacitacion: (id: number) => void
 
 

@@ -5,5 +5,6 @@ export interface ICapacitacion {
     horas: string
     institucion:string
     year:string
-    descripcion: string
+    descripcion: string,
+    doc?: string
 }

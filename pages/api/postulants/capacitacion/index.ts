@@ -3,7 +3,9 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
 import { getSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
-
+import { S3 } from 'aws-sdk';
+import aws from 'aws-sdk';
+import { capacitacion } from '@prisma/client';
 
 
 
@@ -61,7 +63,7 @@ async function  getCapacitacion(req: NextApiRequest, res: NextApiResponse<any>) 
 
 
 async function  postCapacitacion(req: NextApiRequest, res: NextApiResponse<any>) {
-  const{titulo='', institucion='',horas,descripcion,year,idPos}=req.body
+  const{titulo='', institucion='',horas,descripcion,year,idPos,doc}=req.body
 
 
   try {
@@ -73,7 +75,8 @@ async function  postCapacitacion(req: NextApiRequest, res: NextApiResponse<any>)
           horas:parseInt(horas),
           descripcion,
           year:parseInt(year),
-          postulante_id:idPos
+          postulante_id:idPos,
+          doc
         }
       })  
     return res.status(200).json(cargo)
@@ -88,7 +91,33 @@ async function  postCapacitacion(req: NextApiRequest, res: NextApiResponse<any>)
 }
 
 async function updateCapacitacion(req: NextApiRequest, res: NextApiResponse<any>) {
-  const{id,titulo='', institucion='',horas,descripcion,year,idPos}=req.body
+  const{id,titulo='', institucion='',horas,descripcion,year,idPos,doc}=req.body
+
+
+  const capacitacion = await  prisma.capacitacion.findUnique({
+    where:{
+      id
+    },
+    select:{
+      doc:true
+    }
+  })
+  const s3 = new S3({     
+    region:"us-west-2",
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    signatureVersion:'v4',
+});
+if(capacitacion){
+  if(capacitacion.doc !== doc){
+    const deleteParams: aws.S3.DeleteObjectRequest = {
+      Bucket: process.env.BUCKET_NAME!,
+      Key: 'docs/'+ capacitacion.doc,
+    };
+    const resp = await s3.deleteObject(deleteParams).promise();
+    console.log('se elimino el documento', resp)
+  }
+}
 
 
   try {
@@ -103,7 +132,8 @@ async function updateCapacitacion(req: NextApiRequest, res: NextApiResponse<any>
           horas:parseInt(horas),
           descripcion,
           year:parseInt(year),
-          postulante_id:idPos
+          postulante_id:idPos,
+          doc
         }
       })  
     return res.status(200).json(cargo)

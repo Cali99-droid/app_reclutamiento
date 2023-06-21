@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 import AWS from '../../../aws-config';
 
-import  S3  from 'aws-sdk/clients/s3';
 
 
 type Data = |
@@ -38,12 +37,7 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
        const uniqueFileName = `${uuidv4()}.${name.split('.').pop()}`;
        const folder = 'img/';
        const fileName = `${folder}${uniqueFileName}`;
-    const s3 = new S3({     
-        region:"us-west-2",
-        accessKeyId: process.env.ACCESS_KEY_ID,
-        secretAccessKey: process.env.SECRET_ACCESS_KEY,
-        signatureVersion:'v4',
-    });
+    const s3 = new AWS.S3();
     
     try {
 

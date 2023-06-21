@@ -313,7 +313,9 @@ const Step2 = () => {
                             min: 1950
                         }}
 
-                    /> <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
+                    />
+                    <InputLabel id="demo-simple-select-label">Certificado</InputLabel>
+                    <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
                     <input
                         ref={fileInputRef}
                         type="file"

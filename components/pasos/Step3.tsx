@@ -1,5 +1,5 @@
 import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, FormHelperText } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useContext, ChangeEvent } from 'react';
 import { DatosContext } from '@/context';
@@ -11,6 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { toast } from 'react-toastify';
 import { validations } from '@/helpers';
 import { Edit, UploadFileOutlined } from '@mui/icons-material';
+import { reclutApi } from '@/apies';
 
 const inputProps = {
     max: '50',
@@ -128,6 +129,7 @@ const Step3 = () => {
         setContacto('')
         setYear('')
     }
+    const [doc, setDoc] = useState<string | null>(null);
     const handleConfirmCargo = () => {
 
 
@@ -142,10 +144,10 @@ const Step3 = () => {
             return
         }
         if (idCargo) {
-            editarCargo(idCargo, referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos)
+            editarCargo(idCargo, referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos, doc)
             toast.success('Actualizado con éxito')
         } else {
-            agregarCargo(referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos)
+            agregarCargo(referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos, doc)
             toast.success('Agregado con éxito')
         }
 
@@ -248,7 +250,7 @@ const Step3 = () => {
             fontSize: 14,
         },
     }));
-    function handleEdit(id: number, descripcion: string, institucion: string, referencia: string, contacto: string, nivel: string, cantidadCargo: string, remuneracion: string, year: string): void {
+    function handleEdit(id: number, descripcion: string, institucion: string, referencia: string, contacto: string, nivel: string, cantidadCargo: string, remuneracion: string, year: string, doc: any): void {
         setOpenCargo(true)
         setIdCargo(id),
             setDescripcion(descripcion);
@@ -259,10 +261,54 @@ const Step3 = () => {
         setYear(year)
         setNivel(nivel);
         setCantidad(cantidadCargo)
+        setDoc(doc)
 
     }
 
+    const fileInputRef = useRef<HTMLInputElement>(null)
+    const [file, setFile] = useState<File | null>(null);
 
+    const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+        if (!target.files || target.files.length === 0) {
+            return;
+        }
+        const selectedFile = target.files[0];
+
+
+        try {
+
+
+            const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/docupload', {
+                name: target.files[0].name,
+                type: target.files[0].type
+            });
+
+            const url = data.url;
+            const res = await reclutApi.put(url, target.files[0], {
+                headers: {
+                    "Content-type": target.files[0].type,
+                    "Access-Control-Allow-Origin": "*"
+                }
+            })
+
+            console.log(data.message)
+
+
+            setDoc(data.message);
+
+            console.log(data)
+
+
+        } catch (error) {
+            console.log({ error });
+        }
+
+
+    }
+    const handleReplaceFile = () => {
+        setFile(null);
+        setDoc(null);
+    };
 
     return (
         <Box padding={4} mt={3} className="fadeIn" >
@@ -309,7 +355,7 @@ const Step3 = () => {
                                     <TableCell align="right">S/ {parseFloat(e.remuneracion)}</TableCell>
 
                                     <TableCell align="right">
-                                        <IconButton onClick={() => handleEdit(e.id, e.descripcion, e.institucion, e.referencia, e.contacto, e.nivel, e.cantidadCargo, e.remuneracion, e.year)} >
+                                        <IconButton onClick={() => handleEdit(e.id, e.descripcion, e.institucion, e.referencia, e.contacto, e.nivel, e.cantidadCargo, e.remuneracion, e.year, e.doc)} >
                                             <Edit />
                                         </IconButton>
                                         <IconButton onClick={() => handleDeleteCargo(e.id)} color='error'>
@@ -456,17 +502,17 @@ const Step3 = () => {
                 handleClose={handleCloseCargo}
                 handleConfirm={handleConfirmCargo}
             >
-                <Box display={'flex'} flexDirection={'column'} gap={.5} mt={1}
+                <Box display={'flex'} width={400} flexDirection={'column'} gap={.5} mt={1}
                     component="form"
                     sx={{
-                        '& .MuiTextField-root': { m: 1, width: 350 },
+                        '& .MuiTextField-root': { m: 1, },
                     }}
                     noValidate
-                    autoComplete="off"
+                    autoComplete="on"
                 >
                     <TextField
 
-
+                        autoFocus
                         id="descripcion"
                         label="Descripción del cargo"
                         placeholder='Dirección, subdirección, coordinaciones,etc.
@@ -479,7 +525,7 @@ const Step3 = () => {
 
                     />
                     <TextField
-                        autoFocus
+
 
                         id="institucion"
                         label="Institución"
@@ -583,11 +629,35 @@ const Step3 = () => {
                             min: 1950
                         }}
                     />
-
+                    <InputLabel id="demo-simple-select-label">Certificado</InputLabel>
                     <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
-                    <Button variant="outlined" startIcon={<UploadFileOutlined />}>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+
+                        accept='.pdf'
+                        style={{ display: 'none' }}
+                        onChange={onFilesSelected}
+                    />
+                    <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRef.current?.click()} disabled={doc ? true : false}>
                         Subir Certificado
                     </Button>
+                    {/* <input accept='.pdf' type="file" onChange={onFilesSelected} /> */}
+                    {doc && (
+                        <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
+                            <Box >
+                                <h3>Vista Previa</h3>
+                                <object data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
+                                    <p>No se puede previsualizar</p>
+                                </object>
+
+                            </Box>
+                            <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
+                                Quitar
+                            </Button>
+                        </Box>
+                    )}
+
                 </Box>
 
 

@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren } from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Box } from "@mui/material";
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Box, useMediaQuery } from "@mui/material";
 
 
 interface ModalProps extends PropsWithChildren {
@@ -10,15 +10,17 @@ interface ModalProps extends PropsWithChildren {
 }
 
 export const Modal: FC<ModalProps> = ({ title, children, open, handleClose, handleConfirm }) => {
-
+  const matches = useMediaQuery('(min-width:600px)');
   return (
 
-    <Dialog open={open} onClose={handleClose} maxWidth='lg'>
+    <Dialog open={open} onClose={handleClose} >
 
       <DialogTitle >{title}</DialogTitle>
       <DialogContent  >
+        <Box sx={matches ? { width: 400 } : { width: 250 }}>
+          {children}
+        </Box>
 
-        {children}
 
       </DialogContent>
       <DialogActions>

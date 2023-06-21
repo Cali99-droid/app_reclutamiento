@@ -1,13 +1,14 @@
 import { prisma } from '@/server/db/client';
 
 import { IEstudio } from "@/interfaces";
-import { Box, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery } from '@mui/material';
+import { Box, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery, IconButton } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 
 import Image from 'next/image';
 import { calcularEdad } from '@/helpers/functions';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import FilePresentIcon from '@mui/icons-material/FilePresent';
 
 import PhoneIcon from '@mui/icons-material/Phone';
 import MailIcon from '@mui/icons-material/Mail';
@@ -23,6 +24,7 @@ import { Paperbase } from '@/components/dash';
 import { cargo, investigacion, capacitacion, reconocimiento, tics, aficion } from '@prisma/client';
 import moment from 'moment';
 import 'moment/locale/es';
+import { DockOutlined } from '@mui/icons-material';
 moment.locale('es');
 interface Props {
     postulante: any
@@ -64,7 +66,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const PostulantePage: NextPage<Props> = ({ postulante }) => {
-    console.log(postulante)
+
     const router = useRouter();
     const matches = useMediaQuery('(min-width:600px)');
     return (
@@ -101,7 +103,7 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
                             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Image
                                     priority
-                                    src={(postulante.image === null ? '/avatar.jpg' : postulante.image)}
+                                    src={(postulante.image === null ? '/avatar.jpg' : `https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${postulante.image}`)}
                                     width={150}
                                     height={150}
                                     alt="Imagen postulante"
@@ -174,10 +176,12 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
 
                                             <TableHead >
                                                 <TableRow>
-                                                    <StyledTableCell >Profesión</StyledTableCell>
+                                                    <StyledTableCell >Año</StyledTableCell>
+                                                    <StyledTableCell align="left">Profesión</StyledTableCell>
                                                     <StyledTableCell align="right">Institución</StyledTableCell>
                                                     <StyledTableCell align="right">Grado</StyledTableCell>
-                                                    <StyledTableCell align="right">Año</StyledTableCell>
+                                                    <StyledTableCell align="right">Doc</StyledTableCell>
+
 
                                                 </TableRow>
                                             </TableHead>
@@ -187,12 +191,20 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
                                                         key={e.id}
                                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                     >
+                                                        <TableCell >{e.year}</TableCell>
                                                         <TableCell component="th" scope="row">
                                                             {e.profesion}
                                                         </TableCell>
                                                         <TableCell align="right">{e.institucion}</TableCell>
                                                         <TableCell align="right">{e.grado}</TableCell>
-                                                        <TableCell align="right">{e.year}</TableCell>
+                                                        <TableCell align="right">
+
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                                <FilePresentIcon />
+                                                            </IconButton>
+                                                        </TableCell>
+
+
 
                                                     </TableRow>
                                                 ))}
@@ -229,6 +241,7 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
                                                     {/* <StyledTableCell align="right">Nivel</StyledTableCell> */}
                                                     {/* <StyledTableCell align="right">Personas a cargo</StyledTableCell> */}
                                                     <StyledTableCell align="right">Remuneración</StyledTableCell>
+                                                    <StyledTableCell align="right">Doc</StyledTableCell>
 
 
                                                 </TableRow>
@@ -248,7 +261,12 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
                                                         {/* <TableCell align="right">{e.nivel}</TableCell> */}
                                                         {/* <TableCell align="right">{e.cantidadCargo}</TableCell> */}
                                                         <TableCell align="right">{e.remuneracion}</TableCell>
+                                                        <TableCell align="right">
 
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                                <FilePresentIcon />
+                                                            </IconButton>
+                                                        </TableCell>
 
                                                     </TableRow>
                                                 ))}
@@ -329,6 +347,7 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
                                                     <StyledTableCell align="right">Horas</StyledTableCell>
                                                     <StyledTableCell align="right">Año</StyledTableCell>
                                                     <StyledTableCell align="right">Detalles</StyledTableCell>
+                                                    <StyledTableCell align="right">Doc</StyledTableCell>
 
                                                 </TableRow>
                                             </TableHead>
@@ -346,7 +365,12 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
 
                                                         <TableCell align="right">{e.year}</TableCell>
                                                         <TableCell align="right">{e.descripcion}</TableCell>
+                                                        <TableCell align="right">
 
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                                <FilePresentIcon />
+                                                            </IconButton>
+                                                        </TableCell>
                                                     </TableRow>
                                                 ))}
                                             </TableBody>

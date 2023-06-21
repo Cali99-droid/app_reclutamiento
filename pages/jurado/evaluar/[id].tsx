@@ -39,7 +39,7 @@ const EvaluarPage: NextPage<Props> = ({ convocatoria }) => {
     const { data, error } = useSWR<any[]>(`/api/jurado/postulantes/${id}`);
 
     const [postulantes, setPostulantes] = useState<any[]>([]);
-
+    console.log(postulantes)
     const { openClase, handleCloseClase, handleConfirmClase, openAptitud, handleConfirmAptitud, handleCloseAptitud, idUser } = useContext(PostContext);
 
     useEffect(() => {

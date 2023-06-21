@@ -1,7 +1,7 @@
 import { JobsLayout } from "@/components/layouts";
 import { prisma } from '@/server/db/client';
 
-import { Alert, AlertTitle, Box, Button, Chip, Grid, IconButton, Paper, useMediaQuery } from '@mui/material';
+import { Alert, AlertTitle, Box, Button, Chip, Grid, IconButton, LinearProgress, Paper, Tooltip, useMediaQuery } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { postulante, convocatoria } from '@prisma/client';
@@ -9,8 +9,15 @@ import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 import { IConvocatoriaPostulante, IJob } from "@/interfaces";
 import { DataGrid, GridColDef, GridValueGetterParams, esES } from '@mui/x-data-grid';
-import { UploadFileOutlined } from "@mui/icons-material";
+import { Edit, UploadFileOutlined } from "@mui/icons-material";
 import { cyan } from "@mui/material/colors";
+import { Modal } from "@/components/modal";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { reclutApi } from "@/apies";
+import { toast, ToastContainer } from 'react-toastify';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { useRouter } from "next/router";
 interface Props {
 
     convocatorias: any[],
@@ -20,6 +27,66 @@ interface Props {
 
 
 const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
+
+
+
+    const [convo, setConvo] = useState<number | null>(null)
+    const [doc, setDoc] = useState<string | null>(null);
+
+    const fileInputRef = useRef<HTMLInputElement>(null)
+
+    const router = useRouter();
+
+
+
+
+
+    const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+        if (!target.files || target.files.length === 0) {
+            return;
+        }
+
+
+
+        try {
+
+            toast.info('Cargando Documento')
+            const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/docupload', {
+                name: target.files[0].name,
+                type: target.files[0].type
+            });
+
+            const url = data.url;
+            const res = await reclutApi.put(url, target.files[0], {
+                headers: {
+                    "Content-type": target.files[0].type,
+                    "Access-Control-Allow-Origin": "*"
+                }
+            })
+
+
+            setDoc(data.message);
+
+            guardarSession(data.message, convo)
+            toast.success('Guardado Correctamente !!')
+
+
+
+        } catch (error) {
+            toast.error('Hubo un error !!')
+            console.log({ error });
+        }
+
+
+    }
+
+
+
+    const asignarSession = (id: number) => {
+        setConvo(id)
+        fileInputRef.current?.click()
+        console.log(id)
+    }
 
     const columns: GridColDef[] = [
 
@@ -38,7 +105,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
             width: 250,
             renderCell: (params) => {
                 return (
-                    <Chip color="warning" label={`${params.row.estadoPostulante}`} variant='outlined' />
+                    <Chip color="info" label={`${params.row.estadoPostulante}`} variant='outlined' />
 
                 )
             }
@@ -53,10 +120,35 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
 
 
 
+                    <>
 
-                    <Button disabled={params.row.estadoPostulante !== 'pasa a evaluación'} variant="outlined" startIcon={< UploadFileOutlined />}>
-                        Subir Sesión
-                    </Button>
+
+                        <Box>
+
+                            <Tooltip title={'Ver sesión'}>
+                                <IconButton target="_blank" href={`/postulant/doc/${params.row.id}`} disabled={params.row.estadoPostulante !== 'pasa a evaluación'}>
+                                    < RemoveRedEyeIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title={'Subir o reemplazar sesión'}>
+                                <IconButton onClick={() => asignarSession(params.row.id)} disabled={params.row.estadoPostulante !== 'pasa a evaluación'}>
+                                    < UploadFileOutlined />
+                                </IconButton>
+                            </Tooltip>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+
+                                accept='.pdf'
+                                style={{ display: 'none' }}
+                                onChange={onFilesSelected}
+                            />
+                        </Box>
+
+
+
+                    </>
+
 
                 )
             }
@@ -64,13 +156,18 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
         {
             field: 'mensajes',
             headerName: 'Mensaje',
-            width: 550,
+            width: 400,
             renderCell: (params) => {
                 return (
-                    <Alert severity="info">
-                        <AlertTitle> Atención</AlertTitle>
-                        {params.row.mensajes}
-                    </Alert>
+                    params.row.mensajes ? (
+                        <Alert severity="info">
+                            <AlertTitle> Atención</AlertTitle>
+                            {params.row.mensajes}
+                        </Alert>
+                    ) : (
+                        <p>No tienes mensajes </p>
+                    )
+
 
                 )
             }
@@ -82,6 +179,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
 
     const rows = convocatorias.map((job) => ({
         id: job.id,
+        sesion: job.session,
         convocatoria: job.convocatoria.titulo,
         estado: job.convocatoria.estado.nombre,
         estadoPostulante: job.estado_postulante.nombre === 'No interesa' ? 'No fuiste seleccionado' : job.estado_postulante.nombre,
@@ -92,6 +190,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
 
     return (
         <JobsLayout title={"Mis postulaciones"} pageDescription={"Lista de postulacioes"}>
+
             <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18} bgcolor={'#E1E1E1'} >
                 <Box padding={4}>
                     <Paper sx={{ bgcolor: '#0045AA' }} >
@@ -109,6 +208,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
 
                         <Box sx={{ height: 400, width: '100%', padding: 2 }}>
                             <DataGrid
+                                getRowHeight={() => 'auto'}
                                 rows={rows}
                                 columns={columns}
                                 localeText={esES.components.MuiDataGrid.defaultProps.localeText}
@@ -162,7 +262,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
         where: {
             postulante_id: persona?.postulante[0].id,
         },
-        include: {
+        select: {
+            id: true,
+            session: true,
+            comentario: true,
             convocatoria: {
                 select: {
                     titulo: true,
@@ -189,4 +292,19 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 }
 
 export default PostulacionesPage
+
+async function guardarSession(doc: string, id: any) {
+
+
+    try {
+        const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/session', {
+            doc: doc,
+            id: id
+        });
+
+    } catch (error) {
+        console.log(error)
+    }
+
+}
 

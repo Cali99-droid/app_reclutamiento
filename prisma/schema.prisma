@@ -36,7 +36,7 @@ model capacitacion {
 model cargo {
   id            Int        @id @default(autoincrement())
   institucion   String     @db.VarChar(150)
-  referencia    String?    @db.Char(1)
+  referencia    String?    @db.Char(10)
   remuneracion  Float
   nivel         String     @db.VarChar(45)
   cantidadCargo Int?       @default(0) @map("cantidad_cargo")
@@ -246,6 +246,7 @@ model postulante {
 model postulante_x_convocatoria {
   id                   Int               @id @default(autoincrement())
   comentario           String?           @db.LongText
+  session              String?           @db.VarChar(255)
   fecha_comentario     String?           @db.VarChar(60)
   convocatoria_id      Int
   estado_postulante_id Int

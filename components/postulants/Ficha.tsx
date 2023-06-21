@@ -2,7 +2,7 @@ import { reclutApi } from '@/apies';
 import { validations } from '@/helpers';
 
 import { ErrorOutline } from '@mui/icons-material';
-import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, styled, tableCellClasses, useMediaQuery } from '@mui/material';
+import { Box, Button, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, styled, tableCellClasses, useMediaQuery } from '@mui/material';
 import { postulante } from '@prisma/client';
 
 import moment from 'moment';
@@ -22,6 +22,7 @@ import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DevicesIcon from '@mui/icons-material/Devices';
 import NaturePeopleIcon from '@mui/icons-material/NaturePeople';
+import FilePresentIcon from '@mui/icons-material/FilePresent';
 interface Props {
 
     // grados: IGrado[]
@@ -76,7 +77,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                     <Item elevation={1}>
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                             <Image
-                                src={(postulante.image === null ? '/avatar.jpg' : postulante.image)}
+                                src={(postulante.image === null ? '/avatar.jpg' : `https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${postulante.image}`)}
                                 width={150}
                                 height={150}
                                 alt="Imagen postulante"
@@ -155,6 +156,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                                                 <StyledTableCell align="left">Institución</StyledTableCell>
                                                 <StyledTableCell align="right">Grado</StyledTableCell>
                                                 <StyledTableCell align="right">Año</StyledTableCell>
+                                                <StyledTableCell align="right">Doc</StyledTableCell>
 
                                             </TableRow>
                                         </TableHead>
@@ -170,7 +172,12 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                                                     <TableCell align="left">{e.institucion}</TableCell>
                                                     <TableCell align="right">{e.grado}</TableCell>
                                                     <TableCell align="right">{e.year}</TableCell>
+                                                    <TableCell align="right">
 
+                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                            <FilePresentIcon />
+                                                        </IconButton>
+                                                    </TableCell>
                                                 </TableRow>
                                             ))}
                                         </TableBody>
@@ -206,6 +213,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                                                 {/* <StyledTableCell align="right">Nivel</StyledTableCell> */}
                                                 {/* <StyledTableCell align="right">Personas a cargo</StyledTableCell> */}
                                                 <StyledTableCell align="right">Remuneración</StyledTableCell>
+                                                <StyledTableCell align="right">Doc</StyledTableCell>
 
 
                                             </TableRow>
@@ -225,7 +233,12 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                                                     {/* <TableCell align="right">{e.nivel}</TableCell> */}
                                                     {/* <TableCell align="right">{e.cantidadCargo}</TableCell> */}
                                                     <TableCell align="right">{e.remuneracion}</TableCell>
+                                                    <TableCell align="right">
 
+                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                            <FilePresentIcon />
+                                                        </IconButton>
+                                                    </TableCell>
 
                                                 </TableRow>
                                             ))}
@@ -306,7 +319,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                                                 <StyledTableCell align="right">Horas</StyledTableCell>
                                                 <StyledTableCell align="right">Año</StyledTableCell>
                                                 <StyledTableCell align="right">Detalles</StyledTableCell>
-
+                                                <StyledTableCell align="right">Doc</StyledTableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -323,7 +336,12 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
 
                                                     <TableCell align="right">{e.year}</TableCell>
                                                     <TableCell align="right">{e.descripcion}</TableCell>
+                                                    <TableCell align="right">
 
+                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                            <FilePresentIcon />
+                                                        </IconButton>
+                                                    </TableCell>
                                                 </TableRow>
                                             ))}
                                         </TableBody>

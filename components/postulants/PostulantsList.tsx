@@ -22,7 +22,7 @@ export const PostulantsList: FC<Props> = ({ postulants }) => {
             <Typography >No hay postulantes en esta fase, si existe un error contacte con el administrador</Typography>
           </Box>
           : postulants.map((postulant, index) => (
-            <PostulantCard key={postulant.postulante.id} postulant={postulant.postulante} index={index} />
+            <PostulantCard key={postulant.postulante.id} postulant={postulant.postulante} index={index} ses={postulant.session} />
           ))
       }
     </Grid>

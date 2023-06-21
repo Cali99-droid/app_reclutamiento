@@ -16,7 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
-import { Modal } from '../modal';
+import { Modal, ModalFicha } from '../modal';
 import { Ficha } from './Ficha';
 import { persona } from '@prisma/client';
 import { useSession } from 'next-auth/react';
@@ -26,17 +26,18 @@ import CheckIcon from '@mui/icons-material/Check';
 
 interface Props {
     postulant: any;
+    ses: any;
     index: number;
 }
 
 
-export const PostulantCard: FC<Props> = ({ postulant, index }) => {
+export const PostulantCard: FC<Props> = ({ postulant, index, ses }) => {
 
     const { data: session } = useSession()
 
     const { handleOpenClase } = useContext(PostContext)
 
-
+    console.log(ses)
 
     const [open, setOpen] = useState(false)
     const [pos, setPos] = useState<any>(postulant);
@@ -61,7 +62,7 @@ export const PostulantCard: FC<Props> = ({ postulant, index }) => {
                 <CardActionArea >
                     <CardMedia
                         sx={{ height: 220 }}
-                        image={(postulant.image === null ? '/avatar.jpg' : postulant.image)}
+                        image={(postulant.image === null ? '/avatar.jpg' : `https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${postulant.image}`)}
 
                     />
                     <CardContent>
@@ -89,51 +90,54 @@ export const PostulantCard: FC<Props> = ({ postulant, index }) => {
 
 
                 <CardActions >
-                    {postulant.evaluacion_x_postulante.length > 0 ? (
+                    <Box display={'flex'} flexDirection={'column'} width={'100%'} gap={2}>
+                        {postulant.evaluacion_x_postulante.length > 0 ? (
+
+                            <Chip
+                                icon={<CheckIcon />}
+                                label="Evaluado"
+                                variant="outlined"
+                                // clickable
+
+                                sx={{ width: '100%' }}
+                                color={'warning'}
+                            // onClick={() => { handleOpenClase(postulant.id) }}
+                            />
+                        ) : (
+                            <Chip
+                                icon={<FactCheckIcon />}
+                                label="Evaluar"
+                                variant="outlined"
+                                clickable
+
+                                sx={{ width: '100%' }}
+                                color={'primary'}
+                                onClick={() => { handleOpenClase(postulant.id) }}
+                            />
+                        )}
+
 
                         <Chip
-                            icon={<CheckIcon />}
-                            label="Evaluado"
-                            variant="outlined"
-                            // clickable
-
-                            sx={{ width: '100%' }}
-                            color={'warning'}
-                        // onClick={() => { handleOpenClase(postulant.id) }}
-                        />
-                    ) : (
-                        <Chip
-                            icon={<FactCheckIcon />}
-                            label="Evaluar"
+                            icon={<FilePresentIcon />}
+                            label="Ver ficha"
                             variant="outlined"
                             clickable
-
                             sx={{ width: '100%' }}
-                            color={'primary'}
-                            onClick={() => { handleOpenClase(postulant.id) }}
+                            color={'secondary'}
+                            onClick={() => { handleOpen(postulant) }}
                         />
-                    )}
+                        {
+                            ses && (
+                                <Button variant='outlined' target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${ses}`}>
+                                    Ver Sesión
+                                </Button>
+                            )
+                        }
 
 
-                    <Chip
-                        icon={<FilePresentIcon />}
-                        label="Ver ficha"
-                        variant="outlined"
-                        clickable
-                        sx={{ width: '100%' }}
-                        color={'secondary'}
-                        onClick={() => { handleOpen(postulant) }}
-                    />
+                    </Box>
 
 
-                    {/* <IconButton
-
-                        aria-label="evaluar"
-                    // 
-
-                    >
-                        < FactCheckIcon />
-                    </IconButton> */}
 
 
 
@@ -143,7 +147,7 @@ export const PostulantCard: FC<Props> = ({ postulant, index }) => {
             </Card>
 
 
-            <Modal title={'Ficha'} open={open} handleClose={() => handleClose()} handleConfirm={() => handleClose()}>
+            <ModalFicha title={'Ficha'} open={open} handleClose={() => handleClose()} handleConfirm={() => handleClose()}>
 
 
 
@@ -151,7 +155,7 @@ export const PostulantCard: FC<Props> = ({ postulant, index }) => {
 
 
 
-            </Modal>
+            </ModalFicha>
 
         </Grid>
     )

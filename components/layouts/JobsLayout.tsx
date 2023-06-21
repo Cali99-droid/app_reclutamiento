@@ -3,7 +3,8 @@ import Head from 'next/head';
 
 import { NavBar } from '../ui';
 import { SideMenu } from '../ui/SideMenu';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Props extends PropsWithChildren {
     title: string;
@@ -48,7 +49,7 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
                 <NavBar />
             </nav>
 
-
+            <ToastContainer />
             <main style={{
 
                 margin: '0 auto',

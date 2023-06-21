@@ -9,4 +9,5 @@ export interface ICargo {
     contacto: string
     descripcion  : string
     year         : string
+    doc?: string
 }

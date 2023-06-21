@@ -171,13 +171,13 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     }
 
     //-------------------Cargos-----------------------
-    const agregarCargo = async (referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => {
-        const { data } = await reclutApi.post<ICargo>('/postulants/cargo', { referencia, contacto, institucion, nivel, year, cantidadCargo, remuneracion, descripcion, idPos });
+    const agregarCargo = async (referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number, doc: any) => {
+        const { data } = await reclutApi.post<ICargo>('/postulants/cargo', { referencia, contacto, institucion, nivel, year, cantidadCargo, remuneracion, descripcion, idPos, doc });
         dispatch({ type: 'Add-Cargo', payload: data });
 
     }
-    const editarCargo = async (id: number, referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number) => {
-        const { data } = await reclutApi.put<ICargo>('/postulants/cargo', { id, referencia, contacto, nivel, cantidadCargo, year, institucion, remuneracion, descripcion, idPos });
+    const editarCargo = async (id: number, referencia: string, contacto: string, nivel: string, cantidadCargo: string, year: string, institucion: string, remuneracion: string, descripcion: string, idPos: number, doc: any) => {
+        const { data } = await reclutApi.put<ICargo>('/postulants/cargo', { id, referencia, contacto, nivel, cantidadCargo, year, institucion, remuneracion, descripcion, idPos, doc });
 
         dispatch({ type: 'Update-Cargo', payload: data });
     }
@@ -188,13 +188,13 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     }
 
     //----------------Capacitaciones---------------------
-    const agregarCapacitacion = async (titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number) => {
-        const { data } = await reclutApi.post<ICapacitacion>('/postulants/capacitacion', { titulo, institucion, horas, year, descripcion, idPos });
+    const agregarCapacitacion = async (titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number, doc: any) => {
+        const { data } = await reclutApi.post<ICapacitacion>('/postulants/capacitacion', { titulo, institucion, horas, year, descripcion, idPos, doc });
         dispatch({ type: 'Add-Capacitacion', payload: data });
 
     }
-    const editarCapacitacion = async (id: number, titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number) => {
-        const { data } = await reclutApi.put<ICapacitacion>('/postulants/capacitacion', { id, titulo, institucion, horas, year, descripcion, idPos });
+    const editarCapacitacion = async (id: number, titulo: string, horas: string, year: string, institucion: string, descripcion: string, idPos: number, doc: any) => {
+        const { data } = await reclutApi.put<ICapacitacion>('/postulants/capacitacion', { id, titulo, institucion, horas, year, descripcion, idPos, doc });
         dispatch({ type: 'Update-Capacitacion', payload: data });
 
     }
