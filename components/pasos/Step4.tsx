@@ -296,13 +296,14 @@ const Step4 = () => {
 
 
                 <Modal title={'Nuevo Capacitación/Curso'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
-                    <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
+                    <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
                         component="form"
                         sx={{
-                            '& .MuiTextField-root': { m: 1, width: 400 },
+                            '& .MuiTextField-root': { m: 1, },
                         }}
                         noValidate
-                        autoComplete="off"
+                        autoComplete="on"
+
                     >
                         <TextField
                             autoFocus
@@ -317,7 +318,7 @@ const Step4 = () => {
                             required
                         />
                         <TextField
-                            autoFocus
+
                             required
                             id="institucion"
                             label="Institución"
@@ -328,7 +329,7 @@ const Step4 = () => {
                             onChange={onInstitucionChange}
                         />
                         <TextField
-                            autoFocus
+
                             type='number'
                             id="horas"
                             label="Horas"
@@ -359,7 +360,7 @@ const Step4 = () => {
                             }}
                         />
                         <TextField
-                            autoFocus
+
                             required
                             multiline
                             id="desc"
@@ -370,8 +371,22 @@ const Step4 = () => {
                             value={descripcion}
                             onChange={onDescripcionChange}
                         />
-                        <InputLabel id="demo-simple-select-label">Certificado</InputLabel>
+
                         <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
+                        {doc && (
+                            <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
+                                <Box >
+                                    <InputLabel id="demo-simple-select-label">Vista previa del certificado</InputLabel>
+                                    <object data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
+                                        <p>No se puede previsualizar</p>
+                                    </object>
+
+                                </Box>
+                                <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
+                                    Quitar
+                                </Button>
+                            </Box>
+                        )}
                         <input
                             ref={fileInputRef}
                             type="file"
@@ -384,20 +399,7 @@ const Step4 = () => {
                             Subir Certificado
                         </Button>
                         {/* <input accept='.pdf' type="file" onChange={onFilesSelected} /> */}
-                        {doc && (
-                            <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
-                                <Box >
-                                    <h3>Vista Previa</h3>
-                                    <object data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
-                                        <p>No se puede previsualizar</p>
-                                    </object>
 
-                                </Box>
-                                <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
-                                    Quitar
-                                </Button>
-                            </Box>
-                        )}
                     </Box>
 
 
@@ -465,13 +467,14 @@ const Step4 = () => {
 
 
                 <Modal title={'Nuevo Reconocimiento'} open={openRec} handleClose={handleCloseRec} handleConfirm={handleConfirmRec}>
-                    <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
+                    <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
                         component="form"
                         sx={{
-                            '& .MuiTextField-root': { m: 1, width: 400 },
+                            '& .MuiTextField-root': { m: 1, },
                         }}
                         noValidate
-                        autoComplete="off"
+                        autoComplete="on"
+
                     >
                         <TextField
                             autoFocus
@@ -486,8 +489,7 @@ const Step4 = () => {
                             onChange={onReconocimientoChange}
                         />
                         <TextField
-                            autoFocus
-                            required
+
                             id="institucion"
                             label="Institución"
                             placeholder='Intitucion donde llevo el curso'
@@ -513,7 +515,7 @@ const Step4 = () => {
 
                         />
                         <TextField
-                            autoFocus
+
                             multiline
                             id="desc"
                             label="Descripcion del premio"

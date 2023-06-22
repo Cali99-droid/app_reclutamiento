@@ -140,7 +140,7 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
      await sendConfirmationEmail(email, tokenEmail)
 
      const nombreCompleto = nombre + ' ' + apellidoPat + ' '+apellidoMat;
-     crearContacto(nombreCompleto, email)
+     crearContacto(nombreCompleto, email, tokenEmail)
      .then(() => {
        console.log('Contacto creado exitosamente');
      })

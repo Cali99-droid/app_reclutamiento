@@ -1,11 +1,12 @@
 import mauticConfig from '@/mauticConfig';
 import axios, { AxiosRequestConfig } from 'axios';
 
-const crearContacto = async (nombre: string, email: string): Promise<void> => {
+const crearContacto = async (nombre: string, email: string,tokenEmail:string): Promise<void> => {
     try {
       const payload = {
         firstname: nombre,
         email: email,
+        token: tokenEmail
       };
   
       await axios.post(`${mauticConfig.apiUrl}/contacts/new`, payload, {

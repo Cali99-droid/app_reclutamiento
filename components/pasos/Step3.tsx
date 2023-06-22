@@ -439,13 +439,14 @@ const Step3 = () => {
                 handleClose={handleCloseInves}
                 handleConfirm={handleConfirmInves}
             >
-                <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
+                <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
                     component="form"
                     sx={{
-                        '& .MuiTextField-root': { m: 1, width: 300 },
+                        '& .MuiTextField-root': { m: 1, },
                     }}
                     noValidate
-                    autoComplete="off"
+                    autoComplete="on"
+
                 >
                     <TextField
                         autoFocus
@@ -461,7 +462,7 @@ const Step3 = () => {
 
                     />
                     <TextField
-                        autoFocus
+
                         multiline
                         required
                         id="institucion"
@@ -502,13 +503,14 @@ const Step3 = () => {
                 handleClose={handleCloseCargo}
                 handleConfirm={handleConfirmCargo}
             >
-                <Box display={'flex'} width={400} flexDirection={'column'} gap={.5} mt={1}
+                <Box display={'flex'} width={400} flexDirection={'column'} gap={1} mt={1}
                     component="form"
                     sx={{
                         '& .MuiTextField-root': { m: 1, },
                     }}
                     noValidate
                     autoComplete="on"
+
                 >
                     <TextField
 
@@ -629,8 +631,22 @@ const Step3 = () => {
                             min: 1950
                         }}
                     />
-                    <InputLabel id="demo-simple-select-label">Certificado</InputLabel>
+
                     <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
+                    {doc && (
+                        <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
+                            <Box >
+                                <InputLabel id="demo-simple-select-label">Vista previa del certificado</InputLabel>
+                                <object data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
+                                    <p>No se puede previsualizar</p>
+                                </object>
+
+                            </Box>
+                            <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
+                                Quitar
+                            </Button>
+                        </Box>
+                    )}
                     <input
                         ref={fileInputRef}
                         type="file"
@@ -643,20 +659,7 @@ const Step3 = () => {
                         Subir Certificado
                     </Button>
                     {/* <input accept='.pdf' type="file" onChange={onFilesSelected} /> */}
-                    {doc && (
-                        <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
-                            <Box >
-                                <h3>Vista Previa</h3>
-                                <object data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
-                                    <p>No se puede previsualizar</p>
-                                </object>
 
-                            </Box>
-                            <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
-                                Quitar
-                            </Button>
-                        </Box>
-                    )}
 
                 </Box>
 

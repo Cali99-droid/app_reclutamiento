@@ -321,11 +321,18 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
     return suma;
 
   }
+  const formatoNombre = (nombres: string, apellidoPat: string, apellidoMat: string) => {
+    const str = apellidoPat + ' ' + apellidoMat + ' ' + nombres;
+    return str.replace(/\w\S*/g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+    });
+
+  }
 
 
   const rows = postulantes.map((p) => ({
     id: p.postulante.id,
-    postulante: p.postulante.persona.nombres + ' ' + p.postulante.persona.apellido_pat + ' ' + p.postulante.persona.apellido_mat,
+    postulante: formatoNombre(p.postulante.persona.nombres, p.postulante.persona.apellido_pat, p.postulante.persona.apellido_mat),
     estado: parseInt(p.estado_postulante_id),
     edad: calcularEdad(p.postulante.nacimiento) + ' años',
 

@@ -531,37 +531,44 @@ export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
                                 <FormHelperText>*Solo si postula para docente</FormHelperText>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Box>
-                                <FormLabel >Foto</FormLabel>
-                                <Button
-                                    color="secondary"
-                                    fullWidth
-                                    // startIcon={ <UploadOutlined /> }
-                                    disabled={getValues('image') ? true : false}
-                                    onClick={() => fileInputRef.current?.click()}
-                                >
-                                    Cargar imagen
-                                </Button>
-                                <FormHelperText>*Imagen actual con presentación formal.</FormHelperText>
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
 
-                                    accept='image/png, image/gif, image/jpeg'
-                                    style={{ display: 'none' }}
-                                    onChange={onFilesSelected}
-                                />
-                            </Box>
+
+
+                    </Grid>
+                </Box>
+                <Box mt={2} padding={4} borderRadius={4} bgcolor={'#FFF'}>
+                    <Grid container spacing={5}>
+                        <Grid item xs={12} md={6}>
+
+                            <FormLabel >Foto</FormLabel>
+                            <Button
+                                color="secondary"
+                                fullWidth
+                                // startIcon={ <UploadOutlined /> }
+                                disabled={getValues('image') ? true : false}
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                Cargar imagen
+                            </Button>
+                            <FormHelperText>*Imagen actual con presentación formal.</FormHelperText>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+
+                                accept='image/png, image/gif, image/jpeg'
+                                style={{ display: 'none' }}
+                                onChange={onFilesSelected}
+                            />
+
                         </Grid>
 
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={6} >
                             <Typography sx={{ display: loadImg ? 'block' : 'none' }} >Subiendo...</Typography>
                             <LinearProgress sx={{ display: loadImg ? 'block' : 'none' }} />
 
                             {
                                 getValues('image') && (
-                                    <Box width={150} margin={'auto'}>
+                                    <Box width={150} >
 
                                         <Card>
 
@@ -589,11 +596,10 @@ export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
 
 
                         </Grid>
-
-
                     </Grid>
-
                 </Box>
+
+
 
 
 

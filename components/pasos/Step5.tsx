@@ -299,13 +299,14 @@ const Step5 = () => {
 
 
                 <Modal title={'Nuevo uso de Tecnologias'} open={openTics} handleClose={handleCloseTics} handleConfirm={handleConfirmTics}>
-                    <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
+                    <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
                         component="form"
                         sx={{
-                            '& .MuiTextField-root': { m: 1, width: 300 },
+                            '& .MuiTextField-root': { m: 1, },
                         }}
                         noValidate
-                        autoComplete="off"
+                        autoComplete="on"
+
                     >
                         <TextField
                             autoFocus
@@ -406,14 +407,14 @@ const Step5 = () => {
 
 
 
-                <Modal title={'NUEVA ACTIVIDAD, AFICION O HABILIDAD APRENDIDA Y/O ESTUDIADA'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
-                    <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
+                <Modal title={'NUEVA ACTIVIDAD'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
+                    <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
                         component="form"
-                        sx={{
-                            '& .MuiTextField-root': { m: 1 },
-                        }}
+
                         noValidate
-                        autoComplete="off"
+                        autoComplete="on"
+                        alignContent={'center'}
+                        justifyContent={'center'}
                     >
                         <TextField
                             required
@@ -427,7 +428,7 @@ const Step5 = () => {
                             value={actividad}
                             onChange={onActividadChange}
                         />
-                        <Box width={'98%'} marginLeft={1}>
+                        <Box >
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Nivel</InputLabel>
                                 <Select
@@ -448,7 +449,7 @@ const Step5 = () => {
                             </FormControl>
                         </Box>
                         <TextField
-                            autoFocus
+
                             required
                             id="logro"
                             label="Logro"

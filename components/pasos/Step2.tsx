@@ -314,8 +314,22 @@ const Step2 = () => {
                         }}
 
                     />
-                    <InputLabel id="demo-simple-select-label">Certificado</InputLabel>
+
                     <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
+                    {doc && (
+                        <Box display={'flex'} alignItems={'center'}  >
+                            <Box >
+                                <InputLabel id="demo-simple-label">Vista previa del certificado</InputLabel>
+                                <object data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
+                                    <p>No se puede previsualizar</p>
+                                </object>
+
+                            </Box>
+                            <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
+                                Quitar
+                            </Button>
+                        </Box>
+                    )}
                     <input
                         ref={fileInputRef}
                         type="file"
@@ -327,21 +341,8 @@ const Step2 = () => {
                     <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRef.current?.click()} disabled={doc ? true : false}>
                         Subir Certificado
                     </Button>
-                    {/* <input accept='.pdf' type="file" onChange={onFilesSelected} /> */}
-                    {doc && (
-                        <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
-                            <Box >
-                                <h3>Vista Previa</h3>
-                                <object data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
-                                    <p>No se puede previsualizar</p>
-                                </object>
 
-                            </Box>
-                            <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
-                                Quitar
-                            </Button>
-                        </Box>
-                    )}
+
                 </Box>
 
 
