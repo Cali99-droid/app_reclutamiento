@@ -82,21 +82,50 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
             return;
         }
 
+
         try {
 
-            // console.log( file );
-            for (const file of target.files) {
-                const formData = new FormData();
-                formData.append('file', file);
-                const { data } = await reclutApi.post<{ message: string }>('/postulants/upload', formData);
-                setValue('img', data.message, { shouldValidate: true });
 
-            }
+            const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/awsupload', {
+                name: target.files[0].name,
+                type: target.files[0].type
+            });
+
+            const url = data.url;
+            const res = await reclutApi.put(url, target.files[0], {
+                headers: {
+                    "Content-type": target.files[0].type,
+                    "Access-Control-Allow-Origin": "*"
+                }
+            })
+
+
+            const urlimg = 'https://plataforma-virtual.s3.us-west-2.amazonaws.com/' + data.message;
+
+            setValue('img', data.message, { shouldValidate: true });
+
+            console.log(data)
 
 
         } catch (error) {
             console.log({ error });
         }
+
+        // try {
+
+        //     // console.log( file );
+        //     for (const file of target.files) {
+        //         const formData = new FormData();
+        //         formData.append('file', file);
+        //         const { data } = await reclutApi.post<{ message: string }>('/postulants/upload', formData);
+        //         setValue('img', data.message, { shouldValidate: true });
+
+        //     }
+
+
+        // } catch (error) {
+        //     console.log({ error });
+        // }
     }
 
     const onDeleteImage = () => {
@@ -288,7 +317,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                             <CardMedia
                                                 component='img'
                                                 className='fadeIn'
-                                                image={getValues('img')}
+                                                image={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${getValues('img')}`}
                                                 alt={getValues('img')}
 
                                             />

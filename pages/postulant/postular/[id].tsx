@@ -82,7 +82,7 @@ const PostularPage: NextPage<Props> = ({ convocatoria, persona, postulo }) => {
 
           </Box>
           <Box width={'70%'} sx={{ margin: '0 auto' }}>
-            <FormHelperText>*Asegurece de haber llenado correctamente su ficha,
+            <FormHelperText>*Asegurese de haber llenado correctamente su ficha,
               si no no hizo, puede actualizarlo en cualquier momento <a href={'/postulant'} target='_blank'>
                 desde aqui
               </a></FormHelperText>
@@ -167,6 +167,15 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
     }
   })
 
+  if (!persona) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
+
 
 
   const { id = '' } = query
@@ -180,6 +189,16 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
     }
 
   })
+
+  if (convocatoriares) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
+
 
   const convocatorias = await prisma.postulante_x_convocatoria.findMany({
     where: {

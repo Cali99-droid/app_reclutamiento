@@ -141,6 +141,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
     },
   });
+
+  if (!convo) {
+    return {
+      redirect: {
+        destination: '/convocatorias',
+        permanent: false,
+      }
+    }
+  }
   await prisma.$disconnect()
   const convocatoria = JSON.parse(JSON.stringify(convo))
   return {

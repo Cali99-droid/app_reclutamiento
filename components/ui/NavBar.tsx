@@ -239,7 +239,7 @@ export const NavBar = () => {
                                             <ListItemIcon>
                                                 <Avatar src={user?.oAuthImg ? user?.oAuthImg : user?.img} />
                                             </ListItemIcon>
-                                            Mi cuenta
+                                            {user?.persona.nombres}
                                         </MenuItem>
                                         <Divider />
                                         {isLoggedIn && user?.rol.name === 'jurado1' && (

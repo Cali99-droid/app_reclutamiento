@@ -5,6 +5,8 @@ import { convocatoria } from '@prisma/client';
 
 import { v2 as cloudinary } from 'cloudinary';
 cloudinary.config( process.env.CLOUDINARY_URL || '' );
+import aws from 'aws-sdk';
+import AWS from '../../../aws-config';
 
 
 type Data = 
@@ -95,11 +97,13 @@ const updateConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
     if ( convo.img.length <= 0 ) {
       return res.status(400).json({ message: 'Es Necesario que suba una imagen' });
     }
+
+    const s3 = new AWS.S3();
   
         // Borrar de cloudinary
-        const [ fileId, extension ] = convo.img.substring( convo.img.lastIndexOf('/') + 1 ).split('.')
-        console.log({  fileId, extension });
-        await cloudinary.uploader.destroy( fileId );
+        // const [ fileId, extension ] = convo.img.substring( convo.img.lastIndexOf('/') + 1 ).split('.')
+        // console.log({  fileId, extension });
+        // await cloudinary.uploader.destroy( fileId );
  
 
 
@@ -116,9 +120,15 @@ const updateConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
       if(c.img ){
           if ( c.img !== convo.img) {
           // Borrar de cloudinary
-          const [ fileId, extension ] = convo.img.substring( convo.img.lastIndexOf('/') + 1 ).split('.')
+          // const [ fileId, extension ] = convo.img.substring( convo.img.lastIndexOf('/') + 1 ).split('.')
        
-          await cloudinary.uploader.destroy( fileId );
+          // await cloudinary.uploader.destroy( fileId );
+          const deleteParams: aws.S3.DeleteObjectRequest = {
+            Bucket: process.env.BUCKET_NAME!,
+            Key: 'img/'+ c.img,
+          };
+          const resp = await s3.deleteObject(deleteParams).promise();
+          console.log('se elimino la img', resp)
       }
     }
     try {
