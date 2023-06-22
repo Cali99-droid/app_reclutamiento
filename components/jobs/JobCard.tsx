@@ -34,7 +34,7 @@ export const JobCard: FC<Props> = ({ job }) => {
                         <CardActionArea >
                             <CardMedia
                                 sx={{ height: 250 }}
-                                image={`${job.img}`}
+                                image={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${job.img}`}
 
                             />
                             <CardContent >
