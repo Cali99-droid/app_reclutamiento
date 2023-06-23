@@ -128,11 +128,12 @@ const LoginPage = (error: string) => {
                                     <Typography>¿No tienes una cuenta?</Typography>
                                     <NextLink passHref legacyBehavior
                                         type="submit"
-                                        color="secondary"
+
+
                                         href={router.query.p ? `/auth/register?p=${router.query.p}` : '/auth/register'}
 
                                     >
-                                        <Link>Registrate</Link>
+                                        <Link sx={{ fontWeight: 'bold', textDecoration: 'underline' }} color="secondary">Regístrate</Link>
                                     </NextLink>
 
 
@@ -145,7 +146,7 @@ const LoginPage = (error: string) => {
                                         href={"/auth/forgot-password"}
                                         passHref
                                         legacyBehavior>
-                                        <Link >Olvide mi contraseña</Link>
+                                        <Link sx={{ fontWeight: 'bold', textDecoration: 'underline' }} color="secondary">Olvidé mi contraseña</Link>
                                     </NextLink>
 
                                 </Box>

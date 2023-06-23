@@ -22,19 +22,19 @@ import { DatosContext } from '@/context';
 interface Props {
 
 
-  persona: IPersona;
+
   postulante: postulante
 }
 
 
-const PostulantPage: NextPage<Props> = ({ persona, postulante }) => {
+const PostulantPage: NextPage<Props> = ({ postulante }) => {
   const { activeStep } = useContext(DatosContext)
 
   return (
     <JobsLayout title={"AE | Postulante "} pageDescription={"Postular a un empleo"}>
       <ToastContainer />
 
-      <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingLeft={4} paddingRight={4} paddingTop={18} paddingBottom={4} bgcolor={'#E1E1E1'}>
+      <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingLeft={4} paddingRight={4} paddingTop={4} bgcolor={'#E1E1E1'}>
         <Paper sx={{ bgcolor: '#0045AA', padding: 2, mb: 2 }} >
           <Typography variant="h2" color={'#FFF'}>Actualizar mis datos</Typography>
 
@@ -42,7 +42,7 @@ const PostulantPage: NextPage<Props> = ({ persona, postulante }) => {
         <Form />
         {
           activeStep === 0 && (
-            <FormDatos persona={persona} postulante={postulante} />
+            <FormDatos postulante={postulante} />
           )
         }
 

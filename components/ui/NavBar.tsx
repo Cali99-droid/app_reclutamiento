@@ -10,6 +10,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
 import MenuIcon from '@mui/icons-material/Menu';
+import ContactPageIcon from '@mui/icons-material/ContactPage';
 interface Props {
     /**
      * Injected by the documentation to work in an iframe.
@@ -109,7 +110,7 @@ export const NavBar = () => {
         <ElevationScroll {...props}>
             <AppBar sx={{ borderBottom: '1px solid #e1eeee' }} >
                 <Toolbar >
-                    <Box flex={1} />
+                    <Box flex={1.5} />
                     <NextLink href='/' passHref legacyBehavior>
                         <Link color={'secondary'} display='flex' alignItems='end'>
                             <Typography variant='h5' fontWeight={'bold'} >AE  </Typography>
@@ -117,7 +118,7 @@ export const NavBar = () => {
                         </Link>
                     </NextLink>
 
-                    <Box flex={1} />
+                    <Box flex={.5} />
 
                     <Box sx={{ display: isSearchVisible ? 'none' : { xs: 'none', sm: 'block' } }}
                         gap={'2rem'} >
@@ -160,12 +161,23 @@ export const NavBar = () => {
                                 ¿Cómo Postular?
                             </Link>
                         </NextLink>
+                        {isLoggedIn && user?.rol.name === 'postulante' && (
+                            <NextLink href='/mis-datos' passHref legacyBehavior>
+                                <Link
+                                    color={asPath === '/mis-datos' ? '#0045aa' : '#767687'}
+                                    sx={{ padding: '1.5rem', textTransform: 'uppercase', fontWeight: 'bold', fontSize: 14 }}
+                                    fontWeight={asPath === '/docentes' ? 600 : 500}
+                                >
+                                    Mis Datos
+                                </Link>
+                            </NextLink>
+                        )}
 
                     </Box>
 
 
 
-                    <Box flex={1} />
+                    <Box flex={.5} />
 
 
                     {/* Pantallas pantallas grandes */}
@@ -302,7 +314,7 @@ export const NavBar = () => {
                     </Box>
 
 
-                    <Box flex={1} />
+                    <Box flex={1.5} />
 
 
                 </Toolbar>

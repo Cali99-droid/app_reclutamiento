@@ -1,26 +1,25 @@
 import { reclutApi } from '@/apies';
 import { validations } from '@/helpers';
 import { IGrado, IPersona, IUser } from '@/interfaces';
-import { ErrorOutline } from '@mui/icons-material';
+
 import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, SelectChangeEvent, FormLabel, Card, CardMedia, CardActions, CircularProgress, LinearProgress } from '@mui/material';
 import { postulante } from '@prisma/client';
 import axios from 'axios';
 import moment from 'moment';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import EastIcon from '@mui/icons-material/East';
 import { useContext, ChangeEvent } from 'react';
 import { DatosContext } from '@/context';
-import { FullScreenLoading } from '../ui';
-import { InView } from 'react-intersection-observer';
+
 interface Props {
 
 
-    persona: IPersona;
-    postulante: postulante
+
+    postulante: any
 }
 type FormData = {
     image: string;
@@ -49,7 +48,7 @@ type FormData = {
 };
 
 
-export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
+export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
     const [isSaving, setIsSaving] = useState(false);
     const [showError, setShowError] = useState(false);
@@ -65,12 +64,12 @@ export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
     const { register, handleSubmit, formState: { errors }, getValues, setValue } = useForm<FormData>({
         mode: 'all',
         defaultValues: {
-            idPersona: persona.id,
+            idPersona: postulante.persona.id,
             idPostulante: postulante.id,
-            nombre: persona.nombres,
-            apellidoPat: persona.apellido_pat,
-            apellidoMat: persona.apellido_mat,
-            email: persona.user[0].email,
+            nombre: postulante.persona.nombres,
+            apellidoPat: postulante.persona.apellido_pat,
+            apellidoMat: postulante.persona.apellido_mat,
+            email: postulante.persona.user[0].email,
             telefono: postulante.telefono === null ? '' : postulante.telefono,
             direccion: postulante.direccion,
             nacimiento: moment(postulante.nacimiento).toDate().toISOString().substring(0, 10),
@@ -101,7 +100,7 @@ export const FormDatos: NextPage<Props> = ({ persona, postulante }) => {
                 data: form
             });
             handleNext()
-            router.replace(`/postulant`);
+            router.replace(router.asPath);
             if (!(form.idPostulante > 0)) {
                 router.replace(`/postulant`);
 

@@ -34,7 +34,7 @@ const PostularPage: NextPage<Props> = ({ convocatoria, persona, postulo }) => {
 
   const handleConfirm = async () => {
     postular();
-    router.push('/postulant/postulaciones')
+    router.push('/postulant/postulaciones?val=2')
   };
 
   const postular = async () => {
@@ -167,6 +167,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
     }
   })
 
+
   if (!persona) {
     return {
       redirect: {
@@ -190,7 +191,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
 
   })
 
-  if (convocatoriares) {
+  if (!convocatoriares) {
     return {
       redirect: {
         destination: '/',

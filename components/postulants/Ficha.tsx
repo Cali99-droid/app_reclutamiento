@@ -64,6 +64,13 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
 
     const router = useRouter();
     const matches = useMediaQuery('(min-width:600px)');
+    const [nacimiento, setNacimiento] = useState<string>('')
+    useEffect(() => {
+        setNacimiento(moment(postulante.nacimiento).add(1, 'days').toDate().toLocaleDateString())
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+
     return (
         <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} bgcolor={'#eeeeee'} padding={2} >
 
@@ -86,7 +93,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                         </Box>
                         <Box mt={2} textAlign={'center'}>
                             <Typography > {postulante.persona.nombres + ' ' + postulante.persona.apellido_pat + postulante.persona.apellido_mat}</Typography>
-                            <Typography fontSize={12}> {calcularEdad(postulante.persona.nacimiento)} Años</Typography>
+                            <Typography fontSize={12}> {calcularEdad(postulante.nacimiento)} Años</Typography>
                             <Box ml={4} mt={1} display={'flex'} flexDirection={'column'} alignItems={'start'} gap={1}>
 
                                 <Box display={'flex'} gap={1}>
@@ -116,7 +123,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                         <Box display={'flex'} flexDirection={matches ? 'row' : 'column'} justifyContent={'space-between'} padding={2}>
                             <Box display={'flex'} flexDirection={'column'} gap={1}>
                                 <Typography fontWeight={'bold'}>Numero de Documento: </Typography>{postulante.numeroDocumento}
-                                <Typography fontWeight={'bold'}>Nacimiento: </Typography>{moment(postulante.nacimiento).format('L')}
+                                <Typography fontWeight={'bold'}>{`Nacimiento: ${nacimiento}`}</Typography>
                                 <Typography fontWeight={'bold'}>Pretención Salarial: </Typography>S/ {postulante.sueldo}
                                 <Typography fontWeight={'bold'}>Estado Civil: </Typography>{postulante.estado_civil}
 

@@ -88,6 +88,37 @@ const ConfirmPage = () => {
                                     Enviar
                                 </Button>
                             </Grid>
+                            <Grid item xs={12} display={'flex'} justifyContent={'space-between'}>
+
+
+                                <Box >
+                                    <Typography>¿Ya tienes cuenta?</Typography>
+                                    <NextLink
+                                        type="submit"
+                                        color="secondary"
+                                        href={"/auth/login"}
+                                        passHref
+                                        legacyBehavior>
+                                        <Link sx={{ fontWeight: 'bold', textDecoration: 'underline' }} color="secondary">Iniciar Sesión</Link>
+                                    </NextLink>
+
+                                </Box>
+                                <Box textAlign={'end'}>
+                                    <Typography>¿No tienes una cuenta?</Typography>
+                                    <NextLink passHref legacyBehavior
+                                        type="submit"
+
+
+                                        href={router.query.p ? `/auth/register?p=${router.query.p}` : '/auth/register'}
+
+                                    >
+                                        <Link sx={{ fontWeight: 'bold', textDecoration: 'underline' }} color="secondary">Regístrate</Link>
+                                    </NextLink>
+
+
+                                </Box>
+
+                            </Grid>
 
                         </Grid>
                     </Box>

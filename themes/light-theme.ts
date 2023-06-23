@@ -5,11 +5,11 @@ export let lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#eeca73',
+      main: '#001C75',
       
     },
     secondary: {
-      main: '#0045aa  ', /**#005A34  #43655A  dorado: #EECA73  rojo:#ED1C24 Blanco:#DEDEDE Axul: 0045aa*/
+      main: '#0045aa ', /**#005A34  #43655A  dorado: #EECA73  rojo:#ED1C24 Blanco:#DEDEDE Axul: 0045aa*/
     },
     info: {
       main: '#001C75',

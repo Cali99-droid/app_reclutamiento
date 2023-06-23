@@ -250,12 +250,12 @@ export default function RegisterPage() {
                     passHref
                     legacyBehavior
 
-                    color="secondary"
+
                     href={router.query.p ? `/auth/login?p=${router.query.p}` : '/auth/login'}
 
 
                   >
-                    <Link> Iniciar Sesion</Link>
+                    <Link sx={{ fontWeight: 'bold', textDecoration: 'underline' }} color="secondary"> Iniciar Sesión</Link>
                   </NextLink>
                 </Typography>
 
@@ -268,7 +268,7 @@ export default function RegisterPage() {
                   href={"/auth/forgot-password"}
                   passHref
                   legacyBehavior>
-                  <Link >Olvide mi contraseña
+                  <Link sx={{ fontWeight: 'bold', textDecoration: 'underline' }} color="secondary">Olvidé mi contraseña
                   </Link>
                 </NextLink>
 
