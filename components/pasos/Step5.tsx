@@ -212,33 +212,6 @@ const Step5 = () => {
 
     }
 
-    const handleFin = async () => {
-        if (!file) {
-            return;
-        }
-        try {
-
-            // console.log( file );
-
-            const formData = new FormData();
-            formData.append('file', file);
-            const { data } = await reclutApi.post<{ message: string }>('/postulants/docUpload', formData);
-            // setDoc(data.message);
-            subirDoc(data.message, IdPos);
-
-
-
-
-        } catch (error) {
-            console.log({ error });
-        }
-    }
-
-    const handleReplaceFile = () => {
-        setFile(null);
-        setPreviewUrl(null);
-    };
-
 
 
     return (

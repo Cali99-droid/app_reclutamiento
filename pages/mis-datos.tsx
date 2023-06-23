@@ -15,7 +15,7 @@ interface Props {
 const MisDatosPage: NextPage<Props> = ({ postulante, convocatorias }) => {
     return (
         <JobsLayout title={"AE | Mis datos "} pageDescription={"mis datos"}>
-            <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={15} >
+            <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto', overflow: 'visible' }} paddingTop={15} >
                 <Navigation postulante={postulante} convocatorias={convocatorias} />
             </Box>
 

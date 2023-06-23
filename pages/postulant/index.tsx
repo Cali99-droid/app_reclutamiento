@@ -1,7 +1,7 @@
 import { prisma } from '@/server/db/client';
 import { JobsLayout } from "@/components/layouts";
 
-import { Box, Paper, Typography, useMediaQuery } from '@mui/material';
+import { Box, Divider, Paper, Typography, useMediaQuery } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 import { IGrado, IPersona } from "@/interfaces";
@@ -9,7 +9,7 @@ import { getSession } from 'next-auth/react';
 
 import { apiCon } from '@/apies';
 
-import { postulante } from '@prisma/client';
+import { postulante, persona } from '@prisma/client';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useContext } from 'react';
@@ -24,6 +24,7 @@ interface Props {
 
 
   postulante: postulante
+
 }
 
 
@@ -33,24 +34,25 @@ const PostulantPage: NextPage<Props> = ({ postulante }) => {
   return (
     <JobsLayout title={"AE | Postulante "} pageDescription={"Postular a un empleo"}>
       <ToastContainer />
+      <Box bgcolor={'#F8F8FF'} paddingBottom={6}>
 
-      <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingLeft={4} paddingRight={4} paddingTop={4} bgcolor={'#E1E1E1'}>
-        <Paper sx={{ bgcolor: '#0045AA', padding: 2, mb: 2 }} >
-          <Typography variant="h2" color={'#FFF'}>Actualizar mis datos</Typography>
+        <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingLeft={4} paddingRight={4} paddingTop={22}>
+          <Box paddingTop={2} paddingBottom={2}>
+            <Typography variant='h2' fontWeight={'bold'}>Actualizar Mi Ficha</Typography>
+            <Divider />
+          </Box>
+          <Form />
+          {
+            activeStep === 0 && (
+              <FormDatos postulante={postulante} />
+            )
+          }
 
-        </Paper>
-        <Form />
-        {
-          activeStep === 0 && (
-            <FormDatos postulante={postulante} />
-          )
-        }
+        </Box>
+
+        {/* <FormDatos grados={grados} persona={persona} postulante={postulante} /> */}
 
       </Box>
-
-      {/* <FormDatos grados={grados} persona={persona} postulante={postulante} /> */}
-
-
     </JobsLayout>
   )
 }
@@ -62,6 +64,32 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
   const { user } = session;
 
+
+
+  const post = await prisma.postulante.findFirst({
+    where: {
+      persona_id: parseInt(user.persona.id)
+    },
+    include: {
+      persona: {
+        include: {
+          user: {
+            select: {
+              email: true
+            }
+          }
+        }
+      },
+      estudios: true,
+      cargo: true,
+      investigacion: true,
+      capacitacion: true,
+      aficion: true,
+      reconocimiento: true,
+      tics: true
+
+    }
+  })
   const person = await prisma.persona.findUnique({
     where: {
       id: user.persona.id,
@@ -76,35 +104,34 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     }
   })
 
-  const persona = JSON.parse(JSON.stringify(person))
-  if (person?.postulante[0] === undefined) {
-    const post = {
-      postulanteId: 0,
-      id: 0,
-      telefono: '9',
-      direccion: '',
-      nacimiento: '1999-02-14',
-      tipoId: null,
-      numeroDocumento: '',
-      experiencia: null,
-      sueldo: null,
-      especialidad: null,
-      gradoId: 0,
-      estado_postulante_id: null,
-      persona_id: persona.id,
+  // const persona = JSON.parse(JSON.stringify(person))
+  // if (person?.postulante[0] === undefined) {
+  //   const post = {
+  //     postulanteId: 0,
+  //     id: 0,
+  //     telefono: '9',
+  //     direccion: '',
+  //     nacimiento: '1999-02-14',
+  //     tipoId: null,
+  //     numeroDocumento: '',
+  //     experiencia: null,
+  //     sueldo: null,
+  //     especialidad: null,
+  //     gradoId: 0,
+  //     estado_postulante_id: null,
+  //     persona_id: persona.id,
 
-    }
+  //   }
 
-    postulante = post;
-  } else {
+  //   postulante = post;
+  // } else {
 
-
-    postulante = JSON.parse(JSON.stringify(person.postulante[0]))
-  }
+  postulante = JSON.parse(JSON.stringify(post))
+  // }
 
   return {
     props: {
-      persona,
+
       postulante,
     }
   }

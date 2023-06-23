@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Stepper, Step, StepLabel, Button, Box, Divider, useMediaQuery } from '@mui/material';
+import { Stepper, Step, StepLabel, Button, Box, Divider, useMediaQuery, Typography, Alert, Chip, Link } from '@mui/material';
 import { useContext } from 'react';
 import { DatosContext } from '@/context/datos';
 import LabelIcon from '@mui/icons-material/Label';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import EastIcon from '@mui/icons-material/East';
 import { useRouter } from 'next/router';
+import { CheckCircle } from '@mui/icons-material';
 type FormStepperProps = {
     // steps: { label: string; content: JSX.Element, icon: any }[];
     onSubmit: () => void;
@@ -13,17 +14,18 @@ type FormStepperProps = {
 
 const FormStepper = ({ onSubmit }: FormStepperProps) => {
     const matches = useMediaQuery('(min-width:600px)');
-    const { activeStep, handleBack, handleNext, steps } = useContext(DatosContext)
+    const { activeStep, handleBack, handleNext, steps, handleReset } = useContext(DatosContext)
 
     const isLastStep = activeStep === steps.length - 1;
     const router = useRouter();
+
     return (
         <>
-            <Stepper activeStep={activeStep} orientation={matches ? 'horizontal' : 'vertical'} sx={{ padding: 4 }}>
+            <Stepper activeStep={activeStep} orientation={matches ? 'horizontal' : 'vertical'} sx={{ padding: 4 }} >
                 {steps.map(({ label, icon }, index) => (
-                    <Step key={label} sx={{ color: '#FFF' }}>
+                    <Step key={label} sx={{ color: '#FFF' }} >
                         <Box display={'flex'} flexDirection={'column'} alignItems={matches ? 'center' : 'start'} >
-                            <Box width={'50px'} height={'50px'} padding={3} bgcolor={activeStep === index ? '#0045aa' : '#FFF'} display={'flex'} justifyContent={'center'} alignItems={'center'} borderRadius={'50%'}>{icon}
+                            <Box width={'50px'} height={'50px'} padding={3} bgcolor={activeStep === index ? '#0045aa' : '#EC508B'} display={'flex'} justifyContent={'center'} alignItems={'center'} borderRadius={'50%'}>{icon}
 
                             </Box>
                             <StepLabel >{label}</StepLabel>
@@ -34,14 +36,34 @@ const FormStepper = ({ onSubmit }: FormStepperProps) => {
 
 
             < Box display={'flex'} justifyContent={'space-between'} gap={1} padding={4} mt={2}>
+                {activeStep === steps.length ? (
+                    <Box width={'100%'} display={'flex'} justifyContent={'space-between'} gap={1}>
+                        <Box flex={2}>
+                            <Alert > Haz Completado todos tus datos</Alert>
+                        </Box>
+                        <Box display={'flex'} gap={2} alignItems={'center'}>
+                            <Button variant='outlined' color='info' onClick={() => router.push('/postulant/ficha')}>Ver mi ficha</Button>
+                            <Button variant='outlined' onClick={handleReset}>Comenzar de nuevo</Button>
 
-                {activeStep !== 0 && (
-                    <Button startIcon={<KeyboardBackspaceIcon />} variant="contained" onClick={handleBack}>
-                        Atrás
-                    </Button>
+                        </Box>
+                    </Box>
+                ) : (
+                    <>
+                        <Button disabled={activeStep === 0} startIcon={<KeyboardBackspaceIcon />} variant="contained" onClick={handleBack}>
+                            Atrás
+                        </Button>
+                        <Button onClick={handleNext} endIcon={activeStep === steps.length - 1 ? <CheckCircle /> : <EastIcon />}>
+                            {activeStep === steps.length - 1 ? 'Finalizar' : 'Siguiente'}
+                        </Button>
+                    </>
+
                 )
+
                 }
-                {
+
+
+
+                {/* {
                     (activeStep !== steps.length - 1) && (activeStep !== 0) && (
                         <Button endIcon={<EastIcon />} variant="contained" onClick={handleNext}>
                             Siguiente
@@ -50,20 +72,20 @@ const FormStepper = ({ onSubmit }: FormStepperProps) => {
                 }
                 {
                     isLastStep && (
-                        <Button variant="contained" onClick={() => router.push('/postulant/ficha')} color="primary" >
-                            Finalizar
-                        </Button>
+                        <Box display={'flex'} gap={1}>
+                           
+                            <Button variant="contained" onClick={handleNext} color="primary" >
+                                Finalizar
+                            </Button>
+
+                        </Box>
+
                     )
-                }
-                {
-                    // activeStep !== 0 && (
-                    //     <Button variant="contained" color="info" >
-                    //         Reiniciar
-                    //     </Button>
-                    // )
-                }
+                } */}
+
             </Box >
-            {steps[activeStep].content}
+            {activeStep !== steps.length && (steps[activeStep].content)}
+
         </>
     );
 };

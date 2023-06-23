@@ -36,46 +36,7 @@ function ElevationScroll(props: Props) {
     });
 }
 
-const StyledMenu = styled((props: MenuProps) => (
-    <Menu
-        elevation={0}
-        anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-        }}
-        transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-        }}
-        {...props}
-    />
-))(({ theme }) => ({
-    '& .MuiPaper-root': {
-        borderRadius: 6,
-        marginTop: theme.spacing(1),
-        minWidth: 180,
-        color:
-            theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
-        boxShadow:
-            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-        '& .MuiMenu-list': {
-            padding: '4px 0',
-        },
-        '& .MuiMenuItem-root': {
-            '& .MuiSvgIcon-root': {
-                fontSize: 18,
-                color: theme.palette.text.secondary,
-                marginRight: theme.spacing(1.5),
-            },
-            '&:active': {
-                backgroundColor: alpha(
-                    theme.palette.primary.main,
-                    theme.palette.action.selectedOpacity,
-                ),
-            },
-        },
-    },
-}));
+
 
 
 export const NavBar = () => {
@@ -108,8 +69,8 @@ export const NavBar = () => {
 
     return (
         <ElevationScroll {...props}>
-            <AppBar sx={{ borderBottom: '1px solid #e1eeee' }} >
-                <Toolbar >
+            <AppBar sx={{ borderBottom: '1px solid #e1eeee', height: '120px' }} >
+                <Toolbar sx={{ paddingTop: 12, paddingBottom: 6 }} >
                     <Box flex={1.5} />
                     <NextLink href='/' passHref legacyBehavior>
                         <Link color={'secondary'} display='flex' alignItems='end'>
@@ -161,7 +122,7 @@ export const NavBar = () => {
                                 ¿Cómo Postular?
                             </Link>
                         </NextLink>
-                        {isLoggedIn && user?.rol.name === 'postulante' && (
+                        {/* {isLoggedIn && user?.rol.name === 'postulante' && (
                             <NextLink href='/mis-datos' passHref legacyBehavior>
                                 <Link
                                     color={asPath === '/mis-datos' ? '#0045aa' : '#767687'}
@@ -171,7 +132,7 @@ export const NavBar = () => {
                                     Mis Datos
                                 </Link>
                             </NextLink>
-                        )}
+                        )} */}
 
                     </Box>
 
@@ -194,6 +155,8 @@ export const NavBar = () => {
 
                             <Box display={'flex'} alignItems={'center'} sx={{ padding: 1 }} gap={1}>
                                 <Box >
+
+
                                     <Tooltip title="Mi cuenta">
                                         <IconButton
                                             onClick={handleMenuUser}
@@ -318,9 +281,39 @@ export const NavBar = () => {
 
 
                 </Toolbar>
+                {isLoggedIn && user?.rol.name === 'postulante' && (
 
+                    <Box bgcolor={'#EC508B'} display={'flex'} justifyContent={'space-around'} alignItems={'center'} padding={2} >
+                        <Box >
+                            <Typography fontSize={25} fontWeight={'bold'} color={'#FFF'}>{`Bienvenido: ${user?.persona.nombres}`} </Typography>
+                        </Box>
+                        <Box display={'flex'} gap={2}>
+                            <NextLink href='/postulant/ficha' passHref legacyBehavior>
+                                <Link alignItems='end'>
+                                    <Typography color={asPath === '/postulant/ficha' ? '#00075E' : '#FFF'} fontWeight={'bold'} > Mi Ficha </Typography>
+
+                                </Link>
+                            </NextLink>
+                            <NextLink href='/postulant' passHref legacyBehavior>
+                                <Link alignItems='end'>
+                                    <Typography color={asPath === '/postulant' ? '#00075E' : '#FFF'} fontWeight={'bold'} >Actualizar mi Ficha </Typography>
+
+                                </Link>
+                            </NextLink>
+                            <NextLink href='/postulant/postulaciones' passHref legacyBehavior>
+                                <Link alignItems='end'>
+                                    <Typography color={asPath === '/postulant/postulaciones' ? '#00075E' : '#FFF'} fontWeight={'bold'} >Mis Postulaciones</Typography>
+
+                                </Link>
+                            </NextLink>
+
+                        </Box>
+
+
+                    </Box>
+                )}
             </AppBar>
 
-        </ElevationScroll>
+        </ElevationScroll >
     )
 }

@@ -1,5 +1,5 @@
 import { JobsLayout } from "@/components/layouts";
-import { Box, useMediaQuery, } from '@mui/material';
+import { Box, Chip, useMediaQuery, } from '@mui/material';
 
 import { Hero } from '../views/HomePage/Hero';
 import { Partners } from "@/views/HomePage/Partners";
@@ -24,16 +24,17 @@ export default function Home() {
 
   return (
     <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatoria a trabajos en Ancash"} imageFullUrl={''} >
+
+
+
       {showLoadingMessage && <FullScreenLoading />}
       <InView onChange={handleIntersection}>
-        <Box maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18} >
 
+        <Box maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18} >
           <Hero />
           <Partners />
           <Convocatorias />
           <Beneficios />
-
-
         </Box>
 
         <Box  >

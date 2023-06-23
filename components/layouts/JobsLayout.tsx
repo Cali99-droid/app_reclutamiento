@@ -5,6 +5,7 @@ import { NavBar } from '../ui';
 import { SideMenu } from '../ui/SideMenu';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Box } from '@mui/material';
 
 interface Props extends PropsWithChildren {
     title: string;
@@ -57,6 +58,7 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
 
 
             }}>
+
                 {children}
             </main>
 

@@ -25,7 +25,7 @@ interface ContextProps {
     doc: () => Promise<void>
     handleNext: () => void,
     handleBack: () => void
-
+    handleReset: () => void
 
     setEstudios: () => Promise<void>
     agregarEstudio: (profesion: string, institucion: string, grado: string, year: string, idPos: number, doc: any) => Promise<void>

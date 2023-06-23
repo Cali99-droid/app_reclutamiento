@@ -60,11 +60,12 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     const [state, dispatch] = useReducer(datosReducer, DATOS_INITIAL_STATE)
 
     const steps = [
-        { label: 'Datos personales', content: <Step1 />, icon: <ContactPageIcon sx={{ color: '#EECA73' }} /> },
-        { label: 'Formación', content: <Step2 />, icon: <SchoolIcon sx={{ color: '#EECA73' }} /> },
-        { label: 'Experiencia', content: <Step3 />, icon: <WorkIcon sx={{ color: '#EECA73' }} /> },
-        { label: 'Cursos / Capacitaciones', content: <Step4 />, icon: <MilitaryTechIcon sx={{ color: '#EECA73' }} /> },
-        { label: 'Otras Actividades', content: <Step5 />, icon: <NaturePeopleIcon sx={{ color: '#EECA73' }} /> },
+        { label: 'Datos personales', content: <Step1 />, icon: <ContactPageIcon sx={{ color: '#FFF' }} /> },
+        { label: 'Formación', content: <Step2 />, icon: <SchoolIcon sx={{ color: '#FFF' }} /> },
+        { label: 'Experiencia', content: <Step3 />, icon: <WorkIcon sx={{ color: '#FFF' }} /> },
+        { label: 'Cursos / Capacitaciones', content: <Step4 />, icon: <MilitaryTechIcon sx={{ color: '#FFF' }} /> },
+        { label: 'Otras Actividades', content: <Step5 />, icon: <NaturePeopleIcon sx={{ color: '#FFF' }} /> },
+
     ];
     const setPos = async () => {
         const { data } = await reclutApi.get<IPostulant>(`/postulants/`)
@@ -135,6 +136,9 @@ export const DatosProvider: FC<Props> = ({ children }) => {
 
     const handleBack = () => {
         setActiveStep(prevActiveStep => prevActiveStep - 1);
+    };
+    const handleReset = () => {
+        setActiveStep(0);
     };
     //-----------------estudios..................
     const agregarEstudio = async (profesion: string, institucion: string, grado: string, year: string, idPos: number, doc: any) => {
@@ -293,7 +297,7 @@ export const DatosProvider: FC<Props> = ({ children }) => {
 
             handleNext,
             handleBack,
-
+            handleReset,
             setEstudios,
             agregarEstudio,
             editarEstudio,

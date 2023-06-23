@@ -196,106 +196,101 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
 
     return (
         <JobsLayout title={"Mis postulaciones"} pageDescription={"Lista de postulacioes"}>
-
-            <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={5} bgcolor={'#E1E1E1'}>
-                <Box padding={4} >
-                    <Paper sx={{ bgcolor: '#0045AA' }} >
-                        <Grid container spacing={2} alignItems="center" mb={1} padding={2}>
-                            <Grid item>
-                                <span color="inherit" />
-                            </Grid>
-                            <Grid item xs>
-                                <Typography variant="h2" color={'#FFF'}>Mis postulaciones</Typography>
-                            </Grid>
-
-                        </Grid>
-                    </Paper>
-                    <Paper sx={{ bgcolor: '#eeeeee', }}>
-
-                        <Box sx={{ width: '100%', padding: 2 }} height={400} >
-                            <DataGrid
-                                getRowHeight={() => 'auto'}
-                                rows={rows}
-                                columns={columns}
-                                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-                                sx={{ bgcolor: '#FFF' }}
-                            />
+            <Box bgcolor={'#F8F8FF'} paddingBottom={6} height={900}>
+                <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18} >
+                    <Box padding={4} >
+                        <Box paddingTop={2} paddingBottom={2}>
+                            <Typography variant='h2' fontWeight={'bold'}>Mis Postulaciones</Typography>
+                            <Divider />
                         </Box>
+                        <Paper>
 
-                    </Paper>
+                            <Box sx={{ width: '100%', padding: 2 }} height={400} >
+                                <DataGrid
+                                    getRowHeight={() => 'auto'}
+                                    rows={rows}
+                                    columns={columns}
+                                    localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+                                    sx={{ bgcolor: '#FFF' }}
+                                />
+                            </Box>
+
+                        </Paper>
+                    </Box>
                 </Box>
             </Box>
+
 
 
         </JobsLayout >
     )
 }
 
-// export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
-//     const session: any = await getSession({ req });
+    const session: any = await getSession({ req });
 
 
 
-//     const { user } = session;
+    const { user } = session;
 
-//     const persona = await prisma.persona.findUnique({
-//         where: {
-//             id: user.persona.id,
-//         },
-//         select: {
-//             id: true,
-//             postulante: {
-//                 select: {
-//                     id: true
-//                 },
-//             }
+    const persona = await prisma.persona.findUnique({
+        where: {
+            id: user.persona.id,
+        },
+        select: {
+            id: true,
+            postulante: {
+                select: {
+                    id: true
+                },
+            }
 
-//         }
-//     })
-//     if (persona?.postulante[0] === undefined) {
-//         //TODO redirigir a pantalla cuando no llenó sus datos
-//         return {
-//             redirect: {
-//                 destination: '/',
-//                 permanent: false,
-//             }
-//         }
-//     }
+        }
+    })
+    if (persona?.postulante[0] === undefined) {
+        //TODO redirigir a pantalla cuando no llenó sus datos
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            }
+        }
+    }
 
-//     // const convocatorias = await apiCon('/admin/convocatorias')
-//     const convocatorias = await prisma.postulante_x_convocatoria.findMany({
-//         where: {
-//             postulante_id: persona?.postulante[0].id,
-//         },
-//         select: {
-//             id: true,
-//             session: true,
-//             comentario: true,
-//             convocatoria: {
-//                 select: {
-//                     titulo: true,
-//                     estado: true,
+    // const convocatorias = await apiCon('/admin/convocatorias')
+    const convocatorias = await prisma.postulante_x_convocatoria.findMany({
+        where: {
+            postulante_id: persona?.postulante[0].id,
+        },
+        select: {
+            id: true,
+            session: true,
+            comentario: true,
+            convocatoria: {
+                select: {
+                    titulo: true,
+                    estado: true,
 
-//                 }
-//             },
-//             estado_postulante: {
-//                 select: {
-//                     nombre: true,
-//                 }
-//             }
-//         },
-//     });
+                }
+            },
+            estado_postulante: {
+                select: {
+                    nombre: true,
+                }
+            }
+        },
+    });
 
-//     await prisma.$disconnect()
+    await prisma.$disconnect()
 
-//     return {
-//         props: {
-//             convocatorias
+    return {
+        props: {
+            convocatorias
 
-//         }
-//     }
-// }
+        }
+    }
+}
 
 export default PostulacionesPage
 

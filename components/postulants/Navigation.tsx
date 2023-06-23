@@ -56,7 +56,7 @@ export const Navigation: NextPage<Props> = ({ postulante, convocatorias }) => {
                 showLabels
                 value={value}
                 onChange={(event, newValue) => handleChange(newValue)}
-                sx={{ backgroundColor: '#F1F1E6' }}
+                sx={{ backgroundColor: '#F1F1E6', position: 'sticky' }}
             >
                 <BottomNavigationAction onChange={() => console.log('cambiando...')} label="Actualizar Mi Ficha" icon={<EditIcon />} />
                 <BottomNavigationAction label="Mi Ficha" icon={<ArticleOutlined />} />
