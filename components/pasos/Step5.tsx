@@ -272,7 +272,7 @@ const Step5 = () => {
 
 
                 <Modal title={'Nuevo uso de Tecnologias'} open={openTics} handleClose={handleCloseTics} handleConfirm={handleConfirmTics}>
-                    <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
+                    <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
                         component="form"
                         sx={{
                             '& .MuiTextField-root': { m: 1, },
@@ -381,7 +381,7 @@ const Step5 = () => {
 
 
                 <Modal title={'NUEVA ACTIVIDAD'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
-                    <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
+                    <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
                         component="form"
 
                         noValidate

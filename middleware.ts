@@ -38,6 +38,24 @@ export async function middleware(req: NextRequest) {
         }
         });
     };
+    if( requestedPage.includes('/api/jurado') && !validRolJurados.includes( session.user.rol.name ) ){
+ 
+      return new Response( JSON.stringify({ message: 'No autorizado' }),{
+        status: 401,
+        headers:{
+          'Content-Type':'application/json'
+        }
+        });
+    };
+    if( requestedPage.includes('/api/postulants') && session.user.rol.name !== 'postulante' ){
+ 
+      return new Response( JSON.stringify({ message: 'No autorizado' }),{
+        status: 401,
+        headers:{
+          'Content-Type':'application/json'
+        }
+        });
+    };
 
     if( requestedPage.includes('/admin') && !validRoles.includes( session.user.rol.name ) ){
  
@@ -60,5 +78,5 @@ export async function middleware(req: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher:[ '/admin/:path*','/postulant/:path*','/jurado/:path*'],
+  matcher:[ '/admin/:path*','/postulant/:path*','/jurado/:path*','/api/admin/:path*','/api/jurado/:path*', '/api/postulants/:path*'],
 }

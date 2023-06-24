@@ -30,7 +30,13 @@ const getConvocatorias = async(req: NextApiRequest, res: NextApiResponse<Data>) 
         where:{
             estadoId:1
         },
-        include: {
+        select: {
+            id:true,
+            titulo:true,
+            descripcion:true,
+            img:true,
+            vacantes:true,
+            experiencia:true,
             estado:{
               select: {  nombre: true},  
             },

@@ -439,7 +439,7 @@ const Step3 = () => {
                 handleClose={handleCloseInves}
                 handleConfirm={handleConfirmInves}
             >
-                <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
+                <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
                     component="form"
                     sx={{
                         '& .MuiTextField-root': { m: 1, },
@@ -503,7 +503,7 @@ const Step3 = () => {
                 handleClose={handleCloseCargo}
                 handleConfirm={handleConfirmCargo}
             >
-                <Box display={'flex'} width={400} flexDirection={'column'} gap={1} mt={1}
+                <Box display={'flex'} flexDirection={'column'} gap={1} mt={1}
                     component="form"
                     sx={{
                         '& .MuiTextField-root': { m: 1, },

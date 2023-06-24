@@ -42,6 +42,7 @@ moment.locale('es');
 
 import { usePostulantes } from '@/hooks';
 import { FullScreenLoading } from '@/components/ui';
+import { Send } from '@mui/icons-material';
 interface Props {
   postulantes: postulante[]
   convocatoria: IJob
@@ -749,17 +750,20 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
       </ModalEntrevista>
 
 
-      <Modal title={'Agregar comentario'} open={messageModal} handleClose={() => setMessageModal(false)} handleConfirm={sendMessage}>
-        <Box mt={1} width={300}>
+      <Modal title={'Agregar comentario'} open={messageModal} handleClose={() => setMessageModal(false)} handleConfirm={() => setMessageModal(false)}>
+        <Box mt={1} >
 
           <TextField onChange={(e) => setMessage(e.target.value)} value={message} multiline rows={3} fullWidth id="outlined-basic" label="Agregar Mensaje" variant="outlined" sx={{ mb: 2 }} />
+          <Box display={'flex'} justifyContent={'end'}>
+            <Button sx={{ mb: 1 }} variant='contained' endIcon={<Send />} onClick={sendMessage} >Enviar</Button>
+          </Box>
           <Divider />
           <Box mt={2}>
             <Typography variant='body1' fontWeight={'bold'}>Último mensaje</Typography>
             <Paper>
               <Box padding={1} mt={1}>
                 <Typography >{lastMessage}</Typography>
-                <Typography variant='body2' color={'gray'}>{moment(fechaComennt).fromNow()}</Typography>
+                <Typography variant='body2' color={'gray'}>{fechaComennt ? (moment(fechaComennt).fromNow()) : 'No hay mensajes'}</Typography>
               </Box>
             </Paper>
           </Box>

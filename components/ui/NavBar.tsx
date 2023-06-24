@@ -69,7 +69,7 @@ export const NavBar = () => {
 
     return (
         <ElevationScroll {...props}>
-            <AppBar sx={{ borderBottom: '1px solid #e1eeee', height: '120px' }} >
+            <AppBar sx={{ height: '110px' }} >
                 <Toolbar sx={{ paddingTop: 12, paddingBottom: 6 }} >
                     <Box flex={1.5} />
                     <NextLink href='/' passHref legacyBehavior>
@@ -283,26 +283,26 @@ export const NavBar = () => {
                 </Toolbar>
                 {isLoggedIn && user?.rol.name === 'postulante' && (
 
-                    <Box bgcolor={'#EC508B'} display={'flex'} justifyContent={'space-around'} alignItems={'center'} padding={2} >
+                    <Box bgcolor={'#FF7F6A'} display={'flex'} justifyContent={'space-evenly'} alignItems={'center'}  >
                         <Box >
-                            <Typography fontSize={25} fontWeight={'bold'} color={'#FFF'}>{`Bienvenido: ${user?.persona.nombres}`} </Typography>
+                            <Typography fontSize={23} fontWeight={'bold'} color={'#FFF'}>{`Bienvenido: ${user?.persona.nombres}`} </Typography>
                         </Box>
                         <Box display={'flex'} gap={2}>
                             <NextLink href='/postulant/ficha' passHref legacyBehavior>
                                 <Link alignItems='end'>
-                                    <Typography color={asPath === '/postulant/ficha' ? '#00075E' : '#FFF'} fontWeight={'bold'} > Mi Ficha </Typography>
+                                    <Typography fontSize={15} color={asPath === '/postulant/ficha' ? '#00075E' : '#FFF'} fontWeight={asPath === '/postulant/ficha' ? 'bold' : ''} > Mi Ficha </Typography>
 
                                 </Link>
                             </NextLink>
                             <NextLink href='/postulant' passHref legacyBehavior>
                                 <Link alignItems='end'>
-                                    <Typography color={asPath === '/postulant' ? '#00075E' : '#FFF'} fontWeight={'bold'} >Actualizar mi Ficha </Typography>
+                                    <Typography fontSize={15} color={asPath === '/postulant' ? '#00075E' : '#FFF'} fontWeight={asPath === '/postulant' ? 'bold' : ''}>Actualizar mi Ficha </Typography>
 
                                 </Link>
                             </NextLink>
                             <NextLink href='/postulant/postulaciones' passHref legacyBehavior>
                                 <Link alignItems='end'>
-                                    <Typography color={asPath === '/postulant/postulaciones' ? '#00075E' : '#FFF'} fontWeight={'bold'} >Mis Postulaciones</Typography>
+                                    <Typography fontSize={15} color={asPath === '/postulant/postulaciones' ? '#00075E' : '#FFF'} fontWeight={asPath === '/postulant/postulaciones' ? 'bold' : ''} >Mis Postulaciones</Typography>
 
                                 </Link>
                             </NextLink>

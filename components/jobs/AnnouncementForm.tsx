@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActions, CardMedia, FormControl, FormHelperText, FormLabel, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material'
+import { Box, Button, Card, CardActions, CardMedia, FormControl, FormHelperText, FormLabel, Grid, InputLabel, LinearProgress, MenuItem, Paper, Select, TextField, Typography } from '@mui/material'
 
 import SaveIcon from '@mui/icons-material/Save';
 import { useRouter } from 'next/router';
@@ -11,10 +11,10 @@ import { useState, ChangeEvent } from 'react';
 
 import { ModalAlert } from '../modal/ModalAlert';
 
-import { convocatoria } from '@prisma/client';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import moment from 'moment';
 import { useRef } from 'react';
+import { toast } from 'react-toastify';
 
 
 interface Props {
@@ -77,16 +77,18 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
         }
     }
+    const [loadImg, setLoadImg] = useState(false)
     const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         if (!target.files || target.files.length === 0) {
             return;
         }
-
+        toast.info('Cargando imagen')
+        setLoadImg(true)
 
         try {
 
 
-            const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/awsupload', {
+            const { data } = await reclutApi.post<{ message: string, url: string }>('/admin/awsupload', {
                 name: target.files[0].name,
                 type: target.files[0].type
             });
@@ -104,7 +106,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
             setValue('img', data.message, { shouldValidate: true });
 
-            console.log(data)
+
 
 
         } catch (error) {
@@ -313,13 +315,15 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                             {
                                 getValues('img') && (
                                     <Box width={150} margin={'auto'}>
+                                        <Typography sx={{ display: loadImg ? 'block' : 'none' }} >Subiendo...</Typography>
+                                        <LinearProgress sx={{ display: loadImg ? 'block' : 'none' }} />
                                         <Card>
                                             <CardMedia
                                                 component='img'
                                                 className='fadeIn'
                                                 image={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${getValues('img')}`}
                                                 alt={getValues('img')}
-
+                                                onLoad={() => setLoadImg(false)}
                                             />
                                             <CardActions>
                                                 <Button

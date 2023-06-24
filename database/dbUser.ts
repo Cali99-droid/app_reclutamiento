@@ -100,7 +100,7 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
                 direccion:'',
                 experiencia:0 ,
                 nacimiento:new Date(),
-                numeroDocumento:'00000000',
+                numeroDocumento:null,
                 sueldo:0 ,
                 gradoId:1,
                 tipoId:1,

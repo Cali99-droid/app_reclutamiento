@@ -2,6 +2,7 @@ import { IEstudio, ITics } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
 import { aficion, capacitacion, cargo, estudios, investigacion } from '@prisma/client';
+import { getSession } from 'next-auth/react';
 
 type Data = 
 |{message: string}
@@ -32,7 +33,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 const deleteCapacitacion= async(req:NextApiRequest, res:NextApiResponse<Data>)=>{
     const{id}:any = req.query ;
  
-
+    const session: any = await getSession({ req });
+    if ( !session ) {
+        return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
+    }
 
     try {
         const delAficion = await prisma.aficion.delete({

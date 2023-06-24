@@ -9,7 +9,7 @@ import { Box } from "@mui/material";
 import { convocatoria } from "@prisma/client";
 import { GetServerSideProps, NextPage } from "next";
 import { Paperbase } from '@/components/dash';
-
+import "react-toastify/dist/ReactToastify.css";
 
 
 interface Props {

@@ -53,7 +53,7 @@ const imageStyle = {
 };
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: '#4565D0',
+        backgroundColor: '#0045AA',
         color: theme.palette.common.white,
         fontWeight: 700
 
@@ -74,17 +74,17 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
     return (
         <JobsLayout title={"Postulante "} pageDescription={'Ficha'} >
 
-            <Box bgcolor={'#F8F8FF'} paddingBottom={6}>
+            <Box bgcolor={'#F8F8FF'} paddingBottom={6} mt={4}>
 
 
-                <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} paddingTop={22} >
+                <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} paddingLeft={4} paddingRight={4} pt={15} >
                     <Box paddingTop={2} paddingBottom={2}>
                         <Typography variant='h2' fontWeight={'bold'}>Mi Ficha</Typography>
                         <Divider />
                     </Box>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={10}>
-                            <Item elevation={1} sx={{ bgcolor: '#4565D0', padding: 1 }} >
+                            <Item elevation={1} sx={{ bgcolor: '#0045AA', padding: 1 }} >
                                 <Typography fontWeight={'bold'} color={'#FFF'}>Ficha del Postulante</Typography>
                             </Item>
                         </Grid>
@@ -95,7 +95,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                 color='secondary'
                                 sx={{ width: '100%' }}
                                 onClick={() => push('/postulant')}>
-                                Editar
+                                Actualizar
                             </Button>
                         </Grid>
                         <Grid item xs={12} sm={3}>
@@ -116,15 +116,15 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
 
                                         <Box display={'flex'} gap={1}>
 
-                                            <FmdGoodIcon sx={{ color: '#EC508B' }} /> <Typography fontSize={12} >  {postulante.direccion.length > 0 ? postulante.direccion : 'Sin datos'}</Typography>
+                                            <FmdGoodIcon sx={{ color: '#FF7F6A' }} /> <Typography fontSize={12} >  {postulante.direccion.length > 0 ? postulante.direccion : 'Sin datos'}</Typography>
                                         </Box>
                                         <Box display={'flex'} gap={1}>
 
-                                            <PhoneIcon sx={{ color: '#EC508B' }} /> <Typography fontSize={12}>  {postulante.telefono.length > 0 ? postulante.telefono : 'Sin datos'}</Typography>
+                                            <PhoneIcon sx={{ color: '#FF7F6A' }} /> <Typography fontSize={12}>  {postulante.telefono.length > 0 ? postulante.telefono : 'Sin datos'}</Typography>
                                         </Box>
                                         <Box display={'flex'} gap={1}>
 
-                                            <MailIcon sx={{ color: '#EC508B' }} /> <Typography fontSize={12}>  {postulante.persona.user[0].email}</Typography>
+                                            <MailIcon sx={{ color: '#FF7F6A' }} /> <Typography fontSize={12}>  {postulante.persona.user[0].email}</Typography>
                                         </Box>
                                     </Box>
 

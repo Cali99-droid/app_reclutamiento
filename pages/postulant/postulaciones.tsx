@@ -4,7 +4,7 @@ import { prisma } from '@/server/db/client';
 import { Alert, AlertTitle, Box, Button, Chip, Grid, IconButton, LinearProgress, Paper, Tooltip, useMediaQuery } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import { postulante, convocatoria } from '@prisma/client';
+import { postulante, convocatoria, categoria } from '@prisma/client';
 import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 import { IConvocatoriaPostulante, IJob } from "@/interfaces";
@@ -34,10 +34,6 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
     const [doc, setDoc] = useState<string | null>(null);
 
     const fileInputRef = useRef<HTMLInputElement>(null)
-
-    const router = useRouter();
-
-
 
 
 
@@ -121,35 +117,40 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
 
 
                     <>
+                        {
+                            params.row.categoria === 1 ? (
+                                <Chip color="info" variant="outlined" label={'No disponible'} />
+                            ) : (
+                                <Box>
 
+                                    <Tooltip title={'Ver sesión'}>
+                                        <span>
+                                            <IconButton target="_blank" href={`/postulant/doc/${params.row.id}`} disabled={params.row.estadoPostulante !== 'Apto evaluación'}>
+                                                < RemoveRedEyeIcon />
+                                            </IconButton>
+                                        </span>
 
-                        <Box>
+                                    </Tooltip>
+                                    <Tooltip title={'Subir o reemplazar sesión'}>
+                                        <span>
+                                            <IconButton onClick={() => asignarSession(params.row.id)} disabled={params.row.estadoPostulante !== 'Apto evaluación'}>
+                                                < UploadFileOutlined />
+                                            </IconButton>
+                                        </span>
 
-                            <Tooltip title={'Ver sesión'}>
-                                <span>
-                                    <IconButton target="_blank" href={`/postulant/doc/${params.row.id}`} disabled={params.row.estadoPostulante !== 'pasa a evaluación'}>
-                                        < RemoveRedEyeIcon />
-                                    </IconButton>
-                                </span>
+                                    </Tooltip>
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
 
-                            </Tooltip>
-                            <Tooltip title={'Subir o reemplazar sesión'}>
-                                <span>
-                                    <IconButton onClick={() => asignarSession(params.row.id)} disabled={params.row.estadoPostulante !== 'pasa a evaluación'}>
-                                        < UploadFileOutlined />
-                                    </IconButton>
-                                </span>
+                                        accept='.pdf'
+                                        style={{ display: 'none' }}
+                                        onChange={onFilesSelected}
+                                    />
+                                </Box>
+                            )
+                        }
 
-                            </Tooltip>
-                            <input
-                                ref={fileInputRef}
-                                type="file"
-
-                                accept='.pdf'
-                                style={{ display: 'none' }}
-                                onChange={onFilesSelected}
-                            />
-                        </Box>
 
 
 
@@ -190,16 +191,16 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
         estado: job.convocatoria.estado.nombre,
         estadoPostulante: job.estado_postulante.nombre === 'No interesa' ? 'No fuiste seleccionado' : job.estado_postulante.nombre,
         mensajes: job.comentario,
-
+        categoria: job.convocatoria.categoria.id
 
     }))
 
     return (
         <JobsLayout title={"Mis postulaciones"} pageDescription={"Lista de postulacioes"}>
-            <Box bgcolor={'#F8F8FF'} paddingBottom={6} height={900}>
-                <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18} >
+            <Box bgcolor={'#F8F8FF'} paddingBottom={6} height={900} mt={4}>
+                <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingLeft={4} paddingRight={4} pt={15}>
                     <Box padding={4} >
-                        <Box paddingTop={2} paddingBottom={2}>
+                        <Box paddingBottom={2}>
                             <Typography variant='h2' fontWeight={'bold'}>Mis Postulaciones</Typography>
                             <Divider />
                         </Box>
@@ -271,7 +272,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
                 select: {
                     titulo: true,
                     estado: true,
-
+                    categoria: true,
                 }
             },
             estado_postulante: {

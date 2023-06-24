@@ -1,6 +1,6 @@
 
 import { DatosContext } from '@/context';
-import { Box, Button, Chip, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography, IconButton, TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody, styled, tableCellClasses, SelectChangeEvent } from '@mui/material';
+import { Box, Button, Chip, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography, IconButton, TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody, styled, tableCellClasses, SelectChangeEvent, LinearProgress } from '@mui/material';
 import { useContext, ChangeEvent, useEffect } from 'react';
 import Modal from '../modal/Modal';
 import { useState } from 'react';
@@ -74,6 +74,7 @@ const Step2 = () => {
         setEstudios()
     }
     const [doc, setDoc] = useState<string | null>(null);
+    const [loadDoc, setLoadDoc] = useState(false)
     const handleConfirm = () => {
 
 
@@ -103,6 +104,7 @@ const Step2 = () => {
         handleClose()
     }
     const handleDelete = (id: number) => {
+        toast.info('Eliminado Registro ...')
         quitarEstudio(id)
     }
 
@@ -131,10 +133,12 @@ const Step2 = () => {
     const [file, setFile] = useState<File | null>(null);
 
     const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+        toast.info('Subiendo Documento')
+        setLoadDoc(true)
         if (!target.files || target.files.length === 0) {
             return;
         }
-        const selectedFile = target.files[0];
+        // const selectedFile = target.files[0];
 
         // setFile(selectedFile);
         // if (selectedFile) {
@@ -162,12 +166,11 @@ const Step2 = () => {
                 }
             })
 
-            console.log(data.message)
+
 
 
             setDoc(data.message);
 
-            console.log(data)
 
 
         } catch (error) {
@@ -241,7 +244,7 @@ const Step2 = () => {
 
 
             <Modal title={'AGREGAR ESTUDIO / PROFESION'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
-                <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
+                <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
                     component="form"
                     sx={{
                         '& .MuiTextField-root': { m: 1, },
@@ -319,8 +322,10 @@ const Step2 = () => {
                     {doc && (
                         <Box display={'flex'} alignItems={'center'}  >
                             <Box >
+                                <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Cargando...</Typography>
+                                <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
                                 <InputLabel id="demo-simple-label">Vista previa del certificado</InputLabel>
-                                <object data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
+                                <object onLoad={() => setLoadDoc(false)} data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
                                     <p>No se puede previsualizar</p>
                                 </object>
 

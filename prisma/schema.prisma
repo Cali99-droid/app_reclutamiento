@@ -45,8 +45,8 @@ model cargo {
   contacto      String?    @db.VarChar(200)
   desde         DateTime?  @db.Date
   hasta         DateTime?  @db.Date
-  doc           String?    @db.VarChar(225)
   postulante_id Int
+  doc           String?    @db.VarChar(225)
   postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cargo_postulante1")
 
   @@index([postulante_id], map: "fk_cargo_postulante1_idx1")
@@ -67,9 +67,9 @@ model convocatoria {
   estadoId                  Int                         @map("estado_id")
   sueldoOfertado            Float                       @map("sueldo_ofertado")
   vacantes                  Int
-  img                       String?                     @db.VarChar(225)
   vigencia                  DateTime?                   @db.Date
   categoria_id              Int?
+  img                       String?                     @db.VarChar(225)
   categoria                 categoria?                  @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_convocatoria_categoria1")
   estado                    estado                      @relation(fields: [estadoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_convocatoria_estado1")
   grado                     grado                       @relation(fields: [gradoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_convocatoria_grado1")
@@ -131,8 +131,8 @@ model estudios {
   institucion   String     @db.VarChar(200)
   grado         String     @db.VarChar(200)
   year          Int
-  doc           String?    @db.VarChar(225)
   postulante_id Int
+  doc           String?    @db.VarChar(225)
   postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_estudios_postulante1")
 
   @@index([postulante_id], map: "fk_estudios_postulante1_idx1")
@@ -212,7 +212,7 @@ model postulante {
   direccion                 String                      @db.VarChar(45)
   experiencia               Int?
   nacimiento                DateTime                    @map("fecha_nacimiento") @db.Date
-  numeroDocumento           String                      @unique(map: "numero_documento_UNIQUE") @map("numero_documento") @db.VarChar(45)
+  numeroDocumento           String?                     @unique(map: "numero_documento_UNIQUE") @map("numero_documento") @db.VarChar(45)
   sueldo                    Float
   estado_civil              String?                     @db.VarChar(45)
   exalumno                  Int?                        @db.TinyInt
@@ -246,11 +246,11 @@ model postulante {
 model postulante_x_convocatoria {
   id                   Int               @id @default(autoincrement())
   comentario           String?           @db.LongText
-  session              String?           @db.VarChar(255)
   fecha_comentario     String?           @db.VarChar(60)
   convocatoria_id      Int
   estado_postulante_id Int
   postulante_id        Int
+  session              String?           @db.VarChar(255)
   convocatoria         convocatoria      @relation(fields: [convocatoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_x_convocatoria_convocatoria1")
   estado_postulante    estado_postulante @relation(fields: [estado_postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_x_convocatoria_estado_postulante1")
   postulante           postulante        @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_x_convocatoria_postulante1")

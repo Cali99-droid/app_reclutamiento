@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
  import { v4 as uuidv4 } from 'uuid';
 // import { v2 as cloudinary } from 'cloudinary';
 import AWS from '../../../aws-config';
+import { getSession } from 'next-auth/react';
 
 // cloudinary.config( process.env.CLOUDINARY_URL || '' );
 
@@ -35,7 +36,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 
 const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
-
+    const session: any = await getSession({ req });
+    if ( !session ) {
+        return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
+    }
     let {name,type} = req.body;
     
     // Genera un nombre único para el archivo

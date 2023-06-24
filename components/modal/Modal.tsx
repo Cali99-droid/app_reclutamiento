@@ -24,8 +24,8 @@ export const Modal: FC<ModalProps> = ({ title, children, open, handleClose, hand
 
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} variant='outlined' >
-          Cancelar
+        <Button onClick={handleClose}  >
+          Salir
         </Button>
         <Button onClick={handleConfirm} >
           Aceptar

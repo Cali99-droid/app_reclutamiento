@@ -34,9 +34,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     const session: any = await getSession({ req });
-    if ( !session ) {
-        return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
-    }
+    console.log(session)
+    // if ( !session ) {
+    //     return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
+    // }
     let {name,type} = req.body;
        // Genera un nombre único para el archivo
        const uniqueFileName = `${uuidv4()}.${name.split('.').pop()}`;
@@ -56,7 +57,7 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
         };
         
         const url = await s3.getSignedUrlPromise('putObject', fileParams)
-        console.log(url)
+       
         return res.status(200).json({ url: url,message:uniqueFileName});
      } catch (error) {
         console.log(error)

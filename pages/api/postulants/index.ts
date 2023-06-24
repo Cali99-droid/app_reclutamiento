@@ -56,7 +56,10 @@ async function  getPostulante(req: NextApiRequest, res: NextApiResponse<any>) {
 
 const createPostulant = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
-  
+  const session: any = await getSession({ req });
+  if ( !session ) {
+      return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
+  }
 
     const { 
     nombre ,
@@ -175,7 +178,10 @@ const createPostulant = async(req: NextApiRequest, res: NextApiResponse<Data>) =
  }
 
 async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>) {
-
+  const session: any = await getSession({ req });
+  if ( !session ) {
+      return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
+  }
   const { 
     nombre ,
     apellidoPat, 

@@ -296,7 +296,7 @@ const Step4 = () => {
 
 
                 <Modal title={'Nuevo Capacitación/Curso'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
-                    <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
+                    <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
                         component="form"
                         sx={{
                             '& .MuiTextField-root': { m: 1, },
@@ -467,7 +467,7 @@ const Step4 = () => {
 
 
                 <Modal title={'Nuevo Reconocimiento'} open={openRec} handleClose={handleCloseRec} handleConfirm={handleConfirmRec}>
-                    <Box display={'flex'} width={400} flexDirection={'column'} gap={2} mt={2}
+                    <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
                         component="form"
                         sx={{
                             '& .MuiTextField-root': { m: 1, },
