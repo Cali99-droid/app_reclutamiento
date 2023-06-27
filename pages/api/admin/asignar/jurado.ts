@@ -30,6 +30,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 const setJuradoConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     const { id , jurado } = req.body;
+    console.log('id de jurado', jurado)
     //evitar repeticion
     const existe = await prisma.convocatoria_x_jurado.findFirst({
         where:{
@@ -39,7 +40,7 @@ const setJuradoConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Da
             }
         }
     })
-
+console.log(jurado)
     if(!existe){
                 try {
                 const  juradoNew = await prisma.convocatoria_x_jurado.create({

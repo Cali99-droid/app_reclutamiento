@@ -38,6 +38,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 const getJurados = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
     const { id=''  } = req.query;
+
       const juradosSer = await prisma.convocatoria_x_jurado.findMany({
         where: {
           convocatoria_id: parseInt(id.toString())
@@ -55,7 +56,7 @@ const getJurados = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
         
       });
       const jurados = JSON.parse(JSON.stringify(juradosSer))
-
+      console.log(juradosSer)
       await prisma.$disconnect()
       res.status(201).json( jurados );
  

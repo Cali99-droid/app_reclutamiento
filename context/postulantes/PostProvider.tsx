@@ -39,7 +39,7 @@ export const PostProvider: FC<Props> = ({ children }) => {
       const addNewJurado = async (jurado: string) => {
 
             const { data } = await reclutApi.post('/admin/asignar/jurado', { id, jurado });
-
+            console.log(data)
             if (!data.message) {
                   dispatch({ type: '[jurados] Add-Jurado', payload: data.juradoNew })
                   return;
@@ -74,12 +74,7 @@ export const PostProvider: FC<Props> = ({ children }) => {
             dispatch({ type: '[jurados] REFRESH-Data', payload: data })
 
       }
-      useEffect(() => {
 
-
-
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [])
 
 
       const calcularTotal = () => {

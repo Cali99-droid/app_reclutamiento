@@ -19,7 +19,7 @@ type FormData = {
 
 
 const LoginPage = (error: string) => {
-
+    const matches = useMediaQuery('(min-width:600px)');
     const router = useRouter();
 
 
@@ -58,11 +58,11 @@ const LoginPage = (error: string) => {
     }
 
 
-    const matches = useMediaQuery('(min-width:600px)');
+
     return (
         <AuthLayout title={"Iniciar Sesion "} >
 
-            <Box bgcolor={'#FFF'} padding={4} >
+            <Box bgcolor={'#FFF'} padding={4} className={'fadeIn'}>
                 <Chip
                     label={'La cuenta aún no ha sido confirmada, revisa tu email'}
                     color="error"
@@ -79,7 +79,7 @@ const LoginPage = (error: string) => {
                 />
 
                 <form onSubmit={handleSubmit(onLoginUser)} noValidate>
-                    <Box width={matches ? 350 : 290}>
+                    <Box >
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <TextField
@@ -181,13 +181,31 @@ const LoginPage = (error: string) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
-    let error = '';
-    const session = await getSession({ req });
-    if (query.error) {
-        error = JSON.parse(JSON.stringify(query.error))
-        console.log('eror ssp')
-    }
+    // let error = '';
+    // const session = await getSession({ req });
+    // if (query.error) {
+    //     error = JSON.parse(JSON.stringify(query.error))
+    //     console.log('error en path ')
+    // }
 
+    // const { p = '/' } = query;
+
+    // if (session) {
+    //     return {
+    //         redirect: {
+    //             destination: p.toString(),
+    //             permanent: false
+    //         }
+    //     }
+    // }
+
+
+    // return {
+    //     props: {}
+    // }
+    // console.log({session});
+
+    const session = await getSession({ req });
     const { p = '/' } = query;
 
     if (session) {

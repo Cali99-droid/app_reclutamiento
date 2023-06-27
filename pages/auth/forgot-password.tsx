@@ -47,7 +47,7 @@ const ConfirmPage = () => {
     return (
         <AuthLayout title={"Para recuperar tu contraseña, ingresa tu correo  "} >
 
-            <Box bgcolor={'#FFF'} padding={4} >
+            <Box bgcolor={'#FFF'} padding={4} className={'fadeIn'}>
                 <Typography>Ingresa tu correo</Typography>
                 <form onSubmit={handleSubmit(onSubmitEmail)} noValidate>
                     <Chip
@@ -58,9 +58,9 @@ const ConfirmPage = () => {
                         sx={{ display: showError ? 'flex' : 'none', mb: 4 }}
 
                     />
-                    <Box sx={{ width: 350, }} >
+                    <Box  >
                         <Grid container spacing={2}>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} >
                                 <TextField
                                     type="email"
                                     label="Correo"

@@ -75,7 +75,7 @@ export default function RegisterPage() {
   const matches = useMediaQuery('(min-width:600px)');
   return (
     <AuthLayout title={"Registrate y Postula "} >
-      <Box width={matches ? 350 : 290} bgcolor={'#FFF'} padding={4}>
+      <Box bgcolor={'#FFF'} padding={4} className={'fadeIn'}>
         <form onSubmit={handleSubmit(onRegisterForm)} noValidate>
           <Chip
             label={errorMessage}
