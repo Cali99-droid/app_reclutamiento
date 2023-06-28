@@ -17,6 +17,7 @@ const Step2 = () => {
     const router = useRouter()
     const { data }: any = useSession();
     // ** console.log(data?.user.persona.postulante[0].id);
+
     const IdPos = data?.user.persona.postulante[0].id;
     const { setEstudios, estudios, agregarEstudio, editarEstudio, quitarEstudio } = useContext(DatosContext)
     const [open, setOpen] = useState(false)

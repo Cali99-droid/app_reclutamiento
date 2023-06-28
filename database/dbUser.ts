@@ -111,6 +111,7 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
         },
         include: {
             user: true,
+            postulante:true,
            // Include all posts in the returned object
           },
       })
