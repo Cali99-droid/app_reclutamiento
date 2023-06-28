@@ -40,6 +40,7 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     // if ( !session ) {
     //     return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
     // }
+    console.log('llego tranquilooo')
     let {name,type} = req.body;
     
     // Genera un nombre único para el archivo
