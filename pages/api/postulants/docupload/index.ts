@@ -3,8 +3,10 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
  import { v4 as uuidv4 } from 'uuid';
 // import { v2 as cloudinary } from 'cloudinary';
-import AWS from '../../../aws-config';
+
 import { getSession } from 'next-auth/react';
+import AWS from '../../../../aws-config';
+
 
 // cloudinary.config( process.env.CLOUDINARY_URL || '' );
 
@@ -16,7 +18,7 @@ type Data = {
 
 export const config = {
     api: {
-        sizeLimit: "2mb"
+       
     }
 }
 
@@ -28,7 +30,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
             return uploadFile(req, res);
    
         default:
-            res.status(400).json({ message: 'Bad request' });
+            res.status(400).json({ message: 'Bad request gaa' });
     }
 
 }

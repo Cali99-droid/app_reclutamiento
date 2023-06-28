@@ -21,6 +21,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
         case 'GET':
             return getPostulante( req, res );
+       
 
             
         default:
