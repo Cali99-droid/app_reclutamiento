@@ -192,7 +192,7 @@ const Step2 = () => {
                 >
 
                     <Box mb={2} >
-                        <Typography fontWeight={'bold'}>ESTUDIOS / PROFESIONES </Typography>
+                        <Typography fontWeight={'bold'}>ESTUDIOS / PROFESIONES ps</Typography>
 
                     </Box>
                     <Button fullWidth={!matches} onClick={handleOpen} startIcon={<AddIcon />} color='primary'>Agregar</Button>
