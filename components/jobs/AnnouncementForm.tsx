@@ -15,6 +15,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import moment from 'moment';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 
 interface Props {
@@ -73,6 +74,18 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
 
         } catch (error) {
+            if (axios.isAxiosError(error)) {
+                // setShowError(true);
+                // setErrorMessage(error.response?.data.message!);
+                // setTimeout(() => setShowError(false), 3000);
+                // setIsSaving(false)
+                toast.error(error.response?.data.message);
+                return {
+                    hasError: true,
+                    message: error.response?.data.message
+                }
+            }
+
             console.log(error);
 
         }
@@ -310,13 +323,13 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={4}>
-
-
+                            <Typography sx={{ display: loadImg ? 'block' : 'none' }} >Cargando...</Typography>
+                            <LinearProgress sx={{ display: loadImg ? 'block' : 'none' }} />
                             {
                                 getValues('img') && (
                                     <Box width={150} margin={'auto'}>
-                                        <Typography sx={{ display: loadImg ? 'block' : 'none' }} >Subiendo...</Typography>
-                                        <LinearProgress sx={{ display: loadImg ? 'block' : 'none' }} />
+
+
                                         <Card>
                                             <CardMedia
                                                 component='img'

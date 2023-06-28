@@ -57,7 +57,7 @@ export const JobCard: FC<Props> = ({ job }) => {
                                 <ReqList job={job} />
                                 <Box mt={1}>
 
-                                    <span style={{ color: '#EEEDFF' }}>
+                                    <span style={{ color: '#767687' }}>
 
                                         Vigente hasta: {moment(job.vigencia).add(1, 'days').toDate().toLocaleDateString()}
                                     </span>

@@ -178,10 +178,10 @@ const createPostulant = async(req: NextApiRequest, res: NextApiResponse<Data>) =
  }
 
 async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>) {
-  const session: any = await getSession({ req });
-  if ( !session ) {
-      return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
-  }
+  // const session: any = await getSession({ req });
+  // if ( !session ) {
+  //     return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
+  // }
   const { 
     nombre ,
     apellidoPat, 
@@ -232,7 +232,7 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
     };
 
     if ( image.length <= 0 ) {
-      return res.status(400).json({ message: 'Es Necesario que suba una imagen' });
+      return res.status(400).json({ message: 'Es necesario que suba una imagen !' });
     }
 
     const s3 = new S3({     

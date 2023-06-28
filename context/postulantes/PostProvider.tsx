@@ -39,7 +39,7 @@ export const PostProvider: FC<Props> = ({ children }) => {
       const addNewJurado = async (jurado: string) => {
 
             const { data } = await reclutApi.post('/admin/asignar/jurado', { id, jurado });
-            console.log(data)
+            // console.log(data)
             if (!data.message) {
                   dispatch({ type: '[jurados] Add-Jurado', payload: data.juradoNew })
                   return;
@@ -166,7 +166,7 @@ export const PostProvider: FC<Props> = ({ children }) => {
 
 
             const puntaje = calcularTotal();
-            console.log(puntaje)
+            // console.log(puntaje)
 
             try {
 

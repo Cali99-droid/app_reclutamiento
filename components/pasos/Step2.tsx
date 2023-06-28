@@ -1,6 +1,6 @@
 
 import { DatosContext } from '@/context';
-import { Box, Button, Chip, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography, IconButton, TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody, styled, tableCellClasses, SelectChangeEvent, LinearProgress } from '@mui/material';
+import { Box, Button, Chip, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography, IconButton, TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody, styled, tableCellClasses, SelectChangeEvent, LinearProgress, useMediaQuery } from '@mui/material';
 import { useContext, ChangeEvent, useEffect } from 'react';
 import Modal from '../modal/Modal';
 import { useState } from 'react';
@@ -183,59 +183,66 @@ const Step2 = () => {
         setFile(null);
         setDoc(null);
     };
+    const matches = useMediaQuery('(min-width:600px)');
     return (
-        <Box padding={4} className="fadeIn">
-            <Box bgcolor={'#FFF'} padding={2} borderRadius={2}>
-                <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} mb={2} >
-                    <Typography fontWeight={'bold'}>ESTUDIOS / PROFESIONES </Typography>
+        <Box padding={matches ? 4 : 0} className="fadeIn">
+            <Box bgcolor={'#FFF'} padding={2} borderRadius={2} >
+                <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} mb={2} flexDirection={matches ? 'row' : 'column'}
+                >
 
-                    <Button onClick={handleOpen} startIcon={<AddIcon />}>Agregar</Button>
+                    <Box mb={2} >
+                        <Typography fontWeight={'bold'}>ESTUDIOS / PROFESIONES </Typography>
+
+                    </Box>
+                    <Button fullWidth={!matches} onClick={handleOpen} startIcon={<AddIcon />} color='primary'>Agregar</Button>
                 </Box>
-                <TableContainer   >
 
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell>Profesión</StyledTableCell>
-                                <StyledTableCell align="right">Institución</StyledTableCell>
-                                <StyledTableCell align="right">Grado</StyledTableCell>
-                                <StyledTableCell align="right">Año</StyledTableCell>
-                                <StyledTableCell align="right">Acciones</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {estudios.map((e) => (
-                                <TableRow
-                                    key={e.id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row">{e.profesion}</TableCell>
-                                    <TableCell align="right">{e.institucion}</TableCell>
-                                    <TableCell align="right">{e.grado}</TableCell>
-                                    <TableCell align="right">{e.year}</TableCell>
-                                    <TableCell align="right">
-
-                                        <IconButton onClick={() => handleEdit(e.id, e.profesion, e.institucion, e.grado, e.year, e.doc)} >
-                                            <Edit />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleDelete(e.id)} color='error'>
-                                            <DeleteForeverIcon />
-                                        </IconButton>
-
-
-
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
 
 
                 {
-                    estudios.length === 0 && (
+                    estudios.length === 0 ? (
                         <Typography textAlign={'center'} mt={5}>No hay estudios</Typography>
 
+                    ) : (
+                        <TableContainer   >
+
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                <TableHead>
+                                    <TableRow>
+                                        <StyledTableCell>Profesión</StyledTableCell>
+                                        <StyledTableCell align="right">Institución</StyledTableCell>
+                                        <StyledTableCell align="right">Grado</StyledTableCell>
+                                        <StyledTableCell align="right">Año</StyledTableCell>
+                                        <StyledTableCell align="right">Acciones</StyledTableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {estudios.map((e) => (
+                                        <TableRow
+                                            key={e.id}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">{e.profesion}</TableCell>
+                                            <TableCell align="right">{e.institucion}</TableCell>
+                                            <TableCell align="right">{e.grado}</TableCell>
+                                            <TableCell align="right">{e.year}</TableCell>
+                                            <TableCell align="right">
+
+                                                <IconButton onClick={() => handleEdit(e.id, e.profesion, e.institucion, e.grado, e.year, e.doc)} >
+                                                    <Edit />
+                                                </IconButton>
+                                                <IconButton onClick={() => handleDelete(e.id)} color='error'>
+                                                    <DeleteForeverIcon />
+                                                </IconButton>
+
+
+
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     )
                 }
 

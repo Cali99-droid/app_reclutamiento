@@ -25,10 +25,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 }
 
 const getConvocatorias = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
-    
+    const hoy = new Date().toISOString().split('T')[0]
+
     const convocatorias =await prisma.convocatoria.findMany({
         where:{
-            estadoId:1
+            vigencia:{gte:new Date(hoy)}
         },
         select: {
             id:true,
@@ -37,6 +38,7 @@ const getConvocatorias = async(req: NextApiRequest, res: NextApiResponse<Data>) 
             img:true,
             vacantes:true,
             experiencia:true,
+            vigencia:true,
             estado:{
               select: {  nombre: true},  
             },
@@ -47,6 +49,7 @@ const getConvocatorias = async(req: NextApiRequest, res: NextApiResponse<Data>) 
             id: "desc"
           }
     });
+   
     await prisma.$disconnect()
      return  res.status(200).json( convocatorias );
  

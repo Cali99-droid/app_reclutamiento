@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormControl, FormHelperText, FormLabel, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses } from '@mui/material';
+import { Box, Button, Divider, FormControl, FormHelperText, FormLabel, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses, useMediaQuery } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Modal } from '../modal';
@@ -213,59 +213,63 @@ const Step5 = () => {
     }
 
 
+    const matches = useMediaQuery('(min-width:600px)');
 
     return (
-        <Box padding={4} mt={3} className="fadeIn">
-            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2}>
-                <Box display={'flex'} justifyContent={'space-between'} mb={1}>
-                    <Typography fontWeight={'bold'}> USO DE  TECNOLOGÍAS </Typography>
-
+        <Box padding={matches ? 4 : 0} mt={3} className="fadeIn">
+            <Box bgcolor={'#FFF'} padding={2} borderRadius={2}>
+                <Box display={'flex'} justifyContent={'space-between'} mb={1} flexDirection={matches ? 'row' : 'column'}>
+                    <Box mb={2} >
+                        <Typography fontWeight={'bold'} > USO DE  TECNOLOGÍAS </Typography>
+                    </Box>
                     <Button onClick={handleOpenTics} startIcon={<AddIcon />}>Agregar</Button>
                 </Box>
                 <Divider />
-                <TableContainer   >
 
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-                        <TableHead>
-                            <TableRow>
-
-                                <StyledTableCell >Tecnologia</StyledTableCell>
-                                <StyledTableCell align="right">Nivel</StyledTableCell>
-
-                                <StyledTableCell align="right">Acciones</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {tecnologias.map((e) => (
-                                <TableRow
-                                    key={e.id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {e.tecnologia}
-                                    </TableCell>
-                                    <TableCell align="right">{e.nivel}</TableCell>
-
-                                    <TableCell align="right">
-                                        <IconButton onClick={() => handleEditTic(e.id, e.tecnologia, e.nivel)} >
-                                            <Edit />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleDeleteTics(e.id)} color='error'>
-                                            <DeleteForeverIcon />
-                                        </IconButton>
-
-
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
 
                 {
-                    tecnologias.length === 0 && (
+                    tecnologias.length === 0 ? (
                         <Typography textAlign={'center'} mt={5}>No hay Tecnologias</Typography>
 
+                    ) : (
+                        <TableContainer   >
+
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                <TableHead>
+                                    <TableRow>
+
+                                        <StyledTableCell >Tecnologia</StyledTableCell>
+                                        <StyledTableCell align="right">Nivel</StyledTableCell>
+
+                                        <StyledTableCell align="right">Acciones</StyledTableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {tecnologias.map((e) => (
+                                        <TableRow
+                                            key={e.id}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {e.tecnologia}
+                                            </TableCell>
+                                            <TableCell align="right">{e.nivel}</TableCell>
+
+                                            <TableCell align="right">
+                                                <IconButton onClick={() => handleEditTic(e.id, e.tecnologia, e.nivel)} >
+                                                    <Edit />
+                                                </IconButton>
+                                                <IconButton onClick={() => handleDeleteTics(e.id)} color='error'>
+                                                    <DeleteForeverIcon />
+                                                </IconButton>
+
+
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     )
                 }
 
@@ -322,59 +326,62 @@ const Step5 = () => {
 
 
             </Box>
-            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2} mt={3}>
-                <Box display={'flex'} justifyContent={'space-between'} mb={1}>
-                    <Typography fontWeight={'bold'} >OTRAS ACTIVIDADES, AFICIONES O HABILIDADES APRENDIDAS Y/O ESTUDIADAS </Typography>
-
+            <Box bgcolor={'#FFF'} padding={2} borderRadius={2} mt={3}>
+                <Box display={'flex'} justifyContent={'space-between'} mb={1} flexDirection={matches ? 'row' : 'column'}>
+                    <Box mb={2} >
+                        <Typography fontWeight={'bold'} >OTRAS ACTIVIDADES, AFICIONES O HABILIDADES APRENDIDAS Y/O ESTUDIADAS </Typography>
+                    </Box>
                     <Button onClick={handleOpen} startIcon={<AddIcon />}>Agregar</Button>
                 </Box>
                 <Divider />
-                <TableContainer   >
 
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell>actividad</StyledTableCell>
-                                <StyledTableCell align="right">Nivel</StyledTableCell>
-                                <StyledTableCell align="right">Logro</StyledTableCell>
-                                <StyledTableCell align="right">Año</StyledTableCell>
-
-                                <StyledTableCell align="right">Acciones</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {aficiones.map((e) => (
-                                <TableRow
-                                    key={e.id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {e.actividad}
-                                    </TableCell>
-                                    <TableCell align="right">{e.nivel}</TableCell>
-                                    <TableCell align="right">{e.logro}</TableCell>
-                                    <TableCell align="right">{e.year}</TableCell>
-
-                                    <TableCell align="right">
-                                        <IconButton onClick={() => handleEditActividad(e.id, e.actividad, e.nivel, e.logro, e.year)} >
-                                            <Edit />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleDelete(e.id)} color='error'>
-                                            <DeleteForeverIcon />
-                                        </IconButton>
-
-
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
 
                 {
-                    aficiones.length === 0 && (
+                    aficiones.length === 0 ? (
                         <Typography textAlign={'center'} mt={5}>No hay aficiones</Typography>
 
+                    ) : (
+                        <TableContainer   >
+
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                <TableHead>
+                                    <TableRow>
+                                        <StyledTableCell>actividad</StyledTableCell>
+                                        <StyledTableCell align="right">Nivel</StyledTableCell>
+                                        <StyledTableCell align="right">Logro</StyledTableCell>
+                                        <StyledTableCell align="right">Año</StyledTableCell>
+
+                                        <StyledTableCell align="right">Acciones</StyledTableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {aficiones.map((e) => (
+                                        <TableRow
+                                            key={e.id}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {e.actividad}
+                                            </TableCell>
+                                            <TableCell align="right">{e.nivel}</TableCell>
+                                            <TableCell align="right">{e.logro}</TableCell>
+                                            <TableCell align="right">{e.year}</TableCell>
+
+                                            <TableCell align="right">
+                                                <IconButton onClick={() => handleEditActividad(e.id, e.actividad, e.nivel, e.logro, e.year)} >
+                                                    <Edit />
+                                                </IconButton>
+                                                <IconButton onClick={() => handleDelete(e.id)} color='error'>
+                                                    <DeleteForeverIcon />
+                                                </IconButton>
+
+
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     )
                 }
 

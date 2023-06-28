@@ -18,6 +18,7 @@ import { useState } from 'react';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import moment from 'moment';
 interface Props {
   convocatoria: IJob;
   w: Window & typeof globalThis;
@@ -75,6 +76,13 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
 
             <ReqList job={convocatoria} />
 
+          </Box>
+          <Box mt={1}>
+
+            <span style={{ color: '#767687' }}>
+
+              Vigente hasta: {moment(convocatoria.vigencia).add(1, 'days').toDate().toLocaleDateString()}
+            </span>
           </Box>
           <Button startIcon={<PostAddIcon />} color='secondary' sx={{ mt: 6, width: '100%' }} size="large" href={`/postulant/postular/${convocatoria.id}`}>
             Postular

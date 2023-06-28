@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
 
     const requestedPage = req.nextUrl.pathname;
     const validRoles = ['admin'];
-    const validRolJurados = ['jurado1', 'jurado2'];
+    const validRolJurados = ['jurado1', 'jurado2','admin'];
 
     if( !session ){
       const url = req.nextUrl.clone();
@@ -29,7 +29,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect( url );
     };
 
-    if( requestedPage.includes('/api/admin') && !validRoles.includes( session.user.rol.name ) ){
+    if( requestedPage.includes('/api/admin') && session.user.rol.name !== 'admin'  ){
  
       return new Response( JSON.stringify({ message: 'No autorizado' }),{
         status: 401,
@@ -57,7 +57,7 @@ export async function middleware(req: NextRequest) {
         });
     };
 
-    if( requestedPage.includes('/admin') && !validRoles.includes( session.user.rol.name ) ){
+    if( requestedPage.includes('/admin') &&   session.user.rol.name !== 'admin'){
  
       return NextResponse.redirect(new URL('/', req.url));
     };
@@ -78,7 +78,7 @@ export async function middleware(req: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher:[ '/admin/:path*','/postulant/:path*','/jurado/:path*','/api/jurado/:path*', '/api/postulants/:path*'],
+  matcher:[ '/admin/:path*','/postulant/:path*','/jurado/:path*','/api/admin/:path*','/api/jurado/:path*', '/api/postulants/:path*'],
 }
 
 //'/api/admin/:path*'

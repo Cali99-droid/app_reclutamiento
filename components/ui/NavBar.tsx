@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import NextLink from 'next/link';
 import { Router, useRouter } from 'next/router';
 
-import { AppBar, Avatar, Box, Button, Divider, IconButton, Input, InputAdornment, Link, ListItemIcon, Menu, MenuItem, MenuProps, Slide, Toolbar, Tooltip, Typography, alpha, styled, useScrollTrigger } from '@mui/material';
+import { AppBar, Avatar, Box, Button, Divider, IconButton, Input, InputAdornment, Link, ListItemIcon, Menu, MenuItem, MenuProps, Slide, Toolbar, Tooltip, Typography, alpha, styled, useMediaQuery, useScrollTrigger } from '@mui/material';
 import { AccountBalance, AccountCircleSharp, ArticleOutlined, BorderColor, Checklist, ClearOutlined, ConfirmationNumberOutlined, Logout, SearchOutlined } from '@mui/icons-material';
 
 import { AuthContext, UiContext } from '@/context';
@@ -66,7 +66,7 @@ export const NavBar = () => {
     const handleCloseUser = () => {
         setAnchorEl(null);
     };
-
+    const matches = useMediaQuery('(min-width:600px)');
     return (
         <ElevationScroll {...props}>
             <AppBar sx={{ height: '110px' }} >
@@ -283,11 +283,12 @@ export const NavBar = () => {
                 </Toolbar>
                 {isLoggedIn && user?.rol.name === 'postulante' && (
 
-                    <Box bgcolor={'#FF7F6A'} display={'flex'} justifyContent={'space-evenly'} alignItems={'center'}  >
+                    <Box bgcolor={'#EECA73'} display={'flex'} justifyContent={'space-evenly'} alignItems={'center'}  >
                         <Box >
                             <Typography fontSize={23} fontWeight={'bold'} color={'#FFF'}>{`Bienvenido: ${user?.persona.nombres}`} </Typography>
                         </Box>
-                        <Box display={'flex'} gap={2}>
+
+                        <Box display={matches ? 'flex' : 'none'} gap={2}>
                             <NextLink href='/postulant/ficha' passHref legacyBehavior>
                                 <Link alignItems='end'>
                                     <Typography fontSize={15} color={asPath === '/postulant/ficha' ? '#00075E' : '#FFF'} fontWeight={asPath === '/postulant/ficha' ? 'bold' : ''} > Mi Ficha </Typography>

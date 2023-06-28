@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 
 import { Box, Divider, Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, } from "@mui/material"
-import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, LoginOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
+import { AccountCircleOutlined, AdminPanelSettings, BorderColor, CategoryOutlined, Checklist, ConfirmationNumberOutlined, EscalatorWarningOutlined, LoginOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
 
 import { AuthContext, UiContext } from '../../context';
 import { useRouter } from 'next/router';
@@ -49,19 +49,7 @@ export const SideMenu = () => {
                                     </ListItemIcon>
                                     <ListItemText primary={user?.persona?.nombres} />
                                 </ListItemButton>
-                                <ListItemButton onClick={() => navigateTo('/postulant')}>
-                                    <ListItemIcon>
-                                        <FilePresentIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary={'Mis Datos'} />
-                                </ListItemButton>
 
-                                <ListItemButton onClick={() => navigateTo('/postulant/postulaciones')} >
-                                    <ListItemIcon>
-                                        <ConfirmationNumberOutlined />
-                                    </ListItemIcon>
-                                    <ListItemText primary={'Mis Postulaciones'} />
-                                </ListItemButton>
                             </>
                         )
                     }
@@ -112,13 +100,34 @@ export const SideMenu = () => {
                     <Divider />
                     {
                         isLoggedIn
-                            ? (
+                            ? (<>
+                                <ListItemButton onClick={() => navigateTo('/postulant/ficha')}>
+                                    <ListItemIcon>
+                                        <FilePresentIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary={'Mi Ficha'} />
+                                </ListItemButton>
+
+                                <ListItemButton onClick={() => navigateTo('/postulant')} >
+                                    <ListItemIcon>
+                                        <BorderColor />
+                                    </ListItemIcon>
+                                    <ListItemText primary={'Actualizar mi Ficha'} />
+                                </ListItemButton>
+                                <ListItemButton onClick={() => navigateTo('/postulant/postulaciones')} >
+                                    <ListItemIcon>
+                                        <Checklist />
+                                    </ListItemIcon>
+                                    <ListItemText primary={'Mis Postulaciones'} />
+                                </ListItemButton>
                                 <ListItemButton onClick={logout}>
                                     <ListItemIcon>
                                         <LoginOutlined />
                                     </ListItemIcon>
                                     <ListItemText primary={'Salir'} />
                                 </ListItemButton>
+                            </>
+
                             )
                             : (
                                 <ListItemButton

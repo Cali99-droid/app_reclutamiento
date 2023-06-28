@@ -2,7 +2,7 @@ import { reclutApi } from '@/apies';
 import { validations } from '@/helpers';
 import { IGrado, IPersona, IUser } from '@/interfaces';
 
-import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, SelectChangeEvent, FormLabel, Card, CardMedia, CardActions, CircularProgress, LinearProgress } from '@mui/material';
+import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, SelectChangeEvent, FormLabel, Card, CardMedia, CardActions, CircularProgress, LinearProgress, useMediaQuery } from '@mui/material';
 import { postulante } from '@prisma/client';
 import axios from 'axios';
 import moment from 'moment';
@@ -195,9 +195,9 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
         // console.log(getValues('image'))
 
     }
-
+    const matches = useMediaQuery('(min-width:600px)');
     return (
-        <Box className="fadeIn" marginTop={-10} >
+        <Box className="fadeIn" mt={matches ? -10 : 0}>
             <form onSubmit={handleSubmit(onRegisterForm)} noValidate >
                 <Box width={'100%'} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }} >
 
@@ -596,6 +596,10 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
                         </Grid>
                     </Grid>
+                    <Box width={'100%'} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }} >
+
+                        <Button disabled={isSaving} type='submit' size="large" sx={{ marginTop: 2, textAlign: 'end', width: '100%' }} endIcon={<EastIcon />} >Continuar</Button>
+                    </Box>
                 </Box>
 
 

@@ -163,10 +163,10 @@ const updateConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
 const createConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
     const convo = req.body as IJob;
-   
-    if ( convo.img.length <= 0 ) {
+
+    if ( !convo.img ) {
       return res.status(400).json({ message: 'Es Necesario que suba una imagen' });
-  }
+    }
 
     try {
         const  convocatoria = await prisma.convocatoria.create({
@@ -176,7 +176,7 @@ const createConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
                 experiencia:      parseInt(convo.experiencia.toString()),
                 vacantes:         parseInt(convo.vacantes.toString()),
                 sueldoOfertado:   parseFloat(convo.sueldoOfertado.toString()) ,
-                vigencia:  new Date(convo.vigencia),
+                vigencia:         new Date(convo.vigencia),
                 estadoId:         1,
                 gradoId:           parseInt(convo.gradoId.toString()),
                 categoria_id:           parseInt(convo.categoria_id.toString()),

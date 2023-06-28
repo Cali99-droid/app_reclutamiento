@@ -14,7 +14,7 @@ import { useState } from "react";
 import { FullScreenLoading } from "@/components/ui";
 
 export default function Home() {
-  const matches = useMediaQuery('(min-width:600px)');
+
   const [showLoadingMessage, setShowLoadingMessage] = useState(true);
   const handleIntersection = (inView: boolean) => {
     if (inView) {

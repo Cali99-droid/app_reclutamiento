@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormHelperText, IconButton, InputLabel, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses } from '@mui/material';
+import { Box, Button, Divider, FormHelperText, IconButton, InputLabel, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses, useMediaQuery } from '@mui/material';
 import React, { useRef } from 'react';
 import { DatosContext } from '@/context';
 import { useContext, ChangeEvent } from 'react';
@@ -233,63 +233,66 @@ const Step4 = () => {
     }));
 
 
-
+    const matches = useMediaQuery('(min-width:600px)');
     return (
-        <Box padding={4} mt={3} className="fadeIn">
-            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2}>
-                <Box display={'flex'} justifyContent={'space-between'} mb={1}>
-                    <Typography fontWeight={'bold'} textTransform={'uppercase'}>Capacitaciones/Cursos </Typography>
-
-                    <Button onClick={handleOpen} startIcon={<AddIcon />}>Agregar</Button>
+        <Box padding={matches ? 4 : 0} mt={3} className="fadeIn">
+            <Box bgcolor={'#FFF'} padding={2} borderRadius={2}>
+                <Box display={'flex'} justifyContent={'space-between'} mb={1} flexDirection={matches ? 'row' : 'column'}>
+                    <Box mb={2} >
+                        <Typography fontWeight={'bold'} textTransform={'uppercase'}>Capacitaciones/Cursos </Typography>
+                    </Box>
+                    <Button fullWidth={!matches} onClick={handleOpen} startIcon={<AddIcon />}>Agregar</Button>
                 </Box>
                 <Divider />
-                <TableContainer   >
 
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell>Titulo</StyledTableCell>
-                                <StyledTableCell align="right">Institución</StyledTableCell>
-                                <StyledTableCell align="right">Horas</StyledTableCell>
-                                <StyledTableCell align="right">Año</StyledTableCell>
-                                <StyledTableCell align="right">Detalles</StyledTableCell>
-                                <StyledTableCell align="right">Acciones</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {capacitaciones.map((e) => (
-                                <TableRow
-                                    key={e.id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {e.titulo}
-                                    </TableCell>
-                                    <TableCell align="right">{e.institucion}</TableCell>
-                                    <TableCell align="right">{e.horas}</TableCell>
-
-                                    <TableCell align="right">{e.year}</TableCell>
-                                    <TableCell align="right">{e.descripcion}</TableCell>
-                                    <TableCell align="right">
-                                        <IconButton onClick={() => handleEditCapacitacion(e.id, e.titulo, e.institucion, e.horas, e.descripcion, e.year, e.doc)} >
-                                            <Edit />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleDelete(e.id)} color='error'>
-                                            <DeleteForeverIcon />
-                                        </IconButton>
-
-
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
 
                 {
-                    capacitaciones.length === 0 && (
+                    capacitaciones.length === 0 ? (
                         <Typography textAlign={'center'} mt={5}>No hay capacitaciones</Typography>
 
+                    ) : (
+                        <TableContainer   >
+
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                <TableHead>
+                                    <TableRow>
+                                        <StyledTableCell>Titulo</StyledTableCell>
+                                        <StyledTableCell align="right">Institución</StyledTableCell>
+                                        <StyledTableCell align="right">Horas</StyledTableCell>
+                                        <StyledTableCell align="right">Año</StyledTableCell>
+                                        <StyledTableCell align="right">Detalles</StyledTableCell>
+                                        <StyledTableCell align="right">Acciones</StyledTableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {capacitaciones.map((e) => (
+                                        <TableRow
+                                            key={e.id}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {e.titulo}
+                                            </TableCell>
+                                            <TableCell align="right">{e.institucion}</TableCell>
+                                            <TableCell align="right">{e.horas}</TableCell>
+
+                                            <TableCell align="right">{e.year}</TableCell>
+                                            <TableCell align="right">{e.descripcion}</TableCell>
+                                            <TableCell align="right">
+                                                <IconButton onClick={() => handleEditCapacitacion(e.id, e.titulo, e.institucion, e.horas, e.descripcion, e.year, e.doc)} >
+                                                    <Edit />
+                                                </IconButton>
+                                                <IconButton onClick={() => handleDelete(e.id)} color='error'>
+                                                    <DeleteForeverIcon />
+                                                </IconButton>
+
+
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     )
                 }
 
@@ -408,59 +411,62 @@ const Step4 = () => {
 
 
             </Box>
-            <Box bgcolor={'#F1F1F1'} padding={2} borderRadius={2} mt={3}>
-                <Box display={'flex'} justifyContent={'space-between'} mb={1}>
-                    <Typography fontWeight={'bold'}> PRINCIPALES RECONOCIMIENTOS, DIPLOMAS, PREMIOS U OTROS RECIBIDOS EN SU VIDA LABORAL</Typography>
+            <Box bgcolor={'#FFF'} padding={2} borderRadius={2} mt={3}>
+                <Box display={'flex'} justifyContent={'space-between'} mb={1} flexDirection={matches ? 'row' : 'column'}>
+                    <Box mb={2} ><Typography fontWeight={'bold'} > PRINCIPALES RECONOCIMIENTOS, DIPLOMAS, PREMIOS U OTROS RECIBIDOS EN SU VIDA LABORAL</Typography></Box>
+
 
                     <Button onClick={handleOpenRec} startIcon={<AddIcon />}>Agregar</Button>
                 </Box>
                 <Divider />
 
-                <TableContainer   >
 
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell>Reconocimiento</StyledTableCell>
-                                <StyledTableCell align="right">Institución</StyledTableCell>
-                                <StyledTableCell align="right">Año</StyledTableCell>
-                                <StyledTableCell align="right">Descripción</StyledTableCell>
-                                <StyledTableCell align="right">Acciones</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {reconocimientos.map((e) => (
-                                <TableRow
-                                    key={e.id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {e.reconocimento}
-                                    </TableCell>
-                                    <TableCell align="right">{e.institucion}</TableCell>
-
-                                    <TableCell align="right">{e.year}</TableCell>
-                                    <TableCell align="right">{e.descripcion}</TableCell>
-                                    <TableCell align="right">
-                                        <IconButton onClick={() => handleEditReconocimiento(e.id, e.reconocimento, e.institucion, e.descripcion, e.year)} >
-                                            <Edit />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleDeleteRec(e.id)} color='error'>
-                                            <DeleteForeverIcon />
-                                        </IconButton>
-
-
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
 
                 {
-                    reconocimientos.length === 0 && (
+                    reconocimientos.length === 0 ? (
                         <Typography textAlign={'center'} mt={5}>No hay reconocimientos</Typography>
 
+                    ) : (
+                        <TableContainer   >
+
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                <TableHead>
+                                    <TableRow>
+                                        <StyledTableCell>Reconocimiento</StyledTableCell>
+                                        <StyledTableCell align="right">Institución</StyledTableCell>
+                                        <StyledTableCell align="right">Año</StyledTableCell>
+                                        <StyledTableCell align="right">Descripción</StyledTableCell>
+                                        <StyledTableCell align="right">Acciones</StyledTableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {reconocimientos.map((e) => (
+                                        <TableRow
+                                            key={e.id}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {e.reconocimento}
+                                            </TableCell>
+                                            <TableCell align="right">{e.institucion}</TableCell>
+
+                                            <TableCell align="right">{e.year}</TableCell>
+                                            <TableCell align="right">{e.descripcion}</TableCell>
+                                            <TableCell align="right">
+                                                <IconButton onClick={() => handleEditReconocimiento(e.id, e.reconocimento, e.institucion, e.descripcion, e.year)} >
+                                                    <Edit />
+                                                </IconButton>
+                                                <IconButton onClick={() => handleDeleteRec(e.id)} color='error'>
+                                                    <DeleteForeverIcon />
+                                                </IconButton>
+
+
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     )
                 }
 
