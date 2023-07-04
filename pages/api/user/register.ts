@@ -1,18 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcryptjs';
-
-// import { db } from '../../../database';
-// import { User } from '../../../models';
-
-
-
 import { jwt, validations } from '../../../helpers';
 import { generarId } from '@/helpers/functions';
 import sendConfirmationEmail from '@/helpers/sendConfirmationEmail';
 import { prisma } from '../../../server/db/client';
 import { checkUserEmailPassword } from '../../../database/dbUser';
-import sendEmail from '@/helpers/mauticApi';
-import crearContacto from '@/helpers/mauticApi';
+
 
 
 type Data = 
@@ -70,6 +63,11 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     if ( !validations.isValidEmail( email ) ) {
         return res.status(400).json({
             message: 'El correo no tiene formato de correo'
+        });
+    }
+    if(!validations.validarCorreo(email)){
+        return res.status(400).json({
+            message: 'No puede usar este correo para registrarse'
         });
     }
     
@@ -139,15 +137,16 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
       /**Enviar email de confirmacion */
      await sendConfirmationEmail(email, tokenEmail)
 
-     const nombreCompleto = nombre + ' ' + apellidoPat + ' '+apellidoMat;
-     crearContacto(nombreCompleto, email, tokenEmail)
-     .then(() => {
-       console.log('Contacto creado exitosamente');
-     })
-     .catch((error) => {
-       console.error('Error al crear el contacto:', error);
-     });
-    //  console.log(tokenEmail)
+     // ** API mautic 
+    //  const nombreCompleto = nombre + ' ' + apellidoPat + ' '+apellidoMat;
+    //  crearContacto(nombreCompleto, email, tokenEmail)
+    //  .then(() => {
+    //    console.log('Contacto creado exitosamente');
+    //  })
+    //  .catch((error) => {
+    //    console.error('Error al crear el contacto:', error);
+    //  });
+    // //  console.log(tokenEmail)
     await prisma.$disconnect()
     const newUser = persona.user[0];
     const{id,rol_id} = newUser ;

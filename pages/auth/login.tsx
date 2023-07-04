@@ -1,5 +1,5 @@
 
-import { Box, Button, Grid, TextField, Link, Chip, Divider, useMediaQuery } from '@mui/material';
+import { Box, Button, Grid, TextField, Link, Chip, Divider, useMediaQuery, CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { AuthLayout } from "@/components/layouts/AuthLayout";
 import NextLink from 'next/link';
@@ -12,6 +12,7 @@ import { validations } from '@/helpers';
 import { GetServerSideProps } from 'next';
 import GoogleIcon from '@mui/icons-material/Google';
 import { AuthContext } from '@/context';
+import { blue, green } from '@mui/material/colors';
 type FormData = {
     email: string,
     password: string,
@@ -22,7 +23,7 @@ const LoginPage = (error: string) => {
     const matches = useMediaQuery('(min-width:600px)');
     const router = useRouter();
 
-
+    const [loading, setLoading] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const [showError, setShowError] = useState(false);
 
@@ -38,6 +39,7 @@ const LoginPage = (error: string) => {
 
     const onLoginUser = async ({ email, password }: FormData) => {
         setShowError(false);
+        setLoading(true)
         const confirmado = await verificarConfirmacion(email);
         if (confirmado) {
 
@@ -54,6 +56,8 @@ const LoginPage = (error: string) => {
                 }
 
             }
+        } else {
+            setLoading(false)
         }
     }
 
@@ -117,10 +121,22 @@ const LoginPage = (error: string) => {
                                 <Button
                                     type="submit"
                                     color="secondary"
-
+                                    disabled={loading}
                                     size='large'
                                     fullWidth>
-                                    Ingresar
+                                    Ingresar{loading && (
+                                        <CircularProgress
+                                            size={24}
+                                            sx={{
+                                                color: blue[500],
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: '50%',
+                                                marginTop: '-12px',
+                                                marginLeft: '-12px',
+                                            }}
+                                        />
+                                    )}
                                 </Button>
                             </Grid>
                             <Grid item xs={12} display={'flex'} justifyContent={'space-between'}>

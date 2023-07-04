@@ -5,6 +5,7 @@ import Credentials from "next-auth/providers/credentials"
 import {  dbUsers } from "../../../database"
 
 
+
 declare module "next-auth" {
     interface Session {
       accessToken?: string;
@@ -52,17 +53,18 @@ export default NextAuth({
 
   },
   callbacks:{
+    
     async jwt({token, account,user}) {
-
-        if(account){
-            token.accessToken = account.access_token;
-
+  
+      
+        if(account ){
+          token.accessToken = account.access_token;  
+          
             switch (account.type) {
                 case 'credentials':
                       token.user = user;
                     break;
                 case 'oauth':
-                   
                     token.user = await dbUsers.oAuthToDbUser(user?.email || '', user?.name || '', user?.image || '')
                     
                     break;
@@ -82,6 +84,12 @@ export default NextAuth({
         session.user = token.user as any
         return session;
     },
+    async signIn({ user }) {
+      if (user.email && user.email.endsWith('@ae.edu.pe')) {
+        return false;
+      }
+      return true;
+    }
 
 
   }

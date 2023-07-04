@@ -1,16 +1,17 @@
 
-import { Box, Button, Grid, TextField, Link, Chip, FormControl, InputLabel, Select, MenuItem, FormHelperText, useMediaQuery, Divider } from '@mui/material';
+import { Box, Button, Grid, TextField, Link, Chip, FormControl, InputLabel, Select, MenuItem, FormHelperText, useMediaQuery, Divider, CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { AuthLayout } from "@/components/layouts/AuthLayout";
 import NextLink from 'next/link';
 import { useForm } from 'react-hook-form';
 import { validations } from '@/helpers';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '@/context/';
 import { ErrorOutline } from '@mui/icons-material';
 import { getProviders, signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import GoogleIcon from '@mui/icons-material/Google';
+import { blue, green } from '@mui/material/colors';
 
 
 type FormData = {
@@ -53,7 +54,7 @@ export default function RegisterPage() {
 
   }, [router, status])
   const onRegisterForm = async ({ nombre, apellidoPat, apellidoMat, email, password, fechaNac, tipoId, numeroDocumento }: FormData,) => {
-
+    setLoading(true)
     setShowError(false);
     const { hasError, message } = await registerUser(nombre, apellidoPat, apellidoMat, email, password, fechaNac, tipoId, numeroDocumento);
 
@@ -61,6 +62,7 @@ export default function RegisterPage() {
       setShowError(true);
       setErrorMessage(message!);
       setTimeout(() => setShowError(false), 3000);
+      setLoading(false)
       return;
     }
     router.replace('/auth/confirm');
@@ -72,6 +74,35 @@ export default function RegisterPage() {
 
 
   }
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const timer = useRef<number>();
+
+  const buttonSx = {
+    ...(success && {
+      bgcolor: green[500],
+      '&:hover': {
+        bgcolor: green[700],
+      },
+    }),
+  };
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
+
+  const handleButtonClick = () => {
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+      timer.current = window.setTimeout(() => {
+        setSuccess(true);
+        setLoading(false);
+      }, 2000);
+    }
+  };
   const matches = useMediaQuery('(min-width:600px)');
   return (
     <AuthLayout title={"Registrate y Postula "} >
@@ -234,14 +265,28 @@ export default function RegisterPage() {
             </Grid>
 
             <Grid item xs={12}>
+
               <Button
                 type="submit"
                 color="secondary"
-
+                disabled={loading}
                 size='large'
                 fullWidth>
-                Registrarme
+                Registrarme{loading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      color: blue[500],
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      marginTop: '-12px',
+                      marginLeft: '-12px',
+                    }}
+                  />
+                )}
               </Button>
+
             </Grid>
             <Grid item xs={12} display={'flex'} justifyContent={'space-between'}>
               <Box >

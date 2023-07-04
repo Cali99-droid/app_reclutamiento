@@ -2,6 +2,7 @@
 
 import bcrypt from 'bcryptjs';
 import { prisma } from '../server/db/client';
+
 export const checkUserEmailPassword = async(email:string, password: string)=>{
    
 

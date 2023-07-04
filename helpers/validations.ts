@@ -45,3 +45,17 @@ export const isEmail = (email: string): string | undefined => {
       ? undefined
       : 'El número no parece ser válido';
   }
+
+  
+export const validarCorreo = (correo: string)=>{
+ 
+  const subdominioAE = "@ae.edu.pe";
+  
+  if (correo.endsWith(subdominioAE)) {
+    return false;
+  }
+
+  return true;
+
+
+}
