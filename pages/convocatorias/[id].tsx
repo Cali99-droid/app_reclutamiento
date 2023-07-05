@@ -26,7 +26,7 @@ interface Props {
 
 const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
   const router = useRouter();
-  const url = `https://app-reclutamiento-xpma.vercel.app${router.asPath}`;
+  const url = `https://talentohumano.colegioae.edu.pe${router.asPath}`;
 
   const [open, setOpen] = useState(false);
   const matches = useMediaQuery('(min-width:600px)');

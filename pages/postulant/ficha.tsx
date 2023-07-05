@@ -541,8 +541,11 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
 }
 
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+    res.setHeader(
+        'Cache-Control',
+        'public, s-maxage=10, stale-while-revalidate=59'
+    )
 
     const session: any = await getSession({ req });
     const { user } = session;
