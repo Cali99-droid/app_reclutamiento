@@ -6,9 +6,10 @@ const crearContacto = async (nombre: string, email: string,tokenEmail:string): P
       const payload = {
         firstname: nombre,
         email: email,
-        token: tokenEmail
+        token: tokenEmail,
+        origen:'talento'
       };
-  
+   
       await axios.post(`${mauticConfig.apiUrl}/contacts/new`, payload, {
         auth: {
           username: mauticConfig.username,

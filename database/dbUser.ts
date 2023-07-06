@@ -2,6 +2,7 @@
 
 import bcrypt from 'bcryptjs';
 import { prisma } from '../server/db/client';
+import crearContacto from '@/helpers/mauticApi';
 
 export const checkUserEmailPassword = async(email:string, password: string)=>{
    
@@ -131,7 +132,11 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
     const{email} = newUser ;
     const id = newUser.id.toString()
     const rol_id = newUser.rol_id.toString()
-  
+   
+    crearContacto(oAuthName, oAuthEmail, '')
+    .then(() => {
+      console.log('Contacto creado exitosamente');
+    })
 
     return {id, rol_id,email,oAuthImg,oAuthName,rol,persona};
 }
