@@ -11,6 +11,7 @@ export default function Document() {
         <Main />
         <NextScript />
         <script src="/mautic.js" async defer />
+        <script src="/google-analytics.js" async defer />
       </body>
     </Html>
   )
