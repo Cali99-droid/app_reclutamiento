@@ -136,11 +136,12 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
           },
       })
       /**Enviar email de confirmacion */
-     await sendConfirmationEmail(email, tokenEmail)
+    // await sendConfirmationEmail(email, tokenEmail)
 
      // ** API mautic 
-     const nombreCompleto = nombre + ' ' + apellidoPat + ' '+apellidoMat;
-     crearContacto(nombreCompleto, email, tokenEmail)
+
+     const apellidos =  apellidoPat + ' '+apellidoMat;
+     crearContacto(nombre, email, tokenEmail,apellidos)
      .then(() => {
        console.log('Contacto creado exitosamente');
      })

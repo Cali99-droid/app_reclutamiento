@@ -10,6 +10,6 @@
   a.async = 1;
   a.src = u;
   m.parentNode.insertBefore(a, m);
-})(window, document, "script", "https://www.mautic.groupcjc.com/mtc.js", "mt");
+})(window, document, "script", "https://mautic.colegioae.edu.pe/mtc.js", "mt");
 
 mt("send", "pageview");
