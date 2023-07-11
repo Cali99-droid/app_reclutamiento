@@ -36,7 +36,7 @@ const PostulantPage: NextPage<Props> = ({ postulante }) => {
       <ToastContainer />
       <Box bgcolor={'#EDF1F7'} paddingBottom={6} mt={5}>
 
-        <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingLeft={4} paddingRight={4} pt={15}>
+        <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto', width: '95%' }} pt={15}>
           <Box paddingBottom={2}>
             <Typography variant='h2' fontWeight={'bold'}>Actualizar Mi Ficha</Typography>
             <Divider />

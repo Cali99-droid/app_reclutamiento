@@ -18,7 +18,7 @@ export const Convocatorias = () => {
         <Box className='fadeIn' mt={10}>
             <Box display={'flex'} alignItems={'center'} gap={1} justifyContent={matches ? 'start' : 'center'} mb={2}>
                 <SquareIcon color="secondary" fontSize="large" />
-                <Typography variant='h2' component='h2' fontWeight={'bold'} fontSize={40} color={'#000'} > Convocatorias </Typography>
+                <Typography variant='h2' component='h2' fontWeight={'bold'} fontSize={30} color={'#000'} textTransform={'uppercase'}> Convocatorias </Typography>
             </Box>
 
             <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} >
@@ -27,24 +27,27 @@ export const Convocatorias = () => {
                     {isLoading
                         ? <FullScreenLoading />
                         :
-                        <JobList jobs={convocatorias} />
+                        (<>
+                            <JobList jobs={convocatorias} />
+                            {/* <Box textAlign={'end'} mt={2} mb={2}>
+                                <Chip
+                                    onClick={() => push('/convocatorias')}
+                                    label="Ver mas convocatorias"
+                                    color="secondary"
+                                    clickable
+                                    variant='outlined'
+
+                                />
+                            </Box> */}
+                        </>)
                     }
                     {jobs.length === 0 && (
                         <Box bgcolor={grey[50]} padding={3} borderRadius={2} width={'100%'} >
-                            <Typography color={grey[800]} variant='h2' textAlign={'center'}>No hay convocatorias abiertas, pronto tendremos nuevas convocatorias</Typography>
+                            <Typography color={grey[800]} textAlign={'center'}>No hay convocatorias abiertas, pronto tendremos nuevas convocatorias</Typography>
                         </Box>
                     )}
                 </Box>
-                <Box textAlign={'end'} mt={2} mb={2}>
-                    <Chip
-                        onClick={() => push('/convocatorias')}
-                        label="Ver mas convocatorias"
-                        color="secondary"
-                        clickable
-                        variant='outlined'
 
-                    />
-                </Box>
             </Box>
 
 

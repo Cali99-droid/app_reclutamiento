@@ -1,4 +1,5 @@
 import { Box, Grid, Link, Typography, useMediaQuery } from '@mui/material'
+import Image from 'next/image';
 
 
 export const Footer = () => {
@@ -6,8 +7,8 @@ export const Footer = () => {
     return (
         <Box>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#001A72" fillOpacity="1" d="M0,32L80,53.3C160,75,320,117,480,112C640,107,800,53,960,32C1120,11,1280,21,1360,26.7L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path></svg>
-            <Box padding={10} bgcolor={'#001A72'} mt={-25}>
-
+            <Box padding={10} bgcolor={'#001A72'} mt={-20}>
+                <Image priority src={"/img/logoxl.jpg"} alt={"imagen trabajo"} width={250} height={120} />
 
                 <Box mt={3} maxWidth={1200} sx={{ margin: 'auto' }} >
                     <Typography variant="h2" color={'#FFF'} fontSize={50} textAlign={'center'} fontWeight={'bold'} textTransform={'capitalize'}>Asociacion educativa Luz y Ciencia</Typography>

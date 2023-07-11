@@ -4,7 +4,7 @@ module.exports = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "plataforma-virtual.s3.us-west-2.amazonaws.com",
+        hostname: "caebucket.s3.us-west-2.amazonaws.com",
         port: "",
       },
     ],

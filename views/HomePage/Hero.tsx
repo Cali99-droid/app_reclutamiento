@@ -11,7 +11,7 @@ export const Hero = () => {
     return (
         <Box display={"flex"} gap={matches ? 20 : 10} flexDirection={matches ? 'row' : 'column'} padding={5} justifyContent={'center'} alignItems={'center'}>
             <Box  >
-                <Typography variant='h1' component='h1' fontSize={matches ? 70 : 60} color={'#000'} fontWeight={'bold'} >Nuestra Visión</Typography>
+                <Typography variant='h1' component='h1' fontSize={matches ? 50 : 40} color={'#000'} fontWeight={'bold'} >Nuestra Visión</Typography>
                 <Typography textAlign={'start'} mt={2} color={'#454555'} >Ser una institución con pasión para educar, integrada, ética y humana que desarrolla competencias para la vida.</Typography>
                 <Box display={'flex'} gap={4}>
 

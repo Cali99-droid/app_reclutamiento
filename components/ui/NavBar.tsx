@@ -3,7 +3,7 @@ import NextLink from 'next/link';
 import { Router, useRouter } from 'next/router';
 
 import { AppBar, Avatar, Box, Button, Divider, IconButton, Input, InputAdornment, Link, ListItemIcon, Menu, MenuItem, MenuProps, Slide, Toolbar, Tooltip, Typography, alpha, styled, useMediaQuery, useScrollTrigger } from '@mui/material';
-import { AccountBalance, AccountCircleSharp, ArticleOutlined, BorderColor, Checklist, ClearOutlined, ConfirmationNumberOutlined, Logout, SearchOutlined } from '@mui/icons-material';
+import { ArticleOutlined, BorderColor, Checklist, ClearOutlined, ConfirmationNumberOutlined, Logout, SearchOutlined } from '@mui/icons-material';
 
 import { AuthContext, UiContext } from '@/context';
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,6 +11,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
 import MenuIcon from '@mui/icons-material/Menu';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
+import Image from 'next/image';
 interface Props {
     /**
      * Injected by the documentation to work in an iframe.
@@ -73,12 +74,15 @@ export const NavBar = () => {
                 <Toolbar sx={{ paddingTop: 12, paddingBottom: 6 }} >
                     <Box flex={1} />
                     <NextLink href='/' passHref legacyBehavior>
-                        <Link color={'secondary'} display='flex' alignItems='end'>
-                            <Typography variant='h5' fontWeight={'bold'} >AE  </Typography>
-                            <Typography variant='h6' sx={{ ml: 0.5 }} >| Empleos</Typography>
-                        </Link>
-                    </NextLink>
 
+                        <Link >
+                            {
+                                matches ? (<Image priority src={"/img/logoxl.jpg"} alt={"imagen trabajo"} width={180} height={50} />) : (<Image priority src={"/img/logosm.jpg"} alt={"imagen trabajo"} width={50} height={50} />)
+                            }
+
+                        </Link>
+
+                    </NextLink>
                     <Box flex={.5} />
 
                     <Box sx={{ display: isSearchVisible ? 'none' : { xs: 'none', sm: 'block' } }}

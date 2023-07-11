@@ -52,11 +52,7 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
 
             <ToastContainer />
             <main style={{
-
                 margin: '0 auto',
-
-
-
             }}>
 
                 {children}

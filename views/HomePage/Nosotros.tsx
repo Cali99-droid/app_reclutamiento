@@ -11,14 +11,14 @@ export const Nosotros = () => {
         <>
             <Box display={'flex'} alignItems={'center'} gap={1} mb={3} id={'nosotros'}>
                 <SquareIcon color="secondary" fontSize="large" />
-                <Typography variant='h2' component='h2' fontWeight={'bold'} textAlign={'start'} fontSize={40} color={'#000'} textTransform={'uppercase'}>  Nuestro Equipo </Typography>
+                <Typography variant='h2' component='h2' fontWeight={'bold'} textAlign={'start'} fontSize={30} color={'#000'} textTransform={'uppercase'}>  Nuestro Equipo </Typography>
             </Box>
             <Typography textAlign={'center'}>Únete a nuestra comunidad educativa en crecimiento, donde la colaboración y el liderazgo son fundamentales. Descubre a las personas apasionadas que hacen posible nuestro colegio, donde los estudiantes alcanzan su máximo potencial. ¡Sé parte de nuestro equipo destacado en el Colegio Albert Einstein!</Typography>
             <Grid container spacing={5} justifyContent={'center'} padding={10}>
                 <Grid item>
                     <Card sx={{ maxWidth: 345 }}>
                         <Image
-                            alt={"ejecutivo"} width={matches ? 300 : 200} height={matches ? 300 : 200}
+                            alt={"ejecutivo"} width={matches ? 300 : 300} height={matches ? 300 : 300}
                             src="/img/ejecutivo2.jpg"
 
                         />
@@ -52,7 +52,7 @@ export const Nosotros = () => {
                 <Grid item>
                     <Card sx={{ maxWidth: 345 }}>
                         <Image
-                            alt={"ejecutivo"} width={matches ? 300 : 200} height={matches ? 300 : 200}
+                            alt={"ejecutivo"} width={matches ? 300 : 300} height={matches ? 300 : 300}
                             src="/img/ejecutivo1.jpg"
 
                         />
@@ -84,7 +84,7 @@ export const Nosotros = () => {
                 <Grid item>
                     <Card sx={{ maxWidth: 345 }}>
                         <Image
-                            alt={"ejecutivo"} width={matches ? 300 : 200} height={matches ? 300 : 200}
+                            alt={"ejecutivo"} width={matches ? 300 : 300} height={matches ? 300 : 300}
                             src="/img/ejecutivo3.jpg"
 
                         />

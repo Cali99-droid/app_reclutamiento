@@ -77,7 +77,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
             <Box bgcolor={'#F8F8FF'} paddingBottom={6} mt={4}>
 
 
-                <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} paddingLeft={4} paddingRight={4} pt={15} >
+                <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: '95%', margin: 'auto', overflow: 'visible' }} pt={15}  >
                     <Box paddingTop={2} paddingBottom={2}>
                         <Typography variant='h2' fontWeight={'bold'}>Mi Ficha</Typography>
                         <Divider />
@@ -136,10 +136,10 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                             </Item>
                         </Grid>
                         <Grid item xs={12} sm={9}  >
-                            <Item sx={{ height: 320 }}>
+                            <Item sx={matches ? { height: 320 } : { height: 430 }}>
                                 {/* <Typography variant='h2'>Mis datos</Typography> */}
-                                <Box display={'flex'} justifyContent={'space-between'} padding={2}>
-                                    <Box display={'flex'} flexDirection={'column'} gap={1}>
+                                <Box display={'flex'} justifyContent={'space-between'} padding={2} flexDirection={matches ? 'row' : 'column'}>
+                                    <Box display={'flex'} flexDirection={'column'} gap={1} >
                                         <Typography fontWeight={'bold'} color={'#454555'}>Numero de Documento: </Typography>{postulante.numeroDocumento}
                                         <Typography fontWeight={'bold'} color={'#454555'}>Nacimiento: </Typography>{moment(postulante.nacimiento).add(1, 'days').toDate().toLocaleDateString()}
                                         <Typography fontWeight={'bold'} color={'#454555'}>Pretención Salarial: </Typography>S/ {postulante.sueldo}

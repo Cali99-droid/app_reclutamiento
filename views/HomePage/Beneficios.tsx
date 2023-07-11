@@ -10,7 +10,7 @@ export const Beneficios = () => {
         <Box className='fadeIn' mt={10}>
             <Box display={'flex'} alignItems={'center'} gap={1} justifyContent={matches ? 'start' : 'center'} mb={2}>
                 <SquareIcon color="secondary" fontSize="large" />
-                <Typography variant='h2' component='h2' fontWeight={'bold'} fontSize={40} color={'#000'} > BENEFICIOS </Typography>
+                <Typography variant='h2' component='h2' fontWeight={'bold'} fontSize={30} color={'#000'} > BENEFICIOS </Typography>
             </Box>
 
             <Box display={'flex'} gap={matches ? 10 : 5} paddingLeft={4} paddingRight={4} alignItems={'center'} flexDirection={matches ? 'row' : 'column'}>
@@ -19,7 +19,7 @@ export const Beneficios = () => {
 
                 </Box>
                 <Box>
-                    <Typography fontWeight={900} fontSize={matches ? 50 : 40} color={'#000'}>
+                    <Typography fontWeight={900} fontSize={matches ? 30 : 20} color={'#000'}>
                         Ingreso a planilla con beneficios de ley
                     </Typography>
                     <Typography variant="body1" color={'#767687'} textAlign={'justify'}>
@@ -37,14 +37,13 @@ export const Beneficios = () => {
             <Box display={'flex'} flexDirection={matches ? 'row' : 'column'} gap={10} paddingLeft={4} paddingRight={4} alignItems={'center'}>
 
                 <Box>
-                    <Typography fontWeight={900} fontSize={matches ? 50 : 40} color={'#000'}>
+                    <Typography fontWeight={900} fontSize={matches ? 30 : 20} color={'#000'}>
                         Linea de carrera y escala salarial
                     </Typography>
-                    <Typography variant="body1" color={'#767687'} textAlign={'justify'} >
+                    <Typography variant="body1" color={'#767687'} textAlign={'justify'} mb={2} mt={2}>
                         El Colegio Albert Einstein, líder educativo en la ciudad de Huaraz y en el Callejón de Huaylas, reconoce y valora tanto los años de experiencia como los logros alcanzados por nuestros profesores y personal administrativo. Para fomentar el crecimiento profesional, hemos implementado una sólida escala salarial que respalda una línea de carrera claramente definida. Esta escala valora el esfuerzo y el aprendizaje continuo, proporcionando un entorno motivador donde nunca dejamos de aprender.
+                    </Typography >
 
-
-                    </Typography>
                     <Typography variant="body1" textAlign={'justify'} >
                         Si tu verdadera pasión es la educación, no hay lugar mejor para ti que el Colegio Albert Einstein. Únete a nuestro equipo y forma parte de un ambiente inspirador y en constante evolución, donde valoramos y apoyamos tu crecimiento profesional.
 
@@ -64,21 +63,17 @@ export const Beneficios = () => {
                 </Box>
 
                 <Box>
-                    <Typography fontWeight={900} fontSize={matches ? 50 : 40} color={'#000'}>
+                    <Typography fontWeight={900} fontSize={matches ? 30 : 20} color={'#000'}>
                         Premios y reconocimeintos
                     </Typography>
-                    <Typography variant="body1" color={'#767687'} textAlign={'justify'}>
+                    <Typography variant="body1" color={'#767687'} textAlign={'justify'} mb={2} mt={2}>
                         En el Colegio Albert Einstein, reconocemos y valoramos tu dedicación y responsabilidad en el cumplimiento de todas las actividades inherentes a tu cargo, así como en aquellas programadas en nuestro calendario académico. Tu desempeño es cuidadosamente evaluado y calificado, lo que te brinda la oportunidad de recibir premios y reconocimientos que contribuyen a tu crecimiento profesional.
 
-
-
-
-
                     </Typography>
-                    <Typography variant="body1" textAlign={'justify'}>
+                    <Typography variant="body1" textAlign={'justify'} mb={2} mt={2}>
                         Valoramos el compromiso y la excelencia en cada tarea que desempeñas. Ya sea participando en actividades extracurriculares, liderando proyectos educativos o colaborando en eventos especiales, tu dedicación y contribución no pasan desapercibidas. Estos logros y reconocimientos suman en tu crecimiento profesional.
                     </Typography>
-                    <Typography variant="body1" color={'#767687'} textAlign={'justify'}>
+                    <Typography variant="body1" color={'#767687'} textAlign={'justify'} mb={2} mt={2}>
                         En el Colegio Albert Einstein, creemos en el reconocimiento del esfuerzo y el talento de nuestro equipo. Únete a nosotros y sé parte de una comunidad donde tus logros son apreciados y recompensados, brindándote un impulso adicional en tu camino hacia el éxito. En el Colegio Albert Einstein, creemos en el reconocimiento del esfuerzo y el talento de nuestro equipo. Únete a nosotros y sé parte de una comunidad donde tus logros son apreciados y recompensados, brindándote un impulso adicional en tu camino hacia el éxito.
                     </Typography>
 

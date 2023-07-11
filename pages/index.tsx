@@ -44,10 +44,10 @@ export default function Home() {
           <Nosotros />
         </Box>
 
-        <Box maxWidth={1200} margin={'auto'}>
+        {/* <Box maxWidth={1200} margin={'auto'}>
           <Dudas />
 
-        </Box>
+        </Box> */}
 
         <Footer />
       </InView>
