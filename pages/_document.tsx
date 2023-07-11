@@ -12,7 +12,7 @@ export default function Document() {
         <Main />
         <NextScript />
         <script src="/mautic.js" async defer />
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-RTHN6CE091" />
+        {/* <Script async src="https://www.googletagmanager.com/gtag/js?id=G-RTHN6CE091" />
         <Script strategy="lazyOnload" id='ganty'>
           {`
                     window.dataLayer = window.dataLayer || [];
@@ -22,7 +22,7 @@ export default function Document() {
                     page_path: window.location.pathname,
                     });
                 `}
-        </Script>
+        </Script> */}
 
       </body>
     </Html>

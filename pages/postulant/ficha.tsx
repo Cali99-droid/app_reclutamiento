@@ -141,7 +141,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                 <Box display={'flex'} justifyContent={'space-between'} padding={2}>
                                     <Box display={'flex'} flexDirection={'column'} gap={1}>
                                         <Typography fontWeight={'bold'} color={'#454555'}>Numero de Documento: </Typography>{postulante.numeroDocumento}
-                                        <Typography fontWeight={'bold'} color={'#454555'}>Nacimiento: </Typography>{moment(postulante.nacimiento).toDate().toLocaleDateString()}
+                                        <Typography fontWeight={'bold'} color={'#454555'}>Nacimiento: </Typography>{moment(postulante.nacimiento).add(1, 'days').toDate().toLocaleDateString()}
                                         <Typography fontWeight={'bold'} color={'#454555'}>Pretención Salarial: </Typography>S/ {postulante.sueldo}
                                         <Typography fontWeight={'bold'} color={'#454555'}>Estado Civil: </Typography>{postulante.estado_civil || 'Sin Datos'}
 

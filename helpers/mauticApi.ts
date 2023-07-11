@@ -1,4 +1,4 @@
-import mauticConfig from '@/mauticConfig';
+
 import axios, { AxiosRequestConfig } from 'axios';
 
 const crearContacto = async (nombre: string, email: string,tokenEmail:string,apellidos:string): Promise<void> => {
