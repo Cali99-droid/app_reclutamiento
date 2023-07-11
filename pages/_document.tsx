@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from 'next/document'
+import Script from 'next/script'
 export default function Document() {
   return (
     <Html lang="es">
@@ -11,7 +12,18 @@ export default function Document() {
         <Main />
         <NextScript />
         <script src="/mautic.js" async defer />
-        <script src="/google-analytics.js" async defer />
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-RTHN6CE091" />
+        <Script strategy="lazyOnload" id='ganty'>
+          {`
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
+                    page_path: window.location.pathname,
+                    });
+                `}
+        </Script>
+
       </body>
     </Html>
   )

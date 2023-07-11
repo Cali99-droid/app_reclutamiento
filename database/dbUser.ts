@@ -133,7 +133,7 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
     const id = newUser.id.toString()
     const rol_id = newUser.rol_id.toString()
    
-    crearContacto(oAuthName, oAuthEmail, '')
+    crearContacto(oAuthName, oAuthEmail, '','')
     .then(() => {
       console.log('Contacto creado exitosamente');
     })
