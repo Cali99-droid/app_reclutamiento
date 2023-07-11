@@ -46,7 +46,7 @@ export default function VerticalTabs() {
 
   return (
     <Box
-      sx={{ bgcolor: 'background.paper', display: 'flex', height: 450, borderRadius: 5, width: '100%' }}
+      sx={{ bgcolor: 'background.paper', display: 'flex', height: 450, borderRadius: 5, width: '50%', margin: '0 auto' }}
     >
       <Tabs
         orientation="vertical"

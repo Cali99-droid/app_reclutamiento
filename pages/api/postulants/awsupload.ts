@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 
 import AWS from '../../../aws-config';
-import { getSession } from 'next-auth/react';
+
 
 
 
@@ -43,7 +43,8 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
        const folder = 'img/';
        const fileName = `${folder}${uniqueFileName}`;
     const s3 = new AWS.S3();
-    
+
+    console.log(process.env.BUCKET_NAME)
     try {
 
         
@@ -52,7 +53,7 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
             Key:fileName,
             Expires:600,
             ContentType:type,
-            ACL:"public-read",
+          
         };
         
         const url = await s3.getSignedUrlPromise('putObject', fileParams)

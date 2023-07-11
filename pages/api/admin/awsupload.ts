@@ -33,8 +33,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 
 const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const session: any = await getSession({ req });
-    console.log(session)
+    // const session: any = await getSession({ req });
+    // console.log(session)
     // if ( !session ) {
     //     return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
     // }
@@ -44,7 +44,7 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
        const folder = 'img/';
        const fileName = `${folder}${uniqueFileName}`;
     const s3 = new AWS.S3();
-    
+    console.log(process.env.BUCKET_NAME)
     try {
 
         

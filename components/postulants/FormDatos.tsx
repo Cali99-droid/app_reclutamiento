@@ -574,7 +574,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                                             <CardMedia
                                                 component='img'
                                                 className='fadeIn'
-                                                image={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${getValues('image')}`}
+                                                image={`https://caebucket.s3.us-west-2.amazonaws.com/img/${getValues('image')}`}
                                                 alt={getValues('image')}
                                                 onLoad={() => setLoadImg(false)}
                                             />

@@ -71,7 +71,7 @@ export const NavBar = () => {
         <ElevationScroll {...props}>
             <AppBar sx={{ height: '110px' }} >
                 <Toolbar sx={{ paddingTop: 12, paddingBottom: 6 }} >
-                    <Box flex={1.5} />
+                    <Box flex={1} />
                     <NextLink href='/' passHref legacyBehavior>
                         <Link color={'secondary'} display='flex' alignItems='end'>
                             <Typography variant='h5' fontWeight={'bold'} >AE  </Typography>
@@ -103,7 +103,17 @@ export const NavBar = () => {
                             </Link>
 
                         </NextLink>
-                        <NextLink href='/beneficios' passHref legacyBehavior>
+                        {/* <NextLink href='#nosotros' passHref legacyBehavior>
+                            <Link
+                                color={asPath === '/convocatorias' ? '#0045aa' : '#767687'}
+                                sx={{ padding: '1.5rem', textTransform: 'uppercase', fontWeight: 'bold', fontSize: 14 }}
+                                fontWeight={asPath === '/convocatorias' ? 600 : 500}
+                            >
+                                Nosotros
+                            </Link>
+
+                        </NextLink> */}
+                        {/* <NextLink href='/beneficios' passHref legacyBehavior>
                             <Link
                                 color={asPath === '/beneficios' ? '#0045aa' : '#767687'}
                                 sx={{ padding: '1.5rem', textTransform: 'uppercase', fontWeight: 'bold', fontSize: 14 }}
@@ -121,7 +131,7 @@ export const NavBar = () => {
                             >
                                 ¿Cómo Postular?
                             </Link>
-                        </NextLink>
+                        </NextLink> */}
                         {/* {isLoggedIn && user?.rol.name === 'postulante' && (
                             <NextLink href='/mis-datos' passHref legacyBehavior>
                                 <Link
@@ -277,13 +287,13 @@ export const NavBar = () => {
                     </Box>
 
 
-                    <Box flex={1.5} />
+                    <Box flex={1} />
 
 
                 </Toolbar>
                 {isLoggedIn && user?.rol.name === 'postulante' && (
 
-                    <Box bgcolor={'#EECA73'} display={'flex'} justifyContent={'space-evenly'} alignItems={'center'}  >
+                    <Box bgcolor={'#0045aa'} display={'flex'} justifyContent={'space-evenly'} alignItems={'center'}  >
                         <Box >
                             <Typography fontSize={23} fontWeight={'bold'} color={'#FFF'}>{`Bienvenido: ${user?.persona.nombres}`} </Typography>
                         </Box>
@@ -291,19 +301,19 @@ export const NavBar = () => {
                         <Box display={matches ? 'flex' : 'none'} gap={2}>
                             <NextLink href='/postulant/ficha' passHref legacyBehavior>
                                 <Link alignItems='end'>
-                                    <Typography fontSize={15} color={asPath === '/postulant/ficha' ? '#00075E' : '#FFF'} fontWeight={asPath === '/postulant/ficha' ? 'bold' : ''} > Mi Ficha </Typography>
+                                    <Typography fontSize={15} color={asPath === '/postulant/ficha' ? '#EECA73' : '#FFF'} fontWeight={asPath === '/postulant/ficha' ? 'bold' : ''} > Mi Ficha </Typography>
 
                                 </Link>
                             </NextLink>
                             <NextLink href='/postulant' passHref legacyBehavior>
                                 <Link alignItems='end'>
-                                    <Typography fontSize={15} color={asPath === '/postulant' ? '#00075E' : '#FFF'} fontWeight={asPath === '/postulant' ? 'bold' : ''}>Actualizar mi Ficha </Typography>
+                                    <Typography fontSize={15} color={asPath === '/postulant' ? '#EECA73' : '#FFF'} fontWeight={asPath === '/postulant' ? 'bold' : ''}>Actualizar mi Ficha </Typography>
 
                                 </Link>
                             </NextLink>
                             <NextLink href='/postulant/postulaciones' passHref legacyBehavior>
                                 <Link alignItems='end'>
-                                    <Typography fontSize={15} color={asPath === '/postulant/postulaciones' ? '#00075E' : '#FFF'} fontWeight={asPath === '/postulant/postulaciones' ? 'bold' : ''} >Mis Postulaciones</Typography>
+                                    <Typography fontSize={15} color={asPath === '/postulant/postulaciones' ? '#EECA73' : '#FFF'} fontWeight={asPath === '/postulant/postulaciones' ? 'bold' : ''} >Mis Postulaciones</Typography>
 
                                 </Link>
                             </NextLink>

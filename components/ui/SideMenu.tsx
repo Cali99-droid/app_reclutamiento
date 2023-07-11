@@ -75,7 +75,7 @@ export const SideMenu = () => {
                         <ListItemText primary={'Convocatorias'} />
                     </ListItemButton>
 
-                    <ListItemButton
+                    {/* <ListItemButton
                         sx={{ display: { xs: '', sm: 'none' } }}
                         onClick={() => navigateTo('/docentes')}
                     >
@@ -92,7 +92,7 @@ export const SideMenu = () => {
                             <EscalatorWarningOutlined />
                         </ListItemIcon>
                         <ListItemText primary={'Beneficios'} />
-                    </ListItemButton>
+                    </ListItemButton> */}
 
 
 

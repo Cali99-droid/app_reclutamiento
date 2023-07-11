@@ -84,7 +84,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                     <Item elevation={1}>
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                             <Image
-                                src={(postulante.image === null ? '/avatar.jpg' : `https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${postulante.image}`)}
+                                src={(postulante.image === null ? '/avatar.jpg' : `https://caebucket.s3.us-west-2.amazonaws.com/img/${postulante.image}`)}
                                 width={150}
                                 height={150}
                                 alt="Imagen postulante"

@@ -62,7 +62,7 @@ export const PostulantCard: FC<Props> = ({ postulant, index, ses }) => {
                 <CardActionArea >
                     <CardMedia
                         sx={{ height: 220 }}
-                        image={(postulant.image === null ? '/avatar.jpg' : `https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${postulant.image}`)}
+                        image={(postulant.image === null ? '/avatar.jpg' : `https://caebucket.s3.us-west-2.amazonaws.com/img/${postulant.image}`)}
 
                     />
                     <CardContent>

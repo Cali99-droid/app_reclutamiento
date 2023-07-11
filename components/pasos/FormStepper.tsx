@@ -25,7 +25,7 @@ const FormStepper = ({ onSubmit }: FormStepperProps) => {
                 {steps.map(({ label, icon }, index) => (
                     <Step key={label} sx={{ color: '#FFF' }} >
                         <Box display={'flex'} flexDirection={'column'} alignItems={matches ? 'center' : 'start'} >
-                            <Box width={'50px'} height={'50px'} padding={3} bgcolor={activeStep === index ? '#0045aa' : '#FF7F6A'} display={'flex'} justifyContent={'center'} alignItems={'center'} borderRadius={'50%'}>{icon}
+                            <Box width={'50px'} height={'50px'} padding={3} bgcolor={activeStep === index ? '#0045aa' : '#EECA73'} display={'flex'} justifyContent={'center'} alignItems={'center'} borderRadius={'50%'}>{icon}
 
                             </Box>
                             <StepLabel >{label}</StepLabel>

@@ -13,12 +13,13 @@ const crearContacto = async (nombre: string, email: string,tokenEmail:string,ape
   };
   try {
     const apiUrl = process.env.MAUTIC_API_URL;
+    const mauticUrl = process.env.MAUTIC_URL;
     const publicKey = process.env.MAUTIC_PUBLIC_KEY;
     const secretKey = process.env.MAUTIC_SECRET_KEY;
 
     // Obtén un token de acceso
     const authResponse = await axios.post(
-      `https://mautic.colegioae.edu.pe/oauth/v2/token`,
+      `${mauticUrl}`,
       {
         client_id: publicKey,
         client_secret: secretKey,

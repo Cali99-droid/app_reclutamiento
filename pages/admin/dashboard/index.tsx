@@ -42,7 +42,7 @@ const columns: GridColDef[] = [
                     component='img'
                     alt={row.title}
                     className='fadeIn'
-                    image={row.img === null ? '/avatar.jpg' : `https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${row.img}`}
+                    image={row.img === null ? '/avatar.jpg' : `https://caebucket.s3.us-west-2.amazonaws.com/img/${row.img}`}
                 />
 
             )

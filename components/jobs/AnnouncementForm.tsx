@@ -334,7 +334,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                             <CardMedia
                                                 component='img'
                                                 className='fadeIn'
-                                                image={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${getValues('img')}`}
+                                                image={`https://caebucket.s3.us-west-2.amazonaws.com/img/${getValues('img')}`}
                                                 alt={getValues('img')}
                                                 onLoad={() => setLoadImg(false)}
                                             />

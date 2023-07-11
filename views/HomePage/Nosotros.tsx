@@ -9,11 +9,11 @@ export const Nosotros = () => {
     const matches = useMediaQuery('(min-width:600px)');
     return (
         <>
-            <Box display={'flex'} alignItems={'center'} gap={1} mb={3}>
+            <Box display={'flex'} alignItems={'center'} gap={1} mb={3} id={'nosotros'}>
                 <SquareIcon color="secondary" fontSize="large" />
-                <Typography variant='h2' component='h2' fontWeight={'bold'} textAlign={'start'} fontSize={40} color={'#000'} > NOSOTROS </Typography>
+                <Typography variant='h2' component='h2' fontWeight={'bold'} textAlign={'start'} fontSize={40} color={'#000'} textTransform={'uppercase'}>  Nuestro Equipo </Typography>
             </Box>
-            <Typography textAlign={'center'}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit totam provident dolore velit officiis, quae blanditiis pariatur, sint, voluptatibus quas mollitia nemo ad doloremque similique.</Typography>
+            <Typography textAlign={'center'}>Únete a nuestra comunidad educativa en crecimiento, donde la colaboración y el liderazgo son fundamentales. Descubre a las personas apasionadas que hacen posible nuestro colegio, donde los estudiantes alcanzan su máximo potencial. ¡Sé parte de nuestro equipo destacado en el Colegio Albert Einstein!</Typography>
             <Grid container spacing={5} justifyContent={'center'} padding={10}>
                 <Grid item>
                     <Card sx={{ maxWidth: 345 }}>

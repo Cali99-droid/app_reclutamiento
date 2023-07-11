@@ -45,7 +45,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
       >
 
         <Box>
-          <Image src={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/img/${convocatoria.img}`} alt={''} width={matches ? 500 : 280} height={matches ? 500 : 280} />
+          <Image src={`https://caebucket.s3.us-west-2.amazonaws.com/img/${convocatoria.img}`} alt={''} width={matches ? 500 : 280} height={matches ? 500 : 280} />
         </Box>
 
         <Box borderRadius={4} padding={2}>

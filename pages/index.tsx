@@ -32,14 +32,14 @@ export default function Home() {
 
         <Box maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18} >
           <Hero />
-          <Partners />
+          {/* <Partners /> */}
           <Convocatorias />
           <Beneficios />
         </Box>
 
-        <Box  >
+        {/* <Box  >
           <How />
-        </Box>
+        </Box> */}
         <Box maxWidth={1200} padding={2} margin={'auto'} >
           <Nosotros />
         </Box>
