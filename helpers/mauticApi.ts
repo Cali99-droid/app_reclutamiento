@@ -19,7 +19,7 @@ const crearContacto = async (nombre: string, email: string,tokenEmail:string,ape
 
     // Obtén un token de acceso
     const authResponse = await axios.post(
-      `${mauticUrl}`,
+      `${mauticUrl}/oauth/v2/token`,
       {
         client_id: publicKey,
         client_secret: secretKey,
