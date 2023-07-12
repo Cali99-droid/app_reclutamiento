@@ -77,7 +77,7 @@ export const NavBar = () => {
 
                         <Link >
                             {
-                                matches ? (<Image priority src={"/img/logoxl.jpg"} alt={"imagen trabajo"} width={180} height={50} />) : (<Image priority src={"/img/logosm.jpg"} alt={"imagen trabajo"} width={50} height={50} />)
+                                matches ? (<Image priority src={"/img/logoxs.png"} alt={"imagen colegio albert einstein"} width={250} height={67} />) : (<Image priority src={"/img/logsm.png"} alt={"imagen trabajo"} width={50} height={50} />)
                             }
 
                         </Link>
@@ -297,7 +297,7 @@ export const NavBar = () => {
                 </Toolbar>
                 {isLoggedIn && user?.rol.name === 'postulante' && (
 
-                    <Box bgcolor={'#0045aa'} display={'flex'} justifyContent={'space-evenly'} alignItems={'center'}  >
+                    <Box bgcolor={'#0045aa'} display={'flex'} justifyContent={'space-evenly'} alignItems={'center'} padding={2} >
                         <Box >
                             <Typography fontSize={23} fontWeight={'bold'} color={'#FFF'}>{`Bienvenido: ${user?.persona.nombres}`} </Typography>
                         </Box>

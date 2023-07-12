@@ -197,7 +197,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
 
     return (
         <JobsLayout title={"Mis postulaciones"} pageDescription={"Lista de postulacioes"}>
-            <Box bgcolor={'#F8F8FF'} paddingBottom={6} height={900} mt={4}>
+            <Box bgcolor={'#F8F8FF'} paddingBottom={6} height={900} mt={8}>
                 <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto', width: '90%' }} pt={15}>
                     <Box >
                         <Box paddingBottom={2}>

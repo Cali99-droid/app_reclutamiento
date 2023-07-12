@@ -69,7 +69,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
     const { push } = useRouter()
 
     const matches = useMediaQuery('(min-width:600px)');
-    const { isLoggedIn, user } = useContext(AuthContext);
+    // const { isLoggedIn, user } = useContext(AuthContext);
 
     return (
         <JobsLayout title={"Postulante "} pageDescription={'Ficha'} >
@@ -112,14 +112,12 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                 <Box mt={2} textAlign={'center'}>
                                     <Typography color={'#454555'}> {postulante.persona.nombres + ' ' + postulante.persona.apellido_pat + ' ' + postulante.persona.apellido_mat}</Typography>
                                     <Typography fontSize={12}> {calcularEdad(postulante.nacimiento)} Años</Typography>
-                                    <Box ml={4} mt={1} display={'flex'} flexDirection={'column'} alignItems={'start'} gap={1}>
+                                    <Box ml={1} mt={1} display={'flex'} flexDirection={'column'} alignItems={'start'} gap={1}>
 
                                         <Box display={'flex'} gap={1}>
-
                                             <FmdGoodIcon sx={{ color: '#FF7F6A' }} /> <Typography fontSize={12} >  {postulante.direccion.length > 0 ? postulante.direccion : 'Sin datos'}</Typography>
                                         </Box>
                                         <Box display={'flex'} gap={1}>
-
                                             <PhoneIcon sx={{ color: '#FF7F6A' }} /> <Typography fontSize={12}>  {postulante.telefono.length > 0 ? postulante.telefono : 'Sin datos'}</Typography>
                                         </Box>
                                         <Box display={'flex'} gap={1}>
@@ -140,16 +138,40 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                 {/* <Typography variant='h2'>Mis datos</Typography> */}
                                 <Box display={'flex'} justifyContent={'space-between'} padding={2} flexDirection={matches ? 'row' : 'column'}>
                                     <Box display={'flex'} flexDirection={'column'} gap={1} >
-                                        <Typography fontWeight={'bold'} color={'#454555'}>Numero de Documento: </Typography>{postulante.numeroDocumento}
-                                        <Typography fontWeight={'bold'} color={'#454555'}>Nacimiento: </Typography>{moment(postulante.nacimiento).add(1, 'days').toDate().toLocaleDateString()}
-                                        <Typography fontWeight={'bold'} color={'#454555'}>Pretención Salarial: </Typography>S/ {postulante.sueldo}
-                                        <Typography fontWeight={'bold'} color={'#454555'}>Estado Civil: </Typography>{postulante.estado_civil || 'Sin Datos'}
+                                        <Box>
+                                            <Typography color={'#454555'} fontWeight={'bold'}>Numero de Documento: </Typography>
+                                            <Typography color={'#454555'}>{postulante.numeroDocumento}</Typography>
+                                        </Box>
+                                        <Box>
+                                            <Typography color={'#454555'} fontWeight={'bold'}>Nacimiento: </Typography>
+                                            <Typography color={'#454555'}> {moment(postulante.nacimiento).add(1, 'days').toDate().toLocaleDateString()}</Typography>
+                                        </Box>
+                                        <Box>
+                                            <Typography color={'#454555'} fontWeight={'bold'}>Pretención Salarial:</Typography>
+                                            <Typography color={'#454555'}> S/ {postulante.sueldo}</Typography>
+                                        </Box>
+                                        <Box>
+                                            <Typography color={'#454555'} fontWeight={'bold'}>Estado Civil: </Typography>
+                                            <Typography color={'#454555'}>{postulante.estado_civil || 'Sin Datos'}</Typography>
+                                        </Box>
+
 
                                     </Box>
-                                    <Box display={'flex'} flexDirection={'column'} gap={1}>
-                                        <Typography fontWeight={'bold'} color={'#454555'}>Numero de Hijos: </Typography>{postulante.hijos || 'Sin Datos'}
-                                        <Typography fontWeight={'bold'} color={'#454555'}>Persona con discapacidad: </Typography>{postulante.discapacidad === 1 ? ' Si ' : 'No'}
-                                        <Typography fontWeight={'bold'} color={'#454555'}>Exalumno: </Typography>{postulante.exalumno === 1 ? ' Si ' : 'No'}
+                                    <Box display={'flex'} flexDirection={'column'} gap={1} mt={1}>
+                                        <Box>
+                                            <Typography color={'#454555'} fontWeight={'bold'}>Numero de Hijos: </Typography>
+                                            <Typography color={'#454555'}>{postulante.hijos || 'Sin Datos'}</Typography>
+                                        </Box>
+                                        <Box>
+                                            <Typography color={'#454555'} fontWeight={'bold'}>Persona con discapacidad:  </Typography>
+                                            <Typography color={'#454555'}>{postulante.discapacidad === 1 ? ' Si ' : 'No'}</Typography>
+                                        </Box>
+                                        <Box>
+                                            <Typography color={'#454555'} fontWeight={'bold'}>Exalumno: </Typography>
+                                            <Typography color={'#454555'}> {postulante.exalumno === 1 ? ' Si ' : 'No'}</Typography>
+                                        </Box>
+
+
                                     </Box>
                                     {/* <Box display={'flex'} flexDirection={'column'} gap={2}>
                                     <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary">

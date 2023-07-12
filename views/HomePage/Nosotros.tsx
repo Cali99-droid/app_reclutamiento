@@ -13,7 +13,7 @@ export const Nosotros = () => {
                 <SquareIcon color="secondary" fontSize="large" />
                 <Typography variant='h2' component='h2' fontWeight={'bold'} textAlign={'start'} fontSize={30} color={'#000'} textTransform={'uppercase'}>  Nuestro Equipo </Typography>
             </Box>
-            <Typography textAlign={'center'}>Únete a nuestra comunidad educativa en crecimiento, donde la colaboración y el liderazgo son fundamentales. Descubre a las personas apasionadas que hacen posible nuestro colegio, donde los estudiantes alcanzan su máximo potencial. ¡Sé parte de nuestro equipo destacado en el Colegio Albert Einstein!</Typography>
+            <Typography textAlign={'left'}>Únete a nuestra comunidad educativa en crecimiento, donde la colaboración y el liderazgo son fundamentales. Descubre a las personas apasionadas que hacen posible nuestro colegio, donde los estudiantes alcanzan su máximo potencial. ¡Sé parte de nuestro equipo destacado en el Colegio Albert Einstein!</Typography>
             <Grid container spacing={5} justifyContent={'center'} padding={10}>
                 <Grid item>
                     <Card sx={{ maxWidth: 345 }}>

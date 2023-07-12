@@ -316,7 +316,7 @@ const Step3 = () => {
             <Box bgcolor={'#FFF'} padding={2} borderRadius={2} >
                 <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} mb={1} flexDirection={matches ? 'row' : 'column'}>
                     <Box mb={2} >
-                        <Typography fontWeight={'bold'}>CARGOS DE RESPONSABILIDAD O DE CONFIANZA DESEMPEÑADOS </Typography>
+                        <Typography fontWeight={'bold'} textTransform={'uppercase'}>Experiencia profesional relacionada al cargo </Typography>
                     </Box>
                     <Button fullWidth={!matches} onClick={handleOpenCargo} variant="contained" startIcon={<AddIcon />}>Agregar</Button>
 
