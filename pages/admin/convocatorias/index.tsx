@@ -29,7 +29,7 @@ interface Props {
 
 
 const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
-
+  console.log(convos)
   const [convocatorias, setConvocatorias] = useState(convos)
   const matches = useMediaQuery('(min-width:600px)');
 
