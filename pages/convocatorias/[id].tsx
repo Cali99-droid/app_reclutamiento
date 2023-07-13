@@ -8,7 +8,7 @@ import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
 import { ReqList } from "@/components/jobs/ReqList";
 import ShareIcon from '@mui/icons-material/Share';
-import { convocatoria } from '@prisma/client';
+
 import { grey } from '@mui/material/colors';
 import Image from 'next/image';
 import PostAddIcon from '@mui/icons-material/PostAdd';
@@ -31,7 +31,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
   const [open, setOpen] = useState(false);
   const matches = useMediaQuery('(min-width:600px)');
   return (
-    <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion}>
+    <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion} imageFullUrl={`${convocatoria.img}`}>
 
       <Box
         className="fadeIn" sx={{ mt: 20, }} display={'flex'}
