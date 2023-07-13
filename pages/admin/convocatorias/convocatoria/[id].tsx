@@ -871,7 +871,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   return {
     props: { convocatoria, jurados },
-    revalidate: 1,
+
   }
 }
 
