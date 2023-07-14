@@ -45,8 +45,8 @@ model cargo {
   contacto      String?    @db.VarChar(200)
   desde         DateTime?  @db.Date
   hasta         DateTime?  @db.Date
-  postulante_id Int
   doc           String?    @db.VarChar(225)
+  postulante_id Int
   postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cargo_postulante1")
 
   @@index([postulante_id], map: "fk_cargo_postulante1_idx1")
@@ -67,9 +67,9 @@ model convocatoria {
   estadoId                  Int                         @map("estado_id")
   sueldoOfertado            Float                       @map("sueldo_ofertado")
   vacantes                  Int
+  img                       String?                     @db.VarChar(225)
   vigencia                  DateTime?                   @db.Date
   categoria_id              Int?
-  img                       String?                     @db.VarChar(225)
   categoria                 categoria?                  @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_convocatoria_categoria1")
   estado                    estado                      @relation(fields: [estadoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_convocatoria_estado1")
   grado                     grado                       @relation(fields: [gradoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_convocatoria_grado1")
@@ -131,8 +131,8 @@ model estudios {
   institucion   String     @db.VarChar(200)
   grado         String     @db.VarChar(200)
   year          Int
-  postulante_id Int
   doc           String?    @db.VarChar(225)
+  postulante_id Int
   postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_estudios_postulante1")
 
   @@index([postulante_id], map: "fk_estudios_postulante1_idx1")
@@ -235,6 +235,7 @@ model postulante {
   persona                   persona                     @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_persona1")
   tipo_documento            tipo_documento              @relation(fields: [tipoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_tipo_documento1")
   postulante_x_convocatoria postulante_x_convocatoria[]
+  puntajes                  puntajes[]
   reconocimiento            reconocimiento[]
   tics                      tics[]
 
@@ -246,11 +247,11 @@ model postulante {
 model postulante_x_convocatoria {
   id                   Int               @id @default(autoincrement())
   comentario           String?           @db.LongText
+  session              String?           @db.VarChar(255)
   fecha_comentario     String?           @db.VarChar(60)
   convocatoria_id      Int
   estado_postulante_id Int
   postulante_id        Int
-  session              String?           @db.VarChar(255)
   convocatoria         convocatoria      @relation(fields: [convocatoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_x_convocatoria_convocatoria1")
   estado_postulante    estado_postulante @relation(fields: [estado_postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_x_convocatoria_estado_postulante1")
   postulante           postulante        @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_x_convocatoria_postulante1")
@@ -312,4 +313,46 @@ model user {
 
   @@index([persona_id], map: "fk_user_persona1_idx")
   @@index([rol_id], map: "fk_user_rol_idx")
+}
+
+model item {
+  id            Int             @id @default(autoincrement())
+  descripcion   String          @db.LongText
+  test_id       Int
+  test          test            @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_item_test1")
+  puntaje_items puntaje_items[]
+
+  @@index([test_id], map: "fk_item_test1_idx")
+}
+
+model puntaje_items {
+  id           Int      @id @default(autoincrement())
+  puntajes_id  Int
+  item_id      Int
+  puntaje_item Int?
+  item         item     @relation(fields: [item_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntaje_items_item1")
+  puntajes     puntajes @relation(fields: [puntajes_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntaje_items_puntajes1")
+
+  @@index([item_id], map: "fk_puntaje_items_item1_idx")
+  @@index([puntajes_id], map: "fk_puntaje_items_puntajes1_idx")
+}
+
+model puntajes {
+  id            Int             @id @default(autoincrement())
+  total         Int
+  test_id       Int
+  postulante_id Int
+  puntaje_items puntaje_items[]
+  postulante    postulante      @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_postulante1")
+  test          test            @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_test1")
+
+  @@index([postulante_id], map: "fk_puntajes_postulante1_idx")
+  @@index([test_id], map: "fk_puntajes_test1_idx")
+}
+
+model test {
+  id       Int        @id @default(autoincrement())
+  nombre   String     @db.VarChar(200)
+  item     item[]
+  puntajes puntajes[]
 }

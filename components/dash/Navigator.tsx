@@ -19,7 +19,7 @@ import { Typography } from '@mui/material';
 import { useState, useContext } from 'react';
 import { AuthContext } from '@/context';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
-
+import QuizIcon from '@mui/icons-material/Quiz';
 
 const categories = [
     {
@@ -36,6 +36,13 @@ const categories = [
                 icon: <PublicIcon />,
                 active: true,
                 dir: '/admin/convocatorias'
+            },
+            ,
+            {
+                id: 'Evaluaciones',
+                icon: <QuizIcon />,
+                active: true,
+                dir: '/admin/evaluaciones'
             },
             {
                 id: 'Usuarios',

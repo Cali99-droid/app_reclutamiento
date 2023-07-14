@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren } from 'react';
+import React, { FC, PropsWithChildren, useContext, useEffect } from 'react';
 import Head from 'next/head';
 
 import { NavBar } from '../ui';
@@ -6,6 +6,8 @@ import { SideMenu } from '../ui/SideMenu';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Box } from '@mui/material';
+import { AuthContext } from '@/context';
+import { inactivity } from '@/helpers';
 
 interface Props extends PropsWithChildren {
     title: string;
@@ -22,6 +24,19 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
         window: undefined,
         children: React
     }
+    const { user } = useContext(AuthContext);
+
+
+    // if (user) {
+    //     console.log(true)
+    //     inactivity.inactivityTime()
+    // } else {
+    //     console.log(false)
+    // }
+
+
+
+
     return (
         <>
             <Head>

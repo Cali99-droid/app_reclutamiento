@@ -7,10 +7,14 @@ import { CssBaseline, ThemeProvider } from '@mui/material'
 import type { AppProps } from 'next/app'
 import { PostProvider } from '../context';
 import { SWRConfig } from 'swr'
+import { useEffect } from 'react'
+import { inactivity } from '@/helpers'
 
 
 
 export default function App({ Component, pageProps }: AppProps) {
+
+
 
 
   return (

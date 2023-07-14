@@ -107,8 +107,6 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
 
     if (pos) {
-
-
       refreshJurados()
       const seleccionados = pos.filter(d => d.estado_postulante_id === 6)
       const contratados = pos.filter(d => d.estado_postulante_id === 7)
@@ -116,6 +114,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
       if (filtrando) {
         const aptos = pos.filter(d => d.estado_postulante_id !== 4)
+
         setPostulantes(aptos);
       } else {
         setPostulantes(pos)
@@ -129,7 +128,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
 
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [pos])
 
 
   const columns: GridColDef[] = [
