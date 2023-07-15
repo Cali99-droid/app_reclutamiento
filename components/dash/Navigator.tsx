@@ -12,14 +12,14 @@ import PublicIcon from '@mui/icons-material/Public';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 
-import { LoginOutlined } from "@mui/icons-material"
+import { LoginOutlined, Quiz } from "@mui/icons-material"
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import GroupIcon from '@mui/icons-material/Group';
 import { Typography } from '@mui/material';
 import { useState, useContext } from 'react';
 import { AuthContext } from '@/context';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
-import QuizIcon from '@mui/icons-material/Quiz';
+
 
 const categories = [
     {
@@ -40,7 +40,7 @@ const categories = [
             ,
             {
                 id: 'Evaluaciones',
-                icon: <QuizIcon />,
+                icon: <Quiz />,
                 active: true,
                 dir: '/admin/evaluaciones'
             },
@@ -58,7 +58,11 @@ const categories = [
 
 
             {
-                id: 'Config', icon: <SettingsIcon />, active: false,
+                id: 'Config', icon: <SettingsIcon />, active: true,
+                dir: '/perfil'
+            },
+            {
+                id: 'other', icon: <SettingsIcon />, active: false,
                 dir: '/perfil'
             }
 
@@ -83,7 +87,7 @@ const itemCategory = {
 };
 
 
-const validRolJurados = ['jurado1', 'jurado2'];
+
 export default function Navigator(props: DrawerProps) {
     const { ...other } = props;
     const [option, setOption] = useState(categories)
@@ -97,6 +101,7 @@ export default function Navigator(props: DrawerProps) {
         }))
         setOption(optionUpdate)
         push(url);
+
     }
     return (
         <Drawer variant="permanent" {...other}>
@@ -123,14 +128,14 @@ export default function Navigator(props: DrawerProps) {
                             <ListItem sx={{ py: 2, px: 3 }}>
                                 <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
                             </ListItem>
-                            {hijos.map(({ id: childId, icon, active, dir }) => (
-                                <ListItem disablePadding key={childId}>
+                            {hijos.map((h) => (
+                                <ListItem disablePadding key={h!.id}>
                                     <ListItemButton
-                                        selected={asPath.includes(`${dir}`)}
+                                        selected={asPath.includes(`${h!.dir}`)}
                                         sx={item}
-                                        onClick={() => navigateTo(`${dir}`, childId)}>
-                                        <ListItemIcon>{icon}</ListItemIcon>
-                                        <ListItemText>{childId}</ListItemText>
+                                        onClick={() => navigateTo(`${h!.dir}`, h!.id)}>
+                                        <ListItemIcon>{h!.icon}</ListItemIcon>
+                                        <ListItemText>{h!.id} </ListItemText>
                                     </ListItemButton>
                                 </ListItem>
                             ))}
