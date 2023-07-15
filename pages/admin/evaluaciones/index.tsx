@@ -251,7 +251,8 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       evaluaciones
 
-    }
+    },
+    revalidate: 1,
   }
 }
 
