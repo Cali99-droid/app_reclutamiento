@@ -211,14 +211,20 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
           </Toolbar>
         </AppBar>
         <Box className="fadeIn" padding={4} sx={{ height: 580 }} width={'100%'} textAlign={'center'}>
+          {
+            tests.length > 0 ? (
+              <DataGrid
+                // getRowHeight={() => 'auto'}
 
-          <DataGrid
-            // getRowHeight={() => 'auto'}
+                getRowId={(row: any) => generateRandom()}
+                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+                columns={columns}
+                rows={rows} />
+            ) : (
+              <Typography>No hay datos</Typography>
+            )
+          }
 
-            getRowId={(row: any) => generateRandom()}
-            localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-            columns={columns}
-            rows={rows} />
         </Box>
       </Paper>
 
