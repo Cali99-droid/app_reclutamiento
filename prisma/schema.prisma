@@ -77,6 +77,7 @@ model convocatoria {
   convocatoria_x_user       convocatoria_x_user[]
   evaluacion_x_postulante   evaluacion_x_postulante[]
   postulante_x_convocatoria postulante_x_convocatoria[]
+  puntajes                  puntajes[]
 
   @@index([categoria_id], map: "fk_convocatoria_categoria1_idx")
   @@index([estadoId], map: "fk_convocatoria_estado1_idx")
@@ -340,19 +341,22 @@ model puntaje_items {
 }
 
 model puntajes {
-  id            Int             @id @default(autoincrement())
-  total         Int
-  test_id       Int
-  postulante_id Int
-  user_id       Int
-  puntaje_items puntaje_items[]
-  postulante    postulante      @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_postulante1")
-  test          test            @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_test1")
-  user          user            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_user1")
+  id              Int             @id @default(autoincrement())
+  total           Int
+  test_id         Int
+  postulante_id   Int
+  user_id         Int
+  convocatoria_id Int
+  puntaje_items   puntaje_items[]
+  convocatoria    convocatoria    @relation(fields: [convocatoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_convocatoria1")
+  postulante      postulante      @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_postulante1")
+  test            test            @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_test1")
+  user            user            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_user1")
 
   @@index([postulante_id], map: "fk_puntajes_postulante1_idx")
   @@index([test_id], map: "fk_puntajes_test1_idx")
   @@index([user_id], map: "fk_puntajes_user1_idx")
+  @@index([convocatoria_id], map: "fk_puntajes_convocatoria1_idx")
 }
 
 model test {

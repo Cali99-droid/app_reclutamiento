@@ -61,7 +61,16 @@ const getEvaluacionPostulante = async(req: NextApiRequest, res: NextApiResponse<
           postulante: {
          
             include: {
-            
+            puntajes:{
+              where:{
+                convocatoria_id:parseInt(id.toString()),
+                AND:{
+                user_id:parseInt(idUser.toString())
+                }
+               
+
+              },
+            },
               persona: {
                 
                 include:{

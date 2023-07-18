@@ -1,9 +1,10 @@
 import React, { FC, PropsWithChildren } from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, useMediaQuery, FormControlLabel, RadioGroup, FormLabel, FormControl, FormHelperText, Radio, Slider, Typography, Divider, Grid, Box } from "@mui/material";
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, useMediaQuery, FormControlLabel, RadioGroup, FormLabel, FormControl, FormHelperText, Radio, Slider, Typography, Divider, Grid, Box, Alert } from "@mui/material";
 import { useState, useContext, useEffect } from 'react';
 import { PostContext } from '@/context';
 import { prisma } from '@/server/db/client';
 import { reclutApi } from '@/apies';
+import { useRouter } from 'next/router';
 
 
 interface ModalProps extends PropsWithChildren {
@@ -12,16 +13,26 @@ interface ModalProps extends PropsWithChildren {
     handleClose: () => void;
     handleConfirm: () => void;
     items: any[];
-    idPostulante: number
+
 }
 
-export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, handleConfirm, items, idPostulante }) => {
+export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, handleConfirm, items }) => {
     const { criterios, calcularTotal, total } = useContext(PostContext);
+    let it: any = [];
+    let idTes: any;
+    if (items[0]) {
+        it = items[0].item;
+        idTes = items[0].id;
+    }
+    const router = useRouter();
+    const { id } = router.query;
+
     const [itemValues, setItemValues] = useState<{ [itemId: number]: number }>({});
     const [totalSum, setTotalSum] = useState(0);
     const [tot, setTot] = useState(calcularTotal)
-    const [itemsRead, setItemsRead,] = useState<any[]>(items[0].item)
-    const [idTest, setidTest] = useState(items[0].id)
+
+    const [itemsRead, setItemsRead,] = useState<any[]>(it)
+    const [idTest, setidTest] = useState(idTes)
     const { idPos, idUser } = useContext(PostContext);
     // useEffect(() => {
     //     items.forEach(e => criterios.set(e.descripcion))
@@ -55,7 +66,7 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
 
         try {
 
-            const resp = await reclutApi.post('/evaluar', { itemValues, totalSum, idTest, idPos, idUser });
+            const resp = await reclutApi.post('/evaluar', { itemValues, totalSum, idTest, idPos, idUser, id });
             console.log(resp)
             //   toast.success('🦄 Puntaje asignado correctamente0!'),
             //         handleCloseClase()
@@ -95,29 +106,37 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
                     </Box>
                     <Grid container spacing={2} alignItems="center" >
                         {
-                            itemsRead.map((i, index) => (
-                                <Grid item xs={12} key={i.id}>
-                                    <Box mb={3}>
-                                        <Typography id="input-slider" gutterBottom>
-                                            {(index + 1) + '. ' + i.descripcion}
-                                        </Typography>
-                                        <Divider />
-                                    </Box>
-                                    <Slider
-                                        name='ss'
-                                        value={itemValues[i.id] || 0}
-                                        onChange={handleSliderChange(i.id)}
-                                        aria-labelledby="input-slider"
-                                        valueLabelDisplay="auto"
-                                        step={1}
-                                        marks
-                                        min={0}
-                                        max={10}
+                            itemsRead.length > 0 ? (
+                                itemsRead.map((i, index) => (
+                                    <Grid item xs={12} key={i.id}>
+                                        <Box mb={3}>
+                                            <Typography id="input-slider" gutterBottom>
+                                                {(index + 1) + '. ' + i.descripcion}
+                                            </Typography>
+                                            <Divider />
+                                        </Box>
+                                        <Slider
+                                            name='ss'
+                                            value={itemValues[i.id] || 0}
+                                            onChange={handleSliderChange(i.id)}
+                                            aria-labelledby="input-slider"
+                                            valueLabelDisplay="auto"
+                                            step={1}
+                                            marks
+                                            min={0}
+                                            max={10}
 
-                                    />
+                                        />
+                                    </Grid>
+                                ))
+                            ) : (
+                                <Grid item xs={12} >
+                                    <Alert severity='warning'>No existe una evaluación asignada, contacte con el administrador </Alert>
                                 </Grid>
-                            ))
+
+                            )
                         }
+
                     </Grid>
                     <Box display={'flex'} justifyContent={'end'} mb={3} alignItems={'center'} gap={2}>
                         <Typography variant='subtitle1'>Puntaje Total: </Typography>
@@ -133,7 +152,7 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
                     Cancelar
                 </Button>
 
-                <Button onClick={handleConfirmClase} sx={{ mt: 1, mr: 1, textTransform: 'uppercase' }} variant="outlined">
+                <Button disabled={itemsRead.length <= 0} onClick={handleConfirmClase} sx={{ mt: 1, mr: 1, textTransform: 'uppercase' }} variant="outlined">
                     Calificar
                 </Button>
             </DialogActions>

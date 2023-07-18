@@ -71,11 +71,10 @@ const EvaluarPage: NextPage<Props> = ({ convocatoria, items }) => {
 
 
             {/* <ModalClase title={'Evaluar Clase Modelo'} open={openClase} handleClose={handleCloseClase} handleConfirm={handleConfirmClase} /> */}
-            <ModalAptitud title={'Evaluar aptitudes'} open={openAptitud} handleClose={handleCloseAptitud} handleConfirm={handleConfirmAptitud} />
+            {/* <ModalAptitud title={'Evaluar aptitudes'} open={openAptitud} handleClose={handleCloseAptitud} handleConfirm={handleConfirmAptitud} /> */}
             <ModalEval title={'Evaluacion'} open={openClase} handleClose={handleCloseClase} handleConfirm={function (): void {
                 throw new Error('Function not implemented.');
-            }} items={items} idPostulante={0}>
-
+            }} items={items} >
             </ModalEval>
 
         </Paperbase>

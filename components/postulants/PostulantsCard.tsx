@@ -1,25 +1,16 @@
 
-import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, CardActionArea, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Chip } from '@mui/material'
-
-import { IPostulant } from '@/interfaces';
+import { Grid, Card, CardActions, CardMedia, Box, Typography, Link, CardContent, CardActionArea, IconButton, Button, Chip } from '@mui/material'
 
 
-import NextLink from 'next/link';
 import { FC, useContext, useState } from 'react';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { PostContext, UiContext } from '@/context';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-
 
 
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
-import { Modal, ModalFicha } from '../modal';
+import { ModalFicha } from '../modal';
 import { Ficha } from './Ficha';
-import { persona } from '@prisma/client';
-import { useSession } from 'next-auth/react';
+
 import CheckIcon from '@mui/icons-material/Check';
 
 
@@ -33,11 +24,9 @@ interface Props {
 
 export const PostulantCard: FC<Props> = ({ postulant, index, ses }) => {
 
-    const { data: session } = useSession()
 
     const { handleOpenClase } = useContext(PostContext)
 
-    console.log(ses)
 
     const [open, setOpen] = useState(false)
     const [pos, setPos] = useState<any>(postulant);
@@ -78,8 +67,8 @@ export const PostulantCard: FC<Props> = ({ postulant, index, ses }) => {
                             //     p.
                             // ))
                         }
-                        {postulant.evaluacion_x_postulante.map((e: any, index: number) => (
-                            <Typography key={index}>Puntaje: {e.puntaje}</Typography>
+                        {postulant.puntajes.map((e: any, index: number) => (
+                            <Typography key={index}>Puntaje: {e.total}</Typography>
 
                         ))}
                     </CardContent>
@@ -91,7 +80,7 @@ export const PostulantCard: FC<Props> = ({ postulant, index, ses }) => {
 
                 <CardActions >
                     <Box display={'flex'} flexDirection={'column'} width={'100%'} gap={2}>
-                        {postulant.evaluacion_x_postulante.length > 0 ? (
+                        {postulant.puntajes.length > 0 ? (
 
                             <Chip
                                 icon={<CheckIcon />}
