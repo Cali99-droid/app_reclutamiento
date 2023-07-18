@@ -9,8 +9,8 @@ export const inactivityTime = function () {
 
     function logout() {
      
-        alert("Su session ah expirado")
-        // signOut()
+        alert("Su session ah expirado");
+        signOut()
         //location.href = 'logout.html'
     }
 
