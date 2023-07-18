@@ -40,6 +40,7 @@ async function main() {
     data: [
       { nombre: 'Estudiante' },
       { nombre: 'Practicante' },
+      { nombre: 'Egresado' },
       { nombre: 'Bachiller' },
       { nombre: 'Titulado' },
       { nombre: 'Todos' },

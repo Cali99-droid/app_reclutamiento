@@ -160,7 +160,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
 
 
   const rows = convocatorias.map((job, index) => ({
-    id: job.id,
+    id: index + 1,
     titulo: job.titulo,
     vacantes: job.vacantes,
     estado: job.estado.nombre,

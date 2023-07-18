@@ -53,6 +53,8 @@ const LoginPage = (error: string) => {
                 // console.log(resp.ok)
                 if (resp.ok) {
                     router.push(destination)
+                } else {
+                    setLoading(false)
                 }
 
             }

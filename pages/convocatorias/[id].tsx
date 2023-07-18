@@ -36,7 +36,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
       <Box
         className="fadeIn" sx={{ mt: 20, }} display={'flex'}
         gap={4}
-        alignItems="center" justifyContent={'center'} width={'80%'} margin={'auto'}
+        alignItems="center" justifyContent={'center'} width={'50%'} margin={'auto'}
 
         flexDirection={matches ? 'row' : 'column'}
         bgcolor={'#F1F1F1'}

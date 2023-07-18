@@ -1,6 +1,6 @@
 
 import { DatosContext } from '@/context';
-import { Box, Button, Chip, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography, IconButton, TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody, styled, tableCellClasses, SelectChangeEvent, LinearProgress, useMediaQuery } from '@mui/material';
+import { Box, Button, Chip, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography, IconButton, TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody, styled, tableCellClasses, SelectChangeEvent, LinearProgress, useMediaQuery, Divider } from '@mui/material';
 import { useContext, ChangeEvent, useEffect } from 'react';
 import Modal from '../modal/Modal';
 import { useState } from 'react';
@@ -192,13 +192,13 @@ const Step2 = () => {
                 >
 
                     <Box mb={2} >
-                        <Typography fontWeight={'bold'}>ESTUDIOS / PROFESIONES ps</Typography>
+                        <Typography fontWeight={'bold'}>ESTUDIOS / PROFESIONES</Typography>
 
                     </Box>
                     <Button fullWidth={!matches} onClick={handleOpen} startIcon={<AddIcon />} color='primary'>Agregar</Button>
                 </Box>
 
-
+                <Divider />
 
                 {
                     estudios.length === 0 ? (
@@ -299,6 +299,7 @@ const Step2 = () => {
                             >
                                 <MenuItem value={'Estudiante'}>Estudiante</MenuItem>
                                 <MenuItem value={'Practicante'}>Practicante</MenuItem>
+                                <MenuItem value={'Egresado'}>Egresado</MenuItem>
                                 <MenuItem value={'Bachiller'}>Bachiller</MenuItem>
                                 <MenuItem value={'Titulado'}>Titulado</MenuItem>
                                 <MenuItem value={'Maestria'}>Maestria</MenuItem>

@@ -99,9 +99,9 @@ const UsersPage = () => {
     ];
 
 
-    const rows = usersList.map(user => ({
-        id: user.id,
-        nombres: user.persona.nombres + ' ' + user.persona.apellido_pat + ' ' + user.persona.apellido_mat,
+    const rows = usersList.map((user, index) => ({
+        id: index + 1,
+        nombres: (user.persona.apellido_pat + ' ' + user.persona.apellido_mat + ' ' + user.persona.nombres).toLocaleUpperCase(),
         email: user.email,
         rol: user.rol_id,
 

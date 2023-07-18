@@ -133,7 +133,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 50 },
+    { field: 'id', headerName: 'N°', width: 50 },
     {
       field: 'postulante',
       headerName: 'Postulante',
@@ -331,8 +331,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   }
 
 
-  const rows = postulantes.map((p) => ({
-    id: p.postulante.id,
+  const rows = postulantes.map((p, index) => ({
+    id: index + 1,
     postulante: formatoNombre(p.postulante.persona.nombres, p.postulante.persona.apellido_pat, p.postulante.persona.apellido_mat),
     estado: parseInt(p.estado_postulante_id),
     edad: calcularEdad(p.postulante.nacimiento) + ' años',
