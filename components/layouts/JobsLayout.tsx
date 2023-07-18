@@ -27,12 +27,12 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
     const { user } = useContext(AuthContext);
 
 
-    if (user) {
+    // if (user) {
 
-        inactivity.inactivityTime()
-    } else {
-        console.log(false)
-    }
+    //     inactivity.inactivityTime()
+    // } else {
+    //     console.log(false)
+    // }
 
 
 

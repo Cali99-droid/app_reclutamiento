@@ -16,12 +16,12 @@ interface Props extends PropsWithChildren {
 
 export const AdminLayout: FC<Props> = ({ children, title, subTitle, icon }) => {
     const { user } = useContext(AuthContext);
-    if (user) {
+    // if (user) {
 
-        inactivity.inactivityTime()
-    } else {
-        console.log(false)
-    }
+    //     inactivity.inactivityTime()
+    // } else {
+    //     console.log(false)
+    // }
     return (
         <>    <ToastContainer />
             <nav>
