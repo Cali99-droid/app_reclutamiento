@@ -16,7 +16,9 @@ export const checkUserEmailPassword = async(email:string, password: string)=>{
                 include:{
                     postulante:{
                         select:{
-                            id:true
+                            id:true,
+                            image:true,
+                          
                         }
                     }
                 }
@@ -64,7 +66,9 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
                 include:{
                     postulante:{
                         select:{
-                            id:true
+                            id:true,
+                            image:true
+                         
                         }
                     }
                 }
@@ -114,7 +118,8 @@ export const oAuthToDbUser = async(oAuthEmail:string, oAuthName:string,oAuthImg:
         include: {
             user: true,
             postulante:true,
-           // Include all posts in the returned object
+       
+
           },
       })
 

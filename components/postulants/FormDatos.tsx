@@ -14,7 +14,8 @@ import { toast } from 'react-toastify';
 import EastIcon from '@mui/icons-material/East';
 import { useContext, ChangeEvent } from 'react';
 import { DatosContext } from '@/context';
-
+import sharp from 'sharp';
+import imageConversion from 'image-conversion';
 interface Props {
 
 
@@ -46,7 +47,7 @@ type FormData = {
     nivel: string;
 
 };
-
+const MAX_IMAGE_SIZE_MB = 1;
 
 export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
@@ -141,13 +142,21 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
         if (!target.files || target.files.length === 0) {
             return;
         }
+        const fileSizeInMB = target.files[0].size / (1024 * 1024);
+        if (fileSizeInMB >= MAX_IMAGE_SIZE_MB) {
+
+            // Aquí puedes realizar la lógica para subir el archivo
+            // por ejemplo, enviarlo a través de una API o almacenarlo en S3.
+            console.log('Archivo inválido, tamaño:', fileSizeInMB, 'MB');
+            toast.error('La imagen debe ser de menos de 2 mb');
+            return;
+        }
         setLoadImg(true)
         try {
 
-
             const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/awsupload', {
                 name: target.files[0].name,
-                type: target.files[0].type
+                type: target.files[0].type,
             });
 
             const url = data.url;
@@ -185,6 +194,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
         //     console.log({ error });
         // }
     }
+
 
     const onDeleteImage = () => {
         // console.log(getValues('image'))

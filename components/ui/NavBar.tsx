@@ -12,6 +12,7 @@ import FilePresentIcon from '@mui/icons-material/FilePresent';
 import MenuIcon from '@mui/icons-material/Menu';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import Image from 'next/image';
+import { postulante } from '@prisma/client';
 interface Props {
     /**
      * Injected by the documentation to work in an iframe.
@@ -55,7 +56,7 @@ export const NavBar = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
 
     const { isLoggedIn, user, logout } = useContext(AuthContext);
-
+    console.log(user?.persona.postulante[0].image)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -180,8 +181,7 @@ export const NavBar = () => {
                                             aria-haspopup="true"
                                             aria-expanded={open ? 'true' : undefined}
                                         >
-
-                                            <Avatar sx={{ bgcolor: '#0045AA' }} src={user?.oAuthImg ? user?.oAuthImg : user?.img} />
+                                            <Avatar alt='imagen user' sx={{ bgcolor: '#0045AA', width: 56, height: 56 }} src={user?.persona.postulante[0].image ? `https://caebucket.s3.us-west-2.amazonaws.com/img/${user?.persona.postulante[0].image}` : '/avatar.jpg'} />
 
                                         </IconButton>
                                     </Tooltip>

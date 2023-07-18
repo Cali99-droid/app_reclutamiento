@@ -37,14 +37,13 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     // if ( !session ) {
     //     return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
     // }
-    let {name,type} = req.body;
+    let {name,type,fil} = req.body;
        // Genera un nombre único para el archivo
        const uniqueFileName = `${uuidv4()}.${name.split('.').pop()}`;
        const folder = 'img/';
        const fileName = `${folder}${uniqueFileName}`;
     const s3 = new AWS.S3();
 
-    console.log(process.env.BUCKET_NAME)
     try {
 
         
@@ -66,4 +65,40 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 
 }
+
+const convertToWebP = async (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      const canvas = document.createElement('canvas');
+
+      image.onload = () => {
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        const context = canvas.getContext('2d');
+        if (context) {
+          context.drawImage(image, 0, 0, image.width, image.height);
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                resolve(reader.result as string);
+              };
+              reader.readAsDataURL(blob);
+            } else {
+              reject(new Error('No se pudo crear el Blob de la imagen.'));
+            }
+          }, 'image/webp', 0.9);
+        } else {
+          reject(new Error('No se pudo obtener el contexto del canvas.'));
+        }
+      };
+
+      image.onerror = () => {
+        reject(new Error('No se pudo cargar la imagen.'));
+      };
+
+      image.src = URL.createObjectURL(file);
+    });
+  };
 
