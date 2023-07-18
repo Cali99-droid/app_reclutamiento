@@ -112,7 +112,7 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
                             </Box>
                             <Box mt={2} textAlign={'center'}>
                                 <Typography > {postulante.persona.nombres + ' ' + postulante.persona.apellido_pat + ' ' + postulante.persona.apellido_mat}</Typography>
-                                <Typography fontSize={12}> {calcularEdad(postulante.persona.nacimiento)} Años</Typography>
+                                <Typography fontSize={12}> {calcularEdad(postulante.nacimiento)} Años</Typography>
                                 <Box ml={4} mt={1} display={'flex'} flexDirection={'column'} alignItems={'start'} gap={1}>
 
                                     <Box display={'flex'} gap={1}>

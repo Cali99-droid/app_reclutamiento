@@ -16,7 +16,7 @@ export const inactivityTime = function () {
 
     function resetTimer() {
         clearTimeout(time);
-        time = setTimeout(logout, 20000)
+        time = setTimeout(logout, 60000)
         // 1000 milliseconds = 1 second
     }
 };

@@ -43,15 +43,16 @@ moment.locale('es');
 import { usePostulantes } from '@/hooks';
 import { FullScreenLoading } from '@/components/ui';
 import { Send } from '@mui/icons-material';
+import ModalEval from '../../../../components/eval/test';
 interface Props {
   postulantes: postulante[]
   convocatoria: IJob
-
+  items: any[]
   jurados: IUser[];
 
 }
 
-const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
+const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => {
 
   const router = useRouter();
   const { id } = router.query
@@ -797,6 +798,14 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados }) => {
         </Box>
 
       </Modal>
+      {/* 
+      <ModalEval title={'Evaluacion'} open={false} handleClose={function (): void {
+        throw new Error('Function not implemented.');
+      }} handleConfirm={function (): void {
+        throw new Error('Function not implemented.');
+      }} items={items} idPostulante={0}>
+
+      </ModalEval> */}
     </Paperbase>
   )
 }
@@ -858,7 +867,11 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     }
   })
 
-
+  const items = await prisma.item.findMany({
+    where: {
+      test_id: 1
+    }
+  })
 
 
   await prisma.$disconnect()
@@ -869,7 +882,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 
   return {
-    props: { convocatoria, jurados },
+    props: { convocatoria, jurados, items },
 
   }
 }

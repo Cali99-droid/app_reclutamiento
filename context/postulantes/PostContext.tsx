@@ -9,7 +9,7 @@ interface ContextProps {
       limpiarCriterios: () => void
       idUser: any
       juradosAsignados: any[]
-
+      idPos: string | number
       //Modales
       openClase: boolean
       handleOpenClase: (id: number) => void

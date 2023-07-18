@@ -1,8 +1,10 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useContext } from 'react';
 import { SideMenu } from '../ui/SideMenu';
 import { AdminNavBar } from '../admin';
 import { Box, Divider, Typography } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
+import { AuthContext } from '@/context';
+import { inactivity } from '@/helpers';
 
 
 interface Props extends PropsWithChildren {
@@ -13,6 +15,13 @@ interface Props extends PropsWithChildren {
 }
 
 export const AdminLayout: FC<Props> = ({ children, title, subTitle, icon }) => {
+    const { user } = useContext(AuthContext);
+    if (user) {
+
+        inactivity.inactivityTime()
+    } else {
+        console.log(false)
+    }
     return (
         <>    <ToastContainer />
             <nav>

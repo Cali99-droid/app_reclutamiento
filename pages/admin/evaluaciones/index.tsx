@@ -2,7 +2,7 @@ import { prisma } from '@/server/db/client';
 
 
 import { AdminLayout, JobsLayout } from "@/components/layouts";
-import { AppBar, Box, Button, Chip, Grid, IconButton, Link, List, ListItem, ListItemText, ListSubheader, Paper, TextField, Toolbar, Typography, useMediaQuery } from '@mui/material';
+import { AppBar, Box, Button, Chip, FormControl, Grid, IconButton, InputLabel, Link, List, ListItem, ListItemText, ListSubheader, MenuItem, Paper, Select, SelectChangeEvent, TextField, Toolbar, Typography, useMediaQuery } from '@mui/material';
 
 
 import { GetStaticProps, NextPage } from "next";
@@ -39,6 +39,7 @@ function generateRandom() {
   return retVal;
 }
 const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
+
   const [tests, setTests] = useState<any[]>(evaluaciones)
   const [id, setId] = useState<Number>()
   const [openAlert, setOpenAlert] = useState(false)
@@ -51,22 +52,25 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
   const router = useRouter();
 
   const [evaluacion, setEvaluacion] = useState('')
+  const [rolId, setRolId] = useState(0)
   const onEvalChange = (event: ChangeEvent<HTMLInputElement>) => {
 
     setEvaluacion(event.target.value);
 
   }
   const agregarEvaluacion = async (evaluacion: string) => {
-    const { data } = await reclutApi.post<any>('/admin/evaluaciones/create', { evaluacion });
+    const { data } = await reclutApi.post<any>('/admin/evaluaciones/create', { evaluacion, rolId });
     setTests([...tests, data.ev])
 
   }
   const editarEvaluacion = async () => {
-    const { data } = await reclutApi.put<any>('/admin/evaluaciones/create', { evaluacion, id });
+    const { data } = await reclutApi.put<any>('/admin/evaluaciones/create', { evaluacion, id, rolId });
 
     const testsAct = [...tests.map(t => {
       if (t.id === data.ev.id) {
         t.nombre = data.ev.nombre
+        t.rol.name = data.ev.rol.name
+        t.rol.id = data.ev.rol.id
       }
       return t;
     })]
@@ -78,21 +82,20 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
       toast.warning('Complete correctamente todos los campos')
     };
     if (id) {
-
       editarEvaluacion()
       toast.success('Actualizado con éxito')
     } else {
       agregarEvaluacion(evaluacion);
       toast.success('Actualizado con éxito')
     }
-
     setOpen(false)
   }
 
-  const handleEdit = (id: number, evaluacion: string) => {
+  const handleEdit = (id: number, evaluacion: string, rolId: number) => {
     setOpen(true)
     setId(id)
     setEvaluacion(evaluacion)
+    setRolId(rolId)
 
   }
   const handleClose = () => {
@@ -147,13 +150,16 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
 
     },
     {
+      field: 'responsable', headerName: 'Responsable', width: 320,
+    },
+    {
       field: 'action',
       headerName: 'Acciones',
       width: 250,
       renderCell: (params) => {
         return (
           <Box display={'flex'} justifyContent={'end'} width={'100%'}>
-            <IconButton disabled={params.row.postulantes > 0} aria-label="editar" color='info' onClick={() => { handleEdit(params.row.id, params.row.nombre) }}  >
+            <IconButton disabled={params.row.postulantes > 0} aria-label="editar" color='info' onClick={() => { handleEdit(params.row.id, params.row.nombre, params.row.rolId) }}  >
               <EditIcon />
             </IconButton>
 
@@ -171,6 +177,8 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
   const rows = tests.map((ev: any) => ({
     id: ev.id,
     nombre: ev.nombre,
+    responsable: ev.rol.name === 'jurado1' ? 'Jurado Docente' : 'Jurado Administrativo',
+    rolId: ev.rol.id
   }))
   return (
     <Paperbase title={"Administrar Evaluaciones "} subTitle={"Listado de Evaluaciones"}>
@@ -222,10 +230,27 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
             '& .MuiTextField-root': { m: 1, },
           }}
           noValidate
-          autoComplete="on" >
+          autoComplete="on" minWidth={200}>
 
           <TextField value={evaluacion} id="outlined-basic" label="Nombre de la evaluación" variant="outlined" onChange={onEvalChange}
           />
+          <FormControl >
+            <InputLabel id="select-rol">Rol</InputLabel>
+            <Select
+              labelId="select-rol"
+              id="select-rol"
+              value={rolId}
+              label="Age"
+              onChange={(e: SelectChangeEvent<number>) => setRolId(parseInt(e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
+            >
+
+
+              <MenuItem value={3}>Jurado Docente</MenuItem>
+              <MenuItem value={4}>Jurado Administrativo</MenuItem>
+
+            </Select>
+          </FormControl>
+
         </Box>
 
       </Modal>
@@ -243,7 +268,11 @@ export const getStaticProps: GetStaticProps = async () => {
 
 
 
-  const evaluaciones = await prisma.test.findMany();
+  const evaluaciones = await prisma.test.findMany({
+    include: {
+      rol: true
+    }
+  });
 
   await prisma.$disconnect()
 

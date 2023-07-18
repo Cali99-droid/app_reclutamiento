@@ -26,20 +26,21 @@ import ModalClase from '@/components/modal/ModalClase';
 import { PostulantsList } from '../../../components/postulants/PostulantsList';
 
 import { getSession } from 'next-auth/react';
+import ModalEval from '@/components/eval/test';
 interface Props {
     postulantes: postulante[]
     convocatoria: any
-
+    items: any[]
 
 }
 
-const EvaluarPage: NextPage<Props> = ({ convocatoria }) => {
+const EvaluarPage: NextPage<Props> = ({ convocatoria, items }) => {
     const router = useRouter();
     const { id } = router.query
     const { data, error } = useSWR<any[]>(`/api/jurado/postulantes/${id}`);
 
     const [postulantes, setPostulantes] = useState<any[]>([]);
-    console.log(postulantes)
+
     const { openClase, handleCloseClase, handleConfirmClase, openAptitud, handleConfirmAptitud, handleCloseAptitud, idUser } = useContext(PostContext);
 
     useEffect(() => {
@@ -69,9 +70,13 @@ const EvaluarPage: NextPage<Props> = ({ convocatoria }) => {
             </Box>
 
 
-            <ModalClase title={'Evaluar Clase Modelo'} open={openClase} handleClose={handleCloseClase} handleConfirm={handleConfirmClase} />
+            {/* <ModalClase title={'Evaluar Clase Modelo'} open={openClase} handleClose={handleCloseClase} handleConfirm={handleConfirmClase} /> */}
             <ModalAptitud title={'Evaluar aptitudes'} open={openAptitud} handleClose={handleCloseAptitud} handleConfirm={handleConfirmAptitud} />
+            <ModalEval title={'Evaluacion'} open={openClase} handleClose={handleCloseClase} handleConfirm={function (): void {
+                throw new Error('Function not implemented.');
+            }} items={items} idPostulante={0}>
 
+            </ModalEval>
 
         </Paperbase>
     )
@@ -82,6 +87,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
     const session: any = await getSession({ req });
 
     const { user } = session;
+
     const convocatoriaSer = await prisma.convocatoria_x_jurado.findFirst({
         where: {
             convocatoria_id: parseInt(id.toString())
@@ -118,8 +124,17 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
         }
     }
 
+    const items = await prisma.test.findMany({
+        where: {
+            rol_id: user.rol_id
+        },
+        select: {
+            id: true,
+            item: true
+        }
+    })
 
-    console.log(convocatoriaSer)
+
 
 
 
@@ -127,7 +142,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
     await prisma.$disconnect()
 
     return {
-        props: { convocatoria }
+        props: { convocatoria, items }
     }
 }
 

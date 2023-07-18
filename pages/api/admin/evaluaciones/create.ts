@@ -25,11 +25,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 }
 
 const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const {evaluacion} = req.body
+    const {evaluacion,rolId} = req.body
     try {
         const  ev = await prisma.test.create({
            data:{
-            nombre:evaluacion
+            nombre:evaluacion,
+            rol_id: rolId
+           },
+           include:{
+            rol:true
            }
         })
 
@@ -44,12 +48,16 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
      }
 }
 async function editEvaluacion(req: NextApiRequest, res: NextApiResponse<Data>) {
-    const {evaluacion,id} = req.body
+    const {evaluacion,id,rolId} = req.body
     try {
         const  ev = await prisma.test.update({
-           data:{
-            nombre:evaluacion
-           },where:{
+            data:{
+                nombre:evaluacion,
+                rol_id: rolId
+               },
+               include:{
+                rol:true
+               },where:{
             id
            }
         })

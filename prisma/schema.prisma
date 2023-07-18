@@ -276,6 +276,7 @@ model reconocimiento {
 model rol {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(255)
+  test test[]
   user user[]
 }
 
@@ -308,6 +309,7 @@ model user {
   convocatoria_x_jurado   convocatoria_x_jurado[]
   convocatoria_x_user     convocatoria_x_user[]
   evaluacion_x_postulante evaluacion_x_postulante[]
+  puntajes                puntajes[]
   persona                 persona                   @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_persona1")
   rol                     rol                       @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_rol")
 
@@ -342,17 +344,24 @@ model puntajes {
   total         Int
   test_id       Int
   postulante_id Int
+  user_id       Int
   puntaje_items puntaje_items[]
   postulante    postulante      @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_postulante1")
   test          test            @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_test1")
+  user          user            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_user1")
 
   @@index([postulante_id], map: "fk_puntajes_postulante1_idx")
   @@index([test_id], map: "fk_puntajes_test1_idx")
+  @@index([user_id], map: "fk_puntajes_user1_idx")
 }
 
 model test {
   id       Int        @id @default(autoincrement())
   nombre   String     @db.VarChar(200)
+  rol_id   Int?
   item     item[]
   puntajes puntajes[]
+  rol      rol?       @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_rol1")
+
+  @@index([rol_id], map: "fk_test_rol1_idx")
 }

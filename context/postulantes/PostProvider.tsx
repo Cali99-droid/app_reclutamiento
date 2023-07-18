@@ -201,7 +201,7 @@ export const PostProvider: FC<Props> = ({ children }) => {
                   limpiarCriterios,
                   idUser,
                   total,
-
+                  idPos,
                   //Modales
                   handleOpenClase,
                   openClase,
