@@ -8,9 +8,9 @@ export const inactivityTime = function () {
     document.onkeydown = resetTimer;
 
     function logout() {
-     
-        alert("Su session ah expirado");
-        signOut()
+     signOut()
+        alert("Su sesión ha expirado, vuelva a iniciar session");
+        
         //location.href = 'logout.html'
     }
 
