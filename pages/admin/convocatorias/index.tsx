@@ -100,7 +100,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
       field: 'titulo', headerName: 'Convocatoria', width: 320,
       renderCell: ({ row }) => {
         return (
-          <NextLink href={`/admin/convocatorias/convocatoria/${row.id}`} passHref legacyBehavior>
+          <NextLink href={`/admin/convocatorias/convocatoria/${row.idConv}`} passHref legacyBehavior>
             <Link underline='always'>
               {row.titulo}
             </Link>
@@ -141,12 +141,12 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
         return (
 
           <Box display={'flex'} justifyContent={'end'} width={'100%'}>
-            <IconButton disabled={params.row.postulantes > 0} aria-label="editar" color='info' onClick={() => { router.push(`/admin/convocatorias/${params.row.id}`) }}  >
+            <IconButton disabled={params.row.postulantes > 0} aria-label="editar" color='info' onClick={() => { router.push(`/admin/convocatorias/${params.row.idConv}`) }}  >
               <EditIcon />
             </IconButton>
 
 
-            <IconButton disabled={params.row.postulantes > 0} color='error' aria-label="delete" onClick={() => { handleOpen(params.row.id) }}  >
+            <IconButton disabled={params.row.postulantes > 0} color='error' aria-label="delete" onClick={() => { handleOpen(params.row.idConv) }}  >
               <DeleteIcon />
             </IconButton>
           </Box>
@@ -161,6 +161,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
 
   const rows = convocatorias.map((job, index) => ({
     id: index + 1,
+    idConv: job.id,
     titulo: job.titulo,
     vacantes: job.vacantes,
     estado: job.estado.nombre,

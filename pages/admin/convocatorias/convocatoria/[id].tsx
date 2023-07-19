@@ -138,11 +138,11 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       field: 'postulante',
       headerName: 'Postulante',
       width: 250,
-      renderCell: ({ row }) => {
+      renderCell: (params) => {
         return (
-          <NextLink href={`/admin/convocatorias/convocatoria/p/${row.idPos}`} passHref legacyBehavior>
+          <NextLink href={`/admin/convocatorias/convocatoria/p/${params.row.idPos}`} passHref legacyBehavior>
             <Link underline='always'>
-              {row.postulante}
+              {params.row.postulante}
             </Link>
           </NextLink>
         )
@@ -336,7 +336,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     postulante: formatoNombre(p.postulante.persona.nombres, p.postulante.persona.apellido_pat, p.postulante.persona.apellido_mat),
     estado: parseInt(p.estado_postulante_id),
     edad: calcularEdad(p.postulante.nacimiento) + ' años',
-    idPos:p.id,
+    idPos: p.id,
     sueldo: 'S/ ' + p.postulante.sueldo,
     puntajeEntr: devolverPuntajeEntrevista(p.postulante.evaluacion_x_postulante),
     puntajeJur: devolverPuntajeJurado(p.postulante.evaluacion_x_postulante),
