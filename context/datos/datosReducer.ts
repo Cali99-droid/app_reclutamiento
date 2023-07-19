@@ -83,7 +83,7 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
                         e.institucion = action.payload.institucion;
                         e.profesion = action.payload.profesion;
                         e.year = action.payload.year
-
+                        e.doc= action.payload.doc
                     }
                     return e;
                 })]
@@ -151,6 +151,7 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
                         e.referencia = action.payload.referencia;
                         e.remuneracion = action.payload.remuneracion;
                         e.year = action.payload.year;
+                        e.doc= action.payload.doc
                     }
                     return e;
                 })]
@@ -181,7 +182,7 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
                         e.horas=action.payload.horas
                         e.descripcion=action.payload.descripcion
                         e.year = action.payload.year
-
+                        e.doc= action.payload.doc
                     }
                     return e;
                 })]
@@ -210,7 +211,7 @@ export const datosReducer = (state: DatosState, action: DatosType): DatosState =
                         e.institucion = action.payload.institucion;
                         e.descripcion=action.payload.descripcion
                         e.year = action.payload.year
-
+                        e.doc=action.payload.doc
                     }
                     return e;
                 })]

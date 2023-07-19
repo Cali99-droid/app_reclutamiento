@@ -334,7 +334,7 @@ const Step2 = () => {
                                 <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Cargando...</Typography>
                                 <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
                                 <InputLabel id="demo-simple-label">Vista previa del certificado</InputLabel>
-                                <object onLoad={() => setLoadDoc(false)} data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
+                                <object onLoad={() => setLoadDoc(false)} data={`hhttps://caebucket.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
                                     <p>No se puede previsualizar</p>
                                 </object>
 

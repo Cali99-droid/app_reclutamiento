@@ -56,7 +56,7 @@ export const NavBar = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
 
     const { isLoggedIn, user, logout } = useContext(AuthContext);
-    console.log(user?.persona.postulante[0].image)
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 

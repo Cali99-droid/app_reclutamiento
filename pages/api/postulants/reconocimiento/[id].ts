@@ -2,7 +2,8 @@ import { IEstudio, ITics } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
 import { reconocimiento } from '@prisma/client';
-
+import aws from 'aws-sdk';
+import AWS from '../../../../aws-config';
 type Data = 
 |{message: string}
 |reconocimiento;
@@ -32,8 +33,25 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 const deleteReconocimiento= async(req:NextApiRequest, res:NextApiResponse<Data>)=>{
     const{id}:any = req.query ;
  
-
-
+    const rec = await  prisma.reconocimiento.findUnique({
+        where:{
+            id:parseInt(id)
+        },
+        select:{
+          doc:true
+        }
+      })
+     
+    if(rec){
+        const s3 = new AWS.S3();
+        const deleteParams: aws.S3.DeleteObjectRequest = {
+            Bucket: process.env.BUCKET_NAME!,
+            Key: 'docs/'+ rec.doc,
+        };
+    
+    const resp = await s3.deleteObject(deleteParams).promise();
+    console.log('se elimino el documento', resp)
+}
     try {
         const delReco = await prisma.reconocimiento.delete({
             where:{

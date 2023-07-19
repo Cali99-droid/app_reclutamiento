@@ -209,13 +209,13 @@ export const DatosProvider: FC<Props> = ({ children }) => {
     }
 
     //-------------------Reconocimientos---------------------
-    const agregarReconocimiento = async (reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number) => {
-        const { data } = await reclutApi.post<IReconocimiento>('/postulants/reconocimiento', { reconocimento, institucion, year, descripcion, idPos });
+    const agregarReconocimiento = async (reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number, doc: any) => {
+        const { data } = await reclutApi.post<IReconocimiento>('/postulants/reconocimiento', { reconocimento, institucion, year, descripcion, idPos, doc });
         dispatch({ type: 'Add-Reconocimiento', payload: data });
 
     }
-    const editarReconocimiento = async (id: number, reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number) => {
-        const { data } = await reclutApi.put<IReconocimiento>('/postulants/reconocimiento', { id, reconocimento, institucion, year, descripcion, idPos });
+    const editarReconocimiento = async (id: number, reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number, doc: any) => {
+        const { data } = await reclutApi.put<IReconocimiento>('/postulants/reconocimiento', { id, reconocimento, institucion, year, descripcion, idPos, doc });
         dispatch({ type: 'Update-Reconocimiento', payload: data });
 
     }

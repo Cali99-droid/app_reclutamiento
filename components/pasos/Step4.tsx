@@ -187,10 +187,10 @@ const Step4 = () => {
         }
 
         if (idRec) {
-            editarReconocimiento(idRec, reconocimiento, year, institucion, descripcion, IdPos)
+            editarReconocimiento(idRec, reconocimiento, year, institucion, descripcion, IdPos, docRec)
             toast.success('Actualizado con éxito')
         } else {
-            agregarReconocimiento(reconocimiento, year, institucion, descripcion, IdPos)
+            agregarReconocimiento(reconocimiento, year, institucion, descripcion, IdPos, docRec)
             toast.success('Agregado con éxito')
         }
 
@@ -212,15 +212,54 @@ const Step4 = () => {
 
     }
 
-    function handleEditReconocimiento(id: number, reconocimiento: string, institucion: string, descripcion: string, year: string): void {
+    function handleEditReconocimiento(id: number, reconocimiento: string, institucion: string, descripcion: string, year: string, doc: any): void {
         handleOpenRec()
         setIdRec(id);
         setReconocimiento(reconocimiento)
         setInstitucion(institucion)
         setDescripcion(descripcion);
         setYear(year)
+        setDocRec(doc)
+    }
+
+    //---FILES RECONOCIMIENTOS
+    const fileInputRefRec = useRef<HTMLInputElement>(null)
+    const [fileRec, setFileRec] = useState<File | null>(null);
+    const [docRec, setDocRec] = useState<string | null>(null);
+    const onFilesSelectedRec = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+        if (!target.files || target.files.length === 0) {
+            return;
+        }
+        const selectedFile = target.files[0];
+
+
+        try {
+
+
+            const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/docupload', {
+                name: target.files[0].name,
+                type: target.files[0].type
+            });
+            console.log(data)
+            const url = data.url;
+            const res = await reclutApi.put(url, target.files[0], {
+                headers: {
+                    "Content-type": target.files[0].type,
+                    "Access-Control-Allow-Origin": "*"
+                }
+            })
+            setDocRec(data.message);
+
+        } catch (error) {
+            console.log({ error });
+        }
+
 
     }
+    const handleReplaceFileRec = () => {
+        setFileRec(null);
+        setDocRec(null);
+    };
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
@@ -380,12 +419,12 @@ const Step4 = () => {
                             <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
                                 <Box >
                                     <InputLabel id="demo-simple-select-label">Vista previa del certificado</InputLabel>
-                                    <object data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
+                                    <object data={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
                                         <p>No se puede previsualizar</p>
                                     </object>
 
                                 </Box>
-                                <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
+                                <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFileRec}>
                                     Quitar
                                 </Button>
                             </Box>
@@ -452,8 +491,9 @@ const Step4 = () => {
 
                                             <TableCell align="right">{e.year}</TableCell>
                                             <TableCell align="right">{e.descripcion}</TableCell>
+
                                             <TableCell align="right">
-                                                <IconButton onClick={() => handleEditReconocimiento(e.id, e.reconocimento, e.institucion, e.descripcion, e.year)} >
+                                                <IconButton onClick={() => handleEditReconocimiento(e.id, e.reconocimento, e.institucion, e.descripcion, e.year, e.doc)} >
                                                     <Edit />
                                                 </IconButton>
                                                 <IconButton onClick={() => handleDeleteRec(e.id)} color='error'>
@@ -532,6 +572,32 @@ const Step4 = () => {
                             onChange={onDescripcionChange}
                             required
                         />
+                        <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
+                        {docRec && (
+                            <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
+                                <Box >
+                                    <InputLabel id="demo-simple-select-label">Vista previa del certificado</InputLabel>
+                                    <object data={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${docRec}`} type="application/pdf" width="60%" height="200px">
+                                        <p>No se puede previsualizar</p>
+                                    </object>
+
+                                </Box>
+                                <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFileRec}>
+                                    Quitar
+                                </Button>
+                            </Box>
+                        )}
+                        <input
+                            ref={fileInputRefRec}
+                            type="file"
+
+                            accept='.pdf'
+                            style={{ display: 'none' }}
+                            onChange={onFilesSelectedRec}
+                        />
+                        <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRefRec.current?.click()} disabled={docRec ? true : false}>
+                            Subir Certificado
+                        </Button>
 
                     </Box>
 

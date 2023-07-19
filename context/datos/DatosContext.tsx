@@ -53,8 +53,8 @@ interface ContextProps {
 
 
     setReconocimiento: () => Promise<void>
-    agregarReconocimiento: (reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number) => void
-    editarReconocimiento: (id: number, reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number) => Promise<void>
+    agregarReconocimiento: (reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number, doc: any) => Promise<void>
+    editarReconocimiento: (id: number, reconocimento: string, year: string, institucion: string, descripcion: string, idPos: number, doc: any) => Promise<void>
     quitarReconocimiento: (id: number) => void
 
 

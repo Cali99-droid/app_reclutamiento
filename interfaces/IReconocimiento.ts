@@ -5,4 +5,5 @@ export interface IReconocimiento {
     institucion:string
     year:string
     descripcion: string
+    doc:any
 }
