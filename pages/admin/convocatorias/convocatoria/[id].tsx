@@ -138,11 +138,11 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       field: 'postulante',
       headerName: 'Postulante',
       width: 250,
-      renderCell: (params) => {
+      renderCell: ({ row }) => {
         return (
-          <NextLink href={`/admin/convocatorias/convocatoria/p/${params.row.idPos}`} passHref legacyBehavior>
+          <NextLink href={`/admin/convocatorias/convocatoria/p/${row.idPos}`} passHref legacyBehavior>
             <Link underline='always'>
-              {params.row.postulante}
+              {row.postulante}
             </Link>
           </NextLink>
         )
