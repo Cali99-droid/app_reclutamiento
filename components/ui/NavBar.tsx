@@ -295,7 +295,7 @@ export const NavBar = () => {
 
 
                 </Toolbar>
-                {isLoggedIn && user?.rol.name === 'postulante' && (
+                {isLoggedIn && (
 
                     <Box bgcolor={'#0045aa'} display={'flex'} justifyContent={'space-evenly'} alignItems={'center'} padding={2} >
                         <Box >
