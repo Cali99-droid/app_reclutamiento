@@ -14,8 +14,7 @@ import { toast } from 'react-toastify';
 import EastIcon from '@mui/icons-material/East';
 import { useContext, ChangeEvent } from 'react';
 import { DatosContext } from '@/context';
-import sharp from 'sharp';
-import imageConversion from 'image-conversion';
+
 interface Props {
 
 
