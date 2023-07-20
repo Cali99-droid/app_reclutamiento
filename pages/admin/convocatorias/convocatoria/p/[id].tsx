@@ -636,7 +636,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
 
 
                     <MenuItem disabled={ultimo} onClick={() => updateStatus(idPC, siguienteEstado.id)}>
-                        <Tooltip placement="left-start" title={`Promover a ${siguienteEstado.nombre}`}>
+                        <Tooltip placement="left-start" title={`Pasar a ${siguienteEstado.nombre}`}>
                             <span>
                                 <ListItemIcon>
                                     <ThumbUpOutlinedIcon />
