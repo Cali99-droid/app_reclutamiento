@@ -43,7 +43,7 @@ moment.locale('es');
 import { usePostulantes } from '@/hooks';
 import { FullScreenLoading } from '@/components/ui';
 import { Send } from '@mui/icons-material';
-import ModalEval from '../../../../components/eval/test';
+
 interface Props {
   postulantes: postulante[]
   convocatoria: IJob
@@ -108,19 +108,22 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
 
     if (pos) {
+
       refreshJurados()
+
       const seleccionados = pos.filter(d => d.estado_postulante_id === 6)
       const contratados = pos.filter(d => d.estado_postulante_id === 7)
       const descartados = pos.filter(d => d.estado_postulante_id === 4)
-
+      const aptos = pos.filter(d => d.estado_postulante_id !== 4)
       if (filtrando) {
-        const aptos = pos.filter(d => d.estado_postulante_id !== 4)
+
 
         setPostulantes(aptos);
       } else {
-        setPostulantes(pos)
-      }
 
+        setPostulantes(descartados)
+      }
+      console.log(postulantes)
 
       setSeleccionados(seleccionados);
       setDescartados(descartados);
@@ -129,7 +132,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pos])
+  }, [pos, filtrando])
 
 
   const columns: GridColDef[] = [
@@ -140,7 +143,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       width: 250,
       renderCell: ({ row }) => {
         return (
-          <NextLink href={`/admin/convocatorias/convocatoria/p/${row.idPos}`} passHref legacyBehavior>
+          <NextLink href={`/admin/convocatorias/convocatoria/p/${row.idPos}?conv=${id}`} passHref legacyBehavior>
             <Link underline='always'>
               {row.postulante}
             </Link>
@@ -178,29 +181,30 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     {
       field: 'estado',
       headerName: 'Estado',
-      width: 220,
+      width: 200,
       renderCell: (params) => {
 
         return (
+          <Chip label={`${params.row.estado}`} color="info" variant='outlined' />
 
-          <Select
-            value={parseInt(params.row.estado)}
-            label="Estado"
-            onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.idCp, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
-            sx={{ width: '200px' }}
-            disabled={convocatoria.estadoId === 3}
-          >
+          //     <Select
+          //       value={parseInt(params.row.estado)}
+          //       label="Estado"
+          //       onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.idCp, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
+          //       sx={{ width: '200px' }}
+          //       disabled={convocatoria.estadoId === 3}
+          //     >
 
-            <MenuItem value='1'> Inscrito </MenuItem>
-            <MenuItem value='2'> Pasa a Entrevista</MenuItem>
-            <MenuItem value='3'> Pasa a Evaluación</MenuItem>
-            <MenuItem value='4'> No Interesa </MenuItem>
-            <MenuItem value='5'> Interesante </MenuItem>
-            <MenuItem value='6'> Seleccionado</MenuItem>
-            <MenuItem value='7'> Contratado</MenuItem>
+          //       <MenuItem value='1'> Inscrito </MenuItem>
+          //       <MenuItem value='2'> Pasa a Entrevista</MenuItem>
+          //       <MenuItem value='3'> Pasa a Evaluación</MenuItem>
+          //       <MenuItem value='4'> No Interesa </MenuItem>
+          //       <MenuItem value='5'> Interesante </MenuItem>
+          //       <MenuItem value='6'> Seleccionado</MenuItem>
+          //       <MenuItem value='7'> Contratado</MenuItem>
 
 
-          </Select>
+          //     </Select>
         )
       }
     },
@@ -334,7 +338,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const rows = postulantes.map((p, index) => ({
     id: index + 1,
     postulante: formatoNombre(p.postulante.persona.nombres, p.postulante.persona.apellido_pat, p.postulante.persona.apellido_mat),
-    estado: parseInt(p.estado_postulante_id),
+    estado: p.estado_postulante.nombre,
     edad: calcularEdad(p.postulante.nacimiento) + ' años',
     idPos: p.postulante.id,
     sueldo: 'S/ ' + p.postulante.sueldo,
@@ -493,7 +497,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       {isLoading
         ? <FullScreenLoading />
         :
-        <Box sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} className="fadeIn" >
+        <Box sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible', position: 'relative', } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} className="fadeIn"  >
           <Box mb={2}>
             <Breadcrumbs aria-label="breadcrumb">
               <Link underline="hover" color="inherit" onClick={() => router.push("/admin/convocatorias")} sx={{ cursor: 'pointer' }}>

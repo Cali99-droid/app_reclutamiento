@@ -1,7 +1,7 @@
 import { prisma } from '@/server/db/client';
 
 import { IEstudio } from "@/interfaces";
-import { Box, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery, IconButton } from '@mui/material';
+import { Box, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery, IconButton, Fab, Menu, MenuItem, ListItemIcon, Tooltip, Chip, Divider } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 
@@ -9,10 +9,14 @@ import Image from 'next/image';
 import { calcularEdad } from '@/helpers/functions';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
-
+import AddReactionIcon from '@mui/icons-material/AddReaction';
 import PhoneIcon from '@mui/icons-material/Phone';
 import MailIcon from '@mui/icons-material/Mail';
 import { useRouter } from 'next/router';
+
+import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
+import SwitchAccessShortcutOutlinedIcon from '@mui/icons-material/SwitchAccessShortcutOutlined';
 import SchoolIcon from '@mui/icons-material/School';
 import WorkIcon from '@mui/icons-material/Work';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
@@ -25,10 +29,15 @@ import { cargo, investigacion, capacitacion, reconocimiento, tics, aficion } fro
 import moment from 'moment';
 import 'moment/locale/es';
 import { DockOutlined } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
+import { useState } from 'react';
+import { reclutApi } from '@/apies';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 moment.locale('es');
 interface Props {
-    postulante: any
-
+    postulante: any,
+    estados: any[]
 
 }
 export const config = {
@@ -63,10 +72,63 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const PostulantePage: NextPage<Props> = ({ postulante }) => {
+const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
 
     const router = useRouter();
     const matches = useMediaQuery('(min-width:600px)');
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [ultimo, setUltimo] = useState(false)
+    const estado = postulante.postulante_x_convocatoria[0].estado_postulante;
+
+    const idPC = postulante.postulante_x_convocatoria[0].id;
+
+    const [estadoPostulante, setEstadoPostulante] = useState<any>(estado.nombre)
+    const [idEstado, setIdEstado] = useState(postulante.postulante_x_convocatoria[0].estado_postulante.id);
+
+
+    const [siguienteEstado, setSiguienteEstado] = useState(estados.filter(e => e.id === idEstado + 1)[0])
+    if (!siguienteEstado) {
+        console.log(ultimo)
+        setSiguienteEstado(estados.filter(e => e.id === 7)[0])
+        setUltimo(true)
+    }
+
+    // const siguienteEstado = estados.filter(e => e.id === idEstado + 1)[0];
+
+    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const updateStatus = async (id: number, newStatus: string) => {
+
+        const esta = estados.filter(e => e.id === newStatus + 1)[0];
+        try {
+
+            const res = await reclutApi.put('/admin/postulantes/1', { id, status: newStatus });
+            handleClose();
+            toast.success(' ¡Promovido Correctamente! ')
+            // const newId = parseInt(newStatus) + 1
+            // setIdEstado(newId)   
+            setEstadoPostulante(siguienteEstado.nombre)
+            if (!esta) {
+                setUltimo(true)
+                return;
+            } else {
+                setSiguienteEstado(estados.filter(e => e.id === newStatus + 1)[0])
+
+            }
+
+
+        } catch (error) {
+
+            console.log(error);
+            alert('No se pudo actualizar el estado del postulante');
+        }
+    }
     return (
         <Paperbase title={"Postulante "} subTitle={'ficha'}  >
 
@@ -95,7 +157,9 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
                         <Item elevation={1}>
                             Ficha del Postulante
                         </Item>
+
                     </Grid>
+
                     <Grid item xs={12} sm={3}>
                         <Item elevation={1}>
                             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -110,7 +174,10 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
                             </Box>
                             <Box mt={2} textAlign={'center'}>
                                 <Typography > {postulante.persona.nombres + ' ' + postulante.persona.apellido_pat + ' ' + postulante.persona.apellido_mat}</Typography>
+
+
                                 <Typography fontSize={12}> {calcularEdad(postulante.nacimiento)} Años</Typography>
+
                                 <Box ml={4} mt={1} display={'flex'} flexDirection={'column'} alignItems={'start'} gap={1}>
 
                                     <Box display={'flex'} gap={1}>
@@ -126,7 +193,14 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
                                         <MailIcon /> <Typography fontSize={12}>  {postulante.persona.user[0].email}</Typography>
                                     </Box>
                                 </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
 
+                                    <Chip
+
+                                        label={estadoPostulante}
+                                        color="info"
+                                    />
+                                </Box>
 
 
 
@@ -140,7 +214,7 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
                             <Box display={'flex'} justifyContent={'space-between'} padding={2}>
                                 <Box display={'flex'} flexDirection={'column'} gap={1}>
                                     <Typography fontWeight={'bold'}>Numero de Documento: </Typography>{postulante.numeroDocumento}
-                                    <Typography fontWeight={'bold'}>Nacimiento: </Typography>{moment(postulante.nacimiento).format('L')}
+                                    <Typography fontWeight={'bold'}>Nacimiento: </Typography>{moment(postulante.nacimiento).add(1, 'days').toDate().toLocaleDateString()}
                                     <Typography fontWeight={'bold'}>Pretención Salarial: </Typography>S/ {postulante.sueldo}
                                     <Typography fontWeight={'bold'}>Estado Civil: </Typography>{postulante.estado_civil}
 
@@ -534,6 +608,78 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
 
                 </Grid>
 
+                <Fab color="primary" aria-label="add"
+                    onClick={handleMenu} sx={{
+                        position: 'sticky',
+                        bottom: 100,
+                        left: 2000,
+                    }}
+                >
+                    <SwitchAccessShortcutOutlinedIcon />
+                </Fab>
+                <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                >
+
+
+
+                    <MenuItem disabled={ultimo} onClick={() => updateStatus(idPC, siguienteEstado.id)}>
+                        <Tooltip placement="left-start" title={`Promover a ${siguienteEstado.nombre}`}>
+                            <span>
+                                <ListItemIcon>
+                                    <ThumbUpOutlinedIcon />
+                                </ListItemIcon>
+                                {siguienteEstado.nombre}
+                            </span>
+                        </Tooltip>
+                    </MenuItem>
+
+
+
+                    {/* <MenuItem onClick={handleClose}>
+
+                        <ListItemIcon>
+
+                            <ThumbUpOutlinedIcon />
+                        </ListItemIcon>
+                        Interesante
+
+                    </MenuItem> */}
+                    <MenuItem onClick={handleClose}>
+                        <Tooltip placement="left-start" title={`Descartar`}>
+                            <span>
+                                <ListItemIcon>
+                                    <ThumbDownOffAltOutlinedIcon />
+                                </ListItemIcon>
+                                No interesa
+                            </span>
+                        </Tooltip>
+                    </MenuItem>
+                    <Divider />
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }} padding={1}>
+
+
+                        <Chip
+                            variant='outlined'
+                            label={estadoPostulante}
+                            color="info"
+                        />
+
+                    </Box >
+                </Menu>
+
 
 
 
@@ -547,8 +693,15 @@ const PostulantePage: NextPage<Props> = ({ postulante }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
-    const { id = '' } = query;
-
+    const { id = '', conv = '' } = query;
+    if (isNaN(parseInt(id.toString())) || isNaN(parseInt(conv.toString()))) {
+        return {
+            redirect: {
+                destination: '/admin/convocatorias',
+                permanent: false
+            }
+        }
+    }
     const post = await prisma.postulante.findUnique({
         where: {
             id: parseInt(id.toString())
@@ -569,18 +722,37 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             capacitacion: true,
             aficion: true,
             reconocimiento: true,
-            tics: true
+            tics: true,
+            postulante_x_convocatoria: {
+                where: {
+                    convocatoria_id: parseInt(conv.toString()),
+                },
+                include: {
+                    estado_postulante: true,
+                }
+            }
         }
     })
 
+    if (!post || post.postulante_x_convocatoria.length <= 0) {
 
+        return {
+            redirect: {
+                destination: '/admin/convocatorias',
+                permanent: false
+            }
+        }
+
+
+    }
+    const estados = await prisma.estado_postulante.findMany();
     const postulante = JSON.parse(JSON.stringify(post))
 
-
+    await prisma.$disconnect();
     return {
         props: {
             postulante,
-
+            estados,
 
 
         }

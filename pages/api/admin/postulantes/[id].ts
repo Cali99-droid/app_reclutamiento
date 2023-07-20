@@ -52,6 +52,7 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
         
         
         include: {
+          estado_postulante:true,
           postulante: {
             include: {
               persona: {
@@ -64,8 +65,6 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
                 where:{
                   convocatoria_id:parseInt(id.toString()),
                   
-                 
-
                 },
                 select:{
                   puntaje:true,

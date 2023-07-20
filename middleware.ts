@@ -9,6 +9,7 @@ export async function middleware(req: NextRequest) {
 
     const requestedPage = req.nextUrl.pathname;
     const validRoles = ['admin'];
+    const validRols = ['admin','postulante'];
     const validRolJurados = ['jurado1', 'jurado2','admin'];
 
     if( !session ){
@@ -47,7 +48,7 @@ export async function middleware(req: NextRequest) {
         }
         });
     };
-    if( requestedPage.includes('/api/postulants') && session.user.rol.name !== 'postulante' ){
+    if( requestedPage.includes('/api/postulants') && !validRols.includes( session.user.rol.name )  ){
  
       return new Response( JSON.stringify({ message: 'No autorizado' }),{
         status: 401,
@@ -61,7 +62,7 @@ export async function middleware(req: NextRequest) {
  
       return NextResponse.redirect(new URL('/', req.url));
     };
-    if( requestedPage.includes('/postulant') &&  session.user.rol.name !== 'postulante' ){
+    if( requestedPage.includes('/postulant') &&  !validRols.includes( session.user.rol.name )  ){
  
       return NextResponse.redirect(new URL('/', req.url));
     };
