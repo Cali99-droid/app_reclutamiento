@@ -34,7 +34,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
     <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion} imageFullUrl={`${convocatoria.img}`}>
 
       <Box
-        className="fadeIn" sx={{ mt: 20, }} display={'flex'}
+        className="fadeIn" sx={{ mt: 28, }} display={'flex'}
         gap={4}
         alignItems="center" justifyContent={'center'} width={'50%'} margin={'auto'}
 

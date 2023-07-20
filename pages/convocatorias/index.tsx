@@ -26,11 +26,11 @@ export default function ConvocatoriasPage() {
 
   return (
     <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatorias a trabajos en Ancash"}>
-      <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18} >
+      <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={22} >
         <Box padding={3}  >
-          <Typography fontSize={50} variant='h1' component='h1' color={'#000'} fontWeight={'bold'}  >Convocatoria {new Date().getFullYear()}</Typography>
+          <Typography fontSize={35} variant='h1' component='h1' color={'#000'} fontWeight={'bold'}  >Convocatoria {new Date().getFullYear()}</Typography>
 
-          <Typography color={grey[700]} variant='h2' sx={{ mt: 2 }}>Encuentra tu perfil y postula </Typography>
+          <Typography fontSize={18} color={grey[700]} variant='h2' sx={{ mt: 2 }}>Encuentra tu perfil y postula </Typography>
         </Box>
         <Divider />
         <Box >

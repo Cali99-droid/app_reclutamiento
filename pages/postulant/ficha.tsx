@@ -23,7 +23,7 @@ import BiotechIcon from '@mui/icons-material/Biotech';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DevicesIcon from '@mui/icons-material/Devices';
 import moment from 'moment';
-import { ArrowBack, Edit } from '@mui/icons-material';
+import { ArrowBack, Edit, Padding } from '@mui/icons-material';
 import { useContext } from 'react';
 import { AuthContext } from '@/context';
 import NextLink from 'next/link';
@@ -53,9 +53,10 @@ const imageStyle = {
 };
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: '#0045AA',
+        backgroundColor: '#4565D0',
         color: theme.palette.common.white,
-        fontWeight: 700
+        fontWeight: 600,
+        padding: 12,
 
 
     },
@@ -74,7 +75,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
     return (
         <JobsLayout title={"Postulante "} pageDescription={'Ficha'} >
 
-            <Box bgcolor={'#F8F8FF'} paddingBottom={6} mt={4}>
+            <Box bgcolor={'#EDF1F7'} paddingBottom={6} mt={6}>
 
 
                 <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: '95%', margin: 'auto', overflow: 'visible' }} pt={15}  >
@@ -84,7 +85,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                     </Box>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={10}>
-                            <Item elevation={1} sx={{ bgcolor: '#0045AA', padding: 1 }} >
+                            <Item elevation={1} sx={{ bgcolor: '#4565D0', padding: 1 }} >
                                 <Typography fontWeight={'bold'} color={'#FFF'}>Ficha del Postulante</Typography>
                             </Item>
                         </Grid>
@@ -193,43 +194,47 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                         <SchoolIcon sx={{ color: '#001C75' }} />
                                         <Typography fontWeight={'bold'} >ESTUDIOS / PROFESIONES</Typography>
                                     </Box>
-                                    <Box maxWidth={matches ? '100%' : 400} mt={1}>
-                                        <TableContainer  >
-                                            <Table aria-label="simple table" >
-
-                                                <TableHead >
-                                                    <TableRow>
-                                                        <StyledTableCell >Profesión</StyledTableCell>
-                                                        <StyledTableCell align="right">Institución</StyledTableCell>
-                                                        <StyledTableCell align="right">Grado</StyledTableCell>
-                                                        <StyledTableCell align="right">Año</StyledTableCell>
-
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {postulante.estudios.map((e: IEstudio) => (
-                                                        <TableRow
-                                                            key={e.id}
-                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                        >
-                                                            <TableCell component="th" scope="row">
-                                                                {e.profesion}
-                                                            </TableCell>
-                                                            <TableCell align="right">{e.institucion}</TableCell>
-                                                            <TableCell align="right">{e.grado}</TableCell>
-                                                            <TableCell align="right">{e.year}</TableCell>
-
-                                                        </TableRow>
-                                                    ))}
-                                                </TableBody>
-                                            </Table>
-                                        </TableContainer>
+                                    <Divider />
+                                    <Box maxWidth={matches ? '100%' : 400} mt={3}>
                                         {
-                                            postulante.estudios.length === 0 && (
+                                            postulante.estudios.length === 0 ? (
                                                 <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
+                                            ) : (
+                                                <TableContainer  >
+                                                    <Table aria-label="simple table" >
+
+                                                        <TableHead >
+                                                            <TableRow>
+                                                                <StyledTableCell >Profesión</StyledTableCell>
+                                                                <StyledTableCell align="right">Institución</StyledTableCell>
+                                                                <StyledTableCell align="right">Grado</StyledTableCell>
+                                                                <StyledTableCell align="right">Año</StyledTableCell>
+
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {postulante.estudios.map((e: IEstudio) => (
+                                                                <TableRow
+                                                                    key={e.id}
+                                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                >
+                                                                    <TableCell component="th" scope="row">
+                                                                        {e.profesion}
+                                                                    </TableCell>
+                                                                    <TableCell align="right">{e.institucion}</TableCell>
+                                                                    <TableCell align="right">{e.grado}</TableCell>
+                                                                    <TableCell align="right">{e.year}</TableCell>
+
+                                                                </TableRow>
+                                                            ))}
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
                                             )
                                         }
+
+
                                     </Box>
                                 </Box>
                             </Item>
@@ -241,51 +246,55 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                         <WorkIcon sx={{ color: '#001C75' }} />
                                         <Typography fontWeight={'bold'} >CARGOS DE RESPONSABILIDAD O DE CONFIANZA DESEMPEÑADOS</Typography>
                                     </Box>
-                                    <Box maxWidth={matches ? '100%' : 400} mt={1}>
-                                        <TableContainer   >
-
-                                            <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <StyledTableCell >Año</StyledTableCell>
-                                                        <StyledTableCell>Cargo</StyledTableCell>
-                                                        <StyledTableCell align="right">Institución</StyledTableCell>
-                                                        <StyledTableCell align="right">Referencia</StyledTableCell>
-                                                        {/* <StyledTableCell align="right">Nivel</StyledTableCell> */}
-                                                        {/* <StyledTableCell align="right">Personas a cargo</StyledTableCell> */}
-                                                        <StyledTableCell align="right">Remuneración</StyledTableCell>
-
-
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {postulante.cargo.map((e: ICargo) => (
-                                                        <TableRow
-                                                            key={e.id}
-                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                        >
-                                                            <TableCell >{e.year}</TableCell>
-                                                            <TableCell component="th" scope="row">
-                                                                {e.descripcion}
-                                                            </TableCell>
-                                                            <TableCell align="right">{e.institucion}</TableCell>
-                                                            <TableCell align="right">{e.referencia}</TableCell>
-                                                            {/* <TableCell align="right">{e.nivel}</TableCell> */}
-                                                            {/* <TableCell align="right">{e.cantidadCargo}</TableCell> */}
-                                                            <TableCell align="right">{e.remuneracion}</TableCell>
-
-
-                                                        </TableRow>
-                                                    ))}
-                                                </TableBody>
-                                            </Table>
-                                        </TableContainer>
+                                    <Divider />
+                                    <Box maxWidth={matches ? '100%' : 400} mt={3}>
                                         {
-                                            postulante.cargo.length === 0 && (
+                                            postulante.cargo.length === 0 ? (
                                                 <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
+                                            ) : (
+                                                <TableContainer   >
+
+                                                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <StyledTableCell >Año</StyledTableCell>
+                                                                <StyledTableCell>Cargo</StyledTableCell>
+                                                                <StyledTableCell align="right">Institución</StyledTableCell>
+                                                                <StyledTableCell align="right">Referencia</StyledTableCell>
+                                                                {/* <StyledTableCell align="right">Nivel</StyledTableCell> */}
+                                                                {/* <StyledTableCell align="right">Personas a cargo</StyledTableCell> */}
+                                                                <StyledTableCell align="right">Remuneración</StyledTableCell>
+
+
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {postulante.cargo.map((e: ICargo) => (
+                                                                <TableRow
+                                                                    key={e.id}
+                                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                >
+                                                                    <TableCell >{e.year}</TableCell>
+                                                                    <TableCell component="th" scope="row">
+                                                                        {e.descripcion}
+                                                                    </TableCell>
+                                                                    <TableCell align="right">{e.institucion}</TableCell>
+                                                                    <TableCell align="right">{e.referencia}</TableCell>
+                                                                    {/* <TableCell align="right">{e.nivel}</TableCell> */}
+                                                                    {/* <TableCell align="right">{e.cantidadCargo}</TableCell> */}
+                                                                    <TableCell align="right">{e.remuneracion}</TableCell>
+
+
+                                                                </TableRow>
+                                                            ))}
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
                                             )
                                         }
+
+
 
                                     </Box>
                                 </Box>
@@ -299,41 +308,42 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                         <BiotechIcon sx={{ color: '#001C75' }} />
                                         <Typography fontWeight={'bold'} >INVESTIGACIONES, PROYECTOS U OTROS TRABAJOS ACADÉMICOS REALIZADOS COMO EXPERIENCIA</Typography>
                                     </Box>
-                                    <Box maxWidth={matches ? '100%' : 400} mt={1}>
-
-                                        <TableContainer   >
-
-                                            <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <StyledTableCell>Investigación</StyledTableCell>
-                                                        <StyledTableCell align="right">Institución</StyledTableCell>
-                                                        <StyledTableCell align="right">Año</StyledTableCell>
-
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {postulante.investigacion.map((e: IInvestigacion) => (
-                                                        <TableRow
-                                                            key={e.id}
-                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                        >
-                                                            <TableCell component="th" scope="row">
-                                                                {e.titulo}
-                                                            </TableCell>
-                                                            <TableCell align="right">{e.institucion}</TableCell>
-
-                                                            <TableCell align="right">{e.year}</TableCell>
-
-                                                        </TableRow>
-                                                    ))}
-                                                </TableBody>
-                                            </Table>
-                                        </TableContainer>
+                                    <Divider />
+                                    <Box maxWidth={matches ? '100%' : 400} mt={3}>
                                         {
-                                            postulante.investigacion.length === 0 && (
+                                            postulante.investigacion.length === 0 ? (
                                                 <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
+                                            ) : (
+                                                <TableContainer   >
+
+                                                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <StyledTableCell>Investigación</StyledTableCell>
+                                                                <StyledTableCell align="right">Institución</StyledTableCell>
+                                                                <StyledTableCell align="right">Año</StyledTableCell>
+
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {postulante.investigacion.map((e: IInvestigacion) => (
+                                                                <TableRow
+                                                                    key={e.id}
+                                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                >
+                                                                    <TableCell component="th" scope="row">
+                                                                        {e.titulo}
+                                                                    </TableCell>
+                                                                    <TableCell align="right">{e.institucion}</TableCell>
+
+                                                                    <TableCell align="right">{e.year}</TableCell>
+
+                                                                </TableRow>
+                                                            ))}
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
                                             )
                                         }
                                     </Box>
@@ -347,44 +357,47 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                         <MilitaryTechIcon sx={{ color: '#001C75' }} />
                                         <Typography fontWeight={'bold'} textTransform={'uppercase'} >Capacitaciones/Cursos</Typography>
                                     </Box>
-                                    <Box maxWidth={matches ? '100%' : 400} mt={1}>
-                                        <TableContainer   >
+                                    <Divider />
+                                    <Box maxWidth={matches ? '100%' : 400} mt={3}>
 
-                                            <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <StyledTableCell>Titulo</StyledTableCell>
-                                                        <StyledTableCell align="right">Institución</StyledTableCell>
-                                                        <StyledTableCell align="right">Horas</StyledTableCell>
-                                                        <StyledTableCell align="right">Año</StyledTableCell>
-                                                        <StyledTableCell align="right">Detalles</StyledTableCell>
-
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {postulante.capacitacion.map((e: ICapacitacion) => (
-                                                        <TableRow
-                                                            key={e.id}
-                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                        >
-                                                            <TableCell component="th" scope="row">
-                                                                {e.titulo}
-                                                            </TableCell>
-                                                            <TableCell align="right">{e.institucion}</TableCell>
-                                                            <TableCell align="right">{e.horas}</TableCell>
-
-                                                            <TableCell align="right">{e.year}</TableCell>
-                                                            <TableCell align="right">{e.descripcion}</TableCell>
-
-                                                        </TableRow>
-                                                    ))}
-                                                </TableBody>
-                                            </Table>
-                                        </TableContainer>
                                         {
-                                            postulante.capacitacion.length === 0 && (
+                                            postulante.capacitacion.length === 0 ? (
                                                 <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
+                                            ) : (
+                                                <TableContainer   >
+
+                                                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <StyledTableCell>Titulo</StyledTableCell>
+                                                                <StyledTableCell align="right">Institución</StyledTableCell>
+                                                                <StyledTableCell align="right">Horas</StyledTableCell>
+                                                                <StyledTableCell align="right">Año</StyledTableCell>
+                                                                <StyledTableCell align="right">Detalles</StyledTableCell>
+
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {postulante.capacitacion.map((e: ICapacitacion) => (
+                                                                <TableRow
+                                                                    key={e.id}
+                                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                >
+                                                                    <TableCell component="th" scope="row">
+                                                                        {e.titulo}
+                                                                    </TableCell>
+                                                                    <TableCell align="right">{e.institucion}</TableCell>
+                                                                    <TableCell align="right">{e.horas}</TableCell>
+
+                                                                    <TableCell align="right">{e.year}</TableCell>
+                                                                    <TableCell align="right">{e.descripcion}</TableCell>
+
+                                                                </TableRow>
+                                                            ))}
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
                                             )
                                         }
 
@@ -402,42 +415,45 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                         <EmojiEventsIcon sx={{ color: '#001C75' }} />
                                         <Typography fontWeight={'bold'} textTransform={'uppercase'} >PRINCIPALES RECONOCIMIENTOS, DIPLOMAS, PREMIOS U OTROS RECIBIDOS EN SU VIDA LABORAL</Typography>
                                     </Box>
-                                    <Box maxWidth={matches ? '100%' : 400} mt={1}>
-                                        <TableContainer   >
+                                    <Divider />
+                                    <Box maxWidth={matches ? '100%' : 400} mt={3}>
 
-                                            <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <StyledTableCell>Reconocimiento</StyledTableCell>
-                                                        <StyledTableCell align="right">Institución</StyledTableCell>
-                                                        <StyledTableCell align="right">Año</StyledTableCell>
-                                                        <StyledTableCell align="right">Descripción</StyledTableCell>
-
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {postulante.reconocimiento.map((e: IReconocimiento) => (
-                                                        <TableRow
-                                                            key={e.id}
-                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                        >
-                                                            <TableCell component="th" scope="row">
-                                                                {e.reconocimento}
-                                                            </TableCell>
-                                                            <TableCell align="right">{e.institucion}</TableCell>
-
-                                                            <TableCell align="right">{e.year}</TableCell>
-                                                            <TableCell align="right">{e.descripcion}</TableCell>
-
-                                                        </TableRow>
-                                                    ))}
-                                                </TableBody>
-                                            </Table>
-                                        </TableContainer>
                                         {
-                                            postulante.reconocimiento.length === 0 && (
+                                            postulante.reconocimiento.length === 0 ? (
                                                 <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
+                                            ) : (
+                                                <TableContainer   >
+
+                                                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <StyledTableCell>Reconocimiento</StyledTableCell>
+                                                                <StyledTableCell align="right">Institución</StyledTableCell>
+                                                                <StyledTableCell align="right">Año</StyledTableCell>
+                                                                <StyledTableCell align="right">Descripción</StyledTableCell>
+
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {postulante.reconocimiento.map((e: IReconocimiento) => (
+                                                                <TableRow
+                                                                    key={e.id}
+                                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                >
+                                                                    <TableCell component="th" scope="row">
+                                                                        {e.reconocimento}
+                                                                    </TableCell>
+                                                                    <TableCell align="right">{e.institucion}</TableCell>
+
+                                                                    <TableCell align="right">{e.year}</TableCell>
+                                                                    <TableCell align="right">{e.descripcion}</TableCell>
+
+                                                                </TableRow>
+                                                            ))}
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
                                             )
                                         }
                                     </Box>
@@ -451,41 +467,44 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                         <DevicesIcon sx={{ color: '#001C75' }} />
                                         <Typography fontWeight={'bold'} textTransform={'uppercase'} >USO DE  TECNOLOGÍAS </Typography>
                                     </Box>
-                                    <Box maxWidth={matches ? '100%' : 400} mt={1}>
-                                        <TableContainer   >
+                                    <Divider />
+                                    <Box maxWidth={matches ? '100%' : 400} mt={3}>
 
-                                            <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-                                                <TableHead>
-                                                    <TableRow>
-
-                                                        <StyledTableCell >Tecnologia</StyledTableCell>
-                                                        <StyledTableCell align="right">Nivel</StyledTableCell>
-
-
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {postulante.tics.map((e: ITics) => (
-                                                        <TableRow
-                                                            key={e.id}
-                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                        >
-                                                            <TableCell component="th" scope="row">
-                                                                {e.tecnologia}
-                                                            </TableCell>
-                                                            <TableCell align="right">{e.nivel}</TableCell>
-
-
-
-                                                        </TableRow>
-                                                    ))}
-                                                </TableBody>
-                                            </Table>
-                                        </TableContainer>
                                         {
-                                            postulante.tics.length === 0 && (
+                                            postulante.tics.length === 0 ? (
                                                 <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
+                                            ) : (
+                                                <TableContainer   >
+
+                                                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                                        <TableHead>
+                                                            <TableRow>
+
+                                                                <StyledTableCell >Tecnologia</StyledTableCell>
+                                                                <StyledTableCell align="right">Nivel</StyledTableCell>
+
+
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {postulante.tics.map((e: ITics) => (
+                                                                <TableRow
+                                                                    key={e.id}
+                                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                >
+                                                                    <TableCell component="th" scope="row">
+                                                                        {e.tecnologia}
+                                                                    </TableCell>
+                                                                    <TableCell align="right">{e.nivel}</TableCell>
+
+
+
+                                                                </TableRow>
+                                                            ))}
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
                                             )
                                         }
                                     </Box>
@@ -501,44 +520,47 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                         <NaturePeopleIcon sx={{ color: '#001C75' }} />
                                         <Typography fontWeight={'bold'} textTransform={'uppercase'} >OTRAS ACTIVIDADES, AFICIONES O HABILIDADES APRENDIDAS Y/O ESTUDIADAS </Typography>
                                     </Box>
-                                    <Box maxWidth={matches ? '100%' : 400} mt={1}>
-                                        <TableContainer   >
+                                    <Divider />
+                                    <Box maxWidth={matches ? '100%' : 400} mt={3}>
 
-                                            <Table sx={{ minWidth: 650 }} aria-label="simple table" >
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <StyledTableCell>Actividad</StyledTableCell>
-                                                        <StyledTableCell align="right">Nivel</StyledTableCell>
-                                                        <StyledTableCell align="right">Logro</StyledTableCell>
-                                                        <StyledTableCell align="right">Año</StyledTableCell>
-
-
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {postulante.aficion.map((e: IAficion) => (
-                                                        <TableRow
-                                                            key={e.id}
-                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                        >
-                                                            <TableCell component="th" scope="row">
-                                                                {e.actividad}
-                                                            </TableCell>
-                                                            <TableCell align="right">{e.nivel}</TableCell>
-                                                            <TableCell align="right">{e.logro}</TableCell>
-                                                            <TableCell align="right">{e.year}</TableCell>
-
-
-                                                        </TableRow>
-                                                    ))}
-
-                                                </TableBody>
-                                            </Table>
-                                        </TableContainer>
                                         {
-                                            postulante.aficion.length === 0 && (
+                                            postulante.aficion.length === 0 ? (
                                                 <Typography textAlign={'center'} mt={5}>No hay datos agregados</Typography>
 
+                                            ) : (
+                                                <TableContainer   >
+
+                                                    <Table sx={{ minWidth: 650 }} aria-label="simple table" >
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <StyledTableCell>Actividad</StyledTableCell>
+                                                                <StyledTableCell align="right">Nivel</StyledTableCell>
+                                                                <StyledTableCell align="right">Logro</StyledTableCell>
+                                                                <StyledTableCell align="right">Año</StyledTableCell>
+
+
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {postulante.aficion.map((e: IAficion) => (
+                                                                <TableRow
+                                                                    key={e.id}
+                                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                >
+                                                                    <TableCell component="th" scope="row">
+                                                                        {e.actividad}
+                                                                    </TableCell>
+                                                                    <TableCell align="right">{e.nivel}</TableCell>
+                                                                    <TableCell align="right">{e.logro}</TableCell>
+                                                                    <TableCell align="right">{e.year}</TableCell>
+
+
+                                                                </TableRow>
+                                                            ))}
+
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
                                             )
                                         }
                                     </Box>

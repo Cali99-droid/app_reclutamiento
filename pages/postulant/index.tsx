@@ -34,7 +34,7 @@ const PostulantPage: NextPage<Props> = ({ postulante }) => {
   return (
     <JobsLayout title={"AE | Postulante "} pageDescription={"Postular a un empleo"}>
       <ToastContainer />
-      <Box bgcolor={'#EDF1F7'} paddingBottom={6} mt={5}>
+      <Box bgcolor={'#EDF1F7'} paddingBottom={6} mt={8}>
 
         <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto', width: '95%' }} pt={15}>
           <Box paddingBottom={2}>

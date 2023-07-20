@@ -41,7 +41,7 @@ export default function Header(props: HeaderProps) {
 
     return (
         <React.Fragment>
-            <AppBar color="primary" position="sticky" elevation={0}>
+            <AppBar sx={{ background: 'linear-gradient(to right, #0045aa 0%,#4565d0 31%,#7087f7 64%,#7db9e8 100%); ' }} position="sticky" elevation={0}>
                 <Toolbar>
                     <Grid container spacing={1} alignItems="center">
                         <Grid sx={{ display: { sm: 'none', xs: 'block' } }} item>
@@ -153,10 +153,11 @@ export default function Header(props: HeaderProps) {
             </AppBar>
             <AppBar
                 component="div"
-                color="primary"
+                // color="primary"
+
                 position="static"
                 elevation={0}
-                sx={{ zIndex: 0 }}
+                sx={{ zIndex: 0, background: 'linear-gradient(to right, #0045aa 0%,#4565d0 31%,#7087f7 64%,#7db9e8 100%); ' }}
             >
                 <Toolbar>
                     <Grid container alignItems="center" spacing={1}>

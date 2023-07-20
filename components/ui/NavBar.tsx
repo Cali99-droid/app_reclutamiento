@@ -71,8 +71,8 @@ export const NavBar = () => {
     const matches = useMediaQuery('(min-width:600px)');
     return (
         <ElevationScroll {...props}>
-            <AppBar sx={{ height: '110px' }} >
-                <Toolbar sx={{ paddingTop: 12, paddingBottom: 6 }} >
+            <AppBar sx={{ height: '140px' }} >
+                <Toolbar  >
                     <Box flex={1} />
                     <NextLink href='/' passHref legacyBehavior>
 
@@ -296,8 +296,8 @@ export const NavBar = () => {
 
                 </Toolbar>
                 {isLoggedIn && (
-
-                    <Box bgcolor={'#0045aa'} display={'flex'} justifyContent={'space-evenly'} alignItems={'center'} padding={2} >
+                    //bgcolor={'#0045aa'}
+                    <Box sx={{ background: 'linear-gradient(to right, #0045aa 0%,#4565d0 31%,#7087f7 64%,#7db9e8 100%); ' }} display={'flex'} justifyContent={'space-evenly'} alignItems={'center'} padding={1.5} >
                         <Box >
                             <Typography fontSize={23} fontWeight={'bold'} color={'#FFF'}>{`Bienvenido: ${user?.persona.nombres}`} </Typography>
                         </Box>
