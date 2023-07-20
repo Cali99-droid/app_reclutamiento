@@ -17,7 +17,7 @@ export default function Document() {
       <body >
         <Main />
         <NextScript />
-        {/* <script src="/mautic.js" async defer /> */}
+        <script src="/mautic.js" async defer />
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-RTHN6CE091" />
         <Script strategy="lazyOnload" id='ganty'>
           {`

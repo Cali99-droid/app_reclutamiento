@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { AuthProvider, UiProvider, DatosProvider } from '@/context'
 import { SessionProvider, signOut, useSession } from "next-auth/react"
 import '@/styles/globals.css'
@@ -19,6 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   let inactivityTimer: number | any;
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const resetTimer = () => {
     if (inactivityTimer) clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
@@ -47,8 +49,8 @@ export default function App({ Component, pageProps }: AppProps) {
       document.removeEventListener('touchstart', handleInteraction);
       if (inactivityTimer) clearTimeout(inactivityTimer);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+  }, [handleInteraction, inactivityTimer, resetTimer]);
 
 
   return (
