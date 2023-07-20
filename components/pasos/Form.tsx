@@ -20,7 +20,8 @@ const Form = () => {
         setReconocimiento();
         setAficion();
 
-    }, [setAficion, setCapacitacion, setCargos, setEstudios, setReconocimiento])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     const router = useRouter();
     const handleSubmit = () => {
         router.push(`/postulant/`)
