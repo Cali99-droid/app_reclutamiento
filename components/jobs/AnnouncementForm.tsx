@@ -5,9 +5,10 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { NextPage } from 'next';
 import { IGrado, IJob } from '@/interfaces';
-
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { reclutApi } from '@/apies';
 import { useState, ChangeEvent } from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 
 import { ModalAlert } from '../modal/ModalAlert';
 
@@ -16,7 +17,8 @@ import moment from 'moment';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Swal from 'sweetalert2';
 
 interface Props {
     grados: IGrado[]
@@ -50,27 +52,35 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
     const navigateTo = (url: string) => {
         router.push(url);
     }
-
-    const [open, setOpen] = useState(false)
+    const tomorrow = dayjs().add(1, 'day');
+    const vig = job.vigencia || tomorrow;
+    const [fecha, setFecha] = useState<Dayjs>(dayjs(vig));
 
     const fileInputRef = useRef<HTMLInputElement>(null)
 
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleConfirm = () => {
-        navigateTo('/admin/convocatorias')
-    };
 
     const onRegisterForm = async (form: FormData) => {
+
+
+
         try {
             const { data } = await reclutApi({
                 url: '/admin/convocatorias',
                 method: form.id > 0 ? 'PUT' : 'POST',  // si tenemos un _id, entonces actualizar, si no crear
                 data: form
             });
-            setOpen(true);
+            Swal.fire({
+                title: 'Guardado con éxito ',
+                text: 'La convocatoria se guardo correctamente y esta publicada',
+                icon: 'success',
+
+                confirmButtonText: 'Aceptar',
+
+            }).then((result) => {
+
+                navigateTo('/admin/convocatorias');
+            });
+
 
 
         } catch (error) {
@@ -142,7 +152,11 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
         //     console.log({ error });
         // }
     }
-
+    const onChangeFecha = (dat: dayjs.Dayjs) => {
+        setFecha(dat)
+        setValue('vigencia', dat.toISOString());
+        // console.log(getValues('vigencia'))
+    }
     const onDeleteImage = () => {
         // console.log(getValues('image'))
         setValue(
@@ -152,6 +166,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
         // console.log(getValues('image'))
 
     }
+
 
 
     return (
@@ -275,7 +290,17 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                             />
                         </Grid>
                         <Grid item xs={12} md={3}>
-                            <label htmlFor="vigencia" >Vigencia</label>
+
+                            <DatePicker
+
+                                disablePast
+                                views={['month', 'day']}
+                                label={'Vigencia'}
+                                value={fecha}
+                                onChange={(newValue) => onChangeFecha(newValue!)}
+                            />
+                            {/* <label htmlFor="vigencia" >Vigencia</label>
+
                             <TextField
                                 id='vigencia'
                                 variant="standard"
@@ -290,7 +315,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                 })}
                                 error={!!errors.vigencia}
                                 helperText={errors.vigencia?.message}
-                            />
+                            /> */}
                         </Grid>
 
                         <Grid item xs={12} md={6}>
@@ -397,10 +422,10 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
             </Paper>
 
 
-            <ModalAlert title={'¡ Guardado Correctamente !'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
+            {/* <ModalAlert title={'¡ Guardado Correctamente !'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
                 <Typography >La Convocatoria se guardó correctamente y esta publicada</Typography>
 
-            </ModalAlert>
+            </ModalAlert> */}
 
 
 

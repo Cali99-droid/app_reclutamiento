@@ -53,6 +53,7 @@ const EntrevistaPage: NextPage<Props> = ({ test, items }) => {
         }
 
         setOpen(false)
+        handleClose()
     }
     const editarItem = async () => {
         try {
@@ -210,7 +211,7 @@ const EntrevistaPage: NextPage<Props> = ({ test, items }) => {
                 </Box>
             </Paper>
 
-            <Modal title={`Agregar Item a ${test.nombre}`} open={open} handleClose={() => setOpen(false)} handleConfirm={handleConfirm}>
+            <Modal title={`Agregar Item a ${test.nombre}`} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
 
                 <Box display={'flex'} flexDirection={'column'} gap={2}
                     component="form"

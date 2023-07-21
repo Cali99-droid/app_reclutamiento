@@ -123,7 +123,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
         setPostulantes(descartados)
       }
-      console.log(postulantes)
+
 
       setSeleccionados(seleccionados);
       setDescartados(descartados);

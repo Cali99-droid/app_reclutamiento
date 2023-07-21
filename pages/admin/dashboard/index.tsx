@@ -1,6 +1,6 @@
 import { Paperbase } from '@/components/dash'
 import { FullScreenLoading } from '@/components/ui';
-import { Box, Breadcrumbs, Card, CardMedia, Grid, Link, Paper, Typography, styled, useMediaQuery } from '@mui/material';
+import { Box, Breadcrumbs, Card, CardMedia, Grid, IconButton, Link, Paper, Typography, styled, useMediaQuery, Tooltip } from '@mui/material';
 import { DataGrid, GridColDef, esES } from '@mui/x-data-grid';
 import { GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -8,7 +8,12 @@ import React from 'react'
 import { prisma } from '../../../server/db/client';
 import HailIcon from '@mui/icons-material/Hail';
 import DvrIcon from '@mui/icons-material/Dvr';
-
+import PeopleIcon from '@mui/icons-material/People';
+import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
+import DoDisturbIcon from '@mui/icons-material/DoDisturb';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs, { Dayjs } from 'dayjs';
+import Swal from 'sweetalert2';
 interface Props {
     contratados: any[]
     convocatoriasAbiertas: number
@@ -17,7 +22,7 @@ interface Props {
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
-    padding: theme.spacing(1),
+    padding: 1,
     textAlign: 'center',
     color: theme.palette.text.secondary,
     borderRadius: 10
@@ -59,13 +64,36 @@ const columns: GridColDef[] = [
 
     {
         field: 'puesto',
-        headerName: 'Puesto',
+        headerName: 'Convocatoria',
         width: 300,
     },
     {
-        field: 'actions',
-        headerName: ' Acciones',
+        field: 'fecha',
+        headerName: 'Fecha de Ascenso',
         width: 150,
+    },
+    {
+        field: 'actions',
+        headerName: 'Dar de Baja',
+        width: 150, renderCell: ({ row }) => {
+            return (
+
+                <Box display={'flex'} justifyContent={'start'} width={'100%'}>
+                    <Tooltip title={'Dar de baja'}>
+                        <IconButton aria-label="baja" color='error' onClick={() => handleConfirm(row.idPos)}  >
+                            <DoDisturbIcon />
+                        </IconButton>
+                    </Tooltip>
+
+
+
+                    {/* <IconButton disabled={params.row.postulantes > 0} color='error' aria-label="delete" onClick={() => { hadleOpenAlert(params.row.id, params.row.nombre) }}  >
+                  <DeleteIcon />
+                </IconButton> */}
+                </Box>
+
+            )
+        }
 
     },
 
@@ -84,6 +112,22 @@ function generateRandom() {
     }
     return retVal;
 }
+const handleConfirm = (id: any) => {
+    Swal.fire({
+        title: '¿Esta seguro? ',
+        text: 'Se dará de baja al trabajador',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            console.log('borrando' + id)
+        } else {
+            console.log('no borrar')
+        }
+    });
+};
 const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas }) => {
 
     const { push } = useRouter();
@@ -93,13 +137,20 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas }) 
         id: index + 1,
         img: p.postulante.image,
         nombres: p.postulante.persona.nombres + ' ' + p.postulante.persona.apellido_pat + ' ' + p.postulante.persona.apellido_mat,
-        puesto: p.convocatoria.titulo
+        puesto: p.convocatoria.titulo,
+        idPos: p.postulante.id,
     }))
+
+    const handleFiltro = (val: Dayjs | null) => {
+        setValue(val);
+        console.log('Filtrando desde ' + val?.year())
+    }
+    const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+
+
+
     return (
         <Paperbase title={`Dashboard `} subTitle={"Resumen"}>
-
-
-
             {false
                 ? <FullScreenLoading />
                 :
@@ -108,30 +159,29 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas }) 
                     <Box display={'flex'} gap={3} flexDirection={matches ? 'row' : 'column'}>
 
                         <Grid container spacing={2}>
+                            <Grid item xs={12}>
+
+                                <Box bgcolor={'#FFF'} padding={1.5} borderRadius={1} display={'flex'} justifyContent={'end'}>
+
+                                    <DatePicker label={'Año'} openTo="year" value={value} views={['year']}
+                                        onChange={(newValue) => handleFiltro(newValue)} />
+                                </Box>
+
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Item elevation={0}>
+                                    <Typography variant='h6'>Docentes</Typography>
+                                </Item>
+                            </Grid>
                             <Grid item xs={12} sm={4} >
                                 <Item elevation={4}>
 
                                     <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                                        <HailIcon sx={{ fontSize: 60 }} color={'primary'} />
+                                        <HailIcon sx={{ fontSize: 40 }} color={'primary'} />
                                         <Box>
 
                                             <Typography color={'#454555'} variant="body1" >  Contratados - {new Date().getFullYear()}</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{contratados.length} </Typography>
-
-                                        </Box>
-                                    </Box>
-
-                                </Item>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
-                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'} >
-
-                                        <DvrIcon sx={{ fontSize: 60 }} color={'primary'} />
-                                        <Box>
-                                            <Typography color={'#454555'} variant="body1" > Convocatorias Abiertas</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoriasAbiertas} </Typography>
-
+                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{contratados.length} </Typography>
                                         </Box>
                                     </Box>
                                 </Item>
@@ -140,28 +190,84 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas }) 
                                 <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
                                     <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'} >
 
-                                        <DvrIcon sx={{ fontSize: 60 }} color={'primary'} />
+                                        <PeopleIcon sx={{ fontSize: 40 }} color={'primary'} />
                                         <Box>
-                                            <Typography color={'#454555'} variant="body1" > Convocatorias Abiertas</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoriasAbiertas} </Typography>
+                                            <Typography color={'#454555'} variant="body1" > Postulantes {new Date().getFullYear()}</Typography>
+                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{convocatoriasAbiertas} </Typography>
 
                                         </Box>
                                     </Box>
                                 </Item>
                             </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
+                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'} >
 
+                                        <PersonRemoveAlt1Icon sx={{ fontSize: 40 }} color={'primary'} />
+                                        <Box>
+                                            <Typography color={'#454555'} variant="body1" > Dados de Baja</Typography>
+                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{convocatoriasAbiertas} </Typography>
+
+                                        </Box>
+                                    </Box>
+                                </Item>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Item elevation={0}>
+                                    <Typography variant='h6'>Administrativos</Typography>
+                                </Item>
+                            </Grid>
+                            <Grid item xs={12} sm={4} >
+                                <Item elevation={4}>
+
+                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                                        <HailIcon sx={{ fontSize: 40 }} color={'primary'} />
+                                        <Box>
+
+                                            <Typography color={'#454555'} variant="body1" >  Contratados - {new Date().getFullYear()}</Typography>
+                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{contratados.length} </Typography>
+                                        </Box>
+                                    </Box>
+                                </Item>
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
+                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'} >
+
+                                        <PeopleIcon sx={{ fontSize: 40 }} color={'primary'} />
+                                        <Box>
+                                            <Typography color={'#454555'} variant="body1" > Postulantes {new Date().getFullYear()}</Typography>
+                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{convocatoriasAbiertas} </Typography>
+
+                                        </Box>
+                                    </Box>
+                                </Item>
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
+                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'} >
+
+                                        <PersonRemoveAlt1Icon sx={{ fontSize: 40 }} color={'primary'} />
+                                        <Box>
+                                            <Typography color={'#454555'} variant="body1" > Dados de Baja</Typography>
+                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{convocatoriasAbiertas} </Typography>
+
+                                        </Box>
+                                    </Box>
+                                </Item>
+                            </Grid>
 
                         </Grid>
 
                     </Box>
                     <Box mt={4}
                     >
-                        <Item elevation={4} sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 400, margin: 'auto', overflow: 'visible' }}>
+                        <Item elevation={4} sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 500, margin: 'auto', overflow: 'visible' }}>
                             <Typography>Lista de Contratados</Typography>
                             <Box
                                 sx={{
                                     height: 400,
-
+                                    padding: 1
                                 }} >
 
                                 <DataGrid
@@ -190,13 +296,13 @@ export const getStaticProps: GetStaticProps = async () => {
     const listaPostulantes = await prisma.postulante_x_convocatoria.findMany({
         where: {
             estado_postulante_id: 7
-
         },
 
         select: {
 
             postulante: {
                 select: {
+                    id: true,
                     persona: true,
                     image: true
                 }

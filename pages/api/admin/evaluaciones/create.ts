@@ -33,7 +33,12 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
             rol_id: rolId
            },
            include:{
-            rol:true
+            rol:true,
+            _count: {
+              select: {
+                item: true,
+              }
+            }
            }
         })
 
@@ -56,7 +61,12 @@ async function editEvaluacion(req: NextApiRequest, res: NextApiResponse<Data>) {
                 rol_id: rolId
                },
                include:{
-                rol:true
+                rol:true,
+                _count: {
+                  select: {
+                    item: true,
+                  }
+                }
                },where:{
             id
            }

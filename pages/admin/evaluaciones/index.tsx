@@ -18,7 +18,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { reclutApi } from '@/apies';
-import { evaluacion } from '@prisma/client';
+import { evaluacion, item } from '@prisma/client';
 import NextLink from 'next/link';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -61,7 +61,7 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
   const agregarEvaluacion = async (evaluacion: string) => {
     const { data } = await reclutApi.post<any>('/admin/evaluaciones/create', { evaluacion, rolId });
     setTests([...tests, data.ev])
-
+    handleClose()
   }
   const editarEvaluacion = async () => {
     const { data } = await reclutApi.put<any>('/admin/evaluaciones/create', { evaluacion, id, rolId });
@@ -75,11 +75,16 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
       return t;
     })]
     setTests(testsAct)
-
+    handleClose()
   }
   const handleConfirm = () => {
     if (evaluacion.length === 0) {
       toast.warning('Complete correctamente todos los campos')
+      return;
+    };
+    if (rolId <= 0) {
+      toast.warning('Complete correctamente todos los campos')
+      return;
     };
     if (id) {
       editarEvaluacion()
@@ -150,12 +155,15 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
 
     },
     {
-      field: 'responsable', headerName: 'Responsable', width: 320,
+      field: 'responsable', headerName: 'Responsable', width: 300,
+    },
+    {
+      field: 'items', headerName: 'N° Items', width: 90,
     },
     {
       field: 'action',
       headerName: 'Acciones',
-      width: 250,
+      width: 100,
       renderCell: (params) => {
         return (
           <Box display={'flex'} justifyContent={'end'} width={'100%'}>
@@ -178,6 +186,7 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
     id: ev.id,
     nombre: ev.nombre,
     responsable: ev.rol.name === 'jurado1' ? 'Jurado Docente' : 'Jurado Administrativo',
+    items: ev._count.item,
     rolId: ev.rol.id
   }))
   return (
@@ -245,12 +254,13 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
             <Select
               labelId="select-rol"
               id="select-rol"
-              value={rolId}
+              value={rolId || 0}
               label="Age"
               onChange={(e: SelectChangeEvent<number>) => setRolId(parseInt(e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
             >
 
 
+              <MenuItem value={0} disabled>Seleccione</MenuItem>
               <MenuItem value={3}>Jurado Docente</MenuItem>
               <MenuItem value={4}>Jurado Administrativo</MenuItem>
 
@@ -276,7 +286,12 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const evaluaciones = await prisma.test.findMany({
     include: {
-      rol: true
+      rol: true,
+      _count: {
+        select: {
+          item: true,
+        }
+      }
     }
   });
 

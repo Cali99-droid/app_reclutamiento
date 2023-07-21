@@ -10,9 +10,10 @@ import { SWRConfig } from 'swr'
 import { useEffect, useRef } from 'react'
 import { inactivity } from '@/helpers'
 import { useRouter } from 'next/router'
-
-
-
+import 'dayjs/locale/en-gb';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import "dayjs/locale/es";
 export default function App({ Component, pageProps }: AppProps) {
 
   // const inactivityTimeout = 20 * 60 * 1000; // 20 minutos en milisegundos
@@ -49,31 +50,32 @@ export default function App({ Component, pageProps }: AppProps) {
   //   };
 
   // }, []);
-
-
   return (
     <SessionProvider >
-      <SWRConfig
-        value={{
-          refreshInterval: 1000,
-          fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
-        }}
-      >
-        <AuthProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+        <SWRConfig
+          value={{
+            refreshInterval: 1000,
+            fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
+          }}
+        >
+          <AuthProvider>
 
-          <PostProvider>
-            <DatosProvider >
-              <UiProvider>
+            <PostProvider>
+              <DatosProvider >
+                <UiProvider>
 
-                <ThemeProvider theme={lightTheme} >
-                  <CssBaseline />
-                  <Component {...pageProps} />
-                </ThemeProvider>
-              </UiProvider>
-            </DatosProvider>
-          </PostProvider>
-        </AuthProvider>
-      </SWRConfig>
+                  <ThemeProvider theme={lightTheme} >
+                    <CssBaseline />
+                    <Component {...pageProps} />
+                  </ThemeProvider>
+                </UiProvider>
+              </DatosProvider>
+            </PostProvider>
+          </AuthProvider>
+        </SWRConfig>
+      </LocalizationProvider>
+
     </SessionProvider>
 
 

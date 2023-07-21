@@ -20,6 +20,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import 'moment/locale/es';
+import Swal from 'sweetalert2';
 
 moment.locale('es');
 interface Props {
@@ -41,15 +42,30 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
   const [id, setId] = useState(0)
   const handleOpen = (id: number) => {
     setOpen(true);
-    setId(id)
+
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleConfirm = async () => {
-    const datos = await deleteJob();
+  const handleConfirm = async (id: number) => {
+    setId(id)
+    Swal.fire({
+      title: '¿Esta seguro de eliminar la convocatoria? ',
+      text: 'Se eliminará la convocatoria',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteJob();
+      } else {
+        console.log('no borrar')
+      }
+    });
+
 
 
 
@@ -146,7 +162,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
             </IconButton>
 
 
-            <IconButton disabled={params.row.postulantes > 0} color='error' aria-label="delete" onClick={() => { handleOpen(params.row.idConv) }}  >
+            <IconButton disabled={params.row.postulantes > 0} color='error' aria-label="delete" onClick={() => { handleConfirm(params.row.idConv) }}  >
               <DeleteIcon />
             </IconButton>
           </Box>
@@ -221,10 +237,10 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
           />
 
 
-          <Modal title={'¿ Esta seguro de eliminar la convocatoria ?'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
-            <Typography >La Convocatoria se eliminará definitivamente</Typography>
+          {/* <Modal title={'¿ Esta seguro de eliminar la convocatoria ?'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
+            <Typography >La Convocatoria se eliminará definitivamente</Typography></Modal> */}
 
-          </Modal>
+
         </Box>
       </Paper>
 

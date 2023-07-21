@@ -25,7 +25,7 @@ export default function ConvocatoriasPage() {
 
 
   return (
-    <JobsLayout title={"AE | Empleos "} pageDescription={"Convocatorias a trabajos en Ancash"}>
+    <JobsLayout title={"AE | Convocatorias "} pageDescription={"Convocatorias a trabajos en Ancash"}>
       <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={22} >
         <Box padding={3}  >
           <Typography fontSize={35} variant='h1' component='h1' color={'#000'} fontWeight={'bold'}  >Convocatoria {new Date().getFullYear()}</Typography>

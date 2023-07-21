@@ -14,6 +14,8 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import MailIcon from '@mui/icons-material/Mail';
 import { useRouter } from 'next/router';
 
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
 import SwitchAccessShortcutOutlinedIcon from '@mui/icons-material/SwitchAccessShortcutOutlined';
@@ -86,9 +88,9 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
     const [idEstado, setIdEstado] = useState(postulante.postulante_x_convocatoria[0].estado_postulante.id);
 
 
-    const [siguienteEstado, setSiguienteEstado] = useState(estados.filter(e => e.id === idEstado + 1)[0])
-    if (!siguienteEstado) {
-        console.log(ultimo)
+    const [siguienteEstado, setSiguienteEstado] = useState(estados.filter(e => e.id === idEstado + 1)[0] || { nombre: 'No disponible', id: 0 })
+    if (!siguienteEstado || siguienteEstado.id === 0) {
+
         setSiguienteEstado(estados.filter(e => e.id === 7)[0])
         setUltimo(true)
     }
@@ -657,13 +659,23 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                         Interesante
 
                     </MenuItem> */}
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem onClick={handleClose} disabled={ultimo}>
                         <Tooltip placement="left-start" title={`Descartar`}>
                             <span>
                                 <ListItemIcon>
                                     <ThumbDownOffAltOutlinedIcon />
                                 </ListItemIcon>
                                 No interesa
+                            </span>
+                        </Tooltip>
+                    </MenuItem>
+                    <MenuItem onClick={() => router.back()} >
+                        <Tooltip placement="left-start" title={`Volver a convocatoria`}>
+                            <span>
+                                <ListItemIcon>
+                                    <ArrowBackIcon />
+                                </ListItemIcon>
+                                Volver
                             </span>
                         </Tooltip>
                     </MenuItem>

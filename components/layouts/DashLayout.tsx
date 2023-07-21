@@ -4,7 +4,7 @@ import { AdminNavBar } from '../admin';
 import { Box, Divider, Typography } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
 
-
+import Swal from 'sweetalert2';
 interface Props extends PropsWithChildren {
     title: string;
     subTitle: string;
