@@ -135,10 +135,13 @@ const Step2 = () => {
 
     const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         toast.info('Subiendo Documento')
-        setLoadDoc(true)
+
         if (!target.files || target.files.length === 0) {
+
             return;
+
         }
+        setLoadDoc(true)
         // const selectedFile = target.files[0];
 
         // setFile(selectedFile);
@@ -158,7 +161,7 @@ const Step2 = () => {
                 name: target.files[0].name,
                 type: target.files[0].type
             });
-            console.log(data)
+
             const url = data.url;
             const res = await reclutApi.put(url, target.files[0], {
                 headers: {
@@ -166,9 +169,6 @@ const Step2 = () => {
                     "Access-Control-Allow-Origin": "*"
                 }
             })
-
-
-
 
             setDoc(data.message);
 
@@ -334,7 +334,7 @@ const Step2 = () => {
                                 <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Cargando...</Typography>
                                 <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
                                 <InputLabel id="demo-simple-label">Vista previa del certificado</InputLabel>
-                                <object onLoad={() => setLoadDoc(false)} data={`hhttps://caebucket.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
+                                <object onLoad={() => setLoadDoc(false)} data={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
                                     <p>No se puede previsualizar</p>
                                 </object>
 
