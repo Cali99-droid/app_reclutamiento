@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { NextPage } from 'next';
 import { IGrado, IJob } from '@/interfaces';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+
 import { reclutApi } from '@/apies';
 import { useState, ChangeEvent } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
