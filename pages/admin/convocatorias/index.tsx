@@ -20,7 +20,9 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import 'moment/locale/es';
+import { useSweetAlert } from '@/context/sweet/SweetAlertContext';
 import Swal from 'sweetalert2';
+
 
 moment.locale('es');
 interface Props {
@@ -30,7 +32,7 @@ interface Props {
 
 
 const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
-
+  const { showAlert } = useSweetAlert();
   const [convocatorias, setConvocatorias] = useState(convos)
   const matches = useMediaQuery('(min-width:600px)');
 
@@ -49,8 +51,20 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
     setOpen(false);
   };
 
-  const handleConfirm = async (id: number) => {
-    setId(id)
+  const handleConfirm = async (idConvo: number) => {
+
+
+
+    // const result = await showAlert('Confirmación', '¿Estás seguro de eliminar la convocatoria??');
+    // if (result) {
+    //   // Lógica a realizar si el usuario confirma la acción
+    //   deleteJob();
+    //   console.log('Acción confirmada');
+    // } else {
+    //   // Lógica a realizar si el usuario cancela la acción
+    //   console.log('Acción cancelada');
+    // }
+
     Swal.fire({
       title: '¿Esta seguro de eliminar la convocatoria? ',
       text: 'Se eliminará la convocatoria',
@@ -58,9 +72,11 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
+      backdrop: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteJob();
+        setId(idConvo)
+        deleteJob(idConvo);
       } else {
         console.log('no borrar')
       }
@@ -73,7 +89,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
   const refreshData = () => {
     router.replace(router.asPath)
   }
-  const deleteJob = async () => {
+  const deleteJob = async (id: number) => {
 
 
     try {

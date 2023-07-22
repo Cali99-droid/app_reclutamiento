@@ -113,7 +113,7 @@ export const PostProvider: FC<Props> = ({ children }) => {
                   setOpenAptitud(true);
             }
 
-
+            setOpenClase(true);
             setIdPos(id)
             setIdEv(2)
       };

@@ -1,7 +1,7 @@
 import { IJob } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
-import { convocatoria, postulante, user } from '@prisma/client';
+import { convocatoria, postulante, user, item } from '@prisma/client';
 import { getSession } from 'next-auth/react';
 import moment from 'moment-timezone';
 
@@ -44,6 +44,7 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
     //       id: parseInt(id.toString())
     //     }
     //   })
+   
       const listaPostulantes = await prisma.postulante_x_convocatoria.findMany({
         where: {
           convocatoria_id: parseInt(id.toString())
@@ -55,12 +56,35 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
           estado_postulante:true,
           postulante: {
             include: {
+              puntajes:{
+                where:{
+                  convocatoria_id:parseInt(id.toString()),
+                },select:{
+                  total:true,
+                  user:{
+                    select:{
+                      persona:{
+                        select:{
+                          nombres:true,
+                          apellido_pat:true,
+                          apellido_mat:true
+                        }  
+                      },
+                      rol:true
+                    }
+                  },
+                  _count:{
+                    select:{
+                      puntaje_items:true
+                    }
+                  }
+                }
+              },
               persona: {
                 include:{
                   user:true
                 }
               },
-            
               evaluacion_x_postulante:{
                 where:{
                   convocatoria_id:parseInt(id.toString()),
@@ -73,6 +97,7 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
                   user:true
                 }
               },
+             
               estudios:true,
               cargo:true,
               investigacion:true,

@@ -31,7 +31,8 @@ async function main() {
       { nombre: 'Interesa' },
       { nombre: 'Seleccionado' },
       { nombre: 'Contratado' },
-      
+      { nombre: 'Evaluado' },
+      { nombre: 'Entrevistado' }, 
     ],
    
   })

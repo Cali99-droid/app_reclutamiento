@@ -6,7 +6,7 @@ import { PostContext } from '@/context';
 import { GetServerSideProps, NextPage } from "next";
 import { DataGrid, GridCellParams, GridCloseIcon, GridColDef, esES } from "@mui/x-data-grid";
 import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider, useMediaQuery, Backdrop, CircularProgress } from '@mui/material';
-import { evaluacion_x_postulante, postulante, categoria } from '@prisma/client';
+import { evaluacion_x_postulante, postulante, categoria, puntajes, persona } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -43,6 +43,7 @@ moment.locale('es');
 import { usePostulantes } from '@/hooks';
 import { FullScreenLoading } from '@/components/ui';
 import { Send } from '@mui/icons-material';
+import ModalEval from '@/components/eval/test';
 
 interface Props {
   postulantes: postulante[]
@@ -57,7 +58,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const router = useRouter();
   const { id } = router.query
   const { pos, isLoading } = usePostulantes(`/admin/postulantes/${convocatoria.id}`);
-
+  console.log(pos)
   const [postulantes, setPostulantes] = useState<any[]>([]);
 
   const { calcularTotal, limpiarCriterios, juradosAsignados, addNewJurado, deleteJurado, refreshJurados } = useContext(PostContext);
@@ -134,6 +135,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pos, filtrando])
 
+  const { openClase, handleOpenClase, handleCloseClase } = useContext(PostContext);
+
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'N°', width: 50 },
@@ -162,14 +165,14 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
     {
       field: 'puntajeEntr',
-      headerName: 'Puntaje Entrevista',
+      headerName: ' Entrevista (%)',
       width: 150,
 
     },
     {
       field: 'puntajeJur',
-      headerName: ' Puntaje Jurados',
-      width: 150,
+      headerName: ' Jurados(%)',
+      width: 200,
 
     },
     {
@@ -181,7 +184,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     {
       field: 'estado',
       headerName: 'Estado',
-      width: 200,
+      width: 150,
       renderCell: (params) => {
 
         return (
@@ -235,8 +238,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                     <IconButton
                       sx={{ color: cyan[600] }}
                       aria-label="evaluar"
-                      onClick={() => { handleOpen(params.row.id,) }}
-                      disabled={params.row.estado !== 2 || params.row.puntajeEntr > 0}
+                      onClick={() => { handleOpenClase(params.row.idPos,) }}
+                      disabled={params.row.estadoId !== 2 || params.row.puntajeEntr > 0}
                     >
                       < FactCheckIcon />
                     </IconButton>
@@ -260,7 +263,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                       sx={{ color: cyan[600] }}
                       aria-label="evaluar"
                       onClick={() => { handleOpen(params.row.id) }}
-                      disabled={params.row.estado !== 2 || params.row.puntajeEntr > 0} >
+                      disabled={params.row.estadoId !== 2 || params.row.puntajeEntr > 0} >
                       < FactCheckIcon />
                     </IconButton>
 
@@ -293,28 +296,37 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
 
   ];
-  const devolverPuntajeEntrevista = (puntajes: evaluacion_x_postulante[]) => {
+  const devolverPuntajeEntrevista = (puntajes: any[]) => {
     let puntaje = 0;
     const resultado = puntajes.forEach(x => {
-      if (x.evaluacion_id === 1) {
-        puntaje += x.puntaje
+      //rol de admin
+      if (x.user.rol.id === 2) {
+        puntaje += (x.total / x._count.puntaje_items)
       } else {
         return '';
       }
     });
     return puntaje;
   }
-  const devolverPuntajeJurado = (puntajes: evaluacion_x_postulante[]) => {
+  const devolverPuntajeJurado = (puntajes: any[]) => {
 
     let puntaje = 0;
+    let jurados = 0;
+
     const resultado = puntajes.forEach(x => {
-      if (x.evaluacion_id === 2) {
-        puntaje += x.puntaje
+
+      if (x.user.rol.id === 3 || x.user.rol.id === 4) {
+        puntaje += (x.total / (x._count.puntaje_items));
+        jurados += 1
       } else {
         return '';
       }
+
+      puntaje;
     });
-    return puntaje;
+
+    console.log(jurados)
+    return (puntaje / jurados) * 10;
   }
 
   const tot = (puntajes: evaluacion_x_postulante[]) => {
@@ -339,13 +351,14 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     id: index + 1,
     postulante: formatoNombre(p.postulante.persona.nombres, p.postulante.persona.apellido_pat, p.postulante.persona.apellido_mat),
     estado: p.estado_postulante.nombre,
+    estadoId: p.estado_postulante.id,
     edad: calcularEdad(p.postulante.nacimiento) + ' años',
     idPos: p.postulante.id,
     sueldo: 'S/ ' + p.postulante.sueldo,
-    puntajeEntr: devolverPuntajeEntrevista(p.postulante.evaluacion_x_postulante),
-    puntajeJur: devolverPuntajeJurado(p.postulante.evaluacion_x_postulante),
+    puntajeEntr: Math.round(devolverPuntajeEntrevista(p.postulante.puntajes) * 10) + '%',
+    puntajeJur: devolverPuntajeJurado(p.postulante.puntajes) + '%',
     total: tot(p.postulante.evaluacion_x_postulante),
-    calificaciones: p.postulante.evaluacion_x_postulante,
+    calificaciones: p.postulante.puntajes,
     idCp: p.id,
     comentario: p.comentario,
     fechaComentario: p.fecha_comentario
@@ -481,7 +494,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
 
 
-
+  console.log(items.length)
   const matches = useMediaQuery('(min-width:600px)');
   return (
     <Paperbase title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
@@ -687,10 +700,10 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
           </Box>
         </Box>
       }
-      <Modal title={'Calificación'} open={modalCalificacion} handleClose={() => setModalCalificacion(false)}
+      <Modal title={'Calificación por jurado'} open={modalCalificacion} handleClose={() => setModalCalificacion(false)}
         handleConfirm={() => setModalCalificacion(false)}>
 
-        <Box width={500} display={'flex'} gap={5} justifyContent={'start'}>
+        <Box display={'flex'} gap={5} justifyContent={'start'}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 300 }} aria-label="simple table">
               <TableHead>
@@ -703,13 +716,13 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                 </TableRow>
               </TableHead>
               <TableBody>
-                {calificacion.map((e: any) => (
+                {calificacion.map((e: any, index) => (
                   <TableRow
-                    key={e.user.email}
+                    key={index}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                    <TableCell align="left">{e.user.email}</TableCell>
-                    <TableCell align="right">{e.puntaje}</TableCell>
+                    <TableCell align="left">{(e.user.persona.apellido_pat + ' ' + e.user.persona.apellido_mat + ' ' + e.user.persona.nombres).toLocaleUpperCase()}</TableCell>
+                    <TableCell align="right">{e.total}/{e._count.puntaje_items * 10}</TableCell>
 
                     <TableCell align="right" component="th" scope="row">
                       {e.evaluacion_id === 1 ? 'Entrevista ' : 'Jurado'}
@@ -737,7 +750,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
 
       </Modal>
-      <ModalEntrevista title={'Calificar Entrevista'} open={open} handleClose={handleClose} >
+      {/* <ModalEntrevista title={'Calificar Entrevista'} open={open} handleClose={handleClose} >
         <form onSubmit={handleConfirm}>
           <DialogContent>
             <RatingFrom />
@@ -753,7 +766,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
             </Button>
           </DialogActions>
         </form>
-      </ModalEntrevista>
+      </ModalEntrevista> */}
 
 
       <Modal title={'Agregar comentario'} open={messageModal} handleClose={() => setMessageModal(false)} handleConfirm={() => setMessageModal(false)}>
@@ -802,14 +815,10 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
         </Box>
 
       </Modal>
-      {/* 
-      <ModalEval title={'Evaluacion'} open={false} handleClose={function (): void {
-        throw new Error('Function not implemented.');
-      }} handleConfirm={function (): void {
-        throw new Error('Function not implemented.');
-      }} items={items} idPostulante={0}>
 
-      </ModalEval> */}
+      <ModalEval title={'Evaluacion'} open={openClase} handleClose={handleCloseClase} items={items} >
+
+      </ModalEval>
     </Paperbase>
   )
 }
@@ -871,9 +880,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     }
   })
 
-  const items = await prisma.item.findMany({
+  const items = await prisma.test.findMany({
     where: {
-      test_id: 1
+      rol_id: 3
+    },
+    select: {
+      id: true,
+      item: true
     }
   })
 

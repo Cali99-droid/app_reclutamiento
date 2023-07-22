@@ -14,7 +14,8 @@ import { useState } from 'react';
 import { InView } from 'react-intersection-observer';
 import { FullScreenLoading } from '../ui';
 import { ToastContainer } from 'react-toastify';
-
+import 'sweetalert2/dist/sweetalert2.min.css';
+import Swal from 'sweetalert2';
 
 function Copyright() {
     return (
@@ -187,7 +188,13 @@ export const Paperbase: FC<Props> = ({ children, title, subTitle, icon, navigate
         setMobileOpen(!mobileOpen);
     };
 
-
+    const handleSwal = () => {
+        Swal.fire({
+            title: 'Hola she ',
+            text: 'Se eliminará la convocatoria',
+            icon: 'info',
+        })
+    }
 
 
     return (
@@ -196,12 +203,15 @@ export const Paperbase: FC<Props> = ({ children, title, subTitle, icon, navigate
 
 
             <Box sx={{ display: 'flex', minHeight: '100vh' }} className='fade-in'>
+
                 <ToastContainer />
-                <CssBaseline />
+                {/* <CssBaseline /> */}
+
                 <Box
                     component="nav"
                     sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
                 >
+
                     {isSmUp ? null : (
                         <Navigator
                             PaperProps={{ style: { width: drawerWidth } }}
@@ -227,6 +237,7 @@ export const Paperbase: FC<Props> = ({ children, title, subTitle, icon, navigate
                         <Copyright />
                     </Box>
                 </Box>
+
             </Box>
 
         </ThemeProvider>

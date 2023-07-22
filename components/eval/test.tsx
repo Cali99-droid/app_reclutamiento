@@ -11,12 +11,12 @@ interface ModalProps extends PropsWithChildren {
     title: string;
     open: boolean;
     handleClose: () => void;
-    handleConfirm: () => void;
+    // handleConfirm: () => void;
     items: any[];
 
 }
 
-export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, handleConfirm, items }) => {
+export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, items }) => {
     const { criterios, calcularTotal, total } = useContext(PostContext);
     let it: any = [];
     let idTes: any;
@@ -71,11 +71,11 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
             //   toast.success('🦄 Puntaje asignado correctamente0!'),
             //         handleCloseClase()
             //   limpiarCriterios()
-
+            handleClose();
         } catch (error) {
 
             console.log(error);
-            alert('El postulante ya tiene puntaje');
+            alert('Hubo un error');
         }
 
     };

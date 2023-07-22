@@ -1,8 +1,9 @@
 import { AuthProvider, UiProvider, DatosProvider } from '@/context'
 import { SessionProvider, signOut, useSession } from "next-auth/react"
 import '@/styles/globals.css'
+import '@/styles/coustom-sweet.css'
 import { lightTheme } from '@/themes'
-
+import 'sweetalert2/dist/sweetalert2.min.css';
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import type { AppProps } from 'next/app'
 import { PostProvider } from '../context';
@@ -13,7 +14,9 @@ import { useRouter } from 'next/router'
 import 'dayjs/locale/en-gb';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import Swal from 'sweetalert2';
 import "dayjs/locale/es";
+import { SweetAlertProvider } from '@/context/sweet/SweetAlertContext'
 export default function App({ Component, pageProps }: AppProps) {
 
   // const inactivityTimeout = 20 * 60 * 1000; // 20 minutos en milisegundos
@@ -60,18 +63,19 @@ export default function App({ Component, pageProps }: AppProps) {
           }}
         >
           <AuthProvider>
+            <SweetAlertProvider>
+              <PostProvider>
+                <DatosProvider >
+                  <UiProvider>
 
-            <PostProvider>
-              <DatosProvider >
-                <UiProvider>
-
-                  <ThemeProvider theme={lightTheme} >
-                    <CssBaseline />
-                    <Component {...pageProps} />
-                  </ThemeProvider>
-                </UiProvider>
-              </DatosProvider>
-            </PostProvider>
+                    <ThemeProvider theme={lightTheme} >
+                      <CssBaseline />
+                      <Component {...pageProps} />
+                    </ThemeProvider>
+                  </UiProvider>
+                </DatosProvider>
+              </PostProvider>
+            </SweetAlertProvider>
           </AuthProvider>
         </SWRConfig>
       </LocalizationProvider>

@@ -72,9 +72,7 @@ const EvaluarPage: NextPage<Props> = ({ convocatoria, items }) => {
 
             {/* <ModalClase title={'Evaluar Clase Modelo'} open={openClase} handleClose={handleCloseClase} handleConfirm={handleConfirmClase} /> */}
             {/* <ModalAptitud title={'Evaluar aptitudes'} open={openAptitud} handleClose={handleCloseAptitud} handleConfirm={handleConfirmAptitud} /> */}
-            <ModalEval title={'Evaluacion'} open={openClase} handleClose={handleCloseClase} handleConfirm={function (): void {
-                throw new Error('Function not implemented.');
-            }} items={items} >
+            <ModalEval title={'Evaluacion'} open={openClase} handleClose={handleCloseClase} items={items} >
             </ModalEval>
 
         </Paperbase>
@@ -86,8 +84,24 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
     const session: any = await getSession({ req });
 
     const { user } = session;
-
     const convocatoriaSer = await prisma.convocatoria_x_jurado.findFirst({
+        where: {
+            convocatoria_id: parseInt(id.toString())
+        }, select: {
+            user_id: true,
+            convocatoria: {
+                select: {
+                    id: true,
+                    titulo: true,
+                    estado: true
+                }
+            },
+
+        }
+    }
+    )
+
+    const convocatorias = await prisma.convocatoria_x_jurado.findMany({
         where: {
             convocatoria_id: parseInt(id.toString())
         },
@@ -105,15 +119,18 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
 
     })
 
-    if (convocatoriaSer) {
-        if (convocatoriaSer.convocatoria.estado.id === 3 || convocatoriaSer.user_id !== parseInt(user.id)) {
-            return {
-                redirect: {
-                    destination: '/jurado',
-                    permanent: false
+    if (convocatorias) {
+        convocatorias.forEach(convocatoria => {
+            if (convocatoria.convocatoria.estado.id === 3 || convocatoria.user_id !== parseInt(user.id)) {
+                return {
+                    redirect: {
+                        destination: '/jurado',
+                        permanent: false
+                    }
                 }
             }
-        }
+        });
+
     } else {
         return {
             redirect: {

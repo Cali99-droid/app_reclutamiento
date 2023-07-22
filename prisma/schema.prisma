@@ -227,6 +227,7 @@ model postulante {
   gradoId                   Int                         @map("grado_id")
   tipoId                    Int                         @map("tipo_documento_id")
   aficion                   aficion[]
+  blacklist                 blacklist[]
   capacitacion              capacitacion[]
   cargo                     cargo[]
   estudios                  estudios[]
@@ -369,4 +370,16 @@ model test {
   rol      rol?       @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_rol1")
 
   @@index([rol_id], map: "fk_test_rol1_idx")
+}
+
+model blacklist {
+  id            Int        @id @default(autoincrement())
+  fecha         DateTime   @db.Date
+  dni           String     @db.Char(1)
+  postulante_id Int
+  create_time   DateTime?  @default(now()) @db.Timestamp(0)
+  update_time   DateTime?  @db.Timestamp(0)
+  postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_blacklist_postulante1")
+
+  @@index([postulante_id], map: "fk_blacklist_postulante1_idx")
 }

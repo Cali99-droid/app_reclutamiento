@@ -1,0 +1,13 @@
+.swal2-container {
+    pointer-events: all; /* Deshabilita la interacción con el modal */
+  }
+  
+  .swal2-container.swal2-shown {
+    pointer-events: auto; /* Habilita la interacción con el modal */
+  }
+  
+  .swal2-container.swal2-shown .swal2-backdrop-show {
+    background-color: rgba(0, 0, 0, 0.5); /* Cambia el color de fondo bloqueado */
+    z-index: 9999; 
+  }
+  
