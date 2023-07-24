@@ -273,7 +273,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                                         <TableCell align="right">{e.grado}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -337,7 +337,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                                         <TableCell align="right">{e.remuneracion}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -441,7 +441,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                                         <TableCell align="right">{e.descripcion}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -475,7 +475,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                                     <StyledTableCell align="right">Institución</StyledTableCell>
                                                     <StyledTableCell align="right">Año</StyledTableCell>
                                                     <StyledTableCell align="right">Descripción</StyledTableCell>
-
+                                                    <StyledTableCell align="right">Doc</StyledTableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
@@ -491,7 +491,12 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
 
                                                         <TableCell align="right">{e.year}</TableCell>
                                                         <TableCell align="right">{e.descripcion}</TableCell>
+                                                        <TableCell align="right">
 
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                                <FilePresentIcon />
+                                                            </IconButton>
+                                                        </TableCell>
                                                     </TableRow>
                                                 ))}
                                             </TableBody>
