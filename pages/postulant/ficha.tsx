@@ -4,7 +4,7 @@ import { prisma } from '@/server/db/client';
 import { JobsLayout } from "@/components/layouts";
 
 import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics } from "@/interfaces";
-import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, useMediaQuery, Link, colors, Divider } from '@mui/material';
+import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, useMediaQuery, Link, colors, Divider, IconButton } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 import { getSession } from 'next-auth/react';
@@ -27,6 +27,7 @@ import { ArrowBack, Edit, Padding } from '@mui/icons-material';
 import { useContext } from 'react';
 import { AuthContext } from '@/context';
 import NextLink from 'next/link';
+import FilePresentIcon from '@mui/icons-material/FilePresent';
 
 interface Props {
     postulante: any
@@ -210,7 +211,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                 <StyledTableCell align="right">Institución</StyledTableCell>
                                                                 <StyledTableCell align="right">Grado</StyledTableCell>
                                                                 <StyledTableCell align="right">Año</StyledTableCell>
-
+                                                                <StyledTableCell align="right">Doc</StyledTableCell>
                                                             </TableRow>
                                                         </TableHead>
                                                         <TableBody>
@@ -225,7 +226,12 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                     <TableCell align="right">{e.institucion}</TableCell>
                                                                     <TableCell align="right">{e.grado}</TableCell>
                                                                     <TableCell align="right">{e.year}</TableCell>
+                                                                    <TableCell align="right">
 
+                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                                            <FilePresentIcon />
+                                                                        </IconButton>
+                                                                    </TableCell>
                                                                 </TableRow>
                                                             ))}
                                                         </TableBody>
@@ -265,6 +271,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                 {/* <StyledTableCell align="right">Nivel</StyledTableCell> */}
                                                                 {/* <StyledTableCell align="right">Personas a cargo</StyledTableCell> */}
                                                                 <StyledTableCell align="right">Remuneración</StyledTableCell>
+                                                                <StyledTableCell align="right">Doc</StyledTableCell>
 
 
                                                             </TableRow>
@@ -284,7 +291,12 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                     {/* <TableCell align="right">{e.nivel}</TableCell> */}
                                                                     {/* <TableCell align="right">{e.cantidadCargo}</TableCell> */}
                                                                     <TableCell align="right">{e.remuneracion}</TableCell>
+                                                                    <TableCell align="right">
 
+                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                                            <FilePresentIcon />
+                                                                        </IconButton>
+                                                                    </TableCell>
 
                                                                 </TableRow>
                                                             ))}
@@ -375,6 +387,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                 <StyledTableCell align="right">Horas</StyledTableCell>
                                                                 <StyledTableCell align="right">Año</StyledTableCell>
                                                                 <StyledTableCell align="right">Detalles</StyledTableCell>
+                                                                <StyledTableCell align="right">Doc</StyledTableCell>
 
                                                             </TableRow>
                                                         </TableHead>
@@ -392,7 +405,12 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
 
                                                                     <TableCell align="right">{e.year}</TableCell>
                                                                     <TableCell align="right">{e.descripcion}</TableCell>
+                                                                    <TableCell align="right">
 
+                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                                            <FilePresentIcon />
+                                                                        </IconButton>
+                                                                    </TableCell>
                                                                 </TableRow>
                                                             ))}
                                                         </TableBody>

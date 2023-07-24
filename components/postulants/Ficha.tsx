@@ -181,7 +181,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                                                     <TableCell align="right">{e.year}</TableCell>
                                                     <TableCell align="right">
 
-                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
                                                             <FilePresentIcon />
                                                         </IconButton>
                                                     </TableCell>
@@ -242,7 +242,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                                                     <TableCell align="right">{e.remuneracion}</TableCell>
                                                     <TableCell align="right">
 
-                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
                                                             <FilePresentIcon />
                                                         </IconButton>
                                                     </TableCell>
@@ -345,7 +345,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                                                     <TableCell align="right">{e.descripcion}</TableCell>
                                                     <TableCell align="right">
 
-                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
                                                             <FilePresentIcon />
                                                         </IconButton>
                                                     </TableCell>
@@ -379,6 +379,7 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
                                                 <StyledTableCell align="right">Institución</StyledTableCell>
                                                 <StyledTableCell align="right">Año</StyledTableCell>
                                                 <StyledTableCell align="right">Descripción</StyledTableCell>
+                                                <StyledTableCell align="right">Doc</StyledTableCell>
 
                                             </TableRow>
                                         </TableHead>
@@ -395,6 +396,12 @@ export const Ficha: NextPage<Props> = ({ postulante }) => {
 
                                                     <TableCell align="right">{e.year}</TableCell>
                                                     <TableCell align="right">{e.descripcion}</TableCell>
+                                                    <TableCell align="right">
+
+                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                            <FilePresentIcon />
+                                                        </IconButton>
+                                                    </TableCell>
 
                                                 </TableRow>
                                             ))}
