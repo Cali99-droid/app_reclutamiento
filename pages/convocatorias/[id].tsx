@@ -35,7 +35,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
     <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion} imageFullUrl={`${convocatoria.img}`}>
 
       <Box
-        className="fadeIn" sx={{ mt: 28, }} display={'flex'}
+        className="fadeIn" sx={{ mt: 20, }} display={'flex'}
         gap={4}
         alignItems="center" justifyContent={'center'} width={matches ? '50%' : '90%'} margin={'auto'}
 
@@ -46,7 +46,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
       >
 
         <Box>
-          <Image src={`https://caebucket.s3.us-west-2.amazonaws.com/img/${convocatoria.img}`} alt={''} width={matches ? 500 : 400} height={matches ? 500 : 400} />
+          <Image src={`https://caebucket.s3.us-west-2.amazonaws.com/img/${convocatoria.img}`} alt={''} width={matches ? 500 : 350} height={matches ? 500 : 350} />
         </Box>
 
         <Box borderRadius={4} padding={2}>
