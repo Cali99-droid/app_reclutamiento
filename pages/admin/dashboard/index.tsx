@@ -327,8 +327,8 @@ export const getStaticProps: GetStaticProps = async () => {
         props: {
             contratados,
             convocatoriasAbiertas
-
-        }
+        },
+        revalidate: 1
     }
 }
 export default DashdoardPage
