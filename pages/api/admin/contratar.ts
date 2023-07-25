@@ -14,8 +14,8 @@ type Data =
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
     
     switch (req.method) {
-        case 'PUT':
-            return updateConvocatoria( req, res );
+        case 'POST':
+            return postContrato( req, res );
 
             
         default:
@@ -26,19 +26,19 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 }
 
 
-const updateConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
+const postContrato = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
-    const { id , status } = req.body;
+    const { idPos , monto } = req.body;
     try {
-      const  convocatoria = await prisma.convocatoria.update({
+      const  convocatoria = await prisma.postulante_x_convocatoria.update({
         where: {
-          id:parseInt(id)
+          id:idPos
         },
         data: {
           
-            estadoId:  parseInt(status),
+            monto:  parseInt(monto),
+            estado_postulante_id:7
           
-
         },
       })
 

@@ -12,7 +12,7 @@ export default function Document() {
       <Head>
         <link rel="icon" href="/logo.ico" /> {/* Cambia la ruta si tu favicon se llama de forma diferente */}
         <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
       </Head>
       <body >
         <Main />

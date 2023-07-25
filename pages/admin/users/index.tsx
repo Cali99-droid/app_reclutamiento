@@ -84,10 +84,13 @@ const UsersPage = () => {
                         onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
                         sx={{ width: '250px', }}
                     >
-                        <MenuItem value={1}>Postulante</MenuItem>
+
                         <MenuItem value={2}>Administrador</MenuItem>
+                        <MenuItem value={1}>Postulante</MenuItem>
                         <MenuItem value={3}>Jurado Docente</MenuItem>
                         <MenuItem value={4}>Jurado Administrativo</MenuItem>
+                        <MenuItem value={5}>Jefe RRHH</MenuItem>
+                        <MenuItem value={6}>Asistente RRHH</MenuItem>
 
                     </Select>
 

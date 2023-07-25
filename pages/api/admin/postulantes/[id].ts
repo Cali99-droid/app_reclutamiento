@@ -78,6 +78,8 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
                       puntaje_items:true
                     }
                   }
+                },orderBy:{
+                  total:'desc'
                 }
               },
               persona: {
@@ -85,18 +87,7 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
                   user:true
                 }
               },
-              evaluacion_x_postulante:{
-                where:{
-                  convocatoria_id:parseInt(id.toString()),
-                  
-                },
-                select:{
-                  puntaje:true,
-                  user_id:true,
-                  evaluacion_id:true,
-                  user:true
-                }
-              },
+             
              
               estudios:true,
               cargo:true,

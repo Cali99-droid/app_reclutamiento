@@ -5,14 +5,14 @@ import { PostContext } from '@/context';
 
 import { GetServerSideProps, NextPage } from "next";
 import { DataGrid, GridCellParams, GridCloseIcon, GridColDef, esES } from "@mui/x-data-grid";
-import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider, useMediaQuery, Backdrop, CircularProgress } from '@mui/material';
+import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider, useMediaQuery, Backdrop, CircularProgress, Alert, InputAdornment, FormHelperText } from '@mui/material';
 import { evaluacion_x_postulante, postulante, categoria, puntajes, persona } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { cyan, yellow } from '@mui/material/colors';
-import { useState, useEffect, useContext } from 'react';
+import { cyan, green, yellow } from '@mui/material/colors';
+import { useState, useEffect, useContext, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
 
 import { IJob, IUser } from '@/interfaces';
@@ -24,6 +24,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import GavelIcon from '@mui/icons-material/Gavel';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import PeopleIcon from '@mui/icons-material/People';
 import SpellcheckIcon from '@mui/icons-material/Spellcheck';
@@ -32,7 +33,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 import { Paperbase } from '@/components/dash';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import Modal from '../../../../components/modal/Modal';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import TextField from '@mui/material/TextField';
@@ -42,8 +43,9 @@ moment.locale('es');
 
 import { usePostulantes } from '@/hooks';
 import { FullScreenLoading } from '@/components/ui';
-import { Send } from '@mui/icons-material';
+import { Gavel, Send } from '@mui/icons-material';
 import ModalEval from '@/components/eval/test';
+import confetti from 'canvas-confetti';
 
 interface Props {
   postulantes: postulante[]
@@ -58,7 +60,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const router = useRouter();
   const { id } = router.query
   const { pos, isLoading } = usePostulantes(`/admin/postulantes/${convocatoria.id}`);
-  console.log(pos)
+
   const [postulantes, setPostulantes] = useState<any[]>([]);
 
   const { calcularTotal, limpiarCriterios, juradosAsignados, addNewJurado, deleteJurado, refreshJurados } = useContext(PostContext);
@@ -112,13 +114,18 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
       refreshJurados()
 
-      const seleccionados = pos.filter(d => d.estado_postulante_id === 6)
+      const seleccionados = pos.filter(d => d.estado_postulante_id === 7)
       const contratados = pos.filter(d => d.estado_postulante_id === 7)
       const descartados = pos.filter(d => d.estado_postulante_id === 4)
       const aptos = pos.filter(d => d.estado_postulante_id !== 4)
+
+      if ((convocatoria.vacantes - contratados.length) === 0) {
+
+        cerrarConcocatoria()
+      } else {
+
+      }
       if (filtrando) {
-
-
         setPostulantes(aptos);
       } else {
 
@@ -129,6 +136,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       setSeleccionados(seleccionados);
       setDescartados(descartados);
       setContratados(contratados);
+
+
     }
 
 
@@ -137,7 +146,92 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
   const { openClase, handleOpenClase, handleCloseClase } = useContext(PostContext);
 
+  const getEstado = (estado: string, puntajeEntr: number, puntajeJur: number) => {
+    switch (estado) {
+      case 'Inscrito':
+        return 'Inscrito'
 
+      case 'Apto entrevista':
+        if (puntajeEntr > 0) {
+          return 'Entrevistado'
+        }
+        return 'Apto entrevista'
+      case 'Apto evaluación':
+
+        if (puntajeJur > 0) {
+          return 'Evaluado'
+        }
+        return 'Apto evaluación'
+
+      default:
+        return estado
+        break;
+    }
+  }
+  const cerrarConcocatoria = async () => {
+    try {
+
+      await reclutApi.put('/admin/job', { id, status: 3 });
+      refreshData()
+
+    } catch (error) {
+
+      console.log(error);
+      alert('No se pudo cerrar la convocatoria');
+    }
+  }
+  const devolverResultado = (puntajes: any[], evaluacion: boolean) => {
+    let puntaje = 0;
+    let puntos = 0;
+    let jurados = 0;
+
+    const resultado = puntajes.forEach(x => {
+      //rol de admin
+      if (evaluacion) {
+        if (x.user.rol.id === 3 || x.user.rol.id === 4) {
+          puntaje += (x.total / (x._count.puntaje_items));
+          puntos += x.total
+          jurados += 1
+        }
+        if (((puntaje / jurados) * 10) >= 30) {
+          return {
+            puntos,
+            porcentaje: (puntaje / jurados) * 10 + '%',
+            pasa: true
+          }
+        } else {
+          return {
+            puntos,
+            porcentaje: (puntaje / jurados) * 10 + '%',
+            pasa: false
+          }
+        }
+
+
+      } else {
+        if (x.user.rol.id === 5) {
+          puntaje += (x.total / x._count.puntaje_items)
+          puntos += x.total
+        }
+        if (Math.round(puntaje * 10) >= 30) {
+          return {
+            puntos,
+            porcentaje: Math.round(puntaje * 10) + '%',
+            pasa: true
+          }
+        } else {
+          return {
+            puntos,
+            porcentaje: Math.round(puntaje * 10) + '%',
+            pasa: false
+          }
+        }
+      }
+
+    });
+
+    // return (puntos + '(' + Math.round(puntaje * 10) + '%)').toString();
+  }
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'N°', width: 50 },
     {
@@ -163,32 +257,37 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     },
 
 
-    {
-      field: 'puntajeEntr',
-      headerName: ' Entrevista (%)',
-      width: 150,
+    // {
+    //   field: 'puntajeEntr',
+    //   headerName: ' Entrevista (%)',
+    //   width: 150,
 
-    },
-    {
-      field: 'puntajeJur',
-      headerName: ' Jurados(%)',
-      width: 200,
+    // },
+    // {
+    //   field: 'puntajeJur',
+    //   headerName: ' Jurados(%)',
+    //   width: 200,
 
-    },
-    {
-      field: 'total',
-      headerName: 'Total',
-      width: 50,
+    // },
+    // {
+    //   field: 'total',
+    //   headerName: 'Total',
+    //   width: 50,
 
-    },
+    // },
     {
       field: 'estado',
       headerName: 'Estado',
-      width: 150,
+      width: 200,
       renderCell: (params) => {
 
         return (
-          <Chip label={`${params.row.estado}`} color="info" variant='outlined' />
+
+          <Chip color="info" label={params.row.est} />
+
+
+
+
 
           //     <Select
           //       value={parseInt(params.row.estado)}
@@ -210,6 +309,33 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
           //     </Select>
         )
       }
+    },
+    {
+      field: 'resultado',
+      headerName: 'Resultado',
+      width: 300,
+      renderCell: (params) => {
+
+        const obj = devolverPuntajeEntrevista(params.row.calificaciones);
+        const objJ = devolverPuntajeJurado(params.row.calificaciones);
+
+        return (
+          <>
+            {/* <Chip label={getEstado(params.row.estado, params.row.puntajeEntr, params.row.puntajeJur)} color="info" variant='outlined' /> */}
+            {
+              params.row.puntajeJur ? (
+                <Alert severity={objJ.pasa ? 'success' : 'warning'}>{objJ.mensaje}</Alert>
+              ) : (obj.noEval) ? (
+                <Alert severity={'info'}>{obj.mensaje}</Alert>
+              ) : (
+                <Alert severity={obj.pasa ? 'success' : 'warning'}>{obj.mensaje}</Alert>
+              )
+            }
+
+          </>
+        )
+      }
+
     },
     {
       field: 'actions', headerName: 'Evaluar Entrevista', width: 200,
@@ -248,10 +374,22 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                         sx={{ color: yellow[800] }}
                         aria-label="evaluar"
                         onClick={() => { hadleOpenCalificacion(params.row.calificaciones) }}
-
                       >
                         < StarsIcon />
                       </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Contratar"  >
+                      <span>
+                        <IconButton
+                          sx={{ color: green[800] }}
+                          aria-label="negocias"
+                          disabled={params.row.puntajeJur === 0 || (convocatoria.vacantes - contratados.length) === 0}
+                          onClick={() => { handleOpenContrato(params.row.idCp) }}
+                        >
+                          <GavelIcon />
+                        </IconButton>
+                      </span>
+
                     </Tooltip>
 
                   </>
@@ -298,41 +436,113 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   ];
   const devolverPuntajeEntrevista = (puntajes: any[]) => {
     let puntaje = 0;
+    let puntos = 0;
     const resultado = puntajes.forEach(x => {
       //rol de admin
-      if (x.user.rol.id === 2) {
+      if (x.user.rol.id === 5) {
         puntaje += (x.total / x._count.puntaje_items)
+        puntos += x.total
+      }
+    });
+    if (Math.round(puntaje * 10) === 0) {
+      return {
+        puntos,
+        porcentaje: Math.round(puntaje * 10) + '%',
+        pasa: true,
+        noEval: true,
+        mensaje: 'Sin datos'
+      }
+    }
+    if (Math.round(puntaje * 10) >= 30) {
+      return {
+        puntos,
+        porcentaje: Math.round(puntaje * 10) + '%',
+        pasa: true,
+        mensaje: Math.round(puntaje * 10) + '% ' + 'Puntaje entrevista'
+      }
+    } else {
+      return {
+        puntos,
+        porcentaje: Math.round(puntaje * 10) + '%',
+        pasa: false,
+        mensaje: Math.round(puntaje * 10) + '%' + 'Puntaje entrevista'
+      }
+    }
+    // return (puntos + '(' + Math.round(puntaje * 10) + '%)').toString();
+  }
+  const getPuntajeEntrevista = (puntajes: any[]) => {
+    let puntaje = 0;
+
+    const resultado = puntajes.forEach(x => {
+      //rol de admin
+      if (x.user.rol.id === 5) {
+        puntaje += (x.total)
+
       } else {
         return '';
       }
     });
-    return puntaje;
+    return (puntaje);
   }
   const devolverPuntajeJurado = (puntajes: any[]) => {
 
     let puntaje = 0;
     let jurados = 0;
-
+    let puntos = 0;
     const resultado = puntajes.forEach(x => {
 
       if (x.user.rol.id === 3 || x.user.rol.id === 4) {
         puntaje += (x.total / (x._count.puntaje_items));
         jurados += 1
+        puntos += x.total
       } else {
         return '';
       }
-
-      puntaje;
     });
+    if (Math.round((puntaje / jurados) * 10) === 0) {
+      return {
+        puntos,
+        porcentaje: Math.round(puntaje * 10) + '%',
+        pasa: true,
+        noEval: true,
+        mensaje: 'Aún no evaluado'
+      }
+    }
+    if (Math.round((puntaje / jurados) * 10) >= 30) {
+      return {
+        puntos,
+        porcentaje: Math.round((puntaje / jurados) * 10) + '%',
+        pasa: true,
+        mensaje: Math.round((puntaje / jurados) * 10) + '% ' + 'Puntaje Evaluación'
+      }
+    } else {
+      return {
+        puntos,
+        porcentaje: Math.round((puntaje / jurados) * 10) + '%',
+        pasa: false,
+        mensaje: Math.round((puntaje / jurados) * 10) + '% ' + 'Puntaje Evaluación'
+      }
+    }
 
-    console.log(jurados)
-    return (puntaje / jurados) * 10;
   }
+  const getPuntajeJurado = (puntajes: any[]) => {
+    let puntaje = 0;
 
-  const tot = (puntajes: evaluacion_x_postulante[]) => {
+    const resultado = puntajes.forEach(x => {
+      //rol de admin
+      if (x.user.rol.id === 3 || x.user.rol.id === 4) {
+        puntaje += (x.total)
+
+      } else {
+        return '';
+      }
+    });
+    return (puntaje);
+  }
+  const tot = (puntajes: any[]) => {
     let suma = 0;
     puntajes.forEach(p => {
-      suma += p.puntaje
+      suma += p.total
     });
 
     return suma;
@@ -355,13 +565,14 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     edad: calcularEdad(p.postulante.nacimiento) + ' años',
     idPos: p.postulante.id,
     sueldo: 'S/ ' + p.postulante.sueldo,
-    puntajeEntr: Math.round(devolverPuntajeEntrevista(p.postulante.puntajes) * 10) + '%',
-    puntajeJur: devolverPuntajeJurado(p.postulante.puntajes) + '%',
-    total: tot(p.postulante.evaluacion_x_postulante),
+    puntajeEntr: getPuntajeEntrevista(p.postulante.puntajes),
+    puntajeJur: getPuntajeJurado(p.postulante.puntajes),
+    total: tot(p.postulante.puntajes),
     calificaciones: p.postulante.puntajes,
     idCp: p.id,
     comentario: p.comentario,
-    fechaComentario: p.fecha_comentario
+    fechaComentario: p.fecha_comentario,
+    est: getEstado(p.estado_postulante.nombre, getPuntajeEntrevista(p.postulante.puntajes), getPuntajeJurado(p.postulante.puntajes))
   }))
 
 
@@ -494,7 +705,46 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
 
 
-  console.log(items.length)
+  //Contratos
+  const [openContrato, setOpenContrato] = useState(false)
+  const [monto, setMonto] = useState('');
+  const [error, setError] = useState(false)
+  const contratar = async () => {
+    if (monto.length <= 0) {
+      setError(true)
+      toast.error('Completa los campos')
+      return;
+    }
+
+    try {
+      const { data } = await reclutApi.post(`/admin/contratar`, { idPos, monto });
+      setOpenContrato(false)
+      confetti({
+        particleCount: 300,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+      toast.success('🦄 Tenemos un nuevo contratado')
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleOpenContrato = (idPos: number) => {
+    setIdPos(idPos)
+    setOpenContrato(true);
+  }
+  const onMontoChange = (event: ChangeEvent<HTMLInputElement>) => {
+
+    if (event.target.value.length <= 0 || event.target.value.length > 4) {
+      setError(true)
+    }
+
+
+    setMonto(event.target.value);
+
+  }
   const matches = useMediaQuery('(min-width:600px)');
   return (
     <Paperbase title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
@@ -725,7 +975,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                     <TableCell align="right">{e.total}/{e._count.puntaje_items * 10}</TableCell>
 
                     <TableCell align="right" component="th" scope="row">
-                      {e.evaluacion_id === 1 ? 'Entrevista ' : 'Jurado'}
+                      {e.user.rol.id === 5 ? 'Entrevista ' : 'Jurado'}
                     </TableCell>
 
 
@@ -819,12 +1069,40 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       <ModalEval title={'Evaluacion'} open={openClase} handleClose={handleCloseClase} items={items} >
 
       </ModalEval>
+      <Modal title={'El postulante será contratado'} open={openContrato} handleClose={() => setOpenContrato(false)} handleConfirm={contratar}>
+
+        <Box textAlign={'center'} mt={3}>
+          <TextField
+            type='number'
+            label="Monto Negociado"
+            id="outlined-start-adornment"
+            value={monto}
+            error={error}
+            onChange={onMontoChange}
+            sx={{ m: 1, width: '100%' }}
+            InputProps={{
+              startAdornment: <InputAdornment position="start">S/</InputAdornment>,
+            }}
+            inputProps={{
+              max: 10000,
+              min: 0
+            }}
+          />
+          <FormHelperText>Debe ingresar el monto negociado con el postulante</FormHelperText>
+
+        </Box>
+
+
+      </Modal>
     </Paperbase>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps = async ({ query, req }) => {
   const { id = '' } = query;
+  const session: any = await getSession({ req });
+
+  const { user } = session;
   if (isNaN(parseInt(id.toString()))) {
     return {
       redirect: {
@@ -882,7 +1160,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const items = await prisma.test.findMany({
     where: {
-      rol_id: 3
+      rol_id: user.rol_id
     },
     select: {
       id: true,

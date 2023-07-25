@@ -269,10 +269,12 @@ export const NavBar = () => {
 
 
                                 </Box>
-                                {user?.rol.name === 'admin' && (
+                                {user?.rol.name === 'admin' || user?.rol.name === 'jefe' ? (
                                     <Box>
                                         <Button variant='outlined' onClick={() => push('/admin/convocatorias')}>Administrar</Button>
                                     </Box>
+                                ) : (
+                                    <></>
                                 )}
 
                             </Box>

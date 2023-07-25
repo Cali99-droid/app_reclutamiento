@@ -250,7 +250,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                 <Box padding={1}>
                                     <Box display={'flex'} alignItems={'center'} gap={1}>
                                         <WorkIcon sx={{ color: '#001C75' }} />
-                                        <Typography fontWeight={'bold'} >CARGOS DE RESPONSABILIDAD O DE CONFIANZA DESEMPEÑADOS</Typography>
+                                        <Typography fontWeight={'bold'} >EXPERIENCIA LABORAL (Relacionada al puesto)</Typography>
                                     </Box>
                                     <Divider />
                                     <Box maxWidth={matches ? '100%' : 400} mt={3}>

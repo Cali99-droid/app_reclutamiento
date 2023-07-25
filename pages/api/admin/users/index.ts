@@ -1,6 +1,7 @@
 import { IJob } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
+import { getSession } from 'next-auth/react';
 
 
 
@@ -28,11 +29,31 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const getUsers = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
-    const users = await prisma.user.findMany({
+    const session :any = await getSession(res);
+    let users;
+    // if(session){
+    //        console.log(session.user?.rol_id)
+    // }
+if(session.user?.rol_id === 2){
+ users = await prisma.user.findMany({
         include: {
             persona: true,
         },
     });
+}else{
+     users = await prisma.user.findMany({
+        include: {
+            persona: true,
+
+        },
+        where:{
+            rol_id:{
+                not:2
+            }
+        }
+    }); 
+}
+    
     // const users = JSON.parse(JSON.stringify(ListUsers))
 
     await prisma.$disconnect()

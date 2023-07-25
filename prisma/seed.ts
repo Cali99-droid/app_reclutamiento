@@ -57,6 +57,8 @@ async function main() {
       { name: 'admin' },
       { name: 'jurado1' },
       { name: 'jurado2' },
+      { name: 'jefe' },
+      { name: 'asistente' },
 
       
     ],

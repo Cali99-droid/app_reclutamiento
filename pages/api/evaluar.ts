@@ -30,7 +30,29 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
  
 
   const {itemValues, totalSum, idTest, idPos, idUser,id } = req.body
-  console.log(itemValues)
+
+  const tienePuntaje = await prisma.puntajes.findMany({
+    where:{
+                convocatoria_id:parseInt(id),
+                AND:{
+                    postulante_id:idPos,
+                    test_id:idTest
+                }
+                
+            },
+  })
+    if(tienePuntaje.length>0){
+        // const actualizarEstado = await prisma.postulante_x_convocatoria.update({
+        //     data:{
+        //         estado_postulante_id:9
+        //     },where:{
+
+        //     }
+        // })
+            return res.status(400).json({
+                message:'Ya tiene evaluación'
+            })
+        }
     // const existeEv = await prisma.evaluacion_x_postulante.findMany({
     //     where:{
     //         convocatoria_id:parseInt(id),

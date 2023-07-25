@@ -95,6 +95,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
         setUltimo(true)
     }
 
+
     // const siguienteEstado = estados.filter(e => e.id === idEstado + 1)[0];
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -108,6 +109,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
     const updateStatus = async (id: number, newStatus: string) => {
 
         const esta = estados.filter(e => e.id === newStatus + 1)[0];
+        console.log(esta)
         try {
 
             const res = await reclutApi.put('/admin/postulantes/1', { id, status: newStatus });
@@ -300,7 +302,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                             <Box padding={3}>
                                 <Box display={'flex'} alignItems={'center'} gap={1}>
                                     <WorkIcon sx={{ color: '#001C75' }} />
-                                    <Typography fontWeight={'bold'} >CARGOS DE RESPONSABILIDAD O DE CONFIANZA DESEMPEÑADOS</Typography>
+                                    <Typography fontWeight={'bold'} >EXPERIENCIA LABORAL (Relacionada al puesto)</Typography>
                                 </Box>
                                 <Box>
                                     <TableContainer   >
@@ -642,13 +644,13 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
 
 
 
-                    <MenuItem disabled={ultimo} onClick={() => updateStatus(idPC, siguienteEstado.id)}>
+                    <MenuItem disabled={siguienteEstado.id === 4} onClick={() => updateStatus(idPC, siguienteEstado.id)}>
                         <Tooltip placement="left-start" title={`Pasar a ${siguienteEstado.nombre}`}>
                             <span>
                                 <ListItemIcon>
                                     <ThumbUpOutlinedIcon />
                                 </ListItemIcon>
-                                {siguienteEstado.nombre}
+                                {siguienteEstado.id === 4 ? 'No disponible' : siguienteEstado.nombre}
                             </span>
                         </Tooltip>
                     </MenuItem>
@@ -762,7 +764,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 
     }
-    const estados = await prisma.estado_postulante.findMany();
+    const estados = await prisma.estado_postulante.findMany({
+        where: {
+            id: {
+                lte: 4
+            }
+        }
+    });
     const postulante = JSON.parse(JSON.stringify(post))
 
     await prisma.$disconnect();

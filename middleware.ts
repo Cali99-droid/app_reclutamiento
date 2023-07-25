@@ -8,9 +8,9 @@ export async function middleware(req: NextRequest) {
     const session: any = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
     const requestedPage = req.nextUrl.pathname;
-    const validRoles = ['admin'];
-    const validRols = ['admin','postulante'];
-    const validRolJurados = ['jurado1', 'jurado2','admin'];
+    const validRoles = ['admin','jefe'];
+    const validRols = ['admin','postulante','jefe'];
+    const validRolJurados = ['jurado1', 'jurado2','admin','jefe'];
 
     if( !session ){
       const url = req.nextUrl.clone();
@@ -58,7 +58,7 @@ export async function middleware(req: NextRequest) {
         });
     };
 
-    if( requestedPage.includes('/admin') &&   session.user.rol.name !== 'admin'){
+    if( requestedPage.includes('/admin') && !validRoles.includes(session.user.rol.name)  ){
  
       return NextResponse.redirect(new URL('/', req.url));
     };

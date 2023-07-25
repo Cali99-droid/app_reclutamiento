@@ -5,6 +5,7 @@ import { PostContext } from '@/context';
 import { prisma } from '@/server/db/client';
 import { reclutApi } from '@/apies';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 
 interface ModalProps extends PropsWithChildren {
@@ -68,10 +69,10 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
 
             const resp = await reclutApi.post('/evaluar', { itemValues, totalSum, idTest, idPos, idUser, id });
             console.log(resp)
-            //   toast.success('🦄 Puntaje asignado correctamente0!'),
-            //         handleCloseClase()
-            //   limpiarCriterios()
-            handleClose();
+            toast.success('🦄 Puntaje asignado correctamente0!'),
+                //         handleCloseClase()
+                //   limpiarCriterios()
+                handleClose();
         } catch (error) {
 
             console.log(error);

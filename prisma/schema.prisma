@@ -249,10 +249,11 @@ model postulante {
 model postulante_x_convocatoria {
   id                   Int               @id @default(autoincrement())
   comentario           String?           @db.LongText
+  monto                Int?
   session              String?           @db.VarChar(255)
   fecha_comentario     String?           @db.VarChar(60)
-  convocatoria_id      Int
   estado_postulante_id Int
+  convocatoria_id      Int
   postulante_id        Int
   convocatoria         convocatoria      @relation(fields: [convocatoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_x_convocatoria_convocatoria1")
   estado_postulante    estado_postulante @relation(fields: [estado_postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_x_convocatoria_estado_postulante1")
@@ -303,7 +304,7 @@ model user {
   id                      Int                       @id @default(autoincrement())
   email                   String?                   @unique @db.VarChar(255)
   password                String                    @db.VarChar(255)
-  create_time             DateTime?                 @default(now()) @db.Timestamp(0)
+  create_time             DateTime                  @default(now()) @db.Timestamp(0)
   token                   String?                   @db.VarChar(100)
   confirmado              Int?                      @default(0) @db.TinyInt
   img                     String?                   @db.LongText
@@ -345,6 +346,7 @@ model puntaje_items {
 model puntajes {
   id              Int             @id @default(autoincrement())
   total           Int
+  maximo          Int?
   test_id         Int
   postulante_id   Int
   user_id         Int

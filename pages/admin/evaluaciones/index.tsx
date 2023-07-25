@@ -182,13 +182,31 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
     }
 
   ];
+  const getResponsable = (rol: string) => {
+    switch (rol) {
+      case 'jurado1':
+        return 'Jurado Docente'
+
+      case 'jurado2':
+        return 'Jurado Administrativo'
+
+      case 'jefe':
+        return 'Jefe RRHH'
+
+      default:
+        break;
+    }
+
+  }
   const rows = tests.map((ev: any) => ({
     id: ev.id,
     nombre: ev.nombre,
-    responsable: ev.rol.name === 'jurado1' ? 'Jurado Docente' : 'Jurado Administrativo',
+    responsable: getResponsable(ev.rol.name),
     items: ev._count.item,
     rolId: ev.rol.id
   }))
+
+
   return (
     <Paperbase title={"Administrar Evaluaciones "} subTitle={"Listado de Evaluaciones"}>
       <Paper sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }}>
@@ -263,6 +281,7 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
               <MenuItem value={0} disabled>Seleccione</MenuItem>
               <MenuItem value={3}>Jurado Docente</MenuItem>
               <MenuItem value={4}>Jurado Administrativo</MenuItem>
+              <MenuItem value={5}>Entrevista RRHH</MenuItem>
 
             </Select>
           </FormControl>

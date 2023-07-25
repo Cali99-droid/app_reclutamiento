@@ -122,7 +122,7 @@ export default function Navigator(props: DrawerProps) {
 
                 </ListItem>
 
-                {user?.rol.name === 'admin' && (
+                {user?.rol.name === 'admin' || user?.rol.name === 'jefe' ? (
                     option.map(({ id, hijos }) => (
                         <Box key={id} sx={{ bgcolor: '#101F33' }} >
                             <ListItem sx={{ py: 2, px: 3 }}>
@@ -141,7 +141,9 @@ export default function Navigator(props: DrawerProps) {
                             ))}
                             <Divider sx={{ mt: 2 }} />
                         </Box>
-                    )))}
+                    ))) : (
+                    <></>
+                )}
                 {isLoggedIn && (user?.rol.name === 'jurado1' || user?.rol.name === 'jurado2') && (
                     <ListItem sx={{ ...item, ...itemCategory }}>
                         <ListItemButton
