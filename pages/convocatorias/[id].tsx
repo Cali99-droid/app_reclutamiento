@@ -164,6 +164,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const convocatoria = JSON.parse(JSON.stringify(convo))
   return {
     props: { convocatoria },
+    revalidate: 1
   };
 };
 
