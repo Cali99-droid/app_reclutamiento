@@ -306,7 +306,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                 disablePast
                                 views={['month', 'day']}
                                 label={'Vigencia'}
-
+                                defaultValue={fecha}
                                 onChange={(newValue) => onChangeFecha(newValue)}
                             />
                             {/* <label htmlFor="vigencia" >Vigencia</label>
