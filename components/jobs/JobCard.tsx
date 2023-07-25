@@ -33,7 +33,7 @@ export const JobCard: FC<Props> = ({ job }) => {
                     <Link>
                         <CardActionArea >
                             <CardMedia
-                                sx={{ height: 250 }}
+                                sx={{ height: 'auto' }}
                                 image={`https://caebucket.s3.us-west-2.amazonaws.com/img/${job.img}`}
                                 component="img"
 
