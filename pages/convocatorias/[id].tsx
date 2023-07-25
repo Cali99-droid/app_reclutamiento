@@ -37,7 +37,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
       <Box
         className="fadeIn" sx={{ mt: 28, }} display={'flex'}
         gap={4}
-        alignItems="center" justifyContent={'center'} width={'50%'} margin={'auto'}
+        alignItems="center" justifyContent={'center'} width={matches ? '50%' : '90%'} margin={'auto'}
 
         flexDirection={matches ? 'row' : 'column'}
         bgcolor={'#F1F1F1'}
@@ -46,7 +46,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
       >
 
         <Box>
-          <Image src={`https://caebucket.s3.us-west-2.amazonaws.com/img/${convocatoria.img}`} alt={''} width={matches ? 500 : 280} height={matches ? 500 : 280} />
+          <Image src={`https://caebucket.s3.us-west-2.amazonaws.com/img/${convocatoria.img}`} alt={''} width={matches ? 500 : 400} height={matches ? 500 : 400} />
         </Box>
 
         <Box borderRadius={4} padding={2}>
