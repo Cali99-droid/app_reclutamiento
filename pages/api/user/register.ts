@@ -68,7 +68,7 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     }
     if(!validations.validarCorreo(email)){
         return res.status(400).json({
-            message: 'No puede usar este correo para registrarse'
+            message: 'Tu email no puedes tener el dominio @ae.edu.pe'
         });
     }
     

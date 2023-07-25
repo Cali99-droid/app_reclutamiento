@@ -189,7 +189,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
         sesion: job.session,
         convocatoria: job.convocatoria.titulo,
         estado: job.convocatoria.estado.nombre,
-        estadoPostulante: job.estado_postulante.nombre === 'No interesa' ? 'No fuiste seleccionado' : job.estado_postulante.nombre,
+        estadoPostulante: job.estado_postulante.nombre === 'No interesa' ? 'En proceso' : job.estado_postulante.nombre,
         mensajes: job.comentario,
         categoria: job.convocatoria.categoria.id
 

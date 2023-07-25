@@ -45,6 +45,8 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
     if (job.vigencia) {
         job.vigencia = moment(job.vigencia).toDate().toISOString().substring(0, 10)
+    } else {
+
     }
 
     const { register, handleSubmit, formState: { errors }, getValues, setValue } = useForm<FormData>({
@@ -62,9 +64,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
 
     const onRegisterForm = async (form: FormData) => {
-
-
-
+        console.log(form)
         try {
             const { data } = await reclutApi({
                 url: '/admin/convocatorias',
@@ -82,8 +82,6 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
                 navigateTo('/admin/convocatorias');
             });
-
-
 
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -154,9 +152,10 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
         //     console.log({ error });
         // }
     }
-    const onChangeFecha = (dat: dayjs.Dayjs) => {
+    const onChangeFecha = (dat: any) => {
         setFecha(dat)
-        setValue('vigencia', dat.toISOString());
+
+        setValue('vigencia', dat.toISOString(), { shouldValidate: true });
         // console.log(getValues('vigencia'))
     }
     const onDeleteImage = () => {
@@ -307,8 +306,8 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                 disablePast
                                 views={['month', 'day']}
                                 label={'Vigencia'}
-                                defaultValue={fecha}
-                                onChange={(newValue) => onChangeFecha(newValue!)}
+
+                                onChange={(newValue) => onChangeFecha(newValue)}
                             />
                             {/* <label htmlFor="vigencia" >Vigencia</label>
 

@@ -1,0 +1,17 @@
+/* styles/custom-quill-styles.css */
+
+  .ql-font .ql-picker-options span[data-value="Ubuntu"]::before {
+    font-family: "Ubuntu";
+  }
+  
+  .ql-font .ql-picker-options span[data-value="Raleway"]::before {
+    font-family: "Raleway";
+  }
+  
+  .ql-font .ql-picker-options span[data-value="Roboto"]::before {
+    font-family: "Roboto";
+  }
+  
+  
+  /* Agrega cualquier otro estilo personalizado que desees aquí */
+  

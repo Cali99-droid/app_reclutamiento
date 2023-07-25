@@ -21,16 +21,14 @@ const ConfirmPage = () => {
 
     const router = useRouter();
 
-
-
-
     return (
         <AuthLayout title={"¡ Correo Enviado ! "} >
 
             <Box bgcolor={'#FFF'} padding={4} >
                 <Alert variant="outlined" severity="success">
                     Te hemos enviado las instrucciones correo electrónico , revisa tu bandeja de entrada.
-                </Alert></Box>
+                </Alert>
+            </Box>
 
         </AuthLayout>
     )

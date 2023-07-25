@@ -109,7 +109,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
     const updateStatus = async (id: number, newStatus: string) => {
 
         const esta = estados.filter(e => e.id === newStatus + 1)[0];
-        console.log(esta)
+
         try {
 
             const res = await reclutApi.put('/admin/postulantes/1', { id, status: newStatus });
@@ -666,7 +666,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                         Interesante
 
                     </MenuItem> */}
-                    <MenuItem onClick={handleClose} disabled={ultimo}>
+                    <MenuItem onClick={() => updateStatus(idPC, '4')} disabled={ultimo}>
                         <Tooltip placement="left-start" title={`Descartar`}>
                             <span>
                                 <ListItemIcon>
