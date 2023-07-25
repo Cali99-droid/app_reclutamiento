@@ -32,7 +32,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
   const matches = useMediaQuery('(min-width:1600px)');
   const sl = useMediaQuery('(min-width:1600px)');
   return (
-    <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion} imageFullUrl={`https://caebucket.s3.us-west-2.amazonaws.com/img/${convocatoria.img}`}>
+    <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion} imageFullUrl={`${convocatoria.img}`}>
 
       <Box
         className="fadeIn" sx={{ mt: 28, }} display={'flex'}
