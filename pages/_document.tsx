@@ -20,10 +20,10 @@ export default function Document() {
             src="https://www.facebook.com/tr?id=1332356400685254&ev=PageView&noscript=1"
           />
         </noscript>
+        <script src="/pixel.js" async defer />
 
-        <Script async src="/pixel.js" />
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-RTHN6CE091" />
-        <Script strategy="lazyOnload" id='ganty'>
+        <script id='ganty'>
           {`
                     window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
@@ -32,7 +32,7 @@ export default function Document() {
                     page_path: window.location.pathname,
                     });
                 `}
-        </Script>
+        </script>
       </Head>
       <body >
         <Main />

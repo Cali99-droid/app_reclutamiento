@@ -29,9 +29,10 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
   const url = `https://talentohumano.colegioae.edu.pe${router.asPath}`;
 
   const [open, setOpen] = useState(false);
-  const matches = useMediaQuery('(min-width:600px)');
+  const matches = useMediaQuery('(min-width:1600px)');
+  const sl = useMediaQuery('(min-width:1600px)');
   return (
-    <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion} imageFullUrl={`${convocatoria.img}`}>
+    <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={convocatoria.descripcion} imageFullUrl={`https://caebucket.s3.us-west-2.amazonaws.com/img/${convocatoria.img}`}>
 
       <Box
         className="fadeIn" sx={{ mt: 28, }} display={'flex'}
