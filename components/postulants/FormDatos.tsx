@@ -14,6 +14,8 @@ import { toast } from 'react-toastify';
 import EastIcon from '@mui/icons-material/East';
 import { useContext, ChangeEvent } from 'react';
 import { DatosContext } from '@/context';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { UploadFileOutlined } from '@mui/icons-material';
 
 interface Props {
 
@@ -46,7 +48,7 @@ type FormData = {
     nivel: string;
 
 };
-const MAX_IMAGE_SIZE_MB = 1;
+const MAX_IMAGE_SIZE_MB = 2;
 
 export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
@@ -204,7 +206,14 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
         // console.log(getValues('image'))
 
     }
+    const [doc, setDoc] = useState<string | null>(null);
+    const [loadDoc, setLoadDoc] = useState(false)
+    const handleReplaceFile = () => {
+        setFile(null);
+        setDoc(null);
+    };
     const matches = useMediaQuery('(min-width:600px)');
+
     return (
         <Box className="fadeIn" mt={matches ? -10 : 0}>
             <form onSubmit={handleSubmit(onRegisterForm)} noValidate >
@@ -603,6 +612,36 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                             }
 
 
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            {/* <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText> */}
+                            {doc && (
+                                <Box display={'flex'} alignItems={'center'}  >
+                                    <Box >
+                                        <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Cargando...</Typography>
+                                        <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
+                                        <InputLabel id="demo-simple-label">Vista previa del certificado</InputLabel>
+                                        <object onLoad={() => setLoadDoc(false)} data={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
+                                            <p>No se puede previsualizar</p>
+                                        </object>
+
+                                    </Box>
+                                    <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
+                                        Quitar
+                                    </Button>
+                                </Box>
+                            )}
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+
+                                accept='.pdf'
+                                style={{ display: 'none' }}
+                                onChange={onFilesSelected}
+                            />
+                            <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRef.current?.click()} disabled={doc ? true : false}>
+                                Subir DNI
+                            </Button>
                         </Grid>
                     </Grid>
                     <Box width={'100%'} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }} >
