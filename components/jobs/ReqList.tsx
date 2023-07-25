@@ -15,6 +15,7 @@ interface Props {
   job: IJob;
 }
 export const ReqList: React.FC<Props> = ({ job }) => {
+
   return (
     < >
       <Chip variant='outlined' color='info' icon={<WorkIcon />} sx={{ ml: 1, mt: 1 }} label={`+ ${job.experiencia} Años de experiencia`} />

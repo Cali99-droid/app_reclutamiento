@@ -44,10 +44,13 @@ export const JobCard: FC<Props> = ({ job }) => {
                                     <Typography sx={{ color: '#000' }} fontWeight={800} gutterBottom variant="h5" >
                                         {job.titulo}
                                     </Typography>
+                                    <div dangerouslySetInnerHTML={{ __html: job.descripcion.substring(0, 200) + ' <br>Ver mas...' }} />
 
-                                    <Typography sx={{ color: '#767687' }} fontWeight={800} gutterBottom variant='body2'  >
+
+
+                                    {/* <Typography sx={{ color: '#767687' }} fontWeight={800} gutterBottom variant='body2'  >
                                         {job.descripcion}
-                                    </Typography>
+                                    </Typography> */}
 
                                 </Box>
 

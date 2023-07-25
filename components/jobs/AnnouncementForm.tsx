@@ -19,6 +19,8 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Swal from 'sweetalert2';
+import RichTextEditor from './RichTextEditor';
+
 
 interface Props {
     grados: IGrado[]
@@ -167,8 +169,15 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
     }
 
+    const [content, setContent] = useState(job.descripcion);
 
-
+    const handleEditorChange = (value: string) => {
+        setContent(value);
+        setValue(
+            'descripcion',
+            value, { shouldValidate: true }
+        );
+    };
     return (
         <>
             <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden', padding: 3 }}>
@@ -221,7 +230,9 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <TextField
+                            <InputLabel id="gradoId">Descripción</InputLabel>
+                            <RichTextEditor value={content} onChange={handleEditorChange} />
+                            {/* <TextField
                                 id="outlined-multiline-flexible"
                                 label="Descripcion"
                                 multiline
@@ -234,7 +245,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                 })}
                                 error={!!errors.descripcion}
                                 helperText={errors.descripcion?.message}
-                            />
+                            /> */}
 
                         </Grid>
 

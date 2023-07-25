@@ -46,7 +46,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
       >
 
         <Box>
-          <Image src={`https://caebucket.s3.us-west-2.amazonaws.com/img/${convocatoria.img}`} alt={''} width={matches ? 500 : 350} height={matches ? 500 : 350} />
+          <Image src={`https://caebucket.s3.us-west-2.amazonaws.com/img/${convocatoria.img}`} alt={''} width={matches ? 500 : 350} height={matches ? 500 : 350} priority />
         </Box>
 
         <Box borderRadius={4} padding={2}>
@@ -65,9 +65,10 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
 
 
             </Box>
+            <div dangerouslySetInnerHTML={{ __html: convocatoria.descripcion }} />
+            {/* {convocatoria.descripcion} */}
 
-
-            <Typography variant='body1' component='p' sx={{ mt: 2, width: '100%' }} color={'#767687'}  >{convocatoria.descripcion}</Typography>
+            {/* <Typography variant='body1' component='p' sx={{ mt: 2, width: '100%' }} color={'#767687'}  ></Typography> */}
 
           </Box>
           <Divider variant="middle" />
