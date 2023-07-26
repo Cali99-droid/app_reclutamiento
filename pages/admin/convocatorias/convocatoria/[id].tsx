@@ -56,7 +56,7 @@ interface Props {
 }
 
 const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => {
-  console.log(convocatoria)
+
   const router = useRouter();
   const { id } = router.query
   const { pos, isLoading } = usePostulantes(`/admin/postulantes/${convocatoria.id}`);

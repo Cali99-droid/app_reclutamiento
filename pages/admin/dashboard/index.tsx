@@ -53,7 +53,7 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
     const postAdmin = posts.filter(e => e.convocatoria.categoria_id === 1);
     const contratadosDoce = contratados.filter(e => e.convocatoria.categoria_id === 2)
     const contratadosAdmin = contratados.filter(e => e.convocatoria.categoria_id === 1)
-    console.log(contratados)
+
     const { push, asPath } = useRouter();
     const matches = useMediaQuery('(min-width:600px)');
 

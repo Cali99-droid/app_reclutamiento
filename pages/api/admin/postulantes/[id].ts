@@ -124,6 +124,7 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<any>) 
       },
     })
 
+//TODO agregar a historial
     
     await prisma.$disconnect()
     res.status(201).json({p});

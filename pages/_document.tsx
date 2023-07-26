@@ -22,7 +22,7 @@ export default function Document() {
         </noscript>
         <script src="/pixel.js" async defer />
 
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-RTHN6CE091" />
+        <Script async defer src="https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}" />
         <script id='ganty'>
           {`
                     window.dataLayer = window.dataLayer || [];
