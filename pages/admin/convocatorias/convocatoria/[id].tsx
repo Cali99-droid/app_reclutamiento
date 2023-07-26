@@ -4,7 +4,7 @@ import { PostContext } from '@/context';
 
 
 import { GetServerSideProps, NextPage } from "next";
-import { DataGrid, GridCellParams, GridCloseIcon, GridColDef, esES } from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridCloseIcon, GridColDef, GridToolbar, esES } from "@mui/x-data-grid";
 import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider, useMediaQuery, Backdrop, CircularProgress, Alert, InputAdornment, FormHelperText } from '@mui/material';
 import { evaluacion_x_postulante, postulante, categoria, puntajes, persona } from '@prisma/client';
 import { calcularEdad } from "@/helpers/functions";
@@ -940,6 +940,13 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                       return '';
                     }
                     return params.value >= 75 ? 'bien' : 'mal';
+                  }}
+                  slots={{ toolbar: GridToolbar }}
+                  slotProps={{
+                    toolbar: {
+                      showQuickFilter: true,
+                      quickFilterProps: { debounceMs: 500 },
+                    },
                   }}
                 />
 

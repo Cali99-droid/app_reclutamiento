@@ -33,6 +33,7 @@ async function main() {
       { nombre: 'Contratado' },
       { nombre: 'Evaluado' },
       { nombre: 'Entrevistado' }, 
+      { nombre: 'Descartado' }, 
     ],
    
   })

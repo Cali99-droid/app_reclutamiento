@@ -120,8 +120,7 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<any>) 
       data: {
         
           estado_postulante_id:  parseInt(status),
-        
-
+          fecha_cambio:new Date(),
       },
     })
 
