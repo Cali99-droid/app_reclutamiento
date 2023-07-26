@@ -56,7 +56,7 @@ interface Props {
 }
 
 const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => {
-
+  console.log(convocatoria)
   const router = useRouter();
   const { id } = router.query
   const { pos, isLoading } = usePostulantes(`/admin/postulantes/${convocatoria.id}`);
@@ -338,7 +338,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
     },
     {
-      field: 'actions', headerName: 'Evaluar Entrevista', width: 200,
+      field: 'actions', headerName: 'Acciones', width: 200,
       sortable: false,
       renderCell: (params) => {
 
@@ -412,7 +412,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
                 ) :
                   (
-                    <Chip label="No disponible" color="warning" variant='outlined' />
+                    <Chip label="No disponible" color="error" variant='outlined' />
 
                   )
             }
@@ -771,7 +771,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
             </Breadcrumbs>
           </Box>
 
-          <Box display={'flex'} gap={3} flexDirection={matches ? 'row' : 'column'}>
+          <Box display={'flex'} gap={3} flexDirection={matches ? 'row' : 'column'} >
 
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4} >
@@ -781,7 +781,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                     <NumbersIcon sx={{ fontSize: 60 }} color={'primary'} />
                     <Box>
                       <Typography color={'#454555'} variant="body1" > Vacantes</Typography>
-                      <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{convocatoria.vacantes - contratados.length} </Typography>
+                      <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{convocatoria.vacantes - contratados.length} </Typography>
 
                     </Box>
                   </Box>
@@ -793,7 +793,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                   <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
                     <PeopleIcon sx={{ fontSize: 60 }} color={'primary'} />
                     <Box>  <Typography color={'#454555'} variant="body1" > Postulantes</Typography>
-                      <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{postulantes.length} </Typography>
+                      <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{postulantes.length} </Typography>
 
                     </Box>
                   </Box>
@@ -801,12 +801,12 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
               </Grid>
               <Grid item xs={12} sm={4} >
                 <Item elevation={4}>
-                  <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
+                  <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'} >
                     <SpellcheckIcon sx={{ fontSize: 60 }} color={'primary'} />
                     <Box>
-
-                      <Typography color={'#454555'} variant="body1" > Estado </Typography>
-                      <Select
+                      <Typography color={'#454555'} variant="body1" >Estado</Typography>
+                      <Typography color={convocatoria.estado.id === 3 ? '#ED1C24' : '#454555'} fontWeight={'bold'} fontSize={28} textTransform={'capitalize'} >{convocatoria.estado.nombre} </Typography>
+                      {/* <Select
                         value={convocatoria.estado.id}
                         label="Estado"
                         onChange={(e: SelectChangeEvent<number>) => onStatusJobUpdated(convocatoria.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
@@ -816,7 +816,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                         <MenuItem value={2}>En evaluación</MenuItem>
                         <MenuItem value={3}> Cerrada</MenuItem>
 
-                      </Select>
+                      </Select> */}
 
                     </Box>
                   </Box>
@@ -827,7 +827,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                   <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
                     <CategoryIcon sx={{ fontSize: 60 }} color={'primary'} />
                     <Box><Typography color={'#454555'} variant="body1" > Categoria</Typography>
-                      <Typography color={'#454555'} fontWeight={'bold'} fontSize={37} textTransform={'capitalize'}>{convocatoria.categoria.nombre} </Typography>
+                      <Typography color={'#454555'} fontWeight={'bold'} fontSize={28} textTransform={'capitalize'}>{convocatoria.categoria.nombre} </Typography>
 
                     </Box>
                   </Box>
@@ -839,7 +839,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                     <HowToRegIcon sx={{ fontSize: 60 }} color={'primary'} />
                     <Box>
                       <Typography color={'#454555'} variant="body1" > Seleccionados</Typography>
-                      <Typography fontWeight={'bold'} color={'#454555'} variant="h3" textTransform={'uppercase'}>{seleccionados.length} </Typography>
+                      <Typography fontWeight={'bold'} color={'#454555'} variant="h4" textTransform={'uppercase'}>{seleccionados.length} </Typography>
 
                     </Box>
                   </Box>
@@ -851,7 +851,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                     <PersonRemoveAlt1Icon sx={{ fontSize: 60 }} color={'primary'} />
                     <Box>
                       <Typography color={'#454555'} variant="body1" > Descartados</Typography>
-                      <Typography fontWeight={'bold'} color={'#454555'} variant="h3" >{descartados.length} </Typography>
+                      <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{descartados.length} </Typography>
 
                     </Box>
                   </Box>

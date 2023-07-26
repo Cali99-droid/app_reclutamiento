@@ -122,7 +122,7 @@ export default function Navigator(props: DrawerProps) {
 
                 </ListItem>
 
-                {user?.rol.name === 'admin' || user?.rol.name === 'jefe' ? (
+                {user?.rol.name === 'admin' || user?.rol.name === 'jefe' || user?.rol.name === 'asistente' ? (
                     option.map(({ id, hijos }) => (
                         <Box key={id} sx={{ bgcolor: '#101F33' }} >
                             <ListItem sx={{ py: 2, px: 3 }}>

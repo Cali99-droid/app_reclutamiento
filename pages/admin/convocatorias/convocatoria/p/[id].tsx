@@ -86,14 +86,11 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
 
     const [estadoPostulante, setEstadoPostulante] = useState<any>(estado.nombre)
     const [idEstado, setIdEstado] = useState(postulante.postulante_x_convocatoria[0].estado_postulante.id);
+    const sgt = estados.filter(e => e.id === idEstado + 1)[0] ? estados.filter(e => e.id === idEstado + 1)[0] : { nombre: 'No disponible', id: 0 }
 
+    const [siguienteEstado, setSiguienteEstado] = useState<any>(sgt)
 
-    const [siguienteEstado, setSiguienteEstado] = useState(estados.filter(e => e.id === idEstado + 1)[0] || { nombre: 'No disponible', id: 0 })
-    if (!siguienteEstado || siguienteEstado.id === 0) {
-
-        setSiguienteEstado(estados.filter(e => e.id === 7)[0])
-        setUltimo(true)
-    }
+    const estadoConvocatoria = postulante.postulante_x_convocatoria[0].convocatoria.estado.id;
 
 
     // const siguienteEstado = estados.filter(e => e.id === idEstado + 1)[0];
@@ -623,6 +620,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                         bottom: 100,
                         left: 2000,
                     }}
+                    disabled={estadoConvocatoria === 3}
                 >
                     <SwitchAccessShortcutOutlinedIcon />
                 </Fab>
@@ -644,13 +642,13 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
 
 
 
-                    <MenuItem disabled={siguienteEstado.id === 4} onClick={() => updateStatus(idPC, siguienteEstado.id)}>
-                        <Tooltip placement="left-start" title={`Pasar a ${siguienteEstado.nombre}`}>
+                    <MenuItem disabled={siguienteEstado.nombre == 'No interesa' || idEstado === 4 ? true : false} onClick={() => updateStatus(idPC, siguienteEstado.id)}>
+                        <Tooltip placement="left-start" title={`Pasar a`}>
                             <span>
                                 <ListItemIcon>
                                     <ThumbUpOutlinedIcon />
                                 </ListItemIcon>
-                                {siguienteEstado.id === 4 ? 'No disponible' : siguienteEstado.nombre}
+                                {siguienteEstado.nombre == 'No interesa' ? 'No disponible' : siguienteEstado.nombre}
                             </span>
                         </Tooltip>
                     </MenuItem>
@@ -666,7 +664,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                         Interesante
 
                     </MenuItem> */}
-                    <MenuItem onClick={() => updateStatus(idPC, '4')} disabled={ultimo}>
+                    <MenuItem onClick={() => updateStatus(idPC, '4')} disabled={idEstado === 4}>
                         <Tooltip placement="left-start" title={`Descartar`}>
                             <span>
                                 <ListItemIcon>
@@ -748,6 +746,11 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
                 },
                 include: {
                     estado_postulante: true,
+                    convocatoria: {
+                        select: {
+                            estado: true,
+                        }
+                    }
                 }
             }
         }

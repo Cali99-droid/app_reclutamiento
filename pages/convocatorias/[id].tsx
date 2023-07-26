@@ -32,7 +32,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
   const matches = useMediaQuery('(min-width:1600px)');
   const sl = useMediaQuery('(min-width:1600px)');
   return (
-    <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={`Regístrate y postula a esta convocatoria ${convocatoria.titulo} `} imageFullUrl={`${convocatoria.img}`}>
+    <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={`Regístrate y postula para ${convocatoria.titulo} `} imageFullUrl={`${convocatoria.img}`}>
 
       <Box
         className="fadeIn" sx={{ mt: 20, }} display={'flex'}

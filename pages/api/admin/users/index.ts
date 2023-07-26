@@ -2,6 +2,7 @@ import { IJob } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
 import { getSession } from 'next-auth/react';
+import { postulante } from '@prisma/client';
 
 
 
@@ -35,23 +36,71 @@ const getUsers = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     //        console.log(session.user?.rol_id)
     // }
 if(session.user?.rol_id === 2){
- users = await prisma.user.findMany({
-        include: {
-            persona: true,
-        },
-    });
-}else{
-     users = await prisma.user.findMany({
-        include: {
-            persona: true,
-
-        },
-        where:{
-            rol_id:{
-                not:2
+//  users = await prisma.user.findMany({
+//         include: {
+//             persona: true,
+//         },
+//     });
+users = await prisma.postulante_x_convocatoria.findMany({
+    include:{
+        postulante:{
+            select:{
+                persona:{
+                    select:{
+                        nombres:true,
+                        apellido_mat:true,
+                        apellido_pat:true,
+                        user:true
+                    }
+                }
             }
         }
-    }); 
+    }
+})
+}else{
+    users = await prisma.postulante_x_convocatoria.findMany({
+        include:{
+            postulante:{
+                select:{
+                    persona:{
+                        select:{
+                            nombres:true,
+                            apellido_mat:true,
+                            apellido_pat:true,
+                            user:true
+                        }
+                    }
+                }
+            }
+        },where:{
+            estado_postulante_id:7
+        }
+    })
+
+    //  users = await prisma.user.findMany({
+    //     include: {
+    //         persona: {
+    //             select:{
+    //                 postulante:{
+    //                     include:{
+    //                         postulante_x_convocatoria:{
+    //                             where:{
+    //                                 estado_postulante_id:7
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         },
+            
+
+    //     },
+    //     where:{
+    //         rol_id:{
+    //             not:2
+    //         }
+    //     }
+    // }); 
 }
     
     // const users = JSON.parse(JSON.stringify(ListUsers))

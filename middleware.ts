@@ -8,9 +8,9 @@ export async function middleware(req: NextRequest) {
     const session: any = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
     const requestedPage = req.nextUrl.pathname;
-    const validRoles = ['admin','jefe'];
-    const validRols = ['admin','postulante','jefe'];
-    const validRolJurados = ['jurado1', 'jurado2','admin','jefe'];
+    const validRoles = ['admin','jefe','asistente'];
+    const validRols = ['admin','postulante','jefe','asistente'];
+    const validRolJurados = ['jurado1', 'jurado2','admin','jefe','asistente'];
 
     if( !session ){
       const url = req.nextUrl.clone();

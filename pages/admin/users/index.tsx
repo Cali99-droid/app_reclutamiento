@@ -1,6 +1,6 @@
 
 import useSWR from 'swr';
-import { useEffect, } from 'react';
+import { useContext, useEffect, } from 'react';
 
 
 import { Grid, Box, Typography, Select, MenuItem, SelectChangeEvent, Paper, Tabs, Tab, Toolbar, AppBar, useMediaQuery } from '@mui/material';
@@ -15,11 +15,15 @@ import { reclutApi } from '@/apies';
 
 
 import { Paperbase } from '@/components/dash';
+import { useSession } from 'next-auth/react';
+import { AuthContext } from '@/context';
 
 
 
 
 const UsersPage = () => {
+    const { user } = useContext(AuthContext);
+
 
     const { data, error } = useSWR<any[]>('/api/admin/users');
     const [usersList, setUsersList] = useState<any[]>([]);
@@ -81,17 +85,16 @@ const UsersPage = () => {
                     <Select
                         value={parseInt(params.row.rol)}
                         label="Rol"
-                        onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.id, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
+                        onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.idUser, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
                         sx={{ width: '250px', }}
                     >
 
-                        <MenuItem value={2}>Administrador</MenuItem>
-                        <MenuItem value={1}>Postulante</MenuItem>
+                        <MenuItem value={2} disabled={user?.rol_id === 5 || user?.rol_id === 6}>Administrador</MenuItem>
+                        <MenuItem value={1}>{params.row.estadoPos === 7 ? 'Contratado' : 'Postulante'}</MenuItem>
                         <MenuItem value={3}>Jurado Docente</MenuItem>
                         <MenuItem value={4}>Jurado Administrativo</MenuItem>
-                        <MenuItem value={5}>Jefe RRHH</MenuItem>
-                        <MenuItem value={6}>Asistente RRHH</MenuItem>
-
+                        <MenuItem value={5} disabled={user?.rol_id === 5 || user?.rol_id === 6}>Jefe RRHH</MenuItem>
+                        <MenuItem value={6} disabled={user?.rol_id === 6}>Asistente RRHH</MenuItem>
                     </Select>
 
                 )
@@ -104,9 +107,11 @@ const UsersPage = () => {
 
     const rows = usersList.map((user, index) => ({
         id: index + 1,
-        nombres: (user.persona.apellido_pat + ' ' + user.persona.apellido_mat + ' ' + user.persona.nombres).toLocaleUpperCase(),
-        email: user.email,
-        rol: user.rol_id,
+        nombres: (user.postulante.persona.apellido_pat + ' ' + user.postulante.persona.apellido_mat + ' ' + user.postulante.persona.nombres).toLocaleUpperCase(),
+        email: user.postulante.persona.user[0].email,
+        rol: user.postulante.persona.user[0].rol_id,
+        estadoPos: user.estado_postulante_id,
+        idUser: user.postulante.persona.user[0].id,
 
     }))
 
