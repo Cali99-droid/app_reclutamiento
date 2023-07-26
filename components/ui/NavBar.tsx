@@ -231,7 +231,7 @@ export const NavBar = () => {
                                             {user?.persona.nombres}
                                         </MenuItem>
                                         <Divider />
-                                        {isLoggedIn && user?.rol.name === 'jurado1' && (
+                                        {isLoggedIn && user?.rol.name === 'jurado1' || user?.rol.name === 'jurado2' && (
                                             <MenuItem onClick={() => push('/jurado')}>Calificar</MenuItem>
                                         )}
                                         {isLoggedIn && user?.rol.name === 'postulante' && (
