@@ -3,7 +3,7 @@ import { validations } from '@/helpers';
 import { IGrado, IPersona, IUser } from '@/interfaces';
 
 import { Box, Button, Chip, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography, Divider, SelectChangeEvent, FormLabel, Card, CardMedia, CardActions, CircularProgress, LinearProgress, useMediaQuery } from '@mui/material';
-import { postulante } from '@prisma/client';
+import { dni_image, postulante } from '@prisma/client';
 import axios from 'axios';
 import moment from 'moment';
 import { NextPage } from 'next';
@@ -45,7 +45,8 @@ type FormData = {
     egreso?: number,
     hijos: number,
     discapacidad: number,
-    nivel: string;
+    nivel: string,
+    imgs: dni_image[]
 
 };
 const MAX_IMAGE_SIZE_MB = 2;
@@ -57,6 +58,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
     const [errorMessage, setErrorMessage] = useState('');
 
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const dniInputRef = useRef<HTMLInputElement>(null)
     const [ex, setEx] = useState(true)
 
     const router = useRouter();
@@ -84,13 +86,14 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
             sueldoPretendido: postulante.sueldo,
             discapacidad: postulante.discapacidad === null ? 0 : postulante.discapacidad,
             nivel: postulante.nivel === null ? '' : postulante.nivel,
-
             gradoId: postulante.gradoId,
             image: postulante.image === null ? '' : postulante.image,
+            imgs: postulante.image === null ? [] : postulante.dni_image,
 
         }
     })
     const [loadImg, setLoadImg] = useState(false)
+    const [loadImgDni, setLoadImgDni] = useState(false)
     const onRegisterForm = async (form: FormData) => {
         //setIsSaving(true);
 
@@ -169,7 +172,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
             })
 
 
-            const urlimg = 'https://plataforma-virtual.s3.us-west-2.amazonaws.com/' + data.message;
+
 
             setValue('image', data.message, { shouldValidate: true });
 
@@ -178,6 +181,53 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
         } catch (error) {
             console.log({ error });
+        }
+        // try {
+
+        //     // console.log( file );
+        //     for (const file of target.files) {
+        //         const formData = new FormData();
+        //         formData.append('file', file);
+        //         const { data } = await reclutApi.post<{ message: string }>('/postulants/upload', formData);
+        //         setValue('image', data.message, { shouldValidate: true });
+        //         console.log(data)
+        //     }
+
+
+        // } catch (error) {
+        //     console.log({ error });
+        // }
+    }
+    const [imgDni, setImgDni] = useState<any>([])
+    const onFilesSelectedDni = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+        if (!target.files || target.files.length === 0 || target.files.length > 2) {
+            toast.error('Son solo 2 imagenes')
+            return;
+        }
+
+        setLoadImgDni(true)
+        try {
+            // setLoadImg(true)
+            for (const file of target.files) {
+                const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/awsupload', {
+                    name: file.name,
+                    type: file.type,
+                });
+                const url = data.url;
+                const res = await reclutApi.put(url, file, {
+                    headers: {
+                        "Content-type": file.type,
+                        "Access-Control-Allow-Origin": "*"
+                    }
+                })
+                // setImgDni([...imgDni, data.message])
+                setValue('imgs', [...getValues('imgs'), { id: 0, image: data.message, postulante_id: postulante.id }], { shouldValidate: true });
+            }
+
+        } catch (error) {
+            console.log({ error });
+            setLoadImgDni(false);
+            toast.error('Hubo un error')
         }
         // try {
 
@@ -205,6 +255,13 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
         );
         // console.log(getValues('image'))
 
+    }
+    const onDeleteImageDni = (image: string) => {
+        setValue(
+            'imgs',
+            getValues('imgs').filter(img => img.image !== image),
+            { shouldValidate: true }
+        );
     }
     const [doc, setDoc] = useState<string | null>(null);
     const [loadDoc, setLoadDoc] = useState(false)
@@ -557,7 +614,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                     <Grid container spacing={5}>
                         <Grid item xs={12} md={6}>
 
-                            <FormLabel >Foto</FormLabel>
+                            <FormLabel >Foto*</FormLabel>
                             <Button
                                 color="secondary"
                                 fullWidth
@@ -565,7 +622,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                                 disabled={getValues('image') ? true : false}
                                 onClick={() => fileInputRef.current?.click()}
                             >
-                                Cargar imagen
+                                Cargar Foto
                             </Button>
                             <FormHelperText>*Imagen actual con presentación formal.</FormHelperText>
                             <input
@@ -579,10 +636,33 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
                         </Grid>
 
+
+                        {/* <Grid item xs={12} md={6}>
+                            <FormLabel >DNI</FormLabel>
+                            <Button
+                                color="secondary"
+                                fullWidth
+                                // startIcon={ <UploadOutlined /> }
+                                disabled={getValues('imgs').length === 2 ? true : false}
+                                onClick={() => dniInputRef.current?.click()}
+                            >
+                                Cargar DNI
+                            </Button>
+                            <FormHelperText>*Cargar dos imagenes, uno de cada cara de su DNI</FormHelperText>
+                            <input
+                                ref={dniInputRef}
+                                type="file"
+                                multiple
+                                accept='image/png, image/gif, image/jpeg'
+                                style={{ display: 'none' }}
+                                onChange={onFilesSelectedDni}
+                            />
+                        </Grid> */}
                         <Grid item xs={12} md={6} >
                             <Typography sx={{ display: loadImg ? 'block' : 'none' }} >Subiendo...</Typography>
                             <LinearProgress sx={{ display: loadImg ? 'block' : 'none' }} />
-
+                            <Grid container spacing={2}>
+                            </Grid>
                             {
                                 getValues('image') && (
                                     <Box width={150} >
@@ -613,36 +693,44 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
 
                         </Grid>
-                        <Grid item xs={12} md={6}>
-                            {/* <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText> */}
-                            {doc && (
-                                <Box display={'flex'} alignItems={'center'}  >
-                                    <Box >
-                                        <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Cargando...</Typography>
-                                        <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
-                                        <InputLabel id="demo-simple-label">Vista previa del certificado</InputLabel>
-                                        <object onLoad={() => setLoadDoc(false)} data={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
-                                            <p>No se puede previsualizar</p>
-                                        </object>
 
-                                    </Box>
-                                    <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
-                                        Quitar
-                                    </Button>
-                                </Box>
-                            )}
-                            <input
-                                ref={fileInputRef}
-                                type="file"
 
-                                accept='.pdf'
-                                style={{ display: 'none' }}
-                                onChange={onFilesSelected}
-                            />
-                            <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRef.current?.click()} disabled={doc ? true : false}>
-                                Subir DNI
-                            </Button>
+                        {/* <Grid item xs={12} md={6} >
+                            <Typography sx={{ display: loadImgDni ? 'block' : 'none' }} >Subiendo DNI...</Typography>
+                            <LinearProgress sx={{ display: loadImgDni ? 'block' : 'none' }} />
+                            <Typography>DNI</Typography>
+                            <Grid container spacing={2}>
+                                {
+                                    getValues('imgs').map((img: any) => (
+                                        <Grid item xs={4} sm={3} key={img.image}>
+                                            <Card>
+                                                <CardMedia
+                                                    component='img'
+                                                    className='fadeIn'
+                                                    image={`https://caebucket.s3.us-west-2.amazonaws.com/img/${img.image || img}`}
+                                                    alt={'imagen dni'}
+                                                    onLoad={() => setLoadImgDni(false)}
+                                                />
+                                                <CardActions>
+                                                    <Button
+                                                        fullWidth
+                                                        color="error"
+                                                        onClick={() => onDeleteImageDni(img.image)}
+                                                    >
+                                                        Borrar
+                                                    </Button>
+                                                </CardActions>
+                                            </Card>
+                                        </Grid>
+                                    ))
+                                }
+                            </Grid>
+
+
+
                         </Grid>
+
+                    */}
                     </Grid>
                     <Box width={'100%'} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }} >
 
