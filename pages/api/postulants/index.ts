@@ -7,6 +7,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { S3 } from 'aws-sdk';
 import { parse } from 'path';
 import { dni_image } from '@prisma/client';
+import { truncateSync } from 'fs';
 cloudinary.config( process.env.CLOUDINARY_URL || '' );
 
 
@@ -234,15 +235,15 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
         imgs:dni_image[]
     };
 
-    // if ( image.length <= 0 ) {
-    //   return res.status(400).json({ message: 'Es necesario que suba una imagen !' });
-    // }
-    // if ( image.length > 0 &&  imgs.length !== 2 ) {
-    //   return res.status(400).json({ message: 'Agregue la foto del DNI, son dos imagenes !' });
-    // }
-    // if ( imgs.length > 2 ) {
-    //   return res.status(400).json({ message: 'Solo se permiten  dos imagenes !' });
-    // }
+    if ( image.length <= 0 ) {
+      return res.status(400).json({ message: 'Es necesario que suba una imagen !' });
+    }
+    if ( image.length > 0 &&  imgs.length !== 2 ) {
+      return res.status(400).json({ message: 'Agregue la foto del DNI, son dos imagenes !' });
+    }
+    if ( imgs.length > 2 ) {
+      return res.status(400).json({ message: 'Solo se permiten  dos imagenes !' });
+    }
 
     const s3 = new S3({     
         region:"us-west-2",
@@ -262,7 +263,7 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
             
             const deleteParams: aws.S3.DeleteObjectRequest = {
               Bucket: process.env.BUCKET_NAME!,
-              Key: 'img/'+ p.image,
+              Key: process.env.FOLDER_IMG_NAME!+p.image,
             };
             const resp = await s3.deleteObject(deleteParams).promise();
             console.log('se elimino la img', resp)
@@ -272,39 +273,80 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
           // await cloudinary.uploader.destroy( fileId );
       }   
      }
+     
+     const imgDnis = await prisma.dni_image.findMany({where: {postulante_id: parseInt(idPostulante.toString())}})
+  
+     imgs.forEach(async(i,index) => {
+       if(i.id === 0 && imgDnis.length >0){
+        //actualizando
+        //Borramos de la base de datos
+        await prisma.dni_image.delete({
+          where:{
+            id:imgDnis[index].id
+          }
+        })
+        //borramos de bucket
+        const deleteParams: aws.S3.DeleteObjectRequest = {
+          Bucket: process.env.BUCKET_NAME!,
+          Key: process.env.FOLDER_IMG_NAME!+imgDnis[index].image,
+        };
+        const resp = await s3.deleteObject(deleteParams).promise();
 
-  //    const imgDnis = await prisma.dni_image.findMany({where: {postulante_id: parseInt(idPostulante.toString())}})
+        //creamos de nuevo
+        await prisma.dni_image.create({
+          data:{
+            image:i.image,
+            postulante_id:parseInt(idPostulante.toString())
+          }
+        })
 
-  //    if(imgDnis.length>0 ){
-  //    imgs.forEach(e => {
-  //     imgDnis.map(async(i) =>{
-  //       if(e.image !== i.image){
-  //         const deleteParams: aws.S3.DeleteObjectRequest = {
-  //           Bucket: process.env.BUCKET_NAME!,
-  //           Key: 'img/'+i.image,
-  //         };
-  //         const resp = await s3.deleteObject(deleteParams).promise();
-  //         console.log('se elimino la img dni', resp)
-  //         const upImagenesDni = await prisma.dni_image.update({
-  //           data:{
-  //             image:e.image
-  //           },
-  //           where:{
-  //             id:i.id
-  //           }
-  //       })
-  //       }
+       }else{
+        //creando
+        if(i.id === 0){
+          await prisma.dni_image.create({
+                      data:{
+                        image:i.image,
+                        postulante_id:parseInt(idPostulante.toString())
+                      }
+                    })
+                }
+                    
+      
 
-  //     })
-  //    });
-  //   //  const imagenesData = imgs.map((image) => ({ image, postulante_id: idPostulante }));
-  //   //       console.log(imagenesData)
-  //   //       const agregarImagenesDni = await prisma.dni_image.updateMany({
-  //   //         data:imagenesData,
-  //   //         where:{
-  //   //           postulante_id:idPostulante,
-  //   //         }
-  //   //     })
+        }
+     });
+     
+
+    //  if(imgDnis.length>0 ){
+    //  imgs.forEach(e => {
+    //   imgDnis.map(async(i) =>{
+    //     if(e.image !== i.image){
+    //       const deleteParams: aws.S3.DeleteObjectRequest = {
+    //         Bucket: process.env.BUCKET_NAME!,
+    //         Key:  process.env.FOLDER_IMG_NAME!+'/'+i.image,
+    //       };
+    //       const resp = await s3.deleteObject(deleteParams).promise();
+    //       console.log('se elimino la img dni', resp)
+    //       const upImagenesDni = await prisma.dni_image.update({
+    //         data:{
+    //           image:e.image
+    //         },
+    //         where:{
+    //           id:i.id
+    //         }
+    //     })
+    //     }
+
+    //   })
+    //  });
+    //  const imagenesData = imgs.map((image) => ({ image, postulante_id: idPostulante }));
+    //       console.log(imagenesData)
+    //       const agregarImagenesDni = await prisma.dni_image.updateMany({
+    //         data:imagenesData,
+    //         where:{
+    //           postulante_id:idPostulante,
+    //         }
+    //     })
       
     
   //   }else{
@@ -352,6 +394,14 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
               }
             }
           },
+          include:{
+            postulante:{
+              include:{
+                dni_image:true,
+              }
+            },
+
+          }
         
       } )
        

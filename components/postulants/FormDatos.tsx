@@ -52,6 +52,7 @@ type FormData = {
 const MAX_IMAGE_SIZE_MB = 2;
 
 export const FormDatos: NextPage<Props> = ({ postulante }) => {
+    const { dni_image } = postulante;
 
     const [isSaving, setIsSaving] = useState(false);
     const [showError, setShowError] = useState(false);
@@ -88,30 +89,33 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
             nivel: postulante.nivel === null ? '' : postulante.nivel,
             gradoId: postulante.gradoId,
             image: postulante.image === null ? '' : postulante.image,
-            imgs: postulante.image === null ? [] : postulante.dni_image,
+            imgs: postulante.dni_image === null ? [] : postulante.dni_image,
 
         }
     })
     const [loadImg, setLoadImg] = useState(false)
     const [loadImgDni, setLoadImgDni] = useState(false)
     const onRegisterForm = async (form: FormData) => {
-        //setIsSaving(true);
+        setIsSaving(true);
 
 
         try {
+
             const { data } = await reclutApi({
                 url: '/postulants',
                 method: form.idPostulante > 0 ? 'PUT' : 'POST',  // si tenemos un _id, entonces actualizar, si no crear
                 data: form
             });
-            handleNext()
-            router.replace(router.asPath);
-            if (!(form.idPostulante > 0)) {
-                router.replace(`/postulant`);
+            console.log(data)
+            router.push(`/postulant`);
+            // router.replace(router.asPath);
+            // if (!(form.idPostulante > 0)) {
 
-            } else {
-                setIsSaving(false)
-            }
+
+            // } else {
+            //     setIsSaving(false)
+            // }
+            handleNext()
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 setShowError(true);
@@ -263,12 +267,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
             { shouldValidate: true }
         );
     }
-    const [doc, setDoc] = useState<string | null>(null);
-    const [loadDoc, setLoadDoc] = useState(false)
-    const handleReplaceFile = () => {
-        setFile(null);
-        setDoc(null);
-    };
+
     const matches = useMediaQuery('(min-width:600px)');
 
     return (
@@ -637,7 +636,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                         </Grid>
 
 
-                        {/* <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={6}>
                             <FormLabel >DNI</FormLabel>
                             <Button
                                 color="secondary"
@@ -657,7 +656,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                                 style={{ display: 'none' }}
                                 onChange={onFilesSelectedDni}
                             />
-                        </Grid> */}
+                        </Grid>
                         <Grid item xs={12} md={6} >
                             <Typography sx={{ display: loadImg ? 'block' : 'none' }} >Subiendo...</Typography>
                             <LinearProgress sx={{ display: loadImg ? 'block' : 'none' }} />
@@ -672,7 +671,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                                             <CardMedia
                                                 component='img'
                                                 className='fadeIn'
-                                                image={`https://caebucket.s3.us-west-2.amazonaws.com/img/${getValues('image')}`}
+                                                image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${getValues('image')}`}
                                                 alt={getValues('image')}
                                                 onLoad={() => setLoadImg(false)}
                                             />
@@ -695,7 +694,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                         </Grid>
 
 
-                        {/* <Grid item xs={12} md={6} >
+                        <Grid item xs={12} md={6} >
                             <Typography sx={{ display: loadImgDni ? 'block' : 'none' }} >Subiendo DNI...</Typography>
                             <LinearProgress sx={{ display: loadImgDni ? 'block' : 'none' }} />
                             <Typography>DNI</Typography>
@@ -707,7 +706,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                                                 <CardMedia
                                                     component='img'
                                                     className='fadeIn'
-                                                    image={`https://caebucket.s3.us-west-2.amazonaws.com/img/${img.image || img}`}
+                                                    image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${img.image || img}`}
                                                     alt={'imagen dni'}
                                                     onLoad={() => setLoadImgDni(false)}
                                                 />
@@ -730,7 +729,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
                         </Grid>
 
-                    */}
+
                     </Grid>
                     <Box width={'100%'} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }} >
 
