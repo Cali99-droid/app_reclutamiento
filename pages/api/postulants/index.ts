@@ -237,12 +237,12 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
     // if ( image.length <= 0 ) {
     //   return res.status(400).json({ message: 'Es necesario que suba una imagen !' });
     // }
-    if ( image.length > 0 &&  imgs.length !== 2 ) {
-      return res.status(400).json({ message: 'Agregue la foto del DNI, son dos imagenes !' });
-    }
-    if ( imgs.length > 2 ) {
-      return res.status(400).json({ message: 'Solo se permiten  dos imagenes !' });
-    }
+    // if ( image.length > 0 &&  imgs.length !== 2 ) {
+    //   return res.status(400).json({ message: 'Agregue la foto del DNI, son dos imagenes !' });
+    // }
+    // if ( imgs.length > 2 ) {
+    //   return res.status(400).json({ message: 'Solo se permiten  dos imagenes !' });
+    // }
 
     const s3 = new S3({     
         region:"us-west-2",
@@ -273,49 +273,49 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
       }   
      }
 
-     const imgDnis = await prisma.dni_image.findMany({where: {postulante_id: parseInt(idPostulante.toString())}})
+  //    const imgDnis = await prisma.dni_image.findMany({where: {postulante_id: parseInt(idPostulante.toString())}})
 
-     if(imgDnis.length>0 ){
-     imgs.forEach(e => {
-      imgDnis.map(async(i) =>{
-        if(e.image !== i.image){
-          const deleteParams: aws.S3.DeleteObjectRequest = {
-            Bucket: process.env.BUCKET_NAME!,
-            Key: 'img/'+i.image,
-          };
-          const resp = await s3.deleteObject(deleteParams).promise();
-          console.log('se elimino la img sssdni', resp)
-          const upImagenesDni = await prisma.dni_image.update({
-            data:{
-              image:e.image
-            },
-            where:{
-              id:i.id
-            }
-        })
-        }
+  //    if(imgDnis.length>0 ){
+  //    imgs.forEach(e => {
+  //     imgDnis.map(async(i) =>{
+  //       if(e.image !== i.image){
+  //         const deleteParams: aws.S3.DeleteObjectRequest = {
+  //           Bucket: process.env.BUCKET_NAME!,
+  //           Key: 'img/'+i.image,
+  //         };
+  //         const resp = await s3.deleteObject(deleteParams).promise();
+  //         console.log('se elimino la img dni', resp)
+  //         const upImagenesDni = await prisma.dni_image.update({
+  //           data:{
+  //             image:e.image
+  //           },
+  //           where:{
+  //             id:i.id
+  //           }
+  //       })
+  //       }
 
-      })
-     });
-    //  const imagenesData = imgs.map((image) => ({ image, postulante_id: idPostulante }));
-    //       console.log(imagenesData)
-    //       const agregarImagenesDni = await prisma.dni_image.updateMany({
-    //         data:imagenesData,
-    //         where:{
-    //           postulante_id:idPostulante,
-    //         }
-    //     })
+  //     })
+  //    });
+  //   //  const imagenesData = imgs.map((image) => ({ image, postulante_id: idPostulante }));
+  //   //       console.log(imagenesData)
+  //   //       const agregarImagenesDni = await prisma.dni_image.updateMany({
+  //   //         data:imagenesData,
+  //   //         where:{
+  //   //           postulante_id:idPostulante,
+  //   //         }
+  //   //     })
       
     
-    }else{
+  //   }else{
 
-      const imagenesData = imgs.map((image) => ({ image, postulante_id: idPostulante }));
+  //     const imagenesData = imgs.map((image) => ({ image, postulante_id: idPostulante }));
 
-      const agregarImagenesDni = await prisma.dni_image.createMany({
-        data:imgs,
+  //     const agregarImagenesDni = await prisma.dni_image.createMany({
+  //       data:imgs,
      
-    })
-  }
+  //   })
+  // }
     const persona = await prisma.persona.update({
           where: {
             id:idPersona
