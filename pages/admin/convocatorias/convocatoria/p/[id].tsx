@@ -1,7 +1,7 @@
 import { prisma } from '@/server/db/client';
 
 import { IEstudio } from "@/interfaces";
-import { Box, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery, IconButton, Fab, Menu, MenuItem, ListItemIcon, Tooltip, Chip, Divider } from '@mui/material';
+import { Box, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery, IconButton, Fab, Menu, MenuItem, ListItemIcon, Tooltip, Chip, Divider, Card, CardMedia } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 
@@ -210,7 +210,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                         </Item>
                     </Grid>
                     <Grid item xs={12} sm={9} >
-                        <Item sx={{ height: 340 }}>
+                        <Item sx={{ height: 'auto' }}>
                             {/* <Typography variant='h2'>Mis datos</Typography> */}
                             <Box display={'flex'} justifyContent={'space-between'} padding={2}>
                                 <Box display={'flex'} flexDirection={'column'} gap={1}>
@@ -226,6 +226,25 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                     <Typography fontWeight={'bold'}>Exalumno: </Typography>{postulante.exalumno === 0 ? 'No' : 'Si'}
 
 
+                                </Box>
+                                <Box width={200}>
+                                    <Grid container spacing={1}>
+                                        {
+                                            postulante.dni_image.map((img: any) => (
+                                                <Grid item xs={12} sm={9} key={img.image}>
+                                                    <Card>
+                                                        <CardMedia
+                                                            component='img'
+                                                            className='fadeIn'
+                                                            image={`https://caebucket.s3.us-west-2.amazonaws.com/img/${img.image || img}`}
+                                                            alt={'imagen dni'}
+                                                        />
+
+                                                    </Card>
+                                                </Grid>
+                                            ))
+                                        }
+                                    </Grid>
                                 </Box>
                                 {/* <Box display={'flex'} flexDirection={'column'} gap={2}>
                                     <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary" >
@@ -740,6 +759,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             aficion: true,
             reconocimiento: true,
             tics: true,
+            dni_image: true,
             postulante_x_convocatoria: {
                 where: {
                     convocatoria_id: parseInt(conv.toString()),

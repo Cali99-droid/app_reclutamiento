@@ -10,6 +10,7 @@ export async function middleware(req: NextRequest) {
     const requestedPage = req.nextUrl.pathname;
     const validRoles = ['admin','jefe','asistente'];
     const validRols = ['admin','postulante','jefe','asistente'];
+    //
     const validRolJurados = ['jurado1', 'jurado2','admin','jefe','asistente'];
 
     if( !session ){

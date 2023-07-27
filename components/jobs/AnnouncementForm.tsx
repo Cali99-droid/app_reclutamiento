@@ -56,15 +56,32 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
     const navigateTo = (url: string) => {
         router.push(url);
     }
-    const tomorrow = dayjs().add(1, 'day');
-    const vig = job.vigencia || tomorrow;
-    const [fecha, setFecha] = useState<Dayjs>(dayjs(vig));
 
+    const tomorrow = dayjs().add(1, 'day');
+    let vig;
+    if (job.vigencia) {
+        vig = dayjs(job.vigencia)
+    } else {
+        vig = null
+    }
+
+    const [fecha, setFecha] = useState<Dayjs | null>(vig);
+    console.log(fecha)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
 
     const onRegisterForm = async (form: FormData) => {
-        console.log(form)
+        if (!fecha) {
+            Swal.fire({
+                title: 'Atención ',
+                text: 'Ingrese la fecha de vigencia',
+                icon: 'info',
+
+                confirmButtonText: 'Aceptar',
+
+            })
+            return;
+        }
         try {
             const { data } = await reclutApi({
                 url: '/admin/convocatorias',
@@ -128,6 +145,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
             const urlimg = 'https://plataforma-virtual.s3.us-west-2.amazonaws.com/' + data.message;
 
             setValue('img', data.message, { shouldValidate: true });
+
 
 
 
@@ -306,8 +324,9 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                 disablePast
                                 views={['month', 'day']}
                                 label={'Vigencia'}
-                                defaultValue={fecha}
+                                value={fecha}
                                 onChange={(newValue) => onChangeFecha(newValue)}
+
                             />
                             {/* <label htmlFor="vigencia" >Vigencia</label>
 

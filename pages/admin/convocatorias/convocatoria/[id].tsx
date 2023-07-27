@@ -62,7 +62,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const { pos, isLoading } = usePostulantes(`/admin/postulantes/${convocatoria.id}`);
 
   const [postulantes, setPostulantes] = useState<any[]>([]);
-
+  console.log(postulantes)
   const { calcularTotal, limpiarCriterios, juradosAsignados, addNewJurado, deleteJurado, refreshJurados } = useContext(PostContext);
 
   const [seleccionados, setSeleccionados] = useState<any[]>([])
@@ -968,6 +968,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                   <TableCell>Jurado</TableCell>
                   <TableCell align="right">Puntaje</TableCell>
                   <TableCell align="right">Tipo</TableCell>
+                  <TableCell align="right">Comentario</TableCell>
 
 
                 </TableRow>
@@ -985,6 +986,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                       {e.user.rol.id === 5 ? 'Entrevista ' : 'Jurado'}
                     </TableCell>
 
+                    <TableCell align="right">{e.comentario}</TableCell>
 
                   </TableRow>
                 ))}

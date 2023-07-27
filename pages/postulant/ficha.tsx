@@ -4,7 +4,7 @@ import { prisma } from '@/server/db/client';
 import { JobsLayout } from "@/components/layouts";
 
 import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics } from "@/interfaces";
-import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, useMediaQuery, Link, colors, Divider, IconButton } from '@mui/material';
+import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, useMediaQuery, Link, colors, Divider, IconButton, Card, CardMedia, CardActions } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 import { getSession } from 'next-auth/react';
@@ -136,9 +136,9 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                             </Item>
                         </Grid>
                         <Grid item xs={12} sm={9}  >
-                            <Item sx={matches ? { height: 320 } : { height: 430 }}>
+                            <Item sx={matches ? { height: 'auto' } : { height: 'auto' }} >
                                 {/* <Typography variant='h2'>Mis datos</Typography> */}
-                                <Box display={'flex'} justifyContent={'space-between'} padding={2} flexDirection={matches ? 'row' : 'column'}>
+                                <Box display={'flex'} justifyContent={'space-between'} padding={2} flexDirection={matches ? 'row' : 'column'} >
                                     <Box display={'flex'} flexDirection={'column'} gap={1} >
                                         <Box>
                                             <Typography color={'#454555'} fontWeight={'bold'}>Numero de Documento: </Typography>
@@ -174,6 +174,25 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                         </Box>
 
 
+                                    </Box>
+                                    <Box width={200}>
+                                        <Grid container spacing={1}>
+                                            {
+                                                postulante.dni_image.map((img: any) => (
+                                                    <Grid item xs={12} sm={9} key={img.image}>
+                                                        <Card>
+                                                            <CardMedia
+                                                                component='img'
+                                                                className='fadeIn'
+                                                                image={`https://caebucket.s3.us-west-2.amazonaws.com/img/${img.image || img}`}
+                                                                alt={'imagen dni'}
+                                                            />
+
+                                                        </Card>
+                                                    </Grid>
+                                                ))
+                                            }
+                                        </Grid>
                                     </Box>
                                     {/* <Box display={'flex'} flexDirection={'column'} gap={2}>
                                     <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary">
@@ -632,7 +651,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
             capacitacion: true,
             aficion: true,
             reconocimiento: true,
-            tics: true
+            tics: true,
+            dni_image: true,
 
         }
     })

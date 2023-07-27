@@ -253,6 +253,7 @@ model postulante {
   blacklist                 blacklist[]
   capacitacion              capacitacion[]
   cargo                     cargo[]
+  dni_image                 dni_image[]
   estudios                  estudios[]
   evaluacion_x_postulante   evaluacion_x_postulante[]
   investigacion             investigacion[]
@@ -304,6 +305,7 @@ model puntajes {
   id              Int             @id @default(autoincrement())
   total           Int
   maximo          Int?
+  comentario      String?         @db.VarChar(200)
   test_id         Int
   postulante_id   Int
   user_id         Int
@@ -386,4 +388,13 @@ model user {
 
   @@index([persona_id], map: "fk_user_persona1_idx")
   @@index([rol_id], map: "fk_user_rol_idx")
+}
+
+model dni_image {
+  id            Int        @id @default(autoincrement())
+  image         String     @db.VarChar(100)
+  postulante_id Int
+  postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_dni_image_postulante1")
+
+  @@index([postulante_id], map: "fk_dni_image_postulante1_idx")
 }

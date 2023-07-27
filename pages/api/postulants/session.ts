@@ -32,10 +32,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 }
 
 async function  postSession(req: NextApiRequest, res: NextApiResponse<any>) {
-    const session: any = await getSession({ req });
-    if ( !session ) {
-        return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
-    }
+    // const session: any = await getSession({ req });
+    // if ( !session ) {
+    //     return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
+    // }
    const {doc,id} = req.body;
    const pc = await  prisma.postulante_x_convocatoria.findUnique({
     where:{

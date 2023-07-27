@@ -29,7 +29,7 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
     
  
 
-  const {itemValues, totalSum, idTest, idPos, idUser,id } = req.body
+  const {itemValues, totalSum, idTest, idPos, idUser,id,comentario } = req.body
 
   const tienePuntaje = await prisma.puntajes.findMany({
     where:{
@@ -89,7 +89,8 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
                 test_id:idTest,
                 postulante_id: idPos,
                 user_id:parseInt(idUser),
-                convocatoria_id:parseInt(id)
+                convocatoria_id:parseInt(id),
+                comentario,
             }
         })
         await prisma.puntaje_items.createMany({

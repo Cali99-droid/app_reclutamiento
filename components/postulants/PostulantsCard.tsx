@@ -12,6 +12,7 @@ import { ModalFicha } from '../modal';
 import { Ficha } from './Ficha';
 
 import CheckIcon from '@mui/icons-material/Check';
+import { FileOpen, FileUploadTwoTone, Warning } from '@mui/icons-material';
 
 
 
@@ -116,10 +117,20 @@ export const PostulantCard: FC<Props> = ({ postulant, index, ses }) => {
                             onClick={() => { handleOpen(postulant) }}
                         />
                         {
-                            ses && (
-                                <Button variant='outlined' target='_blank' href={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${ses}`}>
+                            ses ? (
+                                <Button startIcon={<FileOpen />} variant='outlined' target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${ses}`}>
                                     Ver Sesión
                                 </Button>
+                            ) : (
+                                <Chip
+                                    icon={<Warning />}
+                                    label="No subió su sesión"
+                                    variant="outlined"
+
+                                    sx={{ width: '100%' }}
+                                    color={'warning'}
+
+                                />
                             )
                         }
 

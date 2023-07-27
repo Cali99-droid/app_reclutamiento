@@ -17,7 +17,7 @@ interface Props {
 
 
 const postulantePage: NextPage<Props> = ({ doc }) => {
-    console.log(doc)
+
     return (
         <JobsLayout title={'Sesion'} pageDescription={'Previsualizar documento'} >
 
@@ -25,7 +25,7 @@ const postulantePage: NextPage<Props> = ({ doc }) => {
                 <Box mb={4}>
                     <Typography variant="h2">Documento Subido</Typography>
                 </Box>
-                <object data={`https://plataforma-virtual.s3.us-west-2.amazonaws.com/docs/${doc.session}`} type="application/pdf" width="100%" height="800px">
+                <object data={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${doc.session}`} type="application/pdf" width="100%" height="800px">
                     <Alert severity="warning">No agregó ningun documento</Alert>
                 </object>
 

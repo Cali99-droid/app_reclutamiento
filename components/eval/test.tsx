@@ -1,5 +1,5 @@
-import React, { FC, PropsWithChildren } from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, useMediaQuery, FormControlLabel, RadioGroup, FormLabel, FormControl, FormHelperText, Radio, Slider, Typography, Divider, Grid, Box, Alert } from "@mui/material";
+import React, { ChangeEvent, FC, PropsWithChildren } from 'react';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, useMediaQuery, FormControlLabel, RadioGroup, FormLabel, FormControl, FormHelperText, Radio, Slider, Typography, Divider, Grid, Box, Alert, TextareaAutosize, TextField } from "@mui/material";
 import { useState, useContext, useEffect } from 'react';
 import { PostContext } from '@/context';
 import { prisma } from '@/server/db/client';
@@ -67,7 +67,7 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
 
         try {
 
-            const resp = await reclutApi.post('/evaluar', { itemValues, totalSum, idTest, idPos, idUser, id });
+            const resp = await reclutApi.post('/evaluar', { itemValues, totalSum, idTest, idPos, idUser, id, comentario });
             console.log(resp)
             toast.success('🦄 Puntaje asignado correctamente0!'),
                 //         handleCloseClase()
@@ -95,6 +95,15 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
         //   console.error('Error al guardar los valores:', error);
         // }
     };
+    const [comentario, setComentario] = useState('')
+    const [error, setError] = useState(false)
+    const onComentarioChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value.length <= 0) {
+            setError(true)
+        }
+        setComentario(event.target.value);
+
+    }
     const matches = useMediaQuery('(min-width:600px)');
     return (
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" scroll='body'>
@@ -142,6 +151,26 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
                     <Box display={'flex'} justifyContent={'end'} mb={3} alignItems={'center'} gap={2}>
                         <Typography variant='subtitle1'>Puntaje Total: </Typography>
                         <Typography variant='body1' fontWeight={'bold'}> {totalSum}/{itemsRead.length * 10}</Typography>
+                    </Box>
+                    <Box>
+                        <TextField
+                            id="comentario"
+                            label="Comentario"
+                            multiline
+                            rows={2}
+                            value={comentario}
+                            error={error && comentario.length <= 0}
+                            onChange={onComentarioChange}
+                            fullWidth={true}
+                            // {...register('descripcion', {
+                            //     required: 'Este campo es requerido',
+                            //     minLength: { value: 8, message: 'Mínimo 8 caracteres' }
+                            // })}
+                            // error={!!errors.descripcion}
+                            helperText={'Opcional'}
+                        />
+
+
                     </Box>
                     {/* <Button variant="contained" onClick={handleConfirmClase}>
                         Guardar

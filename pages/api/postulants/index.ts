@@ -6,6 +6,7 @@ import aws from 'aws-sdk';
 import { v2 as cloudinary } from 'cloudinary';
 import { S3 } from 'aws-sdk';
 import { parse } from 'path';
+import { dni_image } from '@prisma/client';
 cloudinary.config( process.env.CLOUDINARY_URL || '' );
 
 
@@ -204,7 +205,8 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
       sueldoPretendido,
       gradoId ,
       idPersona,
-      idPostulante
+      idPostulante,
+      imgs
 
     } = req.body as { 
         email: string, 
@@ -228,35 +230,31 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
         nivel:string,
         image:string,
         idPersona:number
-        idPostulante:number
+        idPostulante:number,
+        imgs:dni_image[]
     };
 
-    if ( image.length <= 0 ) {
-      return res.status(400).json({ message: 'Es necesario que suba una imagen !' });
+    // if ( image.length <= 0 ) {
+    //   return res.status(400).json({ message: 'Es necesario que suba una imagen !' });
+    // }
+    if ( image.length > 0 &&  imgs.length !== 2 ) {
+      return res.status(400).json({ message: 'Agregue la foto del DNI, son dos imagenes !' });
+    }
+    if ( imgs.length > 2 ) {
+      return res.status(400).json({ message: 'Solo se permiten  dos imagenes !' });
     }
 
     const s3 = new S3({     
-      region:"us-west-2",
-      accessKeyId: process.env.ACCESS_KEY_ID,
-      secretAccessKey: process.env.SECRET_ACCESS_KEY,
-      signatureVersion:'v4',
-  });
- 
-        // Borrar de cloudinary
-        // const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
-        // console.log({ image, fileId, extension });
-        // await cloudinary.uploader.destroy( fileId );
+        region:"us-west-2",
+        accessKeyId: process.env.ACCESS_KEY_ID,
+        secretAccessKey: process.env.SECRET_ACCESS_KEY,
+        signatureVersion:'v4',
+    });
  
 
 
-      const p = await prisma.postulante.findUnique({
-        where: {
-          id: parseInt(idPostulante.toString()) 
-        }
-        
-      
-        })
-        if(p === null){
+      const p = await prisma.postulante.findUnique({where: {id: parseInt(idPostulante.toString())}})
+      if(p === null){
           return;
       }
       if(p.image ){
@@ -272,12 +270,52 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
           // const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
        
           // await cloudinary.uploader.destroy( fileId );
-      }
+      }   
+     }
 
+     const imgDnis = await prisma.dni_image.findMany({where: {postulante_id: parseInt(idPostulante.toString())}})
+
+     if(imgDnis.length>0 ){
+     imgs.forEach(e => {
+      imgDnis.map(async(i) =>{
+        if(e.image !== i.image){
+          const deleteParams: aws.S3.DeleteObjectRequest = {
+            Bucket: process.env.BUCKET_NAME!,
+            Key: 'img/'+i.image,
+          };
+          const resp = await s3.deleteObject(deleteParams).promise();
+          console.log('se elimino la img sssdni', resp)
+          const upImagenesDni = await prisma.dni_image.update({
+            data:{
+              image:e.image
+            },
+            where:{
+              id:i.id
+            }
+        })
+        }
+
+      })
+     });
+    //  const imagenesData = imgs.map((image) => ({ image, postulante_id: idPostulante }));
+    //       console.log(imagenesData)
+    //       const agregarImagenesDni = await prisma.dni_image.updateMany({
+    //         data:imagenesData,
+    //         where:{
+    //           postulante_id:idPostulante,
+    //         }
+    //     })
       
-    }
-   
     
+    }else{
+
+      const imagenesData = imgs.map((image) => ({ image, postulante_id: idPostulante }));
+
+      const agregarImagenesDni = await prisma.dni_image.createMany({
+        data:imgs,
+     
+    })
+  }
     const persona = await prisma.persona.update({
           where: {
             id:idPersona

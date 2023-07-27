@@ -89,7 +89,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       capacitacion: true,
       aficion: true,
       reconocimiento: true,
-      tics: true
+      tics: true,
+      dni_image: true,
 
     }
   })

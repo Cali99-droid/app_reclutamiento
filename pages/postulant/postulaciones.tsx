@@ -81,7 +81,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
     const asignarSession = (id: number) => {
         setConvo(id)
         fileInputRef.current?.click()
-        console.log(id)
+
     }
 
     const columns: GridColDef[] = [
@@ -110,7 +110,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
             field: 'actions',
             headerName: 'Acciones',
             description: 'Muestra el estado de la convocatoria',
-            width: 150,
+            width: 300,
             renderCell: (params) => {
                 return (
 
@@ -121,7 +121,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
                             params.row.categoria === 1 ? (
                                 <Chip color="info" variant="outlined" label={'No disponible'} />
                             ) : (
-                                <Box>
+                                <Box display={'flex'}>
 
                                     <Tooltip title={'Ver sesión'}>
                                         <span>
@@ -147,6 +147,13 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
                                         style={{ display: 'none' }}
                                         onChange={onFilesSelected}
                                     />
+                                    {
+                                        params.row.sesion && params.row.estadoPostulante === 'Apto evaluación' ? (
+                                            <Chip color="success" label='!Sesión subida!' />
+                                        ) : (
+                                            <Chip color="warning" label='!Debe subir su sesión de clase!' />
+                                        )
+                                    }
                                 </Box>
                             )
                         }
@@ -163,19 +170,21 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
         {
             field: 'mensajes',
             headerName: 'Mensaje',
-            width: 400,
+            width: 200,
             renderCell: (params) => {
                 return (
                     params.row.mensajes ? (
-                        <Alert severity="info">
-                            <AlertTitle> Atención</AlertTitle>
-                            {params.row.mensajes}
-                        </Alert>
+                        <>
+                            <Alert severity="info">
+                                <AlertTitle> Atención</AlertTitle>
+                                {params.row.mensajes}
+                            </Alert>
+
+                        </>
                     ) : (
-                        <p>No tienes mensajes </p>
+
+                        <p>No tiene mensajes </p>
                     )
-
-
                 )
             }
         },
@@ -203,7 +212,8 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
                         <Box paddingBottom={2}>
                             <Typography variant='h2' fontWeight={'bold'}>Mis Postulaciones</Typography>
                             <Divider />
-                        </Box>
+
+                        </Box> <Typography fontSize={15}>Aqui observará el estado de sus postulaciones y realizará acciones segun la etapa en que se encuentre, es importante que revise periódicamente esta sección para que pueda estar al dia con el proceso de selección.</Typography>
                         <Paper>
 
                             <Box sx={{ width: '100%', padding: 2 }} height={400} >

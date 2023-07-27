@@ -61,6 +61,7 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
                   convocatoria_id:parseInt(id.toString()),
                 },select:{
                   total:true,
+                  comentario:true,
                   user:{
                     select:{
                       persona:{
