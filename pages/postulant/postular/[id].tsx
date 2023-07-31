@@ -134,8 +134,8 @@ const PostularPage: NextPage<Props> = ({ convocatoria, persona, postulo }) => {
 
       </Box>
       <Box padding={4} display='flex' justifyContent='center'>
-        <FormHelperText>*Si tienes dudas de cómo postular, puedes consultar en <a href={'/docentes'} target='_blank'> ¿Cómo postular?
-        </a></FormHelperText>
+        {/* <FormHelperText>*Si tienes dudas de cómo postular, puedes consultar en <a href={'/docentes'} target='_blank'> ¿Cómo postular?
+        </a></FormHelperText> */}
       </Box>
 
     </JobsLayout>

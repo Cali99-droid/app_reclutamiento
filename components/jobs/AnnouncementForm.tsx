@@ -142,7 +142,6 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
             })
 
 
-            const urlimg = 'https://plataforma-virtual.s3.us-west-2.amazonaws.com/' + data.message;
 
             setValue('img', data.message, { shouldValidate: true });
 
@@ -388,7 +387,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                             <CardMedia
                                                 component='img'
                                                 className='fadeIn'
-                                                image={`https://caebucket.s3.us-west-2.amazonaws.com/img/${getValues('img')}`}
+                                                image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${getValues('img')}`}
                                                 alt={getValues('img')}
                                                 onLoad={() => setLoadImg(false)}
                                             />

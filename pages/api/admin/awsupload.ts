@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 
 import AWS from '../../../aws-config';
-import { getSession } from 'next-auth/react';
+
 
 
 
@@ -41,7 +41,7 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     let {name,type} = req.body;
        // Genera un nombre único para el archivo
        const uniqueFileName = `${uuidv4()}.${name.split('.').pop()}`;
-       const folder = 'img/';
+       const folder = process.env.FOLDER_IMG_NAME;
        const fileName = `${folder}${uniqueFileName}`;
     const s3 = new AWS.S3();
     console.log(process.env.BUCKET_NAME)

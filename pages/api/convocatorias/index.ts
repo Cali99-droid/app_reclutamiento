@@ -44,6 +44,9 @@ const getConvocatorias = async(req: NextApiRequest, res: NextApiResponse<Data>) 
             },
             grado:{
               select: {  nombre: true},  
+            },
+            _count: {
+              select: { postulante_x_convocatoria: true }
             }
         }, orderBy: {
             id: "desc"

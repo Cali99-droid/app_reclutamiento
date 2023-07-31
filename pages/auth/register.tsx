@@ -103,10 +103,27 @@ export default function RegisterPage() {
       }, 2000);
     }
   };
-  const matches = useMediaQuery('(min-width:600px)');
+  const styles = {
+    // Define los estilos para el tamaño "pequeño"
+    smallTextField: {
+      fontSize: '12px',
+      padding: '2px 4px',
+    },
+    // Define los estilos para el tamaño "mediano"
+    mediumTextField: {
+      fontSize: '14px',
+      padding: '8px 12px',
+    },
+    // Define los estilos para el tamaño "grande"
+    largeTextField: {
+      fontSize: '18px',
+      padding: '12px 16px',
+    },
+  };
+  const matches = useMediaQuery('(min-width:1000px)');
   return (
     <AuthLayout title={"Registrate y Postula "} >
-      <Box bgcolor={'#FFF'} padding={4} className={'fadeIn'}>
+      <Box bgcolor={'#FFF'} padding={4} className={'fadeIn'} mt={1}>
         <form onSubmit={handleSubmit(onRegisterForm)} noValidate>
           <Chip
             label={errorMessage}
@@ -119,6 +136,7 @@ export default function RegisterPage() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+                size={matches ? 'small' : 'medium'}
                 type="text"
                 label="Nombres"
                 variant="outlined"
@@ -135,6 +153,7 @@ export default function RegisterPage() {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                size={matches ? 'small' : 'medium'}
                 type="text"
                 label="Apellido Paterno"
                 variant="outlined"
@@ -151,6 +170,7 @@ export default function RegisterPage() {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                size={matches ? 'small' : 'medium'}
                 type="text"
                 label="Apellido Materno"
                 variant="outlined"
@@ -168,6 +188,7 @@ export default function RegisterPage() {
             <Grid item xs={12}>
 
               <TextField
+                size={matches ? 'small' : 'medium'}
                 type="date"
                 label='Fecha de nacimiento'
                 variant="outlined"
@@ -185,6 +206,7 @@ export default function RegisterPage() {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                size={matches ? 'small' : 'medium'}
                 type="email"
                 label="Correo"
                 variant="outlined"
@@ -201,8 +223,9 @@ export default function RegisterPage() {
 
             </Grid> <Grid item xs={12} md={12}>
               <FormControl fullWidth >
-                <InputLabel id="tipoId">Tipo </InputLabel>
+                <InputLabel id="tipoId">Tipo de Documento </InputLabel>
                 <Select
+
                   labelId="tipoId"
                   id="tipoId"
                   label="tipo"
@@ -220,7 +243,7 @@ export default function RegisterPage() {
                   <MenuItem value={2}>Carnet de Extranjeria</MenuItem>
 
                 </Select>
-                <FormHelperText>Tipo de documento</FormHelperText>
+                {/* <FormHelperText>Tipo de documento</FormHelperText> */}
               </FormControl>
             </Grid>
             <Grid item xs={12} md={12}>
@@ -235,6 +258,7 @@ export default function RegisterPage() {
               <TextField
                 label="Numero de documento"
                 type="number"
+                size={matches ? 'small' : 'medium'}
                 variant="outlined"
                 fullWidth
                 required
@@ -250,6 +274,7 @@ export default function RegisterPage() {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                size={matches ? 'small' : 'medium'}
                 required
                 label="Contraseña"
                 type='password'
@@ -268,9 +293,9 @@ export default function RegisterPage() {
 
               <Button
                 type="submit"
-                color="secondary"
+
                 disabled={loading}
-                size='large'
+                size='medium'
                 fullWidth>
                 Registrarme{loading && (
                   <CircularProgress
@@ -290,12 +315,10 @@ export default function RegisterPage() {
             </Grid>
             <Grid item xs={12} display={'flex'} justifyContent={'space-between'}>
               <Box >
-                <Typography> ¿Ya tienes una cuenta?
+                <Typography fontSize={13}> ¿Ya tienes una cuenta?
                   <NextLink
                     passHref
                     legacyBehavior
-
-
                     href={router.query.p ? `/auth/login?p=${router.query.p}` : '/auth/login'}
 
 
@@ -307,15 +330,18 @@ export default function RegisterPage() {
               </Box>
 
               <Box textAlign={'right'}>
-                <NextLink
+                <Typography fontSize={13}>
+                  <NextLink
 
-                  color="secondary"
-                  href={"/auth/forgot-password"}
-                  passHref
-                  legacyBehavior>
-                  <Link sx={{ fontWeight: 'bold', textDecoration: 'underline' }} color="secondary">Olvidé mi contraseña
-                  </Link>
-                </NextLink>
+                    color="secondary"
+                    href={"/auth/forgot-password"}
+                    passHref
+                    legacyBehavior>
+                    <Link sx={{ fontWeight: 'bold', textDecoration: 'underline' }} color="secondary">Olvidé mi contraseña
+                    </Link>
+                  </NextLink>
+
+                </Typography>
 
               </Box>
 

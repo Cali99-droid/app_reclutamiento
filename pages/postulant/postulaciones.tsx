@@ -151,7 +151,10 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
                                         params.row.sesion && params.row.estadoPostulante === 'Apto evaluación' ? (
                                             <Chip color="success" label='!Sesión subida!' />
                                         ) : (
-                                            <Chip color="warning" label='!Debe subir su sesión de clase!' />
+                                            !params.row.sesion && params.row.estadoPostulante === 'Apto evaluación' && (
+                                                <Chip color="warning" label='Debe subir su sesión de clase' />
+                                            )
+
                                         )
                                     }
                                 </Box>

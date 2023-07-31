@@ -49,13 +49,34 @@ const deleteConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
      
     if ( postulantes.length > 0 ) {
       return res.status(400).json({
-          message: 'No se puede eliminar'
+          message: 'No se puede eliminar, ya existen postulantes'
       });
   }
+  const c = await prisma.convocatoria.findUnique({
+    where: {
+      id: parseInt(id.toString()) 
+    }
+    
+  
+    })
+    if(c === null){
+      return;
+  }
+  const s3 = new AWS.S3();
+  if(c.img ){
+    
+    // Borrar de cloudinary
+    // const [ fileId, extension ] = convo.img.substring( convo.img.lastIndexOf('/') + 1 ).split('.')
+ 
+    // await cloudinary.uploader.destroy( fileId );
+    const deleteParams: aws.S3.DeleteObjectRequest = {
+      Bucket: process.env.BUCKET_NAME!,
+      Key: process.env.FOLDER_IMG_NAME!+ c.img,
+    };
+    const resp = await s3.deleteObject(deleteParams).promise();
+    console.log('se elimino la img', resp)
 
-
-
-
+}
 
     const deleteJob = await prisma.convocatoria.delete({
         where:{
@@ -125,7 +146,7 @@ const updateConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
           // await cloudinary.uploader.destroy( fileId );
           const deleteParams: aws.S3.DeleteObjectRequest = {
             Bucket: process.env.BUCKET_NAME!,
-            Key: 'img/'+ c.img,
+            Key: process.env.FOLDER_IMG_NAME!+ c.img,
           };
           const resp = await s3.deleteObject(deleteParams).promise();
           console.log('se elimino la img', resp)

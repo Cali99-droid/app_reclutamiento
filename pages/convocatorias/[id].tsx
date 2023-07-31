@@ -19,6 +19,7 @@ import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import moment from 'moment';
+import { PanoramaFishEye, RemoveRedEyeSharp } from '@mui/icons-material';
 interface Props {
   convocatoria: IJob;
   w: Window & typeof globalThis;
@@ -29,15 +30,16 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
   const url = `https://talentohumano.colegioae.edu.pe${router.asPath}`;
 
   const [open, setOpen] = useState(false);
-  const matches = useMediaQuery('(min-width:1600px)');
-  const sl = useMediaQuery('(min-width:1600px)');
+  const matches = useMediaQuery('(min-width:1100px)');
+  const sl = useMediaQuery('(min-width:1000px)');
+
   return (
     <JobsLayout title={`AE | ${convocatoria.titulo} `} pageDescription={`Regístrate y postula para ${convocatoria.titulo} `} imageFullUrl={`${convocatoria.img}`}>
 
       <Box
         className="fadeIn" sx={{ mt: 20, }} display={'flex'}
         gap={4}
-        alignItems="center" justifyContent={'center'} width={matches ? '50%' : '90%'} margin={'auto'}
+        alignItems="center" justifyContent={'center'} width={matches ? '80%' : '90%'} margin={'auto'}
 
         flexDirection={matches ? 'row' : 'column'}
         bgcolor={'#F1F1F1'}
@@ -46,18 +48,18 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
       >
 
         <Box>
-          <Image src={`https://caebucket.s3.us-west-2.amazonaws.com/img/${convocatoria.img}`} alt={''} width={matches ? 500 : 400} height={matches ? 500 : 400} priority />
+          <Image src={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${convocatoria.img}`} alt={''} width={matches ? 430 : 300} height={matches ? 430 : 300} priority />
         </Box>
 
         <Box borderRadius={4} padding={2}>
           <Box >
             <Box display={'flex'} justifyContent={'space-between'}>
-              <Typography variant='h1' component='h1' >
+              <Typography variant='h1' component='h1' fontSize={25} >
                 {convocatoria.titulo.toLocaleUpperCase()}
 
               </Typography>
               <Box>
-                <IconButton aria-label="share" onClick={() => setOpen(true)}>
+                <IconButton aria-label="share" size='small' onClick={() => setOpen(true)}>
                   <ShareIcon />
                 </IconButton>
 
@@ -88,6 +90,9 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
           </Box>
           <Button startIcon={<PostAddIcon />} color='secondary' sx={{ mt: 6, width: '100%' }} size="large" href={`/postulant/postular/${convocatoria.id}`}>
             Postular
+          </Button>
+          <Button startIcon={<RemoveRedEyeSharp />} color='secondary' variant='outlined' sx={{ mt: 1, width: '100%' }} size="large" href={`/convocatorias`}>
+            Ver otras convocatorias
           </Button>
         </Box>
 

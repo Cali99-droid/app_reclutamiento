@@ -22,6 +22,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import 'moment/locale/es';
 import { useSweetAlert } from '@/context/sweet/SweetAlertContext';
 import Swal from 'sweetalert2';
+import { useJobs } from '@/hooks';
 
 
 moment.locale('es');
@@ -32,8 +33,11 @@ interface Props {
 
 
 const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
-  const { showAlert } = useSweetAlert();
-  const [convocatorias, setConvocatorias] = useState(convos)
+
+  const { jobs } = useJobs('/convocatorias/')
+
+  // const [convocatorias, setConvocatorias] = useState<IJob[]>(jobs)
+  // console.log(convocatorias)
   const matches = useMediaQuery('(min-width:600px)');
 
 
@@ -97,23 +101,24 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
         url: '/admin/convocatorias',
         method: 'DELETE',
         data: id
-      }).then(() => {
-        const newConvos = convocatorias.filter(c => c.id !== id);
-        setConvocatorias(newConvos);
-      });
+      })
+      // .then(() => {
+      //   const newConvos = jobs.filter(c => c.id !== id);
+      //   setConvocatorias(newConvos);
+      // });
 
 
 
     } catch (error) {
       console.log(error);
       if (axios.isAxiosError(error)) {
-        setConvocatorias(convocatorias)
+        // setConvocatorias(convocatorias)
         return {
           hasError: true,
           message: error.response?.data.message
         }
       }
-      setConvocatorias(convocatorias)
+      // setConvocatorias(convocatorias)
       return {
         hasError: true,
         message: 'No se pudo eliminar la convocatoria - intente de nuevo'
@@ -129,7 +134,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'N°', width: 50 },
     {
-      field: 'titulo', headerName: 'Convocatoria', width: 320,
+      field: 'titulo', headerName: 'Convocatoria', width: 300,
       renderCell: ({ row }) => {
         return (
           <NextLink href={`/admin/convocatorias/convocatoria/${row.idConv}`} passHref legacyBehavior>
@@ -149,7 +154,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
     {
       field: 'estado',
       headerName: 'Estado',
-      width: 200,
+      width: 140,
       renderCell: (params) => {
         const fechaHoy = new Date();
         return (
@@ -191,7 +196,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
   ];
 
 
-  const rows = convocatorias.map((job, index) => ({
+  const rows = jobs.map((job, index) => ({
     id: index + 1,
     idConv: job.id,
     titulo: job.titulo,
@@ -212,7 +217,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
 
     <Paperbase title={"Administrar convocatorias "} subTitle={"Listado de convocatorias"} >
 
-      <Paper sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }}>
+      <Paper sx={matches ? { maxWidth: 1100, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }}>
         <AppBar
           position="static"
           color="default"
@@ -240,7 +245,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
             </Grid>
           </Toolbar>
         </AppBar>
-        <Box className="fadeIn" padding={4} sx={{ height: 580 }} width={'100%'} textAlign={'center'}>
+        <Box className="fadeIn" padding={2} sx={{ height: 450 }} width={'100%'} textAlign={'center'}>
 
 
 
