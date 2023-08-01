@@ -77,14 +77,14 @@ async function main() {
    
   })
 
-  const evaluaciones = await prisma.evaluacion.createMany({
-    data: [
-      { nombre: 'entrevista' },
-      { nombre: 'jurado' },
+  // const evaluaciones = await prisma.evaluacion.createMany({
+  //   data: [
+  //     { nombre: 'entrevista' },
+  //     { nombre: 'jurado' },
       
-    ],
+  //   ],
    
-  })
+ // })
   // console.log( {createMany} )
 }
 
