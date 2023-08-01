@@ -36,71 +36,59 @@ const getUsers = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     //        console.log(session.user?.rol_id)
     // }
 if(session.user?.rol_id === 2){
-//  users = await prisma.user.findMany({
-//         include: {
-//             persona: true,
-//         },
-//     });
-users = await prisma.postulante_x_convocatoria.findMany({
-    include:{
-        postulante:{
-            select:{
-                persona:{
-                    select:{
-                        nombres:true,
-                        apellido_mat:true,
-                        apellido_pat:true,
-                        user:true
-                    }
-                }
-            }
-        }
-    }
-})
+ users = await prisma.user.findMany({
+        include: {
+            persona: true,
+        },
+    });
+// users = await prisma.postulante_x_convocatoria.findMany({
+//     include:{
+//         postulante:{
+//             select:{
+//                 persona:{
+//                     select:{
+//                         nombres:true,
+//                         apellido_mat:true,
+//                         apellido_pat:true,
+//                         user:true
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// })
 }else{
-    users = await prisma.postulante_x_convocatoria.findMany({
-        include:{
-            postulante:{
-                select:{
-                    persona:{
-                        select:{
-                            nombres:true,
-                            apellido_mat:true,
-                            apellido_pat:true,
-                            user:true
-                        }
-                    }
-                }
-            }
-        },where:{
-            estado_postulante_id:7
-        }
-    })
-
-    //  users = await prisma.user.findMany({
-    //     include: {
-    //         persona: {
+    // users = await prisma.postulante_x_convocatoria.findMany({
+    //     include:{
+    //         postulante:{
     //             select:{
-    //                 postulante:{
-    //                     include:{
-    //                         postulante_x_convocatoria:{
-    //                             where:{
-    //                                 estado_postulante_id:7
-    //                             }
-    //                         }
+    //                 persona:{
+    //                     select:{
+    //                         nombres:true,
+    //                         apellido_mat:true,
+    //                         apellido_pat:true,
+    //                         user:true
     //                     }
     //                 }
     //             }
-    //         },
+    //         }
+    //     },where:{
+    //         estado_postulante_id:7
+    //     }
+    // })
+
+     users = await prisma.user.findMany({
+        include: {
+            persona: true,
             
 
-    //     },
-    //     where:{
-    //         rol_id:{
-    //             not:2
-    //         }
-    //     }
-    // }); 
+        },
+        where:{
+            rol_id:{
+                not:2
+            }
+        }
+    }); 
 }
     
     // const users = JSON.parse(JSON.stringify(ListUsers))

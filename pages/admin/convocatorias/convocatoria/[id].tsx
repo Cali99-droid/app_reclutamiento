@@ -6,7 +6,7 @@ import { PostContext } from '@/context';
 import { GetServerSideProps, NextPage } from "next";
 import { DataGrid, GridCellParams, GridCloseIcon, GridColDef, GridToolbar, esES } from "@mui/x-data-grid";
 import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider, useMediaQuery, Backdrop, CircularProgress, Alert, InputAdornment, FormHelperText } from '@mui/material';
-import { evaluacion_x_postulante, postulante, categoria, puntajes, persona } from '@prisma/client';
+
 import { calcularEdad } from "@/helpers/functions";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -43,9 +43,10 @@ moment.locale('es');
 
 import { usePostulantes } from '@/hooks';
 import { FullScreenLoading } from '@/components/ui';
-import { Gavel, Send } from '@mui/icons-material';
+import { InfoOutlined, Send } from '@mui/icons-material';
 import ModalEval from '@/components/eval/test';
 import confetti from 'canvas-confetti';
+import { postulante } from '@prisma/client';
 
 interface Props {
   postulantes: postulante[]
@@ -62,7 +63,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const { pos, isLoading } = usePostulantes(`/admin/postulantes/${convocatoria.id}`);
 
   const [postulantes, setPostulantes] = useState<any[]>([]);
-  console.log(postulantes)
+
   const { calcularTotal, limpiarCriterios, juradosAsignados, addNewJurado, deleteJurado, refreshJurados } = useContext(PostContext);
 
   const [seleccionados, setSeleccionados] = useState<any[]>([])
@@ -76,10 +77,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const hadleOpenCalificacion = (puntajes: any[]) => {
     setCalificacion(puntajes);
     setModalCalificacion(true);
-
-
   }
-
 
   const [idEv, setIdEv] = useState<string | number>('');
   const [idPos, setIdPos] = useState<string | number>('');
@@ -232,6 +230,14 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
     // return (puntos + '(' + Math.round(puntaje * 10) + '%)').toString();
   }
+  const CountButton = () => {
+    const [count, setCount] = useState(0);
+
+    return (
+      <Button onClick={() => setCount((prev) => prev + 1)}>{count} click(s)</Button>
+    );
+  };
+
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'N°', width: 50 },
     {
@@ -249,26 +255,56 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       }
     },
 
+    // {
+    //   field: 'edad',
+    //   headerName: 'Edad',
+    //   width: 100,
+
+    // },
+
+
     {
-      field: 'edad',
-      headerName: 'Edad',
-      width: 100,
+      field: 'puntajeEntr',
+      headerName: ' Entrevista (%)',
+      width: 150,
+      type: 'number',
+      valueFormatter: ({ value }) => value + ' %',
+      cellClassName: (params: GridCellParams<any, number>) => {
+        if (params.value == null) {
+          return '';
+        }
+        if (params.value == 0) {
+          return 'sindatos';
+        }
+        if (params.value < 30) {
+          return 'medio'
+        } else {
+          return 'bien'
+        }
 
+      }
     },
+    {
+      field: 'puntajeJur',
+      headerName: ' Jurados(%)',
+      width: 150,
+      type: 'number',
+      valueFormatter: ({ value }) => value + ' %',
+      cellClassName: (params: GridCellParams<any, number>) => {
+        if (params.value == null) {
+          return '';
+        }
+        if (params.value == 0) {
+          return 'sindatos';
+        }
+        if (params.value < 30) {
+          return 'medio'
+        } else {
+          return 'bien'
+        }
 
-
-    // {
-    //   field: 'puntajeEntr',
-    //   headerName: ' Entrevista (%)',
-    //   width: 150,
-
-    // },
-    // {
-    //   field: 'puntajeJur',
-    //   headerName: ' Jurados(%)',
-    //   width: 200,
-
-    // },
+      }
+    },
     // {
     //   field: 'total',
     //   headerName: 'Total',
@@ -283,7 +319,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
         return (
 
-          <Chip color="info" label={params.row.est} />
+          <Chip icon={<InfoOutlined />} variant='outlined' color="info" label={params.row.est} />
 
 
 
@@ -310,33 +346,35 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
         )
       }
     },
-    {
-      field: 'resultado',
-      headerName: 'Resultado',
-      width: 300,
-      renderCell: (params) => {
+    // {
+    //   field: 'resultado',
+    //   headerName: 'Resultado',
+    //   width: 300,
+    //   type: 'number',
+    //   valueFormatter: ({ value }) => devolverPuntajeEntrevista(value),
+    //   // renderCell: (params) => {
 
-        const obj = devolverPuntajeEntrevista(params.row.calificaciones);
-        const objJ = devolverPuntajeJurado(params.row.calificaciones);
+    //   //   const obj = devolverPuntajeEntrevista(params.row.calificaciones, params.row.idCp);
+    //   //   const objJ = devolverPuntajeJurado(params.row.calificaciones);
 
-        return (
-          <>
-            {/* <Chip label={getEstado(params.row.estado, params.row.puntajeEntr, params.row.puntajeJur)} color="info" variant='outlined' /> */}
-            {
-              params.row.puntajeJur ? (
-                <Alert severity={objJ.pasa ? 'success' : 'warning'}>{objJ.mensaje}</Alert>
-              ) : (obj.noEval) ? (
-                <Alert severity={'info'}>{obj.mensaje}</Alert>
-              ) : (
-                <Alert severity={obj.pasa ? 'success' : 'warning'}>{obj.mensaje}</Alert>
-              )
-            }
+    //   //   return (
+    //   //     <>
+    //   //       {/* <Chip label={getEstado(params.row.estado, params.row.puntajeEntr, params.row.puntajeJur)} color="info" variant='outlined' /> */}
+    //   //       {
+    //   //         params.row.puntajeJur ? (
+    //   //           <Alert severity={objJ.pasa ? 'success' : 'warning'}>{objJ.mensaje}</Alert>
+    //   //         ) : (obj.noEval) ? (
+    //   //           <Alert severity={'info'}>{obj.mensaje}</Alert>
+    //   //         ) : (
+    //   //           <Alert severity={obj.pasa ? 'success' : 'warning'}>{obj.mensaje}</Alert>
+    //   //         )
+    //   //       }
 
-          </>
-        )
-      }
+    //   //     </>
+    //   //   )
+    //   // }
 
-    },
+    // },
     {
       field: 'actions', headerName: 'Acciones', width: 200,
       sortable: false,
@@ -383,7 +421,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                         <IconButton
                           sx={{ color: green[800] }}
                           aria-label="negocias"
-                          disabled={params.row.puntajeJur === 0 || (convocatoria.vacantes - contratados.length) === 0}
+                          disabled={params.row.puntajeJur < 30 || (convocatoria.vacantes - contratados.length) === 0}
                           onClick={() => { handleOpenContrato(params.row.idCp) }}
                         >
                           <GavelIcon />
@@ -425,7 +463,6 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
             >
               < SpeakerNotesIcon />
             </IconButton>
-
           </>
         )
       }
@@ -440,32 +477,34 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     const resultado = puntajes.forEach(x => {
       //rol de admin
       if (x.user.rol.id === 5) {
-        puntaje += (x.total / x._count.puntaje_items)
+        puntaje += (x.total / x.maximo)
         puntos += x.total
       }
     });
-    if (Math.round(puntaje * 10) === 0) {
+    if (Math.round(puntaje * 100) === 0) {
       return {
         puntos,
-        porcentaje: Math.round(puntaje * 10) + '%',
+        porcentaje: Math.round(puntaje * 100),
         pasa: true,
         noEval: true,
         mensaje: 'Sin datos'
       }
     }
-    if (Math.round(puntaje * 10) >= 30) {
+    if (Math.round(puntaje * 100) >= 30) {
+
+
       return {
         puntos,
-        porcentaje: Math.round(puntaje * 10) + '%',
+        porcentaje: Math.round(puntaje * 100),
         pasa: true,
-        mensaje: Math.round(puntaje * 10) + '% ' + 'Puntaje entrevista'
+        mensaje: Math.round(puntaje * 100) + '% ' + 'Puntaje entrevista'
       }
     } else {
       return {
         puntos,
-        porcentaje: Math.round(puntaje * 10) + '%',
+        porcentaje: Math.round(puntaje * 100),
         pasa: false,
-        mensaje: Math.round(puntaje * 10) + '%' + 'Puntaje entrevista'
+        mensaje: Math.round(puntaje * 100) + '%' + 'Puntaje entrevista'
       }
     }
     // return (puntos + '(' + Math.round(puntaje * 10) + '%)').toString();
@@ -476,49 +515,52 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     const resultado = puntajes.forEach(x => {
       //rol de admin
       if (x.user.rol.id === 5) {
-        puntaje += (x.total)
+        puntaje += (x.total / x.maximo)
 
       } else {
         return '';
       }
     });
-    return (puntaje);
+    return (Math.round(puntaje * 100));
   }
   const devolverPuntajeJurado = (puntajes: any[]) => {
 
     let puntaje = 0;
     let jurados = 0;
     let puntos = 0;
+    let maximo = 0;
     const resultado = puntajes.forEach(x => {
 
       if (x.user.rol.id === 3 || x.user.rol.id === 4) {
-        puntaje += (x.total / (x._count.puntaje_items));
+        puntaje += (x.total);
+        maximo += (x.maximo)
+
         jurados += 1
         puntos += x.total
       } else {
         return '';
       }
     });
-    if (Math.round((puntaje / jurados) * 10) === 0) {
+    if (Math.round((puntaje / maximo) * 100) === 0) {
       return {
         puntos,
-        porcentaje: Math.round(puntaje * 10) + '%',
+        porcentaje: isNaN(Math.round(puntaje * 10)) ? 0 : Math.round((puntaje / maximo) * 100),
         pasa: true,
         noEval: true,
         mensaje: 'Aún no evaluado'
       }
     }
-    if (Math.round((puntaje / jurados) * 10) >= 30) {
+    if (Math.round((puntaje / maximo) * 100) >= 30) {
       return {
         puntos,
-        porcentaje: Math.round((puntaje / jurados) * 10) + '%',
+        porcentaje: isNaN(Math.round((puntaje / jurados) * 10)) ? 0 : Math.round((puntaje / maximo) * 100),
         pasa: true,
         mensaje: Math.round((puntaje / jurados) * 10) + '% ' + 'Puntaje Evaluación'
       }
     } else {
       return {
         puntos,
-        porcentaje: Math.round((puntaje / jurados) * 10) + '%',
+        porcentaje: isNaN(Math.round((puntaje / jurados) * 10)) ? 0 : Math.round((puntaje / maximo) * 100),
         pasa: false,
         mensaje: Math.round((puntaje / jurados) * 10) + '% ' + 'Puntaje Evaluación'
       }
@@ -565,13 +607,14 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     edad: calcularEdad(p.postulante.nacimiento) + ' años',
     idPos: p.postulante.id,
     sueldo: 'S/ ' + p.postulante.sueldo,
-    puntajeEntr: getPuntajeEntrevista(p.postulante.puntajes),
-    puntajeJur: getPuntajeJurado(p.postulante.puntajes),
+    puntajeEntr: devolverPuntajeEntrevista(p.postulante.puntajes).porcentaje,
+    puntajeJur: devolverPuntajeJurado(p.postulante.puntajes).porcentaje,
     total: tot(p.postulante.puntajes),
     calificaciones: p.postulante.puntajes,
     idCp: p.id,
     comentario: p.comentario,
     fechaComentario: p.fecha_comentario,
+    resultado: p.postulante.puntajes,
     est: getEstado(p.estado_postulante.nombre, getPuntajeEntrevista(p.postulante.puntajes), getPuntajeJurado(p.postulante.puntajes))
   }))
 
@@ -624,7 +667,6 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       estado_postulante_id: id === p.id ? parseInt(newStatus) : p.id
     }));
     setPostulantes(updatedPostulantes);
-
 
     try {
 
@@ -922,12 +964,16 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                     color: '#FFF',
                   },
                   '& .medio': {
-                    backgroundColor: '#ff943975',
-                    color: '#FFF',
+                    backgroundColor: '#d47483',
+                    color: '#1a3e72',
                   },
                   '& .bien': {
-                    backgroundColor: '#4caf50',
-                    color: '#FFF',
+                    backgroundColor: 'rgba(157, 255, 118, 0.49)',
+                    color: '#1a3e72',
+                  },
+                  '& .sindatos': {
+                    backgroundColor: 'rgba(157, 255, 225, 0.49)',
+                    color: '#1a3e72',
                   },
                 }} >
 

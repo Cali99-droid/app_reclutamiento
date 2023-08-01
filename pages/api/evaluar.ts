@@ -1,13 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { prisma } from '@/server/db/client';
-import {  evaluacion_x_postulante } from '@prisma/client';
-import { getSession } from 'next-auth/react';
 
+import { getSession } from 'next-auth/react';
+import { getServerSession } from 'next-auth';
+import NextAuth  from '@/pages/api/auth/[...nextauth]'
 type Data = 
 | { message: string }
-|{ev: evaluacion_x_postulante}
-|{itemValues: any}
+
+|{itemValues: any[]}
 
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
@@ -26,9 +27,19 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
      
-    
- 
-
+    const session:any = await getServerSession(req, res, NextAuth);
+if(!session){
+  return  res.status(403).json({message:'No autorizado'});
+}
+ const email = session.user.email;
+ const user = await prisma.user.findFirst({
+    where:{
+        email
+    }
+ })
+ if(!user){
+    return  res.status(403).json({message:'No autorizado'});
+  }
   const {itemValues, totalSum, idTest, idPos, idUser,id,comentario } = req.body
 
   const tienePuntaje = await prisma.puntajes.findMany({
@@ -36,7 +47,8 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
                 convocatoria_id:parseInt(id),
                 AND:{
                     postulante_id:idPos,
-                    test_id:idTest
+                    test_id:idTest,
+                    user_id:user.id
                 }
                 
             },
@@ -82,7 +94,7 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
 
         //     },
         // })
-
+const mx =  (Object.entries(itemValues).length * 10);
         const puntajes = await prisma.puntajes.create({
             data:{
                 total:totalSum,
@@ -91,6 +103,7 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
                 user_id:parseInt(idUser),
                 convocatoria_id:parseInt(id),
                 comentario,
+                maximo: (Object.entries(itemValues).length * 10)
             }
         })
         await prisma.puntaje_items.createMany({
@@ -101,6 +114,38 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
                 })),
               });
     
+        const pc = await prisma.postulante_x_convocatoria.findFirst({
+            where:{
+                convocatoria_id:parseInt(id),
+                AND:{
+                    postulante_id:idPos
+                }
+            }
+        })
+        const porcentaje = (totalSum/mx)*100;
+if(pc?.estado_postulante_id ===2 && porcentaje>=30){
+   
+    const update = await prisma.postulante_x_convocatoria.updateMany({
+        data:{
+            estado_postulante_id:(pc.estado_postulante_id+1),
+            update_time:new Date(),
+         
+        }, where:{
+            convocatoria_id:parseInt(id),
+            AND:{
+                postulante_id:idPos
+            }
+        }
+    })
+    // await prisma.historial.create({
+    //     data:{
+    //         accion:`Cambio de estado a Apto a evaluacion`,
+    //         postulante_id:idPos
+    //     }
+    // })
+}
+
+
         console.log('Valores guardados en la base de datos.');
 
 

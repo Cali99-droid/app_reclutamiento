@@ -25,7 +25,6 @@ interface Props {
 
 }
 
-
 const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
 
 
@@ -194,18 +193,70 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
 
 
     ];
+    const getPuntajeEntrevista = (puntajes: any[]) => {
+        let puntaje = 0;
 
+        const resultado = puntajes.forEach(x => {
+            //rol de admin
+            if (x.user.rol_id === 5) {
+                puntaje += (x.total / x.maximo)
+
+            } else {
+                return '';
+            }
+        });
+        return (Math.round(puntaje * 100));
+    }
+    const getPuntajeJurado = (puntajes: any[]) => {
+        let puntaje = 0;
+
+        const resultado = puntajes.forEach(x => {
+            //rol de admin
+            if (x.user.rol_id === 3 || x.user.rol_id === 4) {
+                puntaje += (x.total)
+
+            } else {
+                return '';
+            }
+        });
+        return (puntaje);
+    }
+    const getEstado = (estado: string, puntajeEntr: number, puntajeJur: number) => {
+        console.log(puntajeJur)
+        switch (estado) {
+            case 'Inscrito':
+                return 'Inscrito'
+
+            case 'Apto entrevista':
+                if (puntajeEntr > 0) {
+                    return 'Entrevistado'
+                }
+                return 'Apto entrevista'
+            case 'Apto evaluación':
+
+                if (puntajeJur > 0) {
+                    console.log('entro')
+                    return 'Evaluado'
+                }
+                return 'Apto evaluación'
+
+            default:
+                return estado
+                break;
+        }
+    }
 
     const rows = convocatorias.map((job) => ({
         id: job.id,
         sesion: job.session,
         convocatoria: job.convocatoria.titulo,
-        estado: job.convocatoria.estado.nombre,
-        estadoPostulante: job.estado_postulante.nombre === 'No interesa' ? 'En proceso' : job.estado_postulante.nombre,
+        estado: getEstado(job.estado_postulante.nombre, getPuntajeEntrevista(job.postulante.puntajes), getPuntajeJurado(job.postulante.puntajes)),
+        estadoPostulante: job.estado_postulante.nombre === 'No interesa' ? 'En proceso' : getEstado(job.estado_postulante.nombre, getPuntajeEntrevista(job.postulante.puntajes), getPuntajeJurado(job.postulante.puntajes)),
         mensajes: job.comentario,
         categoria: job.convocatoria.categoria.id
 
     }))
+
 
     return (
         <JobsLayout title={"Mis postulaciones"} pageDescription={"Lista de postulacioes"}>
@@ -276,7 +327,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     }
 
     // const convocatorias = await apiCon('/admin/convocatorias')
-    const convocatorias = await prisma.postulante_x_convocatoria.findMany({
+    const resConvocatoria = await prisma.postulante_x_convocatoria.findMany({
         where: {
             postulante_id: persona?.postulante[0].id,
         },
@@ -284,6 +335,15 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
             id: true,
             session: true,
             comentario: true,
+            postulante: {
+                select: {
+                    puntajes: {
+                        include: {
+                            user: true
+                        }
+                    }
+                }
+            },
             convocatoria: {
                 select: {
                     titulo: true,
@@ -298,7 +358,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
             }
         },
     });
-
+    const convocatorias = JSON.parse(JSON.stringify(resConvocatoria))
     await prisma.$disconnect()
 
     return {

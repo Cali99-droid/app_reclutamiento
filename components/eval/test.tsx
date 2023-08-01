@@ -61,14 +61,10 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
     const handleConfirmClase = async () => {
         //TODO validar actualizacion o creacion  */
 
-
-
-
-
         try {
 
             const resp = await reclutApi.post('/evaluar', { itemValues, totalSum, idTest, idPos, idUser, id, comentario });
-            console.log(resp)
+            // console.log(resp)
             toast.success('🦄 Puntaje asignado correctamente0!'),
                 //         handleCloseClase()
                 //   limpiarCriterios()

@@ -4,7 +4,9 @@ import { prisma } from '@/server/db/client';
 import { convocatoria, postulante, user, item } from '@prisma/client';
 import { getSession } from 'next-auth/react';
 import moment from 'moment-timezone';
-
+import { getServerSession } from 'next-auth';
+import NextAuth  from '@/pages/api/auth/[...nextauth]'
+import { userAgent } from 'next/server';
 
 
 type Data = 
@@ -38,6 +40,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
     const { id=''  } = req.query;
+    const session:any = await getServerSession(req, res, NextAuth);
 
     // const convocatoria = await prisma.convocatoria.findUnique({
     //     where: {
@@ -62,6 +65,7 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
                 },select:{
                   total:true,
                   comentario:true,
+                  maximo:true,
                   user:{
                     select:{
                       persona:{
@@ -111,6 +115,21 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
  }
 
 async function updatePostulante(req: NextApiRequest, res: NextApiResponse<any>) {
+  
+
+  const session:any = await getServerSession(req, res, NextAuth);
+  if(!session){
+    return  res.status(403).json({message:'No autorizado'});
+  }
+   const email = session.user.email;
+   const user = await prisma.user.findFirst({
+      where:{
+          email
+      }
+   })
+   if(!user){
+      return  res.status(403).json({message:'No autorizado'});
+    }
   const { id , status } = req.body;
 
   try {
@@ -122,11 +141,18 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<any>) 
         
           estado_postulante_id:  parseInt(status),
           fecha_cambio:new Date(),
-      },
+          update_time:new Date(),
+        
+      }
     })
 
 //TODO agregar a historial
-    
+// await prisma.historial.create({
+//   data:{
+//       accion:`Cambio de estado a Apto a entrevista`,
+//       postulante_id:p.postulante_id
+//   }
+// })
     await prisma.$disconnect()
     res.status(201).json({p});
   } catch (error) {

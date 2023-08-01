@@ -78,20 +78,6 @@ const getEvaluacionPostulante = async(req: NextApiRequest, res: NextApiResponse<
                 }
               },
             
-              evaluacion_x_postulante:{
-                where:{
-                  convocatoria_id:parseInt(id.toString()),
-                  AND:{
-                  user_id:parseInt(idUser.toString())
-                  }
-                 
-
-                },
-                select:{puntaje:true,user_id:true},
-                orderBy:{
-                  puntaje:'asc'
-                }
-              },
               estudios:true,
               cargo:true,
               investigacion:true,

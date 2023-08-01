@@ -114,7 +114,12 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
             toast.success(' ¡Promovido Correctamente! ')
             // const newId = parseInt(newStatus) + 1
             // setIdEstado(newId)   
-            setEstadoPostulante(siguienteEstado.nombre)
+            if (parseInt(newStatus) === 4) {
+                setEstadoPostulante('No Interesa')
+            } else {
+                setEstadoPostulante(siguienteEstado.nombre)
+            }
+
             if (!esta) {
                 setUltimo(true)
                 return;
@@ -166,7 +171,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Image
                                     priority
-                                    src={(postulante.image === null ? '/avatar.jpg' : `https://caebucket.s3.us-west-2.amazonaws.com/img/${postulante.image}`)}
+                                    src={(postulante.image === null ? '/avatar.jpg' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulante.image}`)}
                                     width={150}
                                     height={150}
                                     alt="Imagen postulante"
@@ -236,7 +241,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                                         <CardMedia
                                                             component='img'
                                                             className='fadeIn'
-                                                            image={`https://caebucket.s3.us-west-2.amazonaws.com/img/${img.image || img}`}
+                                                            image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${img.image || img}`}
                                                             alt={'imagen dni'}
                                                         />
 
@@ -291,7 +296,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                                         <TableCell align="right">{e.grado}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${e.doc}`}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -355,7 +360,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                                         <TableCell align="right">{e.remuneracion}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${e.doc}`}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -459,7 +464,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                                         <TableCell align="right">{e.descripcion}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${e.doc}`}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -511,7 +516,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                                         <TableCell align="right">{e.descripcion}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${e.doc}`}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -661,13 +666,14 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
 
 
 
-                    <MenuItem disabled={siguienteEstado.nombre == 'No interesa' || idEstado === 4 ? true : false} onClick={() => updateStatus(idPC, siguienteEstado.id)}>
+                    <MenuItem disabled={idEstado >= 2 ? true : false} onClick={() => updateStatus(idPC, '2')}>
                         <Tooltip placement="left-start" title={`Pasar a`}>
                             <span>
                                 <ListItemIcon>
                                     <ThumbUpOutlinedIcon />
                                 </ListItemIcon>
-                                {siguienteEstado.nombre == 'No interesa' ? 'No disponible' : siguienteEstado.nombre}
+                                {idEstado >= 2 ? 'No disponible' : 'Apto a Entrevista'}
+                                {/* {siguienteEstado.nombre == 'No interesa' ? 'No disponible' : siguienteEstado.nombre} */}
                             </span>
                         </Tooltip>
                     </MenuItem>

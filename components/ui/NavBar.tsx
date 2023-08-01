@@ -69,6 +69,7 @@ export const NavBar = () => {
         setAnchorEl(null);
     };
     const matches = useMediaQuery('(min-width:600px)');
+
     return (
         <ElevationScroll {...props}>
             <AppBar sx={{ height: '140px' }} >
@@ -231,12 +232,14 @@ export const NavBar = () => {
                                             {user?.persona.nombres}
                                         </MenuItem>
                                         <Divider />
-                                        {isLoggedIn && user?.rol.name === 'jurado1' || user?.rol.name === 'jurado2' && (
+                                        {isLoggedIn && user?.rol.name === 'jurado1' || user?.rol.name === 'jurado2' ? (
                                             <MenuItem onClick={() => push('/jurado')}>Calificar</MenuItem>
+                                        ) : (
+                                            <></>
                                         )}
                                         {isLoggedIn && user?.rol.name === 'postulante' && (
                                             <Box>
-                                                <MenuItem onClick={() => push('/postulant/ficha')} disableRipple>
+                                                <MenuItem onClick={() => push('/postulant/ficha')} >
                                                     <ListItemIcon>
                                                         <ArticleOutlined fontSize="small" />
                                                     </ListItemIcon>

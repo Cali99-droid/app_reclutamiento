@@ -4,7 +4,7 @@ import { useContext, useEffect, } from 'react';
 
 
 import { Grid, Box, Typography, Select, MenuItem, SelectChangeEvent, Paper, Tabs, Tab, Toolbar, AppBar, useMediaQuery } from '@mui/material';
-import { DataGrid, GridColDef, esES } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridToolbar, esES } from '@mui/x-data-grid';
 
 import { useRouter } from 'next/router';
 ;
@@ -15,7 +15,7 @@ import { reclutApi } from '@/apies';
 
 
 import { Paperbase } from '@/components/dash';
-import { useSession } from 'next-auth/react';
+
 import { AuthContext } from '@/context';
 
 
@@ -58,7 +58,7 @@ const UsersPage = () => {
         } catch (error) {
             setUsersList(previosUsers);
             console.log(error);
-            alert('No se pudo actualizar el role del usuario');
+            alert('No se pudo actualizar el rol del usuario');
         }
 
     }
@@ -104,14 +104,14 @@ const UsersPage = () => {
 
     ];
 
-
+    console.log(usersList)
     const rows = usersList.map((user, index) => ({
         id: index + 1,
-        nombres: (user.postulante.persona.apellido_pat + ' ' + user.postulante.persona.apellido_mat + ' ' + user.postulante.persona.nombres).toLocaleUpperCase(),
-        email: user.postulante.persona.user[0].email,
-        rol: user.postulante.persona.user[0].rol_id,
-        estadoPos: user.estado_postulante_id,
-        idUser: user.postulante.persona.user[0].id,
+        nombres: (user.persona.apellido_pat + ' ' + user.persona.apellido_mat + ' ' + user.persona.nombres).toLocaleUpperCase(),
+        email: user.email,
+        rol: user.rol_id,
+        // estadoPos: user.estado_postulante_id,
+        idUser: user.id,
 
     }))
 
@@ -168,6 +168,13 @@ const UsersPage = () => {
                         rows={rows}
                         columns={columns}
                         rowHeight={45}
+                        slots={{ toolbar: GridToolbar }}
+                        slotProps={{
+                            toolbar: {
+                                showQuickFilter: true,
+                                quickFilterProps: { debounceMs: 500 },
+                            },
+                        }}
                     />
 
                 </Box>

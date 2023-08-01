@@ -15,7 +15,7 @@ import { IJob } from '@/interfaces';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Grid, Link, Box, Button, IconButton, Typography, Paper, Toolbar, AppBar, Chip } from '@mui/material';
-import { DataGrid, GridColDef, esES } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridToolbar, esES } from '@mui/x-data-grid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -254,7 +254,13 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
             localeText={esES.components.MuiDataGrid.defaultProps.localeText}
             rows={rows}
             columns={columns}
-
+            slots={{ toolbar: GridToolbar }}
+            slotProps={{
+              toolbar: {
+                showQuickFilter: true,
+                quickFilterProps: { debounceMs: 500 },
+              },
+            }}
           />
 
 

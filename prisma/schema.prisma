@@ -87,7 +87,6 @@ model convocatoria {
   grado                     grado                       @relation(fields: [gradoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_convocatoria_grado1")
   convocatoria_x_jurado     convocatoria_x_jurado[]
   convocatoria_x_user       convocatoria_x_user[]
-  evaluacion_x_postulante   evaluacion_x_postulante[]
   postulante_x_convocatoria postulante_x_convocatoria[]
   puntajes                  puntajes[]
 
@@ -119,13 +118,6 @@ model convocatoria_x_user {
   @@index([user_id], map: "fk_convocatoria_x_user_user1_idx")
 }
 
-model criterio {
-  id                   Int                    @id @default(autoincrement())
-  nombre               String                 @db.VarChar(45)
-  puntaje_max          Int
-  evaluacion_criterios evaluacion_criterios[]
-}
-
 model estado {
   id           Int            @id @default(autoincrement())
   nombre       String         @db.VarChar(80)
@@ -149,46 +141,6 @@ model estudios {
   postulante    postulante @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_estudios_postulante1")
 
   @@index([postulante_id], map: "fk_estudios_postulante1_idx1")
-}
-
-model evaluacion {
-  id                      Int                       @id @default(autoincrement())
-  nombre                  String                    @db.VarChar(45)
-  fecha_creacion          DateTime?                 @db.Date
-  evaluacion_criterios    evaluacion_criterios[]
-  evaluacion_x_postulante evaluacion_x_postulante[]
-}
-
-model evaluacion_criterios {
-  id            Int        @id @default(autoincrement())
-  orden         Int?
-  peso          Int
-  evaluacion_id Int
-  criterio_id   Int
-  criterio      criterio   @relation(fields: [criterio_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evaluacion_criterios_criterio1")
-  evaluacion    evaluacion @relation(fields: [evaluacion_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evaluacion_criterios_evaluacion1")
-
-  @@index([criterio_id], map: "fk_evaluacion_criterios_criterio1_idx")
-  @@index([evaluacion_id], map: "fk_evaluacion_criterios_evaluacion1_idx")
-}
-
-model evaluacion_x_postulante {
-  id              Int          @id @default(autoincrement())
-  puntaje         Int
-  puntaje_max     Int
-  convocatoria_id Int
-  evaluacion_id   Int
-  user_id         Int
-  postulante_id   Int
-  convocatoria    convocatoria @relation(fields: [convocatoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evaluacion_x_postulante_convocatoria1")
-  evaluacion      evaluacion   @relation(fields: [evaluacion_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evaluacion_x_postulante_evaluacion1")
-  postulante      postulante   @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evaluacion_x_postulante_postulante1")
-  user            user         @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_evaluacion_x_postulante_user1")
-
-  @@index([convocatoria_id], map: "fk_evaluacion_x_postulante_convocatoria1_idx")
-  @@index([evaluacion_id], map: "fk_evaluacion_x_postulante_evaluacion1_idx")
-  @@index([postulante_id], map: "fk_evaluacion_x_postulante_postulante1_idx1")
-  @@index([user_id], map: "fk_evaluacion_x_postulante_user1_idx")
 }
 
 model grado {
@@ -255,7 +207,6 @@ model postulante {
   cargo                     cargo[]
   dni_image                 dni_image[]
   estudios                  estudios[]
-  evaluacion_x_postulante   evaluacion_x_postulante[]
   investigacion             investigacion[]
   grado                     grado                       @relation(fields: [gradoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_grado1")
   persona                   persona                     @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_persona1")
@@ -277,12 +228,15 @@ model postulante_x_convocatoria {
   fecha_cambio         DateTime?         @db.DateTime(0)
   session              String?           @db.VarChar(255)
   fecha_comentario     String?           @db.VarChar(60)
+  create_time          DateTime?         @default(now()) @db.Timestamp(0)
+  update_time          DateTime?         @db.Timestamp(0)
   estado_postulante_id Int
   convocatoria_id      Int
   postulante_id        Int
   convocatoria         convocatoria      @relation(fields: [convocatoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_x_convocatoria_convocatoria1")
   estado_postulante    estado_postulante @relation(fields: [estado_postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_x_convocatoria_estado_postulante1")
   postulante           postulante        @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_x_convocatoria_postulante1")
+  puntajes             puntajes[]
 
   @@index([convocatoria_id], map: "fk_postulante_x_convocatoria_convocatoria1_idx")
   @@index([estado_postulante_id], map: "fk_postulante_x_convocatoria_estado_postulante1_idx")
@@ -302,24 +256,28 @@ model puntaje_items {
 }
 
 model puntajes {
-  id              Int             @id @default(autoincrement())
-  total           Int
-  maximo          Int?
-  comentario      String?         @db.VarChar(200)
-  test_id         Int
-  postulante_id   Int
-  user_id         Int
-  convocatoria_id Int
-  puntaje_items   puntaje_items[]
-  convocatoria    convocatoria    @relation(fields: [convocatoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_convocatoria1")
-  postulante      postulante      @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_postulante1")
-  test            test            @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_test1")
-  user            user            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_user1")
+  id                           Int                        @id @default(autoincrement())
+  total                        Int
+  maximo                       Int?
+  comentario                   String?                    @db.VarChar(200)
+  test_id                      Int
+  postulante_id                Int
+  user_id                      Int
+  rol                          Int?
+  convocatoria_id              Int
+  postulante_x_convocatoria_id Int?
+  puntaje_items                puntaje_items[]
+  convocatoria                 convocatoria               @relation(fields: [convocatoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_convocatoria1")
+  postulante                   postulante                 @relation(fields: [postulante_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_postulante1")
+  postulante_x_convocatoria    postulante_x_convocatoria? @relation(fields: [postulante_x_convocatoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_postulante_x_convocatoria1")
+  test                         test                       @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_test1")
+  user                         user                       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_puntajes_user1")
 
   @@index([convocatoria_id], map: "fk_puntajes_convocatoria1_idx")
   @@index([postulante_id], map: "fk_puntajes_postulante1_idx")
   @@index([test_id], map: "fk_puntajes_test1_idx")
   @@index([user_id], map: "fk_puntajes_user1_idx")
+  @@index([postulante_x_convocatoria_id], map: "fk_puntajes_postulante_x_convocatoria1_idx")
 }
 
 model reconocimiento {
@@ -370,21 +328,20 @@ model tipo_documento {
 }
 
 model user {
-  id                      Int                       @id @default(autoincrement())
-  email                   String?                   @unique @db.VarChar(255)
-  password                String                    @db.VarChar(255)
-  create_time             DateTime                  @default(now()) @db.Timestamp(0)
-  token                   String?                   @db.VarChar(100)
-  confirmado              Int?                      @default(0) @db.TinyInt
-  img                     String?                   @db.LongText
-  rol_id                  Int
-  persona_id              Int
-  convocatoria_x_jurado   convocatoria_x_jurado[]
-  convocatoria_x_user     convocatoria_x_user[]
-  evaluacion_x_postulante evaluacion_x_postulante[]
-  puntajes                puntajes[]
-  persona                 persona                   @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_persona1")
-  rol                     rol                       @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_rol")
+  id                    Int                     @id @default(autoincrement())
+  email                 String?                 @unique @db.VarChar(255)
+  password              String                  @db.VarChar(255)
+  create_time           DateTime                @default(now()) @db.Timestamp(0)
+  token                 String?                 @db.VarChar(100)
+  confirmado            Int?                    @default(0) @db.TinyInt
+  img                   String?                 @db.LongText
+  rol_id                Int
+  persona_id            Int
+  convocatoria_x_jurado convocatoria_x_jurado[]
+  convocatoria_x_user   convocatoria_x_user[]
+  puntajes              puntajes[]
+  persona               persona                 @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_persona1")
+  rol                   rol                     @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_rol")
 
   @@index([persona_id], map: "fk_user_persona1_idx")
   @@index([rol_id], map: "fk_user_rol_idx")
