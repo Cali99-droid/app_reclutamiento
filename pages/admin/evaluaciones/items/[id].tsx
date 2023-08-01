@@ -17,7 +17,7 @@ import { Modal } from '@/components/modal';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { reclutApi } from '@/apies';
-import ModalAlert from '../../../../components/modal/ModalAlert';
+
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
