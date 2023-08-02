@@ -104,7 +104,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                             <Item elevation={1}>
                                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                     <Image
-                                        src={(postulante.image === null ? '/avatar.jpg' : `https://caebucket.s3.us-west-2.amazonaws.com/img/${postulante.image}`)}
+                                        src={(postulante.image === null ? '/avatar.jpg' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulante.image}`)}
                                         width={150}
                                         height={150}
                                         alt="Imagen postulante"
@@ -179,12 +179,13 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                         <Grid container spacing={1}>
                                             {
                                                 postulante.dni_image.map((img: any) => (
-                                                    <Grid item xs={12} sm={9} key={img.image}>
+                                                    <Grid item xs={12} sm={6} key={img.image}>
                                                         <Card>
                                                             <CardMedia
+                                                                height={250}
                                                                 component='img'
                                                                 className='fadeIn'
-                                                                image={`https://caebucket.s3.us-west-2.amazonaws.com/img/${img.image || img}`}
+                                                                image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${img.image || img}`}
                                                                 alt={'imagen dni'}
                                                             />
 
