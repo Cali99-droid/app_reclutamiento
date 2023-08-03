@@ -296,7 +296,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                                         <TableCell align="right">{e.grado}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -360,7 +360,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                                         <TableCell align="right">{e.remuneracion}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -464,7 +464,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                                         <TableCell align="right">{e.descripcion}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
