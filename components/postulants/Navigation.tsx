@@ -14,7 +14,7 @@ import { ArticleOutlined, BorderColor, Checklist } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import handler from '../../pages/api/admin/evaluaciones/index';
+
 
 interface Props {
 
