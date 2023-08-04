@@ -1,7 +1,7 @@
 import { prisma } from '@/server/db/client';
 
 import { IEstudio } from "@/interfaces";
-import { Box, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery, IconButton, Fab, Menu, MenuItem, ListItemIcon, Tooltip, Chip, Divider, Card, CardMedia } from '@mui/material';
+import { Box, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery, IconButton, Fab, Menu, MenuItem, ListItemIcon, Tooltip, Chip, Divider, Card, CardMedia, Pagination, Button } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 
@@ -27,7 +27,7 @@ import BiotechIcon from '@mui/icons-material/Biotech';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DevicesIcon from '@mui/icons-material/Devices';
 import { Paperbase } from '@/components/dash';
-import { cargo, investigacion, capacitacion, reconocimiento, tics, aficion } from '@prisma/client';
+import { cargo, investigacion, capacitacion, reconocimiento, tics, aficion, postulante } from '@prisma/client';
 import moment from 'moment';
 import 'moment/locale/es';
 import { DockOutlined } from '@mui/icons-material';
@@ -40,7 +40,7 @@ moment.locale('es');
 interface Props {
     postulante: any,
     estados: any[]
-
+    listaPostulantes: any[]
 }
 export const config = {
     api: {
@@ -74,9 +74,34 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
+const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes }) => {
 
+    let index: number = 0;
     const router = useRouter();
+    const { id, conv } = router.query;
+
+
+    const nextPos = listaPostulantes.filter((p) => p.postulante.id == id)
+    const prevId = listaPostulantes.indexOf(nextPos[0]) - 1
+    const nextId = listaPostulantes.indexOf(nextPos[0]) + 1
+    // console.log(nextPos)
+    const handlePrevious = () => {
+
+
+        if (listaPostulantes[prevId]) {
+            const id = listaPostulantes[prevId].postulante.id;
+            router.push(`/admin/convocatorias/convocatoria/p/${id}?conv=${conv}`);
+        }
+    };
+
+    const handleNext = () => {
+        // const nextId = listaPostulantes.indexOf(nextPos[0]) + 1
+        if (listaPostulantes[nextId]) {
+            const id = listaPostulantes[nextId].postulante.id;
+            router.push(`/admin/convocatorias/convocatoria/p/${id}?conv=${conv}`);
+        }
+    };
+
     const matches = useMediaQuery('(min-width:600px)');
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [ultimo, setUltimo] = useState(false)
@@ -145,19 +170,25 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                         <Link
                             underline="hover"
                             color="inherit"
-                            onClick={() => router.push("/admin/convocatorias")} sx={{ cursor: 'pointer' }}
+                            onClick={() => router.push(`/admin/convocatorias`)} sx={{ cursor: 'pointer' }}
                         >
                             Convocatorias
                         </Link>
-                        <Link underline="hover" sx={{ cursor: 'pointer' }} color="inherit" onClick={() => router.back()}>
+                        <Link underline="hover" sx={{ cursor: 'pointer' }} color="inherit" onClick={() => router.push(`/admin/convocatorias/convocatoria/${conv}`)}>
                             Administrar Convocatoria
                         </Link>
-
                         <Typography fontWeight={'bold'} color="text.primary">{postulante.persona.nombres}</Typography>
                     </Breadcrumbs>
                 </Box>
 
-
+                <Box display={'flex'} justifyContent={'space-between'} mb={2}>
+                    <Button variant="outlined" onClick={handlePrevious} disabled={!listaPostulantes[prevId]}>
+                        Anterior
+                    </Button>
+                    <Button variant="outlined" onClick={handleNext} disabled={!listaPostulantes[nextId]}>
+                        Siguiente
+                    </Button>
+                </Box>
                 <Grid container spacing={2}>
                     <Grid item xs={12} >
                         <Item elevation={1}>
@@ -167,7 +198,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                     </Grid>
 
                     <Grid item xs={12} sm={3}>
-                        <Item elevation={1}>
+                        <Item elevation={1} >
                             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Image
                                     priority
@@ -178,13 +209,29 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                     style={imageStyle}
                                 />
                             </Box>
-                            <Box mt={2} textAlign={'center'}>
-                                <Typography > {postulante.persona.nombres + ' ' + postulante.persona.apellido_pat + ' ' + postulante.persona.apellido_mat}</Typography>
+                            <Box mt={2} textAlign={'center'} padding={2}>
+
+                                <Box display={'flex'} flexDirection={matches ? 'row' : 'column'} justifyContent={'left'} gap={1}>
+                                    <Typography color={'#454555'} fontWeight={'bold'}>Apellido Paterno: </Typography>
+                                    <Typography color={'#454555'}>{postulante.persona.apellido_pat}</Typography>
+                                </Box>
+                                <Box display={'flex'} flexDirection={matches ? 'row' : 'column'} justifyContent={'left'} gap={1}>
+                                    <Typography color={'#454555'} fontWeight={'bold'}>Apellido Materno: </Typography>
+                                    <Typography color={'#454555'}>{postulante.persona.apellido_mat}</Typography>
+                                </Box>
+                                <Box display={'flex'} justifyContent={'left'} gap={1} flexDirection={matches ? 'row' : 'column'}>
+                                    <Typography color={'#454555'} fontWeight={'bold'}>Nombres: </Typography>
+                                    <Typography color={'#454555'}>{postulante.persona.nombres}</Typography>
+                                </Box>
+                                <Box display={'flex'} justifyContent={'left'} gap={1} flexDirection={matches ? 'row' : 'column'}>
+                                    <Typography color={'#454555'} fontWeight={'bold'}>Edad: </Typography>
+                                    <Typography color={'#454555'}>{calcularEdad(postulante.nacimiento)} Años</Typography>
+                                </Box>
+
+                                <Divider />
 
 
-                                <Typography fontSize={12}> {calcularEdad(postulante.nacimiento)} Años</Typography>
-
-                                <Box ml={4} mt={1} display={'flex'} flexDirection={'column'} alignItems={'start'} gap={1}>
+                                <Box mt={1} display={'flex'} flexDirection={'column'} alignItems={'start'} gap={1}>
 
                                     <Box display={'flex'} gap={1}>
 
@@ -214,21 +261,43 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                             </Box>
                         </Item>
                     </Grid>
-                    <Grid item xs={12} sm={9} >
-                        <Item sx={{ height: 'auto' }}>
+                    <Grid item xs={12} sm={9}  >
+                        <Item sx={matches ? { height: 440 } : { height: 'auto' }} >
                             {/* <Typography variant='h2'>Mis datos</Typography> */}
-                            <Box display={'flex'} justifyContent={'space-between'} padding={2}>
-                                <Box display={'flex'} flexDirection={'column'} gap={1}>
-                                    <Typography fontWeight={'bold'}>Numero de Documento: </Typography>{postulante.numeroDocumento}
-                                    <Typography fontWeight={'bold'}>Nacimiento: </Typography>{moment(postulante.nacimiento).add(1, 'days').toDate().toLocaleDateString()}
-                                    <Typography fontWeight={'bold'}>Pretención Salarial: </Typography>S/ {postulante.sueldo}
-                                    <Typography fontWeight={'bold'}>Estado Civil: </Typography>{postulante.estado_civil}
+                            <Box display={'flex'} justifyContent={'space-between'} padding={2} flexDirection={matches ? 'row' : 'column'} >
+                                <Box display={'flex'} flexDirection={'column'} gap={4} >
+                                    <Box>
+                                        <Typography color={'#454555'} fontWeight={'bold'}>Numero de Documento: </Typography>
+                                        <Typography color={'#454555'}>{postulante.numeroDocumento}</Typography>
+                                    </Box>
+                                    <Box>
+                                        <Typography color={'#454555'} fontWeight={'bold'}>Nacimiento: </Typography>
+                                        <Typography color={'#454555'}> {moment(postulante.nacimiento).add(1, 'days').toDate().toLocaleDateString()}</Typography>
+                                    </Box>
+                                    <Box>
+                                        <Typography color={'#454555'} fontWeight={'bold'}>Pretención Salarial:</Typography>
+                                        <Typography color={'#454555'}> S/ {postulante.sueldo}</Typography>
+                                    </Box>
+                                    <Box>
+                                        <Typography color={'#454555'} fontWeight={'bold'}>Estado Civil: </Typography>
+                                        <Typography color={'#454555'}>{postulante.estado_civil || 'Sin Datos'}</Typography>
+                                    </Box>
+
 
                                 </Box>
-                                <Box display={'flex'} flexDirection={'column'} gap={1}>
-                                    <Typography fontWeight={'bold'}>Numero de Hijos: </Typography>{postulante.hijos}
-                                    <Typography fontWeight={'bold'}>Persona con discapacidad: </Typography>{postulante.discapacidad === 0 ? 'No' : 'Si'}
-                                    <Typography fontWeight={'bold'}>Exalumno: </Typography>{postulante.exalumno === 0 ? 'No' : 'Si'}
+                                <Box display={'flex'} flexDirection={'column'} gap={4} mt={matches ? 0 : 3}>
+                                    <Box>
+                                        <Typography color={'#454555'} fontWeight={'bold'}>Numero de Hijos: </Typography>
+                                        <Typography color={'#454555'}>{postulante.hijos || 'Sin Datos'}</Typography>
+                                    </Box>
+                                    <Box>
+                                        <Typography color={'#454555'} fontWeight={'bold'}>Persona con discapacidad:  </Typography>
+                                        <Typography color={'#454555'}>{postulante.discapacidad === 1 ? ' Si ' : 'No'}</Typography>
+                                    </Box>
+                                    <Box>
+                                        <Typography color={'#454555'} fontWeight={'bold'}>Exalumno: </Typography>
+                                        <Typography color={'#454555'}> {postulante.exalumno === 1 ? ' Si ' : 'No'}</Typography>
+                                    </Box>
 
 
                                 </Box>
@@ -236,9 +305,10 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                     <Grid container spacing={1}>
                                         {
                                             postulante.dni_image.map((img: any) => (
-                                                <Grid item xs={12} sm={9} key={img.image}>
+                                                <Grid item xs={12} sm={6} key={img.image}>
                                                     <Card>
                                                         <CardMedia
+                                                            height={250}
                                                             component='img'
                                                             className='fadeIn'
                                                             image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${img.image || img}`}
@@ -252,6 +322,10 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
                                     </Grid>
                                 </Box>
                                 {/* <Box display={'flex'} flexDirection={'column'} gap={2}>
+                                    <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary">
+                                        Editar
+                                    </Button>
+
                                     <Button variant="contained" onClick={() => router.push('/postulant/')} color="primary" >
                                         Exportar PDF
                                     </Button>
@@ -637,7 +711,14 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados }) => {
 
 
                 </Grid>
-
+                <Box display={'flex'} justifyContent={'space-between'} mt={2}>
+                    <Button variant="outlined" onClick={handlePrevious} disabled={!listaPostulantes[prevId]}>
+                        Anterior
+                    </Button>
+                    <Button variant="outlined" onClick={handleNext} disabled={!listaPostulantes[nextId]}>
+                        Siguiente
+                    </Button>
+                </Box>
                 <Fab color="primary" aria-label="add"
                     onClick={handleMenu} sx={{
                         position: 'sticky',
@@ -800,14 +881,31 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             }
         }
     });
+
     const postulante = JSON.parse(JSON.stringify(post))
+
+
+    const listaPostulantes = await prisma.postulante_x_convocatoria.findMany({
+        where: {
+            convocatoria_id: parseInt(conv.toString()),
+
+        },
+        select: {
+            postulante: {
+                select: {
+                    id: true
+                }
+            },
+        }
+    });
+    const postulantes = JSON.parse(JSON.stringify(listaPostulantes))
 
     await prisma.$disconnect();
     return {
         props: {
             postulante,
             estados,
-
+            listaPostulantes,
 
         }
     }

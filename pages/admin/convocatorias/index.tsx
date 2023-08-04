@@ -245,7 +245,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
             </Grid>
           </Toolbar>
         </AppBar>
-        <Box className="fadeIn" padding={2} sx={{ height: 450 }} width={'100%'} textAlign={'center'}>
+        <Box className="fadeIn" padding={2} height={matches ? 400 : 650} width={'100%'} textAlign={'center'}>
 
 
 

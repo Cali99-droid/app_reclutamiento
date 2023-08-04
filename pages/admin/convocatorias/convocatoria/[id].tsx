@@ -4,7 +4,7 @@ import { PostContext } from '@/context';
 
 
 import { GetServerSideProps, NextPage } from "next";
-import { DataGrid, GridCellParams, GridCloseIcon, GridColDef, GridToolbar, esES } from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridCloseIcon, GridColDef, GridColumnVisibilityModel, GridToolbar, esES } from "@mui/x-data-grid";
 import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider, useMediaQuery, Backdrop, CircularProgress, Alert, InputAdornment, FormHelperText } from '@mui/material';
 
 import { calcularEdad } from "@/helpers/functions";
@@ -61,7 +61,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const router = useRouter();
   const { id } = router.query
   const { pos, isLoading } = usePostulantes(`/admin/postulantes/${convocatoria.id}`);
-
+  console.log(pos);
   const [postulantes, setPostulantes] = useState<any[]>([]);
 
   const { calcularTotal, limpiarCriterios, juradosAsignados, addNewJurado, deleteJurado, refreshJurados } = useContext(PostContext);
@@ -255,12 +255,24 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       }
     },
 
-    // {
-    //   field: 'edad',
-    //   headerName: 'Edad',
-    //   width: 100,
+    {
+      field: 'edad',
+      headerName: 'Edad',
+      width: 100,
 
-    // },
+    },
+    {
+      field: 'telefono',
+      headerName: 'Telefono',
+      width: 100,
+
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      width: 250,
+
+    },
 
 
     {
@@ -616,7 +628,10 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     comentario: p.comentario,
     fechaComentario: p.fecha_comentario,
     resultado: p.postulante.puntajes,
-    est: getEstado(p.estado_postulante.nombre, getPuntajeEntrevista(p.postulante.puntajes), getPuntajeJurado(p.postulante.puntajes))
+    est: getEstado(p.estado_postulante.nombre, getPuntajeEntrevista(p.postulante.puntajes), getPuntajeJurado(p.postulante.puntajes)),
+    telefono: p.postulante.telefono,
+    email: p.postulante.persona.user[0].email
+
   }))
 
 
@@ -788,6 +803,12 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     setMonto(event.target.value);
 
   }
+
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>({
+    telefono: false,
+    email: false,
+    edad: false,
+  });
   const matches = useMediaQuery('(min-width:600px)');
   return (
     <Paperbase title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
@@ -957,8 +978,9 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
               </Box>
               <Box
+                height={matches ? 400 : 650}
                 sx={{
-                  height: 400,
+
                   width: '100%',
                   '& .mal': {
                     backgroundColor: '#ff5722',
@@ -995,6 +1017,20 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                       quickFilterProps: { debounceMs: 500 },
                     },
                   }}
+                  initialState={{
+                    columns: {
+                      columnVisibilityModel: {
+                        // Hide columns status and traderName, the other columns will remain visible
+                        telefono: false,
+                        email: false,
+                        edad: false,
+                      },
+                    },
+                  }}
+                // columnVisibilityModel={columnVisibilityModel}
+                // onColumnVisibilityModelChange={(newModel) =>
+                //   setColumnVisibilityModel(newModel)
+                // }
                 />
 
 
