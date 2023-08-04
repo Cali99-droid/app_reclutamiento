@@ -1,10 +1,9 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
-import { cargo, test } from '@prisma/client';
+import {  test } from '@prisma/client';
 
-import aws from 'aws-sdk';
-import AWS from '../../../../aws-config';
+
 
 type Data = 
 |{message: string}
