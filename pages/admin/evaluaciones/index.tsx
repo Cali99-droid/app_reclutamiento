@@ -206,7 +206,7 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
     }
 
   }
-  console.log(tests)
+
   const rows = tests.map((ev: any) => ({
     id: ev.id,
     nombre: ev.nombre,

@@ -185,7 +185,7 @@ model persona {
 model postulante {
   id                        Int                         @id @default(autoincrement())
   telefono                  String?                     @db.VarChar(45)
-  direccion                 String                      @db.VarChar(45)
+  direccion                 String                      @db.VarChar(225)
   experiencia               Int?
   nacimiento                DateTime                    @map("fecha_nacimiento") @db.Date
   numeroDocumento           String?                     @unique(map: "numero_documento_UNIQUE") @map("numero_documento") @db.VarChar(45)
