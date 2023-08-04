@@ -6,7 +6,6 @@ const crearContacto = async (nombre: string, email: string,tokenEmail:string,ape
     firstname: nombre,
     lastname: apellidos,
     email: email,
-
     token:tokenEmail,
     origen:'talento',
     // Otros campos según tus necesidades y configuración en Mautic

@@ -68,6 +68,7 @@ model categoria {
   id           Int            @id @default(autoincrement())
   nombre       String         @db.VarChar(80)
   convocatoria convocatoria[]
+  test         test[]
 }
 
 model convocatoria {
@@ -301,14 +302,17 @@ model rol {
 }
 
 model test {
-  id       Int        @id @default(autoincrement())
-  nombre   String     @db.VarChar(200)
-  rol_id   Int?
-  item     item[]
-  puntajes puntajes[]
-  rol      rol?       @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_rol1")
+  id           Int        @id @default(autoincrement())
+  nombre       String     @db.VarChar(200)
+  rol_id       Int?
+  categoria_id Int?
+  item         item[]
+  puntajes     puntajes[]
+  categoria    categoria? @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_categoria1")
+  rol          rol?       @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_rol1")
 
   @@index([rol_id], map: "fk_test_rol1_idx")
+  @@index([categoria_id], map: "fk_test_categoria1_idx")
 }
 
 model tics {

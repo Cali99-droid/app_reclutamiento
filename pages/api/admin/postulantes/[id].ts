@@ -66,6 +66,11 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
                   total:true,
                   comentario:true,
                   maximo:true,
+                  test:{
+                    select:{
+                      categoria_id:true
+                    }
+                  },
                   user:{
                     select:{
                       persona:{

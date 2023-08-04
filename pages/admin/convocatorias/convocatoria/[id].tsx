@@ -61,7 +61,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const router = useRouter();
   const { id } = router.query
   const { pos, isLoading } = usePostulantes(`/admin/postulantes/${convocatoria.id}`);
-  console.log(pos)
+
   const [postulantes, setPostulantes] = useState<any[]>([]);
 
   const { calcularTotal, limpiarCriterios, juradosAsignados, addNewJurado, deleteJurado, refreshJurados } = useContext(PostContext);
@@ -186,7 +186,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     const resultado = puntajes.forEach(x => {
       //rol de admin
       if (evaluacion) {
-        if (x.user.rol.id === 3 || x.user.rol.id === 4) {
+        if (x.test.categoria_id === 3) {
           puntaje += (x.total / (x._count.puntaje_items));
           puntos += x.total
           jurados += 1
@@ -472,11 +472,12 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
   ];
   const devolverPuntajeEntrevista = (puntajes: any[]) => {
+
     let puntaje = 0;
     let puntos = 0;
     const resultado = puntajes.forEach(x => {
       //rol de admin
-      if (x.user.rol.id === 5) {
+      if (x.test.categoria_id === 3) {
         puntaje += (x.total / x.maximo)
         puntos += x.total
       }
@@ -514,7 +515,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
     const resultado = puntajes.forEach(x => {
       //rol de admin
-      if (x.user.rol.id === 5) {
+      if (x.test.categoria_id === 3) {
         puntaje += (x.total / x.maximo)
 
       } else {
@@ -531,7 +532,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     let maximo = 0;
     const resultado = puntajes.forEach(x => {
 
-      if (x.user.rol.id === 3 || x.user.rol.id === 4) {
+      if (x.test.categoria_id === 1 || x.test.categoria_id === 2) {
         puntaje += (x.total);
         maximo += (x.maximo)
 
@@ -1181,7 +1182,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
         select: { nombre: true },
       },
       categoria: {
-        select: { nombre: true }
+        select: { id: true, nombre: true }
       },
       _count: {
         select: { postulante_x_convocatoria: true }
@@ -1215,7 +1216,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
 
   const items = await prisma.test.findMany({
     where: {
-      rol_id: user.rol_id
+      categoria_id: 3
     },
     select: {
       id: true,

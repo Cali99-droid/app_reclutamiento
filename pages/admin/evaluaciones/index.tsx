@@ -24,6 +24,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { indigo } from '@mui/material/colors';
 import axios from 'axios';
+import { categoria } from '@prisma/client';
 
 
 interface Props {
@@ -53,24 +54,27 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
 
   const [evaluacion, setEvaluacion] = useState('')
   const [rolId, setRolId] = useState(0)
+  const [categoriaId, setCategoriaId] = useState(0)
   const onEvalChange = (event: ChangeEvent<HTMLInputElement>) => {
 
     setEvaluacion(event.target.value);
 
   }
   const agregarEvaluacion = async (evaluacion: string) => {
-    const { data } = await reclutApi.post<any>('/admin/evaluaciones/create', { evaluacion, rolId });
+    const { data } = await reclutApi.post<any>('/admin/evaluaciones/create', { evaluacion, rolId, categoriaId });
     setTests([...tests, data.ev])
     handleClose()
   }
   const editarEvaluacion = async () => {
-    const { data } = await reclutApi.put<any>('/admin/evaluaciones/create', { evaluacion, id, rolId });
+    const { data } = await reclutApi.put<any>('/admin/evaluaciones/create', { evaluacion, id, rolId, categoriaId });
 
     const testsAct = [...tests.map(t => {
       if (t.id === data.ev.id) {
         t.nombre = data.ev.nombre
         t.rol.name = data.ev.rol.name
         t.rol.id = data.ev.rol.id
+        t.categoria_id = data.ev.categoria_id
+        t.categoria.nombre = data.ev.categoria.nombre
       }
       return t;
     })]
@@ -96,11 +100,12 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
     setOpen(false)
   }
 
-  const handleEdit = (id: number, evaluacion: string, rolId: number) => {
+  const handleEdit = (id: number, evaluacion: string, rolId: number, categoriaId: number) => {
     setOpen(true)
     setId(id)
     setEvaluacion(evaluacion)
     setRolId(rolId)
+    setCategoriaId(categoriaId)
 
   }
   const handleClose = () => {
@@ -158,6 +163,9 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
       field: 'responsable', headerName: 'Responsable', width: 300,
     },
     {
+      field: 'categoria', headerName: 'Categoria', width: 200,
+    },
+    {
       field: 'items', headerName: 'N° Items', width: 90,
     },
     {
@@ -167,7 +175,7 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
       renderCell: (params) => {
         return (
           <Box display={'flex'} justifyContent={'end'} width={'100%'}>
-            <IconButton disabled={params.row.postulantes > 0} aria-label="editar" color='info' onClick={() => { handleEdit(params.row.id, params.row.nombre, params.row.rolId) }}  >
+            <IconButton disabled={params.row.postulantes > 0} aria-label="editar" color='info' onClick={() => { handleEdit(params.row.id, params.row.nombre, params.row.rolId, params.row.categoriaId) }}  >
               <EditIcon />
             </IconButton>
 
@@ -184,13 +192,13 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
   ];
   const getResponsable = (rol: string) => {
     switch (rol) {
-      case 'jurado1':
+      case 'docente':
         return 'Jurado Docente'
 
-      case 'jurado2':
+      case 'administrativo':
         return 'Jurado Administrativo'
 
-      case 'jefe':
+      case 'entrevista':
         return 'Jefe RRHH'
 
       default:
@@ -198,12 +206,16 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
     }
 
   }
+  console.log(tests)
   const rows = tests.map((ev: any) => ({
     id: ev.id,
     nombre: ev.nombre,
-    responsable: getResponsable(ev.rol.name),
+    responsable: getResponsable(ev.categoria.nombre),
     items: ev._count.item,
-    rolId: ev.rol.id
+    rolId: ev.rol.id,
+    categoriaId: ev.categoria_id,
+    categoria: ev.categoria.nombre,
+
   }))
 
 
@@ -267,7 +279,7 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
 
           <TextField value={evaluacion} id="outlined-basic" label="Nombre de la evaluación" variant="outlined" onChange={onEvalChange}
           />
-          <FormControl >
+          {/* <FormControl >
             <InputLabel id="select-rol">Rol</InputLabel>
             <Select
               labelId="select-rol"
@@ -282,6 +294,23 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
               <MenuItem value={3}>Jurado Docente</MenuItem>
               <MenuItem value={4}>Jurado Administrativo</MenuItem>
               <MenuItem value={5}>Entrevista RRHH</MenuItem>
+
+            </Select>
+          </FormControl> */}
+
+          <FormControl >
+            <InputLabel id="select-rol">Categoria</InputLabel>
+            <Select
+              labelId="select-rol"
+              id="select-rol"
+              value={categoriaId || 0}
+              label="Age"
+              onChange={(e: SelectChangeEvent<number>) => setCategoriaId(parseInt(e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
+            >
+              <MenuItem value={0} disabled>Seleccione</MenuItem>
+              <MenuItem value={1}>Administrativo</MenuItem>
+              <MenuItem value={2}>Docente</MenuItem>
+              <MenuItem value={3}>Entrevista</MenuItem>
 
             </Select>
           </FormControl>
@@ -306,6 +335,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const evaluaciones = await prisma.test.findMany({
     include: {
       rol: true,
+      categoria: true,
       _count: {
         select: {
           item: true,

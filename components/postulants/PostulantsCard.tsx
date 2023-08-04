@@ -52,7 +52,7 @@ export const PostulantCard: FC<Props> = ({ postulant, index, ses }) => {
                 <CardActionArea >
                     <CardMedia
                         sx={{ height: 220 }}
-                        image={(postulant.image === null ? '/avatar.jpg' : `https://caebucket.s3.us-west-2.amazonaws.com/img/${postulant.image}`)}
+                        image={(postulant.image === null ? '/avatar.jpg' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulant.image}`)}
 
                     />
                     <CardContent>
@@ -117,21 +117,20 @@ export const PostulantCard: FC<Props> = ({ postulant, index, ses }) => {
                             onClick={() => { handleOpen(postulant) }}
                         />
                         {
-                            ses ? (
-                                <Button startIcon={<FileOpen />} variant='outlined' target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${ses}`}>
+                            ses && (
+                                <Button startIcon={<FileOpen />} variant='outlined' target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${ses}`}>
                                     Ver Sesión
-                                </Button>
-                            ) : (
-                                <Chip
-                                    icon={<Warning />}
-                                    label="No subió su sesión"
-                                    variant="outlined"
+                                </Button>)
+                            //  ) : (
+                            //     <Chip
+                            //         icon={<Warning />}
+                            //         label="No subió su sesión"
+                            //         variant="outlined"
+                            //         sx={{ width: '100%' }}
+                            //         color={'warning'}
 
-                                    sx={{ width: '100%' }}
-                                    color={'warning'}
-
-                                />
-                            )
+                            //     />
+                            // )
                         }
 
 

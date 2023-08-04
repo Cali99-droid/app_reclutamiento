@@ -35,6 +35,7 @@ interface Props {
 }
 
 const EvaluarPage: NextPage<Props> = ({ convocatoria, items }) => {
+    console.log(convocatoria)
     const router = useRouter();
     const { id } = router.query
     const { data, error } = useSWR<any[]>(`/api/jurado/postulantes/${id}`);
@@ -93,13 +94,22 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
                 select: {
                     id: true,
                     titulo: true,
-                    estado: true
+                    estado: true,
+                    categoria_id: true
                 }
             },
 
         }
     }
     )
+    if (!convocatoriaSer) {
+        return {
+            redirect: {
+                destination: '/jurado',
+                permanent: false
+            }
+        }
+    }
 
     const convocatorias = await prisma.convocatoria_x_jurado.findMany({
         where: {
@@ -142,7 +152,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
 
     const items = await prisma.test.findMany({
         where: {
-            rol_id: user.rol_id
+            categoria_id: convocatoriaSer.convocatoria.categoria_id
         },
         select: {
             id: true,

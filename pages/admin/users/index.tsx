@@ -104,10 +104,10 @@ const UsersPage = () => {
 
     ];
 
-    console.log(usersList)
+
     const rows = usersList.map((user, index) => ({
         id: index + 1,
-        nombres: (user.persona.apellido_pat + ' ' + user.persona.apellido_mat + ' ' + user.persona.nombres).toLocaleUpperCase(),
+        nombres: (user.persona.apellido_pat.trim() + ' ' + user.persona.apellido_mat + ' ' + user.persona.nombres).toLocaleUpperCase(),
         email: user.email,
         rol: user.rol_id,
         // estadoPos: user.estado_postulante_id,

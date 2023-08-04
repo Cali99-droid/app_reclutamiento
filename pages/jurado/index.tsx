@@ -4,7 +4,7 @@ import { prisma } from '@/server/db/client';
 import { AppBar, Box, Button, Chip, Grid, IconButton, Paper, Toolbar, useMediaQuery } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import { postulante, convocatoria } from '@prisma/client';
+import { postulante, convocatoria, categoria } from '@prisma/client';
 import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 import { IConvocatoriaPostulante, IJob } from "@/interfaces";
@@ -50,6 +50,17 @@ const JuradoPage: NextPage<Props> = ({ convocatorias }) => {
             }
 
         },
+        {
+            field: 'categoria',
+            headerName: 'Categoria',
+            width: 200,
+            renderCell: ({ row }) => {
+                return (
+                    <Chip label={row.categoria} color="info" />
+                )
+            }
+
+        },
 
         {
             field: 'actions', headerName: 'Acciones', width: 200,
@@ -78,7 +89,7 @@ const JuradoPage: NextPage<Props> = ({ convocatorias }) => {
         id: c.convocatoria.id,
         convocatoria: c.convocatoria.titulo,
         estado: c.convocatoria.estado.nombre,
-
+        categoria: c.convocatoria.categoria.nombre
 
     }))
     const matches = useMediaQuery('(min-width:600px)');
@@ -160,7 +171,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
                 select: {
                     id: true,
                     titulo: true,
-                    estado: true
+                    estado: true,
+                    categoria: true
                 }
             },
 

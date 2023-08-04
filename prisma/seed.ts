@@ -17,6 +17,7 @@ async function main() {
     data: [
       { nombre: 'administrativo' },
       { nombre: 'docente' },
+      { nombre: 'entrevista' },
       
     ],
    

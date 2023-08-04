@@ -250,7 +250,7 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
 
 
           <DataGrid
-            getRowHeight={() => 'auto'}
+
             localeText={esES.components.MuiDataGrid.defaultProps.localeText}
             rows={rows}
             columns={columns}
