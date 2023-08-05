@@ -28,6 +28,7 @@ import { useContext } from 'react';
 import { AuthContext } from '@/context';
 import NextLink from 'next/link';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
+import { ModalAlert } from '@/components/modal';
 
 interface Props {
     postulante: any
@@ -188,8 +189,18 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                 image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${img.image || img}`}
                                                                 alt={'imagen dni'}
                                                             />
-
+                                                            <CardActions>
+                                                                <Button
+                                                                    fullWidth
+                                                                    color="info"
+                                                                    href={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${img.image}`}
+                                                                    target='_blank'
+                                                                >
+                                                                    Ver
+                                                                </Button>
+                                                            </CardActions>
                                                         </Card>
+
                                                     </Grid>
                                                 ))
                                             }

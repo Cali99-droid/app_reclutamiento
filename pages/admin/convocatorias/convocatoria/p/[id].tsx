@@ -1,7 +1,7 @@
 import { prisma } from '@/server/db/client';
 
 import { IEstudio } from "@/interfaces";
-import { Box, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery, IconButton, Fab, Menu, MenuItem, ListItemIcon, Tooltip, Chip, Divider, Card, CardMedia, Pagination, Button } from '@mui/material';
+import { Box, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, Breadcrumbs, Link, useMediaQuery, IconButton, Fab, Menu, MenuItem, ListItemIcon, Tooltip, Chip, Divider, Card, CardMedia, Pagination, Button, CardActions } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 
@@ -311,10 +311,19 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
                                                             height={250}
                                                             component='img'
                                                             className='fadeIn'
-                                                            image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${img.image || img}`}
+                                                            image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${img.image}`}
                                                             alt={'imagen dni'}
                                                         />
-
+                                                        <CardActions>
+                                                            <Button
+                                                                fullWidth
+                                                                color="info"
+                                                                href={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${img.image}`}
+                                                                target='_blank'
+                                                            >
+                                                                Ver
+                                                            </Button>
+                                                        </CardActions>
                                                     </Card>
                                                 </Grid>
                                             ))

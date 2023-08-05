@@ -13,6 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import Image from 'next/image';
 import { postulante } from '@prisma/client';
+import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
 interface Props {
     /**
      * Injected by the documentation to work in an iframe.
@@ -233,7 +234,11 @@ export const NavBar = () => {
                                         </MenuItem>
                                         <Divider />
                                         {isLoggedIn && user?.rol.name === 'jurado1' || user?.rol.name === 'jurado2' ? (
-                                            <MenuItem onClick={() => push('/jurado')}>Calificar</MenuItem>
+                                            <MenuItem onClick={() => push('/jurado')}>
+                                                <ListItemIcon>
+                                                    <PlaylistAddCheckCircleIcon />
+                                                </ListItemIcon>
+                                                Calificar</MenuItem>
                                         ) : (
                                             <></>
                                         )}
@@ -326,7 +331,16 @@ export const NavBar = () => {
 
                                 </Link>
                             </NextLink>
+                            {isLoggedIn && user?.rol.name === 'jurado1' || user?.rol.name === 'jurado2' ? (
+                                <NextLink href='/jurado' passHref legacyBehavior>
+                                    <Link alignItems='end'>
+                                        <Typography fontSize={15} color={'#FFF'}>Calificar</Typography>
 
+                                    </Link>
+                                </NextLink>
+                            ) : (
+                                <></>
+                            )}
                         </Box>
 
 
