@@ -25,7 +25,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 }
 
 const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const {evaluacion,rolId,categoriaId} = req.body
+    const {evaluacion,rolId,categoriaId} = req.body;
+
+    const ev= await prisma.test.findMany({
+        where:{
+            categoria_id:categoriaId,
+        }
+    });
+    if(ev){
+        return res.status(404).json({ message: 'No se puede crear mas de una evaluación para esta categoría' });
+    }
     try {
         const  ev = await prisma.test.create({
            data:{
@@ -55,7 +64,25 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
      }
 }
 async function editEvaluacion(req: NextApiRequest, res: NextApiResponse<Data>) {
+
+
+
     const {evaluacion,id,rolId,categoriaId} = req.body
+    const ev = await prisma.test.findFirst({
+        where:{
+            categoria_id:categoriaId,
+           
+        }
+    });
+
+    if(ev){
+      if(ev.id !== id){
+        return res.status(404).json({ message: 'No se puede asignar mas de una evaluación para esta categoría' });
+    }
+
+    }
+
+    
     try {
         const  ev = await prisma.test.update({
             data:{

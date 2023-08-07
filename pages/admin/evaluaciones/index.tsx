@@ -61,24 +61,64 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
 
   }
   const agregarEvaluacion = async (evaluacion: string) => {
-    const { data } = await reclutApi.post<any>('/admin/evaluaciones/create', { evaluacion, rolId, categoriaId });
-    setTests([...tests, data.ev])
+    try {
+      const { data } = await reclutApi.post<any>('/admin/evaluaciones/create', { evaluacion, rolId, categoriaId });
+      setTests([...tests, data.ev])
+      toast.success('Actualizado con éxito', {
+        theme: "colored",
+
+      })
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message, {
+          theme: "colored",
+
+        });
+        return {
+          hasError: true,
+          message: error.response?.data.message
+        }
+      }
+      console.log(error);
+
+    }
+
+
     handleClose()
   }
   const editarEvaluacion = async () => {
-    const { data } = await reclutApi.put<any>('/admin/evaluaciones/create', { evaluacion, id, rolId, categoriaId });
 
-    const testsAct = [...tests.map(t => {
-      if (t.id === data.ev.id) {
-        t.nombre = data.ev.nombre
-        t.rol.name = data.ev.rol.name
-        t.rol.id = data.ev.rol.id
-        t.categoria_id = data.ev.categoria_id
-        t.categoria.nombre = data.ev.categoria.nombre
+    try {
+      const { data } = await reclutApi.put<any>('/admin/evaluaciones/create', { evaluacion, id, rolId, categoriaId });
+
+      const testsAct = [...tests.map(t => {
+        if (t.id === data.ev.id) {
+          t.nombre = data.ev.nombre
+          t.rol.name = data.ev.rol.name
+          t.rol.id = data.ev.rol.id
+          t.categoria_id = data.ev.categoria_id
+          t.categoria.nombre = data.ev.categoria.nombre
+        }
+        return t;
+      })]
+      setTests(testsAct)
+      toast.success('Actualizado con éxito', {
+        theme: "colored",
+
+      })
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message, {
+          theme: "colored",
+
+        });
+        return {
+          hasError: true,
+          message: error.response?.data.message
+        }
       }
-      return t;
-    })]
-    setTests(testsAct)
+    }
+
     handleClose()
   }
   const handleConfirm = () => {
@@ -86,16 +126,16 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
       toast.warning('Complete correctamente todos los campos')
       return;
     };
-    if (rolId <= 0) {
+    if (categoriaId <= 0) {
       toast.warning('Complete correctamente todos los campos')
       return;
     };
     if (id) {
       editarEvaluacion()
-      toast.success('Actualizado con éxito')
+
     } else {
       agregarEvaluacion(evaluacion);
-      toast.success('Actualizado con éxito')
+
     }
     setOpen(false)
   }
