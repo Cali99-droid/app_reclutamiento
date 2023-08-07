@@ -34,7 +34,7 @@ interface Props {
 
 const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
 
-  const { jobs } = useJobs('/convocatorias/')
+  const { jobs } = useJobs('/admin/convocatorias')
 
   // const [convocatorias, setConvocatorias] = useState<IJob[]>(jobs)
   // console.log(convocatorias)
