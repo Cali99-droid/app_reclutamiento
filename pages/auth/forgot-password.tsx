@@ -45,7 +45,7 @@ const ConfirmPage = () => {
 
 
     return (
-        <AuthLayout title={"Para recuperar tu contraseña, ingresa tu correo  "} >
+        <AuthLayout title={"Para recuperar tu contraseña, ingresa tu correo"} >
 
             <Box bgcolor={'#FFF'} padding={4} className={'fadeIn'}>
                 <Typography>Ingresa tu correo</Typography>

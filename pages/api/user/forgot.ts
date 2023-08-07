@@ -11,7 +11,7 @@ import { generarId } from '@/helpers/functions';
 import sendConfirmationEmail from '@/helpers/sendConfirmationEmail';
 import { prisma } from '../../../server/db/client';
 import { checkUserEmailPassword } from '../../../database/dbUser';
-import sendTokenPassword from '@/helpers/sendTokenPassword';
+import {sendEmail} from '@/helpers/sendTokenPassword';
 
 
 type Data = 
@@ -81,15 +81,21 @@ const findEmail = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
    
     
       /**Enviar email de confirmacion */
-     await sendTokenPassword(email, tokenEmail)
+      try {
+         await sendEmail(email,'Recuperar contraseña - Colegio AE ', tokenEmail)
+            await prisma.$disconnect()
+            return res.status(200).json({message:'Correo enviado' })
+      } catch (error) {
+        console.log(error)
+        return res.status(500).json({message:'Error' })
+      }
+    
     //  console.log(tokenEmail)
-    await prisma.$disconnect()
-
    
    
 
 
-    return res.status(200).json({message:'Correo enviado' })
+   
 
 
 }
