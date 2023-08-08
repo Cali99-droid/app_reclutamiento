@@ -130,9 +130,9 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 
 
   return {
-    paths: productSlugs.map(({ id }) => ({
+    paths: productSlugs.map(({ slug }) => ({
       params: {
-        id: id.toString()
+        slug: slug!
       }
     })),
     fallback: 'blocking'
