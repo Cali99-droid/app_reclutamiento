@@ -13,6 +13,7 @@ import moment from 'moment';
 
 
 
+
 interface Props {
     job: IJob;
 }
@@ -26,6 +27,7 @@ export const JobCard: FC<Props> = ({ job }) => {
             sm={4}
 
         >
+
             <Card sx={{ bgcolor: '#eeeeee' }} >
 
                 <NextLink href={`/convocatorias/${job.slug}`} passHref prefetch={false} legacyBehavior>
@@ -49,14 +51,14 @@ export const JobCard: FC<Props> = ({ job }) => {
 
 
                                     {/* <Typography sx={{ color: '#767687' }} fontWeight={800} gutterBottom variant='body2'  >
-                                        {job.descripcion}
-                                    </Typography> */}
+                        {job.descripcion}
+                    </Typography> */}
 
                                 </Box>
 
                                 {/* <Typography variant="body2" color="text.secondary">
-                                    {job.descripcion}
-                                </Typography> */}
+                    {job.descripcion}
+                </Typography> */}
                                 <Divider />
                                 <ReqList job={job} />
                                 <Box mt={1}>
@@ -82,6 +84,8 @@ export const JobCard: FC<Props> = ({ job }) => {
 
                 </CardActions>
             </Card>
+
+
 
         </Grid>
     )

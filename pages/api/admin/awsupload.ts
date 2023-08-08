@@ -44,7 +44,7 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
        const folder = process.env.FOLDER_IMG_NAME;
        const fileName = `${folder}${uniqueFileName}`;
     const s3 = new AWS.S3();
-    console.log(process.env.BUCKET_NAME)
+  
     try {
 
         

@@ -17,6 +17,7 @@ export const JobList: FC<Props> = ({ jobs }) => {
       spacing={2} marginTop={2} padding={2} borderRadius={4} >
       {
         jobs.map(job => (
+
           <JobCard key={job.id} job={job} />
         ))
       }

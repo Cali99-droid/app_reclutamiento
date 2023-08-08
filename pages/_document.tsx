@@ -14,7 +14,6 @@ export default function Document() {
         <link rel="icon" href="/logo.ico" /> {/* Cambia la ruta si tu favicon se llama de forma diferente */}
         <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet" />
 
-
         <noscript>
           <img height="1" width="1" alt='pixel' style={{ display: 'none' }}
             src="https://www.facebook.com/tr?id=1332356400685254&ev=PageView&noscript=1"

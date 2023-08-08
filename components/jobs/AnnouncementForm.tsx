@@ -67,7 +67,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
     }
 
     const [fecha, setFecha] = useState<Dayjs | null>(vig);
-    console.log(fecha)
+
     const fileInputRef = useRef<HTMLInputElement>(null)
 
 
@@ -79,7 +79,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                     .replaceAll("'", '')
                     .normalize('NFD')
                     .replaceAll(/[\u0300-\u036f]/g, '')
-                    .replaceAll(/[^a-zA-Z0-9]/g, '_')
+                    .replaceAll(/[^a-zA-Z0-9]/g, '-')
                     .replaceAll(/ñ/g, 'n')
 
 

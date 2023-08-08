@@ -3,6 +3,7 @@ import { SessionProvider, signOut, useSession } from "next-auth/react"
 import '@/styles/globals.css'
 import '@/styles/coustom-sweet.css'
 import '@/styles/custom-quill-styles.css'
+import 'atropos/css'
 import { lightTheme } from '@/themes'
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { CssBaseline, ThemeProvider } from '@mui/material'
