@@ -58,7 +58,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       categoria_id: null,
       vigencia: null,
       img: null,
-      slug: null
+      slug: ""
     }
     jobSer = jobTemp;
 
