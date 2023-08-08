@@ -75,8 +75,14 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
         const subscription = watch((value, { name, type }) => {
             if (name === 'titulo') {
                 const newSlug = value.titulo?.trim()
-                    .replaceAll(' ', '_')
+
                     .replaceAll("'", '')
+                    .normalize('NFD')
+                    .replaceAll(/[\u0300-\u036f]/g, '')
+                    .replaceAll(/[^a-zA-Z0-9]/g, '_')
+                    .replaceAll(/ñ/g, 'n')
+
+
                     .toLocaleLowerCase() || '';
 
                 setValue('slug', newSlug);
