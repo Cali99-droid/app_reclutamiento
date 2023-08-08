@@ -132,7 +132,7 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
   return {
     paths: productSlugs.map(({ slug }) => ({
       params: {
-        slug: slug!
+        slug: slug!.toString()
       }
     })),
     fallback: 'blocking'
