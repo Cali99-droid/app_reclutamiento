@@ -47,7 +47,7 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     
     // Genera un nombre único para el archivo
     const uniqueFileName = `${uuidv4()}.${name.split('.').pop()}`;
-    const folder = 'docs/';
+    const folder = process.env.FOLDER_DOCS_NAME;
     const fileName = `${folder}${uniqueFileName}`;
     const s3 = new AWS.S3();
  
