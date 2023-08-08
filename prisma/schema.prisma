@@ -82,6 +82,7 @@ model convocatoria {
   vacantes                  Int
   img                       String?                     @db.VarChar(225)
   vigencia                  DateTime?                   @db.Date
+  slug                      String?                     @db.VarChar(255)
   categoria_id              Int?
   categoria                 categoria?                  @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_convocatoria_categoria1")
   estado                    estado                      @relation(fields: [estadoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_convocatoria_estado1")

@@ -166,7 +166,8 @@ const updateConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
             estadoId:        1,
             gradoId:         parseInt(convo.gradoId.toString()),
             vigencia:  new Date(convo.vigencia),
-            img:convo.img
+            img:convo.img,
+            slug: convo.slug,
         },
       })
 
@@ -201,7 +202,8 @@ const createConvocatoria = async(req: NextApiRequest, res: NextApiResponse<Data>
                 estadoId:         1,
                 gradoId:           parseInt(convo.gradoId.toString()),
                 categoria_id:           parseInt(convo.categoria_id.toString()),
-                img:convo.img
+                img:convo.img,
+                slug: convo.slug,
             },
         })
 

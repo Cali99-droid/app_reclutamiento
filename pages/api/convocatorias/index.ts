@@ -39,6 +39,7 @@ const getConvocatorias = async(req: NextApiRequest, res: NextApiResponse<Data>) 
             vacantes:true,
             experiencia:true,
             vigencia:true,
+            slug:true,
             estado:{
               select: {  nombre: true},  
             },

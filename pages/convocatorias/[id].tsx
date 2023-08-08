@@ -142,9 +142,9 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
 
-  const convo = await prisma.convocatoria.findUnique({
+  const convo = await prisma.convocatoria.findFirst({
     where: {
-      id: Number(params?.id),
+      slug: params?.id?.toString(),
     },
     include: {
       estado: {

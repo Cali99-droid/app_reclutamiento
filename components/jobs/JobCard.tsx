@@ -28,7 +28,7 @@ export const JobCard: FC<Props> = ({ job }) => {
         >
             <Card sx={{ bgcolor: '#eeeeee' }} >
 
-                <NextLink href={`/convocatorias/${job.id}`} passHref prefetch={false} legacyBehavior>
+                <NextLink href={`/convocatorias/${job.slug}`} passHref prefetch={false} legacyBehavior>
 
                     <Link>
                         <CardActionArea >

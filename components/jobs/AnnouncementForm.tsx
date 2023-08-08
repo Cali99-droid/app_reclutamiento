@@ -7,7 +7,7 @@ import { NextPage } from 'next';
 import { IGrado, IJob } from '@/interfaces';
 
 import { reclutApi } from '@/apies';
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 
 import { ModalAlert } from '../modal/ModalAlert';
@@ -38,6 +38,7 @@ type FormData = {
     gradoId: number;
     estadoId: number;
     categoria_id: number | null;
+    slug: string;
     img: string;
 };
 
@@ -49,7 +50,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
     }
 
-    const { register, handleSubmit, formState: { errors }, getValues, setValue } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({
         defaultValues: job
     })
     const router = useRouter();
@@ -70,6 +71,19 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
     const fileInputRef = useRef<HTMLInputElement>(null)
 
 
+    useEffect(() => {
+        const subscription = watch((value, { name, type }) => {
+            if (name === 'titulo') {
+                const newSlug = value.titulo?.trim()
+                    .replaceAll(' ', '_')
+                    .replaceAll("'", '')
+                    .toLocaleLowerCase() || '';
+
+                setValue('slug', newSlug);
+            }
+        });
+        return () => subscription.unsubscribe();
+    }, [watch, setValue])
     const onRegisterForm = async (form: FormData) => {
         if (!fecha) {
             Swal.fire({
@@ -375,6 +389,22 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
                             </FormControl>
                         </Grid>
+                        <Grid item xs={12} md={12}>
+                            <FormLabel sx={{ mb: 1 }}>Slug - URL</FormLabel>
+                            <TextField
+
+
+                                fullWidth
+                                sx={{ mb: 1 }}
+                                {...register('slug', {
+                                    required: 'Este campo es requerido',
+                                    validate: (val) => val.trim().includes(' ') ? 'No puede tener espacios en blanco' : undefined
+                                })}
+                                error={!!errors.slug}
+                                helperText={errors.slug?.message}
+                            />
+                        </Grid>
+
                         <Grid item xs={12} md={4}>
                             <Typography sx={{ display: loadImg ? 'block' : 'none' }} >Cargando...</Typography>
                             <LinearProgress sx={{ display: loadImg ? 'block' : 'none' }} />
