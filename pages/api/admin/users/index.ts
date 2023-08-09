@@ -55,7 +55,13 @@ if(session.user?.rol_id === 2){
 
         },
         where:{
-            rol_id:7
+            rol_id:{
+                not:2
+            },AND:{
+                rol_id:{
+                    not:1
+                }
+            }
         }
     }); 
 }
