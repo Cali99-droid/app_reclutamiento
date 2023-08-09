@@ -61,6 +61,7 @@ async function main() {
       { name: 'jurado2' },
       { name: 'jefe' },
       { name: 'asistente' },
+      { name: 'trabajador' },
 
       
     ],

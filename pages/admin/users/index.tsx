@@ -90,11 +90,13 @@ const UsersPage = () => {
                     >
 
                         <MenuItem value={2} disabled={user?.rol_id === 5 || user?.rol_id === 6}>Administrador</MenuItem>
-                        <MenuItem value={1}>{params.row.estadoPos === 7 ? 'Contratado' : 'Postulante'}</MenuItem>
+                        <MenuItem value={1}> Postulante</MenuItem>
                         <MenuItem value={3}>Jurado Docente</MenuItem>
                         <MenuItem value={4}>Jurado Administrativo</MenuItem>
                         <MenuItem value={5} disabled={user?.rol_id === 5 || user?.rol_id === 6}>Jefe RRHH</MenuItem>
                         <MenuItem value={6} disabled={user?.rol_id === 6}>Asistente RRHH</MenuItem>
+                        <MenuItem value={7} disabled={user?.rol_id === 6}>Trabajador</MenuItem>
+
                     </Select>
 
                 )

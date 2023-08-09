@@ -1,7 +1,7 @@
 import { IJob } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
-import { capacitacion } from '@prisma/client';
+import { capacitacion, persona } from '@prisma/client';
 
 
 
@@ -105,6 +105,23 @@ const postContrato = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
             fecha_cambio: new Date()
           
         },
+      })
+
+      const per = await prisma.postulante.findFirst({
+        where:{
+            id:idPos
+        },
+        select:{
+            persona:true
+        }
+      })
+
+      const user = await prisma.user.updateMany({
+        data:{
+            rol_id:7
+        },where:{
+            persona_id:per?.persona.id
+        }
       })
 
       

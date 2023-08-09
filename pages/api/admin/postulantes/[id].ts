@@ -1,7 +1,7 @@
 import { IJob } from '@/interfaces';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
-import { convocatoria, postulante, user, item } from '@prisma/client';
+import { convocatoria, postulante, user, item, persona } from '@prisma/client';
 import { getSession } from 'next-auth/react';
 import moment from 'moment-timezone';
 import { getServerSession } from 'next-auth';
@@ -146,6 +146,26 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<any>) 
         
       }
     })
+
+    const post = await prisma.postulante.findFirst({
+      where:{
+        id:p.postulante_id
+      },select:{
+        persona:true
+      }
+    })
+
+    const user = await prisma.user.updateMany({
+      data:{
+        rol_id:1
+      },where:{
+        persona_id:post?.persona.id
+      }
+    })
+
+    
+
+
 
 //TODO agregar a historial
 // await prisma.historial.create({

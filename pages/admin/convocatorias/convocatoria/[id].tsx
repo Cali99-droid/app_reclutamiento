@@ -63,6 +63,9 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const router = useRouter();
   const { id } = router.query
   const { pos, isLoading } = usePostulantes(`/admin/postulantes/${convocatoria.id}`);
+  // const seleccionados = pos.filter(d => d.estado_postulante_id === 7)
+  // const contratados = pos.filter(d => d.estado_postulante_id === 7)
+  // const descartados = pos.filter(d => d.estado_postulante_id === 4)
 
   const [postulantes, setPostulantes] = useState<any[]>([]);
 
@@ -109,6 +112,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
 
   useEffect(() => {
+    console.log('uf')
     if (pos) {
 
       refreshJurados()
@@ -121,16 +125,14 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       if ((convocatoria.vacantes - contratados.length) === 0) {
 
         cerrarConcocatoria()
-      } else {
-
       }
-      if (filtrando) {
-        setPostulantes(aptos);
-      } else {
 
+
+      if (!filtrando) {
         setPostulantes(descartados)
+      } else {
+        setPostulantes(aptos)
       }
-
 
       setSeleccionados(seleccionados);
       setDescartados(descartados);
@@ -824,10 +826,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     edad: false,
   });
   const matches = useMediaQuery('(min-width:600px)');
-  const [load, setLoad] = useState(true)
-  setTimeout(() => {
-    setLoad(false)
-  }, 2000);
+
   return (
     <Paperbase title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
       <ToastContainer />
@@ -842,7 +841,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       {isLoading
         ? <FullScreenLoading />
         :
-        <Box sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible', position: 'relative', } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} className="fadeIn"  >
+        <Box sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible', position: 'relative', } : { maxWidth: 400, margin: 'auto', overflow: 'visible' }} className="fadeIn"  >
           <Box mb={2}>
             <Breadcrumbs aria-label="breadcrumb">
               <Link underline="hover" color="inherit" onClick={() => router.push("/admin/convocatorias")} sx={{ cursor: 'pointer' }}>
@@ -1019,7 +1018,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                 }} >
 
                 <DataGrid
-                  loading={load}
+                  loading={isLoading}
                   localeText={esES.components.MuiDataGrid.defaultProps.localeText}
                   rows={rows}
                   columns={columns}

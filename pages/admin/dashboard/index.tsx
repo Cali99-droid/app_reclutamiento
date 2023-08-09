@@ -158,7 +158,7 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
     ];
 
     const darBaja = async (id: number) => {
-        console.log(id);
+
         // return;
         try {
 

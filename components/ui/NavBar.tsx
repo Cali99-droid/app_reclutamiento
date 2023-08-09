@@ -242,7 +242,7 @@ export const NavBar = () => {
                                         ) : (
                                             <></>
                                         )}
-                                        {isLoggedIn && user?.rol.name === 'postulante' && (
+                                        {isLoggedIn && user?.rol.name === 'postulante' || user?.rol.name === 'trabajador' && (
                                             <Box>
                                                 <MenuItem onClick={() => push('/postulant/ficha')} >
                                                     <ListItemIcon>
