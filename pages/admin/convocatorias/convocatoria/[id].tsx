@@ -434,7 +434,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                         <IconButton
                           sx={{ color: green[800] }}
                           aria-label="negocias"
-                          disabled={params.row.puntajeJur < 30 || (convocatoria.vacantes - contratados.length) === 0}
+                          disabled={params.row.puntajeJur < 30 || (convocatoria.vacantes - contratados.length) === 0 || params.row.estado === 'Contratado'}
                           onClick={() => { handleOpenContrato(params.row.idCp, params.row.idPos) }}
                         >
                           <GavelIcon />
@@ -824,6 +824,10 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     edad: false,
   });
   const matches = useMediaQuery('(min-width:600px)');
+  const [load, setLoad] = useState(true)
+  setTimeout(() => {
+    setLoad(false)
+  }, 2000);
   return (
     <Paperbase title={`Administrar convocatoria: ${convocatoria.titulo} `} subTitle={"Resumen"}>
       <ToastContainer />
@@ -1015,6 +1019,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                 }} >
 
                 <DataGrid
+                  loading={load}
                   localeText={esES.components.MuiDataGrid.defaultProps.localeText}
                   rows={rows}
                   columns={columns}
