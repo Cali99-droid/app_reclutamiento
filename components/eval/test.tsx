@@ -60,7 +60,7 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
     }
     const handleConfirmClase = async () => {
         //TODO validar actualizacion o creacion  */
-
+        console.log(idPos)
         try {
 
             const resp = await reclutApi.post('/evaluar', { itemValues, totalSum, idTest, idPos, idUser, id, comentario });

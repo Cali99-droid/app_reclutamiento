@@ -259,7 +259,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                     <TableCell align="right">{e.year}</TableCell>
                                                                     <TableCell align="right">
 
-                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
                                                                             <FilePresentIcon />
                                                                         </IconButton>
                                                                     </TableCell>
@@ -324,7 +324,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                     <TableCell align="right">{e.remuneracion}</TableCell>
                                                                     <TableCell align="right">
 
-                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
                                                                             <FilePresentIcon />
                                                                         </IconButton>
                                                                     </TableCell>
@@ -438,7 +438,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                     <TableCell align="right">{e.descripcion}</TableCell>
                                                                     <TableCell align="right">
 
-                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${e.doc}`}>
+                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
                                                                             <FilePresentIcon />
                                                                         </IconButton>
                                                                     </TableCell>
@@ -481,6 +481,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                 <StyledTableCell align="right">Institución</StyledTableCell>
                                                                 <StyledTableCell align="right">Año</StyledTableCell>
                                                                 <StyledTableCell align="right">Descripción</StyledTableCell>
+                                                                <StyledTableCell align="right">Doc</StyledTableCell>
 
                                                             </TableRow>
                                                         </TableHead>
@@ -497,7 +498,12 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
 
                                                                     <TableCell align="right">{e.year}</TableCell>
                                                                     <TableCell align="right">{e.descripcion}</TableCell>
+                                                                    <TableCell align="right">
 
+                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
+                                                                            <FilePresentIcon />
+                                                                        </IconButton>
+                                                                    </TableCell>
                                                                 </TableRow>
                                                             ))}
                                                         </TableBody>

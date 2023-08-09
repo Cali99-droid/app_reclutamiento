@@ -38,6 +38,8 @@ async function createPostulancion(req: NextApiRequest, res: NextApiResponse<Data
 
     })
 
+   
+
     if(convocatorias.length >0){
         return res.status(400).json({
             message: 'No puede postular dos veces'
@@ -50,6 +52,22 @@ async function createPostulancion(req: NextApiRequest, res: NextApiResponse<Data
             estado_postulante_id:1
         }
     })
+    const onBlacklist = await prisma.blacklist.findFirst({
+        where:{
+            postulante_id:idPostulante
+        }
+    })
+
+    if(onBlacklist){
+     const descartadr =    await prisma.postulante_x_convocatoria.update({
+        data:{
+            estado_postulante_id:4,
+        },where:{
+            id:convocatoriaPostulante.id
+        }
+     })
+
+    }
     await prisma.$disconnect()
     return res.status(200).json(convocatoriaPostulante);
 }

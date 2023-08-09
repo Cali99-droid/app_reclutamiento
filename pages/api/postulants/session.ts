@@ -49,9 +49,10 @@ async function  postSession(req: NextApiRequest, res: NextApiResponse<any>) {
    if(pc){
     if(pc.session !== doc){
         const s3 = new AWS.S3();
+        const folder = process.env.FOLDER_DOCS_NAME!;
         const deleteParams: aws.S3.DeleteObjectRequest = {
             Bucket: process.env.BUCKET_NAME!,
-            Key: 'docs/'+ pc.session,
+            Key: folder + pc.session,
         };
         const resp = await s3.deleteObject(deleteParams).promise();
         console.log('se elimino el documento', resp)

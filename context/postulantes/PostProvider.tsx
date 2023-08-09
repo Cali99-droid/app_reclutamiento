@@ -104,7 +104,7 @@ export const PostProvider: FC<Props> = ({ children }) => {
       const [openClase, setOpenClase] = useState(false)
 
       const handleOpenClase = (id: number) => {
-
+            console.log('abrio')
             if (user?.rol_id === 3) {
                   setOpenClase(true);
             }

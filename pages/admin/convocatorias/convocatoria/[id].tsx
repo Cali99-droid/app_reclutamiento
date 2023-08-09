@@ -47,6 +47,8 @@ import { InfoOutlined, Send } from '@mui/icons-material';
 import ModalEval from '@/components/eval/test';
 import confetti from 'canvas-confetti';
 import { postulante } from '@prisma/client';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 interface Props {
   postulantes: postulante[]
@@ -61,7 +63,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const router = useRouter();
   const { id } = router.query
   const { pos, isLoading } = usePostulantes(`/admin/postulantes/${convocatoria.id}`);
-  console.log(pos);
+
   const [postulantes, setPostulantes] = useState<any[]>([]);
 
   const { calcularTotal, limpiarCriterios, juradosAsignados, addNewJurado, deleteJurado, refreshJurados } = useContext(PostContext);
@@ -80,6 +82,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   }
 
   const [idEv, setIdEv] = useState<string | number>('');
+  const [idPosConv, setIdPosConv] = useState<string | number>('');
   const [idPos, setIdPos] = useState<string | number>('');
 
   const [messageModal, setMessageModal] = useState(false)
@@ -89,7 +92,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const sendMessage = async () => {
 
     try {
-      const { data } = await reclutApi.post(`/admin/postulantes/1`, { idPos, message });
+      const { data } = await reclutApi.post(`/admin/postulantes/1`, { idPosConv, message });
       setLastMessage(data.p.comentario)
       setFechaComennt(data.p.fecha_comentario)
       setMessage('');
@@ -106,8 +109,6 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
 
   useEffect(() => {
-
-
     if (pos) {
 
       refreshJurados()
@@ -395,7 +396,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
         function handleOpenMessage(id: any, comentario: string, fecha: string) {
           setMessageModal(true)
-          setIdPos(id)
+          setIdPosConv(id)
           setLastMessage(comentario)
           setFechaComennt(fecha)
         }
@@ -434,7 +435,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                           sx={{ color: green[800] }}
                           aria-label="negocias"
                           disabled={params.row.puntajeJur < 30 || (convocatoria.vacantes - contratados.length) === 0}
-                          onClick={() => { handleOpenContrato(params.row.idCp) }}
+                          onClick={() => { handleOpenContrato(params.row.idCp, params.row.idPos) }}
                         >
                           <GavelIcon />
                         </IconButton>
@@ -638,8 +639,9 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
   const [open, setOpen] = useState(false)
   const handleOpen = (id: number) => {
+
     setOpen(true);
-    setIdPos(id)
+    setIdPosConv(id)
     setIdEv(1)
   };
 
@@ -654,7 +656,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
     try {
 
-      const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPos, idEv, max: 50, idUser });
+      const resp = await reclutApi.post('/admin/evaluaciones', { id, puntaje, idPosConv, idEv, max: 50, idUser });
 
       toast.success('🦄 Puntaje asignado correctamente!'),
         limpiarCriterios()
@@ -775,7 +777,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     }
 
     try {
-      const { data } = await reclutApi.post(`/admin/contratar`, { idPos, monto });
+      const { data } = await reclutApi.post(`/admin/contratar`, { idPosConv, monto, idPos });
       setOpenContrato(false)
       confetti({
         particleCount: 300,
@@ -785,11 +787,23 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       toast.success('🦄 Tenemos un nuevo contratado')
 
     } catch (error) {
+      setOpenContrato(false);
+      if (axios.isAxiosError(error)) {
+        setOpenContrato(false);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: error.response?.data.message,
+          footer: `<a href='${process.env.NEXT_PUBLIC_URL_BASE}admin/convocatorias/convocatoria/p/${idPos}?conv=${id}'>Revisar ficha del postulante</a>`
+        })
+
+      }
       console.log(error)
     }
   }
 
-  const handleOpenContrato = (idPos: number) => {
+  const handleOpenContrato = (idPosConv: number, idPos: number) => {
+    setIdPosConv(idPosConv)
     setIdPos(idPos)
     setOpenContrato(true);
   }

@@ -27,7 +27,7 @@ import BiotechIcon from '@mui/icons-material/Biotech';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DevicesIcon from '@mui/icons-material/Devices';
 import { Paperbase } from '@/components/dash';
-import { cargo, investigacion, capacitacion, reconocimiento, tics, aficion, postulante } from '@prisma/client';
+import { cargo, investigacion, capacitacion, reconocimiento, tics, aficion, postulante, convocatoria } from '@prisma/client';
 import moment from 'moment';
 import 'moment/locale/es';
 import { DockOutlined } from '@mui/icons-material';
@@ -41,6 +41,7 @@ interface Props {
     postulante: any,
     estados: any[]
     listaPostulantes: any[]
+    pxc: any[]
 }
 export const config = {
     api: {
@@ -74,7 +75,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes }) => {
+const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes, pxc }) => {
 
     let index: number = 0;
     const router = useRouter();
@@ -298,8 +299,16 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
                                         <Typography color={'#454555'} fontWeight={'bold'}>Exalumno: </Typography>
                                         <Typography color={'#454555'}> {postulante.exalumno === 1 ? ' Si ' : 'No'}</Typography>
                                     </Box>
+                                    <Box>
+                                        <Typography color={'#454555'} fontWeight={'bold'}>Historial de postulaciones </Typography>
+                                        {pxc.map((e: any, index) => (
+                                            <Box key={e.id} display={'flex'} gap={2}>
 
+                                                <Typography color={'#454555'} >{index + 1}.{e.convocatoria.titulo}</Typography>
+                                                <Typography color={'primary'} >{e.estado_postulante.nombre} </Typography></Box>
 
+                                        ))}
+                                    </Box>
                                 </Box>
                                 <Box width={200}>
                                     <Grid container spacing={1}>
@@ -834,6 +843,22 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             }
         }
     }
+
+    const pc = await prisma.postulante_x_convocatoria.findMany({
+        where: {
+            postulante_id: parseInt(id.toString())
+        },
+        select: {
+            convocatoria: {
+                select: {
+                    titulo: true,
+
+
+                }
+            },
+            estado_postulante: true,
+        }
+    })
     const post = await prisma.postulante.findUnique({
         where: {
             id: parseInt(id.toString())
@@ -907,6 +932,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             },
         }
     });
+    const pxc = JSON.parse(JSON.stringify(pc))
     const postulantes = JSON.parse(JSON.stringify(listaPostulantes))
 
     await prisma.$disconnect();
@@ -915,6 +941,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             postulante,
             estados,
             listaPostulantes,
+            pxc
 
         }
     }

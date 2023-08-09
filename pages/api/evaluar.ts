@@ -41,7 +41,7 @@ if(!session){
     return  res.status(403).json({message:'No autorizado'});
   }
   const {itemValues, totalSum, idTest, idPos, idUser,id,comentario } = req.body
-
+console.log('el id',idPos);
   const tienePuntaje = await prisma.puntajes.findMany({
     where:{
                 convocatoria_id:parseInt(id),

@@ -25,7 +25,7 @@ const postulantePage: NextPage<Props> = ({ doc }) => {
                 <Box mb={4}>
                     <Typography variant="h2">Documento Subido</Typography>
                 </Box>
-                <object data={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${doc.session}`} type="application/pdf" width="100%" height="800px">
+                <object data={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc.session}`} type="application/pdf" width="100%" height="800px">
                     <Alert severity="warning">No agregó ningun documento</Alert>
                 </object>
 

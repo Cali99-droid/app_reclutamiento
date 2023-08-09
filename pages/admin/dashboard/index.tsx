@@ -10,6 +10,7 @@ import HailIcon from '@mui/icons-material/Hail';
 import 'react-toastify/dist/ReactToastify.css';
 import PeopleIcon from '@mui/icons-material/People';
 import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
+import WorkOffIcon from '@mui/icons-material/WorkOff';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
@@ -93,7 +94,7 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
                         component='img'
                         alt={row.title}
                         className='fadeIn'
-                        image={row.img === null ? '/avatar.jpg' : `https://caebucket.s3.us-west-2.amazonaws.com/img/${row.img}`}
+                        image={row.img === null ? '/avatar.jpg' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${row.img}`}
                     />
 
                 )
@@ -130,11 +131,14 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
                     <Box display={'flex'} justifyContent={'start'} width={'100%'}>
                         <Tooltip title={'Dar de baja'}>
                             <IconButton aria-label="baja" color='error' onClick={() => handleConfirm(row.idCp)}  >
+                                <WorkOffIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title={'Lista negra'}>
+                            <IconButton aria-label="baja" color='error' onClick={() => handleConfirmBlack(row.idCp, row.idPos)}  >
                                 <DoDisturbIcon />
                             </IconButton>
                         </Tooltip>
-
-
 
                         {/* <IconButton disabled={params.row.postulantes > 0} color='error' aria-label="delete" onClick={() => { hadleOpenAlert(params.row.id, params.row.nombre) }}  >
                   <DeleteIcon />
@@ -154,13 +158,32 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
     ];
 
     const darBaja = async (id: number) => {
-        // console.log(id);
+        console.log(id);
         // return;
         try {
 
             const res = await reclutApi.put('/admin/postulantes/1', { id, status: 10 });
 
             toast.info(' ¡Dado de Baja Correctamente! ')
+            push(asPath)
+            // const newId = parseInt(newStatus) + 1
+            // setIdEstado(newId)   
+
+
+        } catch (error) {
+
+            console.log(error);
+            alert('No se pudo actualizar el estado del postulante');
+        }
+    }
+    const addToBlackList = async (id: number, idPos: number) => {
+        // console.log(id);
+        // return;
+        try {
+
+            const res = await reclutApi.post('/admin/blacklist', { id, status: 10, idPos });
+
+            toast.info(' ¡Agregado a la Lista negra! ')
             push(asPath)
             // const newId = parseInt(newStatus) + 1
             // setIdEstado(newId)   
@@ -189,6 +212,22 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
             }
         });
     };
+    const handleConfirmBlack = (id: number, idPos: number) => {
+        Swal.fire({
+            title: '¿Esta seguro? ',
+            text: 'El trabajador pasará a la lista negra para posteriores convocatorias',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                addToBlackList(id, idPos)
+            } else {
+                console.log('no borrar')
+            }
+        });
+    }
     return (
         <Paperbase title={`Dashboard `} subTitle={"Resumen"}>
             {false

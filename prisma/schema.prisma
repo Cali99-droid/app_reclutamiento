@@ -22,7 +22,7 @@ model aficion {
 model blacklist {
   id            Int        @id @default(autoincrement())
   fecha         DateTime   @db.Date
-  dni           String     @db.Char(1)
+  dni           String     @db.Char(15)
   postulante_id Int
   create_time   DateTime?  @default(now()) @db.Timestamp(0)
   update_time   DateTime?  @db.Timestamp(0)
