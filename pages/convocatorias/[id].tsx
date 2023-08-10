@@ -114,11 +114,6 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
       </ModalAlert>
 
 
-
-
-
-
-
     </JobsLayout>
   )
 }

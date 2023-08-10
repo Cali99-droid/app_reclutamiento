@@ -63,17 +63,18 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const router = useRouter();
   const { id } = router.query
   const { pos, isLoading } = usePostulantes(`/admin/postulantes/${convocatoria.id}`);
-  // const seleccionados = pos.filter(d => d.estado_postulante_id === 7)
-  // const contratados = pos.filter(d => d.estado_postulante_id === 7)
-  // const descartados = pos.filter(d => d.estado_postulante_id === 4)
+  const seleccionados = pos.filter(d => d.estado_postulante_id === 7)
+  const contratados = pos.filter(d => d.estado_postulante_id === 7)
+  const descartados = pos.filter(d => d.estado_postulante_id === 4)
+
 
   const [postulantes, setPostulantes] = useState<any[]>([]);
 
   const { calcularTotal, limpiarCriterios, juradosAsignados, addNewJurado, deleteJurado, refreshJurados } = useContext(PostContext);
 
-  const [seleccionados, setSeleccionados] = useState<any[]>([])
-  const [contratados, setContratados] = useState<any[]>([])
-  const [descartados, setDescartados] = useState<any[]>([])
+  // const [seleccionados, setSeleccionados] = useState<any[]>([])
+  // const [contratados, setContratados] = useState<any[]>([])
+  // const [descartados, setDescartados] = useState<any[]>([])
 
   const [calificacion, setCalificacion] = useState<any[]>([])
   const [modalCalificacion, setModalCalificacion] = useState(false)
@@ -113,37 +114,37 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
   useEffect(() => {
     console.log('uf')
-    if (pos) {
+    // if (pos) {
+    //   setPostulantes(pos.filter(d => d.estado_postulante_id !== 4))
+    refreshJurados()
 
-      refreshJurados()
+    // const seleccionados = pos.filter(d => d.estado_postulante_id === 7)
+    // const contratados = pos.filter(d => d.estado_postulante_id === 7)
+    // const descartados = pos.filter(d => d.estado_postulante_id === 4)
+    //const aptos = pos.filter(d => d.estado_postulante_id !== 4)
 
-      const seleccionados = pos.filter(d => d.estado_postulante_id === 7)
-      const contratados = pos.filter(d => d.estado_postulante_id === 7)
-      const descartados = pos.filter(d => d.estado_postulante_id === 4)
-      const aptos = pos.filter(d => d.estado_postulante_id !== 4)
+    if ((convocatoria.vacantes - contratados.length) === 0) {
 
-      if ((convocatoria.vacantes - contratados.length) === 0) {
-
-        cerrarConcocatoria()
-      }
-
-
-      if (!filtrando) {
-        setPostulantes(descartados)
-      } else {
-        setPostulantes(aptos)
-      }
-
-      setSeleccionados(seleccionados);
-      setDescartados(descartados);
-      setContratados(contratados);
-
-
+      cerrarConcocatoria()
     }
 
 
+    // if (!filtrando) {
+    //   setPostulantes(descartados)
+    // } else {
+
+    // }
+
+    // setSeleccionados(seleccionados);
+    // setDescartados(descartados);
+    // setContratados(contratados);
+
+
+    // }
+
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pos, filtrando])
+  }, [filtrando])
 
   const { openClase, handleOpenClase, handleCloseClase } = useContext(PostContext);
 
@@ -615,7 +616,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   }
 
 
-  const rows = postulantes.map((p, index) => ({
+  const rows = pos.map((p, index) => ({
     id: index + 1,
     postulante: formatoNombre(p.postulante.persona.nombres, p.postulante.persona.apellido_pat, p.postulante.persona.apellido_mat),
     estado: p.estado_postulante.nombre,
@@ -874,7 +875,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                   <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
                     <PeopleIcon sx={{ fontSize: 60 }} color={'primary'} />
                     <Box>  <Typography color={'#454555'} variant="body1" > Postulantes</Typography>
-                      <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{postulantes.length} </Typography>
+                      <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{pos.length} </Typography>
 
                     </Box>
                   </Box>

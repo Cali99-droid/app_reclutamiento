@@ -70,8 +70,8 @@ export const Nosotros = () => {
 
                                         />
                                         <CardContent>
-                                            <Typography gutterBottom component="div">
-                                                f {u.persona.nombres + ' ' + u.persona.apellido_pat + ' ' + u.persona.apellido_mat}
+                                            <Typography gutterBottom component="div" >
+                                                {(u.persona.nombres + ' ' + u.persona.apellido_pat + ' ' + u.persona.apellido_mat).toLocaleUpperCase()}
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary">
                                                 {/* Director Ejecutivo */}
