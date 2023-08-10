@@ -185,13 +185,13 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<any>) 
 
 
 async function sendMessage(req: NextApiRequest, res: NextApiResponse<any>) {
-  const { idPos , message } = req.body;
+  const { idPosConv , message } = req.body;
   let fecha =  moment().tz('America/Lima').format('YYYY-MM-DD HH:mm:ss');
 
   try {
     const  p = await prisma.postulante_x_convocatoria.update({
       where: {
-        id:idPos
+        id:idPosConv
       },
       data: {       
           comentario:  message,
