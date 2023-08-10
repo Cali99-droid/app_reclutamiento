@@ -48,7 +48,7 @@ const ConvocatoriaPage: NextPage<Props> = ({ convocatoria }) => {
       >
 
         <Box>
-          <Image src={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${convocatoria.img}`} alt={''} width={matches ? 430 : 300} height={matches ? 430 : 300} priority />
+          <Image src={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${convocatoria.img}`} alt={`${convocatoria.titulo}`} width={matches ? 430 : 300} height={matches ? 430 : 300} priority />
         </Box>
 
         <Box borderRadius={4} padding={2}>

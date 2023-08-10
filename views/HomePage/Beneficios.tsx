@@ -3,6 +3,7 @@ import React from 'react'
 import SquareIcon from '@mui/icons-material/Square';
 
 import Image from 'next/image';
+import Atropos from 'atropos/react';
 
 export const Beneficios = () => {
     const matches = useMediaQuery('(min-width:600px)');
@@ -15,11 +16,13 @@ export const Beneficios = () => {
 
             <Box display={'flex'} gap={matches ? 10 : 5} paddingLeft={4} paddingRight={4} alignItems={'center'} flexDirection={matches ? 'row' : 'column'}>
                 <Box display={matches ? 'block' : 'none'}>
-                    <Image src={"/img/b1.svg"} alt={""} width={matches ? 500 : 400} height={matches ? 600 : 200} />
+                    <Atropos shadow={false} >
 
+                        <Image src={"/img/b1.svg"} alt={"imagen de documentos de planilla con beneficios de ley "} width={matches ? 500 : 400} height={matches ? 600 : 200} />
+                    </Atropos>
                 </Box>
                 <Box>
-                    <Typography fontWeight={900} fontSize={matches ? 30 : 20} color={'#000'}>
+                    <Typography fontWeight={900} fontSize={matches ? 30 : 20} color={'#000'} variant='h3'>
                         Ingreso a planilla con beneficios de ley
                     </Typography>
                     <Typography variant="body1" color={'#767687'} textAlign={'left'} mb={2} mt={2}>
@@ -28,8 +31,9 @@ export const Beneficios = () => {
                     </Typography>
                 </Box>
                 <Box display={matches ? 'none' : 'block'}>
-                    <Image src={"/img/b1.svg"} alt={""} width={matches ? 500 : 400} height={matches ? 600 : 200} />
-
+                    <Atropos shadow={false} >
+                        <Image src={"/img/b1.svg"} alt={"imagen de documentos de planilla con beneficios de ley "} width={matches ? 500 : 400} height={matches ? 600 : 200} />
+                    </Atropos>
                 </Box>
 
             </Box>
@@ -37,7 +41,7 @@ export const Beneficios = () => {
             <Box display={'flex'} flexDirection={matches ? 'row' : 'column'} gap={10} paddingLeft={4} paddingRight={4} alignItems={'center'}>
 
                 <Box>
-                    <Typography fontWeight={900} fontSize={matches ? 30 : 20} color={'#000'}>
+                    <Typography fontWeight={900} fontSize={matches ? 30 : 20} color={'#000'} variant='h3'>
                         Linea de carrera y escala salarial
                     </Typography >
                     <Typography variant="body1" color={'#767687'} textAlign={'left'} mb={2} mt={2}>
@@ -50,20 +54,22 @@ export const Beneficios = () => {
                     </Typography>
                 </Box>
                 <Box >
-                    <Image src={"/img/b2.svg"} alt={" Linea de carrera y escala salarial"} width={matches ? 500 : 400} height={matches ? 600 : 200} />
-
+                    <Atropos shadow={false} >
+                        <Image src={"/img/b2.svg"} alt={" Linea de carrera y escala salarial"} width={matches ? 500 : 400} height={matches ? 600 : 200} />
+                    </Atropos>
                 </Box>
 
             </Box>
 
             <Box display={'flex'} flexDirection={matches ? 'row' : 'column'} gap={10} paddingLeft={4} paddingRight={4} alignItems={'center'}>
                 <Box display={matches ? 'block' : 'none'}>
-                    <Image src={"/img/b3.svg"} alt={""} width={matches ? 500 : 400} height={matches ? 600 : 200} />
-
+                    <Atropos shadow={false} >
+                        <Image src={"/img/b3.svg"} alt={"Linea de carrera y escala salarial"} width={matches ? 500 : 400} height={matches ? 600 : 200} />
+                    </Atropos>
                 </Box>
 
                 <Box>
-                    <Typography fontWeight={900} fontSize={matches ? 30 : 20} color={'#000'}>
+                    <Typography fontWeight={900} fontSize={matches ? 30 : 20} color={'#000'} variant='h3'>
                         Premios y reconocimeintos
                     </Typography>
                     <Typography variant="body1" color={'#767687'} textAlign={'left'} mb={2} mt={2}>
@@ -81,8 +87,9 @@ export const Beneficios = () => {
 
                 </Box>
                 <Box display={matches ? 'none' : 'block'}>
-                    <Image src={"/img/b3.svg"} alt={""} width={matches ? 500 : 400} height={matches ? 600 : 200} />
-
+                    <Atropos shadow={false} >
+                        <Image src={"/img/b3.svg"} alt={" Premios y reconocimeintos"} width={matches ? 500 : 400} height={matches ? 600 : 200} />
+                    </Atropos>
                 </Box>
 
             </Box>

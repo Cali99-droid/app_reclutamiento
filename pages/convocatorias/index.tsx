@@ -1,6 +1,6 @@
 import { JobList } from "@/components/jobs/JobList";
 import { JobsLayout } from "@/components/layouts";
-import { Box, Divider } from '@mui/material';
+import { Box, Divider, useMediaQuery } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
 import { useJobs } from '../../hooks';
@@ -9,6 +9,7 @@ import { FullScreenLoading } from "@/components/ui";
 import { IJob } from "@/interfaces";
 import moment from "moment";
 import { Footer } from "@/views/HomePage/Footer";
+import SquareIcon from '@mui/icons-material/Square';
 function filtrarPorFecha(datos: IJob) {
 
   const fechaHoy = new Date();
@@ -23,14 +24,18 @@ function filtrarPorFecha(datos: IJob) {
 export default function ConvocatoriasPage() {
   const { jobs, isLoading } = useJobs('/convocatorias')
 
-
+  const matches = useMediaQuery('(min-width:600px)');
   return (
-    <JobsLayout title={"AE | Convocatorias "} pageDescription={"Convocatorias a trabajos en Ancash"}>
+    <JobsLayout title={"AE | Convocatorias "} pageDescription={"Lista de empleos disponibles en la institución, ¡Aplica hoy mismo!  "}>
       <Box className="fadeIn" maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={22} >
         <Box padding={3}  >
-          <Typography fontSize={35} variant='h1' component='h1' color={'#000'} fontWeight={'bold'}  >Convocatoria {new Date().getFullYear()}</Typography>
+          <Box display={'flex'} alignItems={'center'} gap={1} justifyContent={matches ? 'start' : 'center'} mb={2}>
+            <SquareIcon color="secondary" fontSize="large" />
+            <Typography variant='h2' component='h2' fontWeight={'bold'} fontSize={30} color={'#000'} textTransform={'uppercase'}> Convocatorias {new Date().getFullYear()}</Typography>
+          </Box>
 
-          <Typography fontSize={18} color={grey[700]} variant='h2' sx={{ mt: 2 }}>Encuentra tu perfil y postula </Typography>
+
+          <Typography fontSize={18} color={grey[700]} variant='h2' sx={{ mt: 2 }}>Oportunidades laborales en Huaraz, Únete a un equipo comprometido con la excelencia educativa en nuestra academia preuniversitaria. Descubre cómo puedes formar parte de nuestro legado. </Typography>
         </Box>
         <Divider />
         <Box >

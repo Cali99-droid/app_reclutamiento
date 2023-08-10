@@ -43,7 +43,7 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
                 <title>{title}</title>
 
                 <meta name="description" content={pageDescription} />
-                <meta name="description" content={pageDescription} />
+                {/* <meta name="description" content={pageDescription} /> */}
                 <meta name="referrer" content="no-referrer" />
 
 

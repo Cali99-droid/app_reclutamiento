@@ -4,6 +4,8 @@ import SquareIcon from '@mui/icons-material/Square';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { Facebook, KeyboardArrowLeft, KeyboardArrowRight, Twitter } from '@mui/icons-material';
 import Image from 'next/image';
+import { useUser } from '@/hooks/useUser';
+import { persona } from '@prisma/client';
 
 
 
@@ -27,7 +29,8 @@ const images = [
 
 export const Nosotros = () => {
     const matches = useMediaQuery('(min-width:600px)');
-
+    const { users, isLoading } = useUser('/users');
+    console.log(users)
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
     const maxSteps = images.length;
@@ -53,142 +56,92 @@ export const Nosotros = () => {
             <Typography textAlign={'left'}>Únete a nuestra comunidad educativa en crecimiento, donde la colaboración y el liderazgo son fundamentales. Descubre a las personas apasionadas que hacen posible nuestro colegio, donde los estudiantes alcanzan su máximo potencial. ¡Sé parte de nuestro equipo destacado en el Colegio Albert Einstein!</Typography>
             <Grid container spacing={5} justifyContent={'center'} padding={10}>
                 {matches ? (
-                    <> <Grid item>
-                        <Card sx={{ maxWidth: 345 }}>
-                            <Image
-                                alt={"ejecutivo"} width={matches ? 300 : 300} height={matches ? 300 : 300}
-                                src="/img/ejecutivo2.jpg"
-
-                            />
-                            <CardContent>
-                                <Typography gutterBottom variant="h5" component="div">
-                                    Juan Carlos Gutierrez
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Director Ejecutivo
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Box display={'flex'}>
-                                    <IconButton aria-label="linkedin">
-                                        <LinkedInIcon />
-                                    </IconButton>
-                                    <IconButton aria-label="linkedin">
-                                        <Facebook />
-                                    </IconButton>
-                                    <IconButton aria-label="linkedin">
-                                        <Twitter />
-                                    </IconButton>
-
-                                </Box>
-                            </CardActions>
-                        </Card>
+                    <>
 
 
 
-                    </Grid>
-                        <Grid item>
-                            <Card sx={{ maxWidth: 345 }}>
-                                <Image
-                                    alt={"ejecutivo"} width={matches ? 300 : 300} height={matches ? 300 : 300}
-                                    src="/img/ejecutivo1.jpg"
+                        {
+                            users.map(u => (
+                                <Grid item key={u.persona.id}>
+                                    <Card sx={{ maxWidth: 345 }} >
+                                        <Image
+                                            alt={"imagen trabajador"} width={matches ? 300 : 300} height={matches ? 300 : 300}
+                                            src={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${u.persona.postulante[0].image}`}
 
-                                />
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        Rosa Maria Flores
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Director Ejecutivo
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Box display={'flex'}>
-                                        <IconButton aria-label="linkedin">
-                                            <LinkedInIcon />
-                                        </IconButton>
-                                        <IconButton aria-label="linkedin">
-                                            <Facebook />
-                                        </IconButton>
-                                        <IconButton aria-label="linkedin">
-                                            <Twitter />
-                                        </IconButton>
+                                        />
+                                        <CardContent>
+                                            <Typography gutterBottom component="div">
+                                                f {u.persona.nombres + ' ' + u.persona.apellido_pat + ' ' + u.persona.apellido_mat}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {/* Director Ejecutivo */}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions>
+                                            <Box display={'flex'}>
+                                                <IconButton aria-label="linkedin">
+                                                    <LinkedInIcon />
+                                                </IconButton>
+                                                <IconButton aria-label="linkedin">
+                                                    <Facebook />
+                                                </IconButton>
+                                                <IconButton aria-label="linkedin">
+                                                    <Twitter />
+                                                </IconButton>
 
-                                    </Box>
-                                </CardActions>
-                            </Card>
+                                            </Box>
+                                        </CardActions>
+                                    </Card>
 
-                        </Grid>
-                        <Grid item>
-                            <Card sx={{ maxWidth: 345 }}>
-                                <Image
-                                    alt={"ejecutivo"} width={matches ? 300 : 300} height={matches ? 300 : 300}
-                                    src="/img/ejecutivo3.jpg"
+                                </Grid>
+                            ))}
 
-                                />
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        Jose Fidel Castro
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Director Ejecutivo
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Box display={'flex'}>
-                                        <IconButton aria-label="linkedin">
-                                            <LinkedInIcon />
-                                        </IconButton>
-                                        <IconButton aria-label="linkedin">
-                                            <Facebook />
-                                        </IconButton>
-                                        <IconButton aria-label="linkedin">
-                                            <Twitter />
-                                        </IconButton>
 
-                                    </Box>
-                                </CardActions>
-                            </Card>
 
-                        </Grid>
+
+
                     </>
 
                 ) : (
-                    <Grid item>
 
-                        <Card sx={{ maxWidth: 345 }} >
-                            <Image
-                                alt={"ejecutivo"} width={matches ? 300 : 300} height={matches ? 300 : 300}
-                                src={images[activeStep].imgPath}
+                    <>
+                        {
+                            users.map(u => (
+                                <Grid item key={u.persona.id}>
+                                    <Card sx={{ maxWidth: 345 }} >
+                                        <Image
+                                            alt={"imagen trabajador"} width={matches ? 300 : 300} height={matches ? 300 : 300}
+                                            src={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${u.persona.postulante[0].image}`}
 
-                            />
-                            <CardContent>
-                                <Typography gutterBottom variant="h5" component="div">
-                                    {images[activeStep].label}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    Director Ejecutivo
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Box display={'flex'}>
-                                    <IconButton aria-label="linkedin">
-                                        <LinkedInIcon />
-                                    </IconButton>
-                                    <IconButton aria-label="linkedin">
-                                        <Facebook />
-                                    </IconButton>
-                                    <IconButton aria-label="linkedin">
-                                        <Twitter />
-                                    </IconButton>
+                                        />
+                                        <CardContent>
+                                            <Typography gutterBottom component="div">
+                                                {u.persona.nombres + ' ' + u.persona.apellido_pat + ' ' + u.persona.apellido_mat}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {/* Director Ejecutivo */}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions>
+                                            <Box display={'flex'}>
+                                                <IconButton aria-label="linkedin">
+                                                    <LinkedInIcon />
+                                                </IconButton>
+                                                <IconButton aria-label="linkedin">
+                                                    <Facebook />
+                                                </IconButton>
+                                                <IconButton aria-label="linkedin">
+                                                    <Twitter />
+                                                </IconButton>
 
-                                </Box>
-                            </CardActions>
-                        </Card>
+                                            </Box>
+                                        </CardActions>
+                                    </Card>
 
 
-
-                        <MobileStepper
+                                </Grid>
+                            ))}
+                        {/* <MobileStepper
                             variant="dots"
                             steps={maxSteps}
                             position="static"
@@ -217,9 +170,10 @@ export const Nosotros = () => {
 
                                 </Button>
                             }
-                        />
+                        /> */}
 
-                    </Grid>
+
+                    </>
                 )}
 
 

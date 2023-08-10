@@ -11,8 +11,9 @@ export const Hero = () => {
     return (
         <Box display={"flex"} gap={matches ? 20 : 10} flexDirection={matches ? 'row' : 'column'} padding={5} justifyContent={'center'} alignItems={'center'}>
 
-            <Box  >
+            <Box >
                 <Typography variant='h1' component='h1' fontSize={matches ? 50 : 40} color={'#000'} fontWeight={'bold'} >Nuestra Visión</Typography>
+
                 <Typography textAlign={'start'} mt={2} color={'#454555'} >Ser una institución con pasión para educar, integrada, ética y humana que desarrolla competencias para la vida.</Typography>
                 <Box display={'flex'} gap={4}>
 
@@ -39,9 +40,9 @@ export const Hero = () => {
                 </Box>
             </Box>
             <Box >
-                <Atropos shadow={false}>
+                <Atropos shadow={false} >
 
-                    <Image priority src={"/img/hero-image.svg"} alt={"imagen trabajo"} width={matches ? 500 : 400} height={matches ? 600 : 200} />
+                    <Image priority src={"/img/hero-image.svg"} alt={"Hero imagen personas negociando"} width={matches ? 500 : 400} height={matches ? 600 : 200} />
 
                 </Atropos>
             </Box>

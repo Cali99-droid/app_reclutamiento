@@ -8,6 +8,7 @@ import { FullScreenLoading } from '@/components/ui';
 import { JobList } from '@/components/jobs';
 import { grey } from '@mui/material/colors';
 import { useRouter } from 'next/router';
+import Atropos from 'atropos/react';
 
 export const Convocatorias = () => {
     const { jobs, isLoading } = useJobs('/convocatorias')
@@ -28,17 +29,19 @@ export const Convocatorias = () => {
                         ? <FullScreenLoading />
                         :
                         (<>
+
                             <JobList jobs={convocatorias} />
-                            {/* <Box textAlign={'end'} mt={2} mb={2}>
+                            <Box textAlign={'center'} mt={2} mb={2}>
                                 <Chip
                                     onClick={() => push('/convocatorias')}
-                                    label="Ver mas convocatorias"
+                                    label="Ver más convocatorias"
                                     color="secondary"
                                     clickable
                                     variant='outlined'
 
                                 />
-                            </Box> */}
+                            </Box>
+
                         </>)
                     }
                     {jobs.length === 0 && (

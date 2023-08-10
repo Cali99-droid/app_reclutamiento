@@ -80,7 +80,7 @@ export const NavBar = () => {
 
                         <Link >
                             {
-                                matches ? (<Image priority src={"/img/logoxs.png"} alt={"imagen colegio albert einstein"} width={250} height={67} />) : (<Image priority src={"/img/logsm.png"} alt={"imagen trabajo"} width={50} height={50} />)
+                                matches ? (<Image priority src={"/img/logoxs.png"} alt={"imagen logo colegio albert einstein"} width={250} height={67} />) : (<Image priority src={"/img/logsm.png"} alt={"imagen trabajo"} width={50} height={50} />)
                             }
 
                         </Link>
@@ -183,7 +183,7 @@ export const NavBar = () => {
                                             aria-haspopup="true"
                                             aria-expanded={open ? 'true' : undefined}
                                         >
-                                            <Avatar alt='imagen user' sx={{ bgcolor: '#0045AA', width: 56, height: 56 }} src={user?.persona.postulante[0].image ? `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${user?.persona.postulante[0].image}` : '/avatar.jpg'} />
+                                            <Avatar alt='avatar usuario' sx={{ bgcolor: '#0045AA', width: 56, height: 56 }} src={user?.persona.postulante[0].image ? `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${user?.persona.postulante[0].image}` : '/avatar.jpg'} />
 
                                         </IconButton>
                                     </Tooltip>
