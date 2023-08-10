@@ -8,7 +8,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useCallback } from 'react'
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import EastIcon from '@mui/icons-material/East';
@@ -17,6 +17,7 @@ import { DatosContext } from '@/context';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { UploadFileOutlined } from '@mui/icons-material';
 
+import Compressor from 'compressorjs';
 interface Props {
 
 
@@ -150,38 +151,54 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
         if (!target.files || target.files.length === 0) {
             return;
         }
-        const fileSizeInMB = target.files[0].size / (1024 * 1024);
-        if (fileSizeInMB >= MAX_IMAGE_SIZE_MB) {
+        // const fileSizeInMB = target.files[0].size / (1024 * 1024);
+        // if (fileSizeInMB >= MAX_IMAGE_SIZE_MB) {
 
-            // Aquí puedes realizar la lógica para subir el archivo
-            // por ejemplo, enviarlo a través de una API o almacenarlo en S3.
-            console.log('Archivo inválido, tamaño:', fileSizeInMB, 'MB');
-            toast.error('La imagen debe ser de menos de 2 mb');
-            return;
-        }
+        //     // Aquí puedes realizar la lógica para subir el archivo
+        //     // por ejemplo, enviarlo a través de una API o almacenarlo en S3.
+        //     console.log('Archivo inválido, tamaño:', fileSizeInMB, 'MB');
+        //     toast.error('La imagen debe ser de menos de 2 mb');
+        //     return;
+        // }
         setLoadImg(true)
+
         try {
 
-            const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/awsupload', {
-                name: target.files[0].name,
-                type: target.files[0].type,
+            new Compressor(target.files[0], {
+                quality: 0.4,
+
+                // The compression process is asynchronous,
+                // which means you have to access the `result` in the `success` hook function.
+                async success(result) {
+
+
+                    // The third parameter is required for server
+
+
+                    const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/awsupload', {
+                        name: result.name,
+                        type: result.type
+                    });
+                    const url = data.url;
+                    const res = await reclutApi.put(url, result, {
+                        headers: {
+                            "Content-type": result.type,
+                            "Access-Control-Allow-Origin": "*"
+                        }
+                    })
+                    setValue('image', data.message, { shouldValidate: true });
+
+                    console.log(data)
+
+                    //   // Send the compressed image file to server with XMLHttpRequest.
+                    //   axios.post('/path/to/upload', formData).then(() => {
+                    //     console.log('Upload success');
+                    //   });
+                },
+                error(err) {
+                    console.log(err.message);
+                },
             });
-
-            const url = data.url;
-            const res = await reclutApi.put(url, target.files[0], {
-                headers: {
-                    "Content-type": target.files[0].type,
-                    "Access-Control-Allow-Origin": "*"
-                }
-            })
-
-
-
-
-            setValue('image', data.message, { shouldValidate: true });
-
-            console.log(data)
-
 
         } catch (error) {
             console.log({ error });
@@ -213,19 +230,54 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
         try {
             // setLoadImg(true)
             for (const file of target.files) {
-                const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/awsupload', {
-                    name: file.name,
-                    type: file.type,
-                });
-                const url = data.url;
-                const res = await reclutApi.put(url, file, {
-                    headers: {
-                        "Content-type": file.type,
-                        "Access-Control-Allow-Origin": "*"
-                    }
-                })
+
+                // const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/awsupload', {
+                //     name: file.name,
+                //     type: file.type,
+                // });
+                // const url = data.url;
+                // const res = await reclutApi.put(url, file, {
+                //     headers: {
+                //         "Content-type": file.type,
+                //         "Access-Control-Allow-Origin": "*"
+                //     }
+                // })
                 // setImgDni([...imgDni, data.message])
-                setValue('imgs', [...getValues('imgs'), { id: 0, image: data.message, postulante_id: postulante.id }], { shouldValidate: true });
+
+
+                new Compressor(file, {
+                    quality: 0.6,
+
+                    // The compression process is asynchronous,
+                    // which means you have to access the `result` in the `success` hook function.
+                    async success(result) {
+
+
+                        // The third parameter is required for server
+
+
+                        const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/awsupload', {
+                            name: result.name,
+                            type: result.type
+                        });
+                        const url = data.url;
+                        const res = await reclutApi.put(url, result, {
+                            headers: {
+                                "Content-type": result.type,
+                                "Access-Control-Allow-Origin": "*"
+                            }
+                        })
+                        setValue('imgs', [...getValues('imgs'), { id: 0, image: data.message, postulante_id: postulante.id }], { shouldValidate: true });
+
+                        //   // Send the compressed image file to server with XMLHttpRequest.
+                        //   axios.post('/path/to/upload', formData).then(() => {
+                        //     console.log('Upload success');
+                        //   });
+                    },
+                    error(err) {
+                        console.log(err.message);
+                    },
+                });
             }
 
         } catch (error) {
@@ -267,6 +319,11 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
             { shouldValidate: true }
         );
     }
+
+    // const onDrop = useCallback(acceptedFiles => {
+    //     // Do something with the files
+    //   }, [])
+
 
     const matches = useMediaQuery('(min-width:600px)');
 
@@ -728,6 +785,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
 
                         </Grid>
+
 
 
                     </Grid>

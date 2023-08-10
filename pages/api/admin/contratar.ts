@@ -104,7 +104,7 @@ const postContrato = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
             estado_postulante_id:7,
             fecha_cambio: new Date()
           
-        },
+        }, 
       })
 
       const per = await prisma.postulante.findFirst({

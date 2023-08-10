@@ -183,7 +183,7 @@ export const NavBar = () => {
                                             aria-haspopup="true"
                                             aria-expanded={open ? 'true' : undefined}
                                         >
-                                            <Avatar alt='imagen user' sx={{ bgcolor: '#0045AA', width: 56, height: 56 }} src={user?.persona.postulante[0].image ? `https://caebucket.s3.us-west-2.amazonaws.com/img/${user?.persona.postulante[0].image}` : '/avatar.jpg'} />
+                                            <Avatar alt='imagen user' sx={{ bgcolor: '#0045AA', width: 56, height: 56 }} src={user?.persona.postulante[0].image ? `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${user?.persona.postulante[0].image}` : '/avatar.jpg'} />
 
                                         </IconButton>
                                     </Tooltip>

@@ -44,12 +44,17 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
         // Calcular la suma total cada vez que se modifiquen los valores de los ítems
         const sum = Object.values(itemValues).reduce((acc, value) => acc + value, 0);
         setTotalSum(sum);
+        // Object.values(itemValues).forEach((v: any) => {
+        //     console.log(v)
+        // });
+
     }, [itemValues]);
 
-    const handleSliderChange = (itemId: number) => (event: any, value: number | number[]) => {
+    const handleSliderChange = (itemId: number, descr: string) => (event: any, value: number | number[]) => {
         setItemValues((prevItemValues) => ({
             ...prevItemValues,
             [itemId]: value as number,
+
         }));
     };
 
@@ -60,7 +65,8 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
     }
     const handleConfirmClase = async () => {
         //TODO validar actualizacion o creacion  */
-        console.log(idPos)
+        console.log(itemValues);
+
         try {
 
             const resp = await reclutApi.post('/evaluar', { itemValues, totalSum, idTest, idPos, idUser, id, comentario });
@@ -124,7 +130,7 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
                                         <Slider
                                             name='ss'
                                             value={itemValues[i.id] || 0}
-                                            onChange={handleSliderChange(i.id)}
+                                            onChange={handleSliderChange(i.id, i.descripcion)}
                                             aria-labelledby="input-slider"
                                             valueLabelDisplay="auto"
                                             step={1}

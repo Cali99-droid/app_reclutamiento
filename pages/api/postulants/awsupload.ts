@@ -38,6 +38,7 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     //     return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
     // }
     let {name,type,fil} = req.body;
+   
        // Genera un nombre único para el archivo
        const uniqueFileName = `${uuidv4()}.${name.split('.').pop()}`;
        const folder = process.env.FOLDER_IMG_NAME;

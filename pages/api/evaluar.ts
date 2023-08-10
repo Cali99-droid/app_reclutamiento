@@ -5,6 +5,7 @@ import { prisma } from '@/server/db/client';
 import { getSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
 import NextAuth  from '@/pages/api/auth/[...nextauth]'
+import { item } from '@prisma/client';
 type Data = 
 | { message: string }
 
@@ -41,7 +42,7 @@ if(!session){
     return  res.status(403).json({message:'No autorizado'});
   }
   const {itemValues, totalSum, idTest, idPos, idUser,id,comentario } = req.body
-console.log('el id',idPos);
+
   const tienePuntaje = await prisma.puntajes.findMany({
     where:{
                 convocatoria_id:parseInt(id),
@@ -83,17 +84,7 @@ console.log('el id',idPos);
     // }
 
     try {
-        // const  ev = await prisma.evaluacion_x_postulante.create({
-        //     data: {
-        //        puntaje,
-        //        puntaje_max:max,
-        //        postulante_id:idPos,
-        //        convocatoria_id:parseInt(id) ,
-        //        evaluacion_id:idEv,
-        //        user_id:parseInt(idUser.toString()) 
-
-        //     },
-        // })
+        const descripciones = await prisma.item.findMany()      
 const mx =  (Object.entries(itemValues).length * 10);
         const puntajes = await prisma.puntajes.create({
             data:{
@@ -110,7 +101,8 @@ const mx =  (Object.entries(itemValues).length * 10);
                 data: Object.entries(itemValues).map(([itemId, value ]) => ({
                   item_id: parseInt(itemId),
                   puntaje_item:parseInt(value as string),
-                  puntajes_id:puntajes.id
+                  puntajes_id:puntajes.id,
+                  descripcion_item:  getDescripcion(parseInt(itemId),descripciones)[0].descripcion
                 })),
               });
     
@@ -157,4 +149,13 @@ if(pc?.estado_postulante_id ===2 && porcentaje>=30){
         return res.status(400).json({ message: 'Revisar logs del servidor' });
      }
 
+}
+
+const getDescripcion = (id:number,descripciones:item[])=>{
+  const ob = descripciones.filter(e=>e.id===id);
+
+
+
+
+return ob
 }

@@ -60,10 +60,6 @@ const categories = [
             {
                 id: 'Config', icon: <SettingsIcon />, active: true,
                 dir: '/perfil'
-            },
-            {
-                id: 'other', icon: <SettingsIcon />, active: false,
-                dir: '/perfil'
             }
 
 
