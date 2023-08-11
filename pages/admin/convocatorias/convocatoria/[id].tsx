@@ -91,25 +91,26 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
   const [messageModal, setMessageModal] = useState(false)
   const [message, setMessage] = useState('')
+  const [phone, setPhone] = useState<number>();
   const [lastMessage, setLastMessage] = useState('')
   const [fechaComennt, setFechaComennt] = useState('')
-  const sendMessage = async () => {
+  // const sendMessage = async () => {
 
-    try {
-      const { data } = await reclutApi.post(`/admin/postulantes/1`, { idPosConv, message });
-      setLastMessage(data.p.comentario)
-      setFechaComennt(data.p.fecha_comentario)
-      setMessage('');
-      toast.success('🦄 Mensage enviado correctamente!')
+  //   try {
+  //     const { data } = await reclutApi.post(`/admin/postulantes/1`, { idPosConv, message });
+  //     setLastMessage(data.p.comentario)
+  //     setFechaComennt(data.p.fecha_comentario)
+  //     setMessage('');
+  //     toast.success('🦄 Mensage enviado correctamente!')
 
-    } catch (error) {
-      console.log(error)
-    }
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
 
-    // setMessageModal(false)
+  //   // setMessageModal(false)
 
 
-  }
+  // }
 
 
   useEffect(() => {
@@ -397,11 +398,12 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       renderCell: (params) => {
 
 
-        function handleOpenMessage(id: any, comentario: string, fecha: string) {
+        function handleOpenMessage(id: any, comentario: string, fecha: string, phone: number) {
           setMessageModal(true)
           setIdPosConv(id)
           setLastMessage(comentario)
           setFechaComennt(fecha)
+          setPhone(phone);
         }
 
         return (
@@ -474,7 +476,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
             <IconButton
               sx={{ color: cyan[600] }}
               aria-label="evaluar"
-              onClick={() => { handleOpenMessage(params.row.idCp, params.row.comentario, params.row.fechaComentario) }}
+              onClick={() => { handleOpenMessage(params.row.idCp, params.row.comentario, params.row.fechaComentario, params.row.telefono) }}
 
             >
               < SpeakerNotesIcon />
@@ -634,7 +636,8 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     resultado: p.postulante.puntajes,
     est: getEstado(p.estado_postulante.nombre, getPuntajeEntrevista(p.postulante.puntajes), getPuntajeJurado(p.postulante.puntajes)),
     telefono: p.postulante.telefono,
-    email: p.postulante.persona.user[0].email
+    email: p.postulante.persona.user[0].email,
+
 
   }))
 
@@ -826,6 +829,32 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     email: false,
     edad: false,
   });
+
+  const sendMessage = async () => {
+
+    try {
+      // const config = {
+      //   headers: {
+      //     "Access-Control-Allow-Origin": "*",
+      //     "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+      //   }
+      // };
+      const { data } = await reclutApi.post(`/admin/postulantes/1`, { idPosConv, message });
+      setLastMessage(data.p.comentario)
+      setFechaComennt(data.p.fecha_comentario)
+
+
+      const url = `https://api.whatsapp.com/send?phone=+51${encodeURIComponent(phone!)}&text=${encodeURIComponent(message)}`;
+      const newTab = window.open(url, '_blank');
+      newTab!.focus();
+      toast.success('🦄 Mensage enviado correctamente!')
+      setMessage('');
+      // const response = await axios.get(url, config);
+      // console.log('Message sent:', response.data);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
   const matches = useMediaQuery('(min-width:600px)');
 
   return (
