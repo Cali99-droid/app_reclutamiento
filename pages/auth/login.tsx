@@ -66,7 +66,7 @@ const LoginPage = (error: string) => {
 
 
     return (
-        <AuthLayout title={"Iniciar Sesion "} >
+        <AuthLayout title={"Iniciar Sesion "} pageDescription={'Iniciar sesión en la plataforma de empleos de la institución educativa Albert Einstein'} >
 
             <Box bgcolor={'#FFF'} padding={4} className={'fadeIn'}>
                 <Chip

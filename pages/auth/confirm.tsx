@@ -22,7 +22,7 @@ const ConfirmPage = () => {
     const router = useRouter();
 
     return (
-        <AuthLayout title={"¡ Correo Enviado ! "} >
+        <AuthLayout title={"¡ Correo Enviado ! "} pageDescription={'Envío de correo electrónico de confirmación '} >
 
             <Box bgcolor={'#FFF'} padding={4} >
                 <Alert variant="outlined" severity="success">

@@ -25,7 +25,7 @@ const ConfirmAccountPage = () => {
 
 
     return (
-        <AuthLayout title={"Confirmar cuenta "} >
+        <AuthLayout title={"Confirmar cuenta "} pageDescription={'Enlace de confirmación de cuenta, verificación de token de confirmación'} >
 
 
 

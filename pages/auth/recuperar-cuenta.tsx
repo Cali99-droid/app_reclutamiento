@@ -48,7 +48,7 @@ const RecuperarPage: NextPage<Props> = ({ token }) => {
 
 
     return (
-        <AuthLayout title={"Para recuperar tu contraseña, ingresa tu nueva contraseña "} >
+        <AuthLayout title={"Para recuperar tu contraseña, ingresa tu nueva contraseña "} pageDescription={'Ingresa tu nueva contraseña para recuperar tu cuenta'} >
 
             <Box bgcolor={'#FFF'} padding={4} >
                 <Typography>Ingresa tu  nueva contraseña</Typography>

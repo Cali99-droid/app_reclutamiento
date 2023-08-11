@@ -9,11 +9,12 @@ import { FullScreenLoading } from '../ui';
 
 interface Props extends PropsWithChildren {
     title: string;
-
+    pageDescription: string;
+    imageFullUrl?: string;
 
 }
 
-export const AuthLayout: FC<Props> = ({ children, title }) => {
+export const AuthLayout: FC<Props> = ({ children, title, pageDescription }) => {
     const [showLoadingMessage, setShowLoadingMessage] = useState(true);
     const handleIntersection = (inView: boolean) => {
         if (inView) {
@@ -26,6 +27,9 @@ export const AuthLayout: FC<Props> = ({ children, title }) => {
         <>
             <Head>
                 <title>{`AE | ${title}`}</title>
+                <meta name="description" content={pageDescription} />
+                <meta name="og:title" content={title} />
+                <meta name="og:description" content={pageDescription} />
             </Head>
 
             {showLoadingMessage && <FullScreenLoading />}  <InView onChange={handleIntersection}>

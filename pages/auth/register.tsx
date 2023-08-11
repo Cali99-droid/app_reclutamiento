@@ -122,7 +122,7 @@ export default function RegisterPage() {
   };
   const matches = useMediaQuery('(min-width:1000px)');
   return (
-    <AuthLayout title={"Registrate y Postula "} >
+    <AuthLayout title={"Registrate y Postula "} pageDescription={'Registrate y llena tu ficha para poder postular a los emplemos disponibles en  la institución educativa Albert Einstein'} >
       <Box bgcolor={'#FFF'} padding={4} className={'fadeIn'} mt={1}>
         <form onSubmit={handleSubmit(onRegisterForm)} noValidate>
           <Chip
