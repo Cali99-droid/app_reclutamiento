@@ -154,7 +154,7 @@ theme = {
                 root: {
                     color: 'inherit',
                     minWidth: 'auto',
-                    marginRight: theme.spacing(2),
+                    // marginRight: theme.spacing(2),
                     '& svg': {
                         fontSize: 20,
                     },

@@ -110,9 +110,9 @@ export default function Navigator(props: DrawerProps) {
                     </Box>
                 </ListItem>
                 <ListItem disablePadding >
-                    <ListItemButton sx={{ ...item }} onClick={() => push('/')}>
+                    <ListItemButton sx={{ ...item, }} onClick={() => push('/')}>
 
-                        <ListItemIcon><HomeIcon /></ListItemIcon>
+                        <ListItemIcon sx={{ marginRight: 1 }}><HomeIcon /></ListItemIcon>
                         <ListItemText>Ir a inicio</ListItemText>
                     </ListItemButton>
 
@@ -130,7 +130,7 @@ export default function Navigator(props: DrawerProps) {
                                         selected={asPath.includes(`${h!.dir}`)}
                                         sx={item}
                                         onClick={() => navigateTo(`${h!.dir}`, h!.id)}>
-                                        <ListItemIcon>{h!.icon}</ListItemIcon>
+                                        <ListItemIcon sx={{ marginRight: 1 }}>{h!.icon}</ListItemIcon>
                                         <ListItemText>{h!.id} </ListItemText>
                                     </ListItemButton>
                                 </ListItem>
@@ -146,7 +146,7 @@ export default function Navigator(props: DrawerProps) {
                             selected={true}
                             onClick={() => push('/jurado')}
                         >
-                            <ListItemIcon>
+                            <ListItemIcon sx={{ marginRight: 1 }}>
                                 <FactCheckIcon />
                             </ListItemIcon>
                             <ListItemText>Evaluar Docente</ListItemText>
@@ -155,15 +155,12 @@ export default function Navigator(props: DrawerProps) {
                 )}
 
                 <ListItem disablePadding  >
-
                     <ListItemButton
-
                         sx={item}
                         onClick={logout}>
-                        <ListItemIcon><LoginOutlined /></ListItemIcon>
+                        <ListItemIcon sx={{ marginRight: 1 }}><LoginOutlined /></ListItemIcon>
                         <ListItemText>Salir</ListItemText>
                     </ListItemButton>
-
                 </ListItem>
 
             </List>

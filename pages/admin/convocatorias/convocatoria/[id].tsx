@@ -4,7 +4,7 @@ import { PostContext } from '@/context';
 
 
 import { GetServerSideProps, NextPage } from "next";
-import { DataGrid, GridCellParams, GridCloseIcon, GridColDef, GridColumnVisibilityModel, GridToolbar, esES } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, GridCellParams, GridCloseIcon, GridColDef, GridColumnVisibilityModel, GridToolbar, esES } from "@mui/x-data-grid";
 import { Link, Box, Typography, IconButton, Tooltip, Select, MenuItem, SelectChangeEvent, Button, DialogActions, DialogContent, Chip, Grid, Paper, styled, Breadcrumbs, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, FormControl, InputLabel, List, ListItem, ListItemText, Divider, useMediaQuery, Backdrop, CircularProgress, Alert, InputAdornment, FormHelperText } from '@mui/material';
 
 import { calcularEdad } from "@/helpers/functions";
@@ -24,6 +24,10 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import AddTaskIcon from '@mui/icons-material/AddTask';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import SecurityIcon from '@mui/icons-material/Security';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 import GavelIcon from '@mui/icons-material/Gavel';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import PeopleIcon from '@mui/icons-material/People';
@@ -42,13 +46,14 @@ import 'moment/locale/es';
 moment.locale('es');
 
 import { usePostulantes } from '@/hooks';
-import { FullScreenLoading } from '@/components/ui';
+import { CustomChip, FullScreenLoading } from '@/components/ui';
 import { InfoOutlined, Send } from '@mui/icons-material';
 import ModalEval from '@/components/eval/test';
 import confetti from 'canvas-confetti';
 import { postulante } from '@prisma/client';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+
 
 interface Props {
   postulantes: postulante[]
@@ -155,16 +160,22 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
         return 'Inscrito'
 
       case 'Apto entrevista':
-        if (puntajeEntr > 0) {
-          return 'Entrevistado'
+        if (puntajeEntr < 30) {
+          return '% Insuficiente'
         }
         return 'Apto entrevista'
       case 'Apto evaluación':
 
-        if (puntajeJur > 0) {
-          return 'Evaluado'
+        if (puntajeJur < 30) {
+          return '% Insuficiente'
+        } else {
+          if (puntajeJur >= 30) {
+            return 'Apto a Contrato'
+          } else {
+            return 'Apto evaluación'
+          }
+
         }
-        return 'Apto evaluación'
 
       default:
         return estado
@@ -333,162 +344,63 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       headerName: 'Estado',
       width: 200,
       renderCell: (params) => {
-
         return (
-
-          <Chip icon={<InfoOutlined />} variant='outlined' color="info" label={params.row.est} />
-
-
-
-
-
-          //     <Select
-          //       value={parseInt(params.row.estado)}
-          //       label="Estado"
-          //       onChange={(e: SelectChangeEvent<number>) => onStatusUpdated(params.row.idCp, (e.target.value.toString()))}//({ target }) => onRoleUpdated( row.id, target.value )
-          //       sx={{ width: '200px' }}
-          //       disabled={convocatoria.estadoId === 3}
-          //     >
-
-          //       <MenuItem value='1'> Inscrito </MenuItem>
-          //       <MenuItem value='2'> Pasa a Entrevista</MenuItem>
-          //       <MenuItem value='3'> Pasa a Evaluación</MenuItem>
-          //       <MenuItem value='4'> No Interesa </MenuItem>
-          //       <MenuItem value='5'> Interesante </MenuItem>
-          //       <MenuItem value='6'> Seleccionado</MenuItem>
-          //       <MenuItem value='7'> Contratado</MenuItem>
-
-
-          //     </Select>
+          //icon={<InfoOutlined />}
+          <CustomChip value={params.row.est} />
         )
       }
     },
-    // {
-    //   field: 'resultado',
-    //   headerName: 'Resultado',
-    //   width: 300,
-    //   type: 'number',
-    //   valueFormatter: ({ value }) => devolverPuntajeEntrevista(value),
-    //   // renderCell: (params) => {
 
-    //   //   const obj = devolverPuntajeEntrevista(params.row.calificaciones, params.row.idCp);
-    //   //   const objJ = devolverPuntajeJurado(params.row.calificaciones);
-
-    //   //   return (
-    //   //     <>
-    //   //       {/* <Chip label={getEstado(params.row.estado, params.row.puntajeEntr, params.row.puntajeJur)} color="info" variant='outlined' /> */}
-    //   //       {
-    //   //         params.row.puntajeJur ? (
-    //   //           <Alert severity={objJ.pasa ? 'success' : 'warning'}>{objJ.mensaje}</Alert>
-    //   //         ) : (obj.noEval) ? (
-    //   //           <Alert severity={'info'}>{obj.mensaje}</Alert>
-    //   //         ) : (
-    //   //           <Alert severity={obj.pasa ? 'success' : 'warning'}>{obj.mensaje}</Alert>
-    //   //         )
-    //   //       }
-
-    //   //     </>
-    //   //   )
-    //   // }
-
-    // },
     {
-      field: 'actions', headerName: 'Acciones', width: 200,
+      field: 'actions', headerName: 'Acciones', width: 120,
       sortable: false,
-      renderCell: (params) => {
+      type: 'actions',
+      getActions: (params) => [
+        <GridActionsCellItem
+          sx={{ color: yellow[800] }}
+          key={params.row.id}
+          icon={<StarsIcon />}
+          label="Puntos"
+          onClick={() => { hadleOpenCalificacion(params.row.calificaciones) }}
+        />,
+        <GridActionsCellItem
+          sx={{ color: green[800] }}
+          key={params.row.id}
+          icon={<WhatsAppIcon />}
+          label="Mensaje"
+          onClick={() => { handleOpenMessage(params.row.idCp, params.row.comentario, params.row.fechaComentario, params.row.telefono) }}
+        />,
+        <GridActionsCellItem
+          disabled={params.row.estadoId !== 2 || params.row.puntajeEntr > 0}
+          key={params.row.id}
+          icon={<AddTaskIcon />}
+          label="Entrevistar"
+          onClick={() => { handleOpenClase(params.row.idPos) }}
 
+          showInMenu
+        />,
+        <GridActionsCellItem
+          key={params.row.id}
+          icon={<GavelIcon />}
+          label="Contratar"
+          onClick={() => { handleOpenContrato(params.row.idCp, params.row.idPos) }}
+          showInMenu
+          disabled={params.row.puntajeJur < 30 || (convocatoria.vacantes - contratados.length) === 0 || params.row.estado === 'Contratado'}
+        />,
+      ]
 
-        function handleOpenMessage(id: any, comentario: string, fecha: string, phone: number) {
-          setMessageModal(true)
-          setIdPosConv(id)
-          setLastMessage(comentario)
-          setFechaComennt(fecha)
-          setPhone(phone);
-        }
-
-        return (
-          <>
-
-            {
-
-              (convocatoria.estado.id !== 3) ?
-                (
-
-
-                  <>
-
-                    <IconButton
-                      sx={{ color: cyan[600] }}
-                      aria-label="evaluar"
-                      onClick={() => { handleOpenClase(params.row.idPos,) }}
-                      disabled={params.row.estadoId !== 2 || params.row.puntajeEntr > 0}
-                    >
-                      < FactCheckIcon />
-                    </IconButton>
-                    <Tooltip title="Ver puntos"  >
-                      <IconButton
-                        sx={{ color: yellow[800] }}
-                        aria-label="evaluar"
-                        onClick={() => { hadleOpenCalificacion(params.row.calificaciones) }}
-                      >
-                        < StarsIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Contratar"  >
-                      <span>
-                        <IconButton
-                          sx={{ color: green[800] }}
-                          aria-label="negocias"
-                          disabled={params.row.puntajeJur < 30 || (convocatoria.vacantes - contratados.length) === 0 || params.row.estado === 'Contratado'}
-                          onClick={() => { handleOpenContrato(params.row.idCp, params.row.idPos) }}
-                        >
-                          <GavelIcon />
-                        </IconButton>
-                      </span>
-
-                    </Tooltip>
-
-                  </>
-
-                ) : (convocatoria.estado.id !== 3 && convocatoria.categoria_id == 1) ? (
-                  <>
-
-                    <IconButton
-                      sx={{ color: cyan[600] }}
-                      aria-label="evaluar"
-                      onClick={() => { handleOpen(params.row.id) }}
-                      disabled={params.row.estadoId !== 2 || params.row.puntajeEntr > 0} >
-                      < FactCheckIcon />
-                    </IconButton>
-
-
-
-
-                  </>
-
-                ) :
-                  (
-                    <Chip label="No disponible" color="error" variant='outlined' />
-
-                  )
-            }
-
-            <IconButton
-              sx={{ color: cyan[600] }}
-              aria-label="evaluar"
-              onClick={() => { handleOpenMessage(params.row.idCp, params.row.comentario, params.row.fechaComentario, params.row.telefono) }}
-
-            >
-              < SpeakerNotesIcon />
-            </IconButton>
-          </>
-        )
-      }
     }
 
 
 
   ];
+  function handleOpenMessage(id: any, comentario: string, fecha: string, phone: number) {
+    setMessageModal(true)
+    setIdPosConv(id)
+    setLastMessage(comentario)
+    setFechaComennt(fecha)
+    setPhone(phone);
+  }
   const devolverPuntajeEntrevista = (puntajes: any[]) => {
 
     let puntaje = 0;
@@ -634,7 +546,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     comentario: p.comentario,
     fechaComentario: p.fecha_comentario,
     resultado: p.postulante.puntajes,
-    est: getEstado(p.estado_postulante.nombre, getPuntajeEntrevista(p.postulante.puntajes), getPuntajeJurado(p.postulante.puntajes)),
+    est: getEstado(p.estado_postulante.nombre, getPuntajeEntrevista(p.postulante.puntajes), devolverPuntajeJurado(p.postulante.puntajes).porcentaje),
     telefono: p.postulante.telefono,
     email: p.postulante.persona.user[0].email,
 
@@ -1075,10 +987,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                       },
                     },
                   }}
-                // columnVisibilityModel={columnVisibilityModel}
-                // onColumnVisibilityModelChange={(newModel) =>
-                //   setColumnVisibilityModel(newModel)
-                // }
+
                 />
 
 
