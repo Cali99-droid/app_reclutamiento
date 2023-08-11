@@ -154,19 +154,19 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
   const { openClase, handleOpenClase, handleCloseClase } = useContext(PostContext);
 
-  const getEstado = (estado: string, puntajeEntr: number, puntajeJur: number) => {
+  const getEstado = (estado: string, puntajeEntr: any, puntajeJur: any) => {
     switch (estado) {
       case 'Inscrito':
         return 'Inscrito'
 
       case 'Apto entrevista':
-        if (puntajeEntr < 30) {
+        if (puntajeEntr.porcentaje < 30 && !puntajeEntr.noEval) {
           return '% Insuficiente'
         }
         return 'Apto entrevista'
       case 'Apto evaluación':
 
-        if (puntajeJur < 30) {
+        if (puntajeJur < 30 && !puntajeJur.noEval) {
           return '% Insuficiente'
         } else {
           if (puntajeJur >= 30) {
@@ -460,6 +460,15 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     let jurados = 0;
     let puntos = 0;
     let maximo = 0;
+    // if(puntajes.length === 0){
+    //   return {
+    //     puntos,
+    //     porcentaje: isNaN(Math.round(puntaje * 10)) ? 0 : Math.round((puntaje / maximo) * 100),
+    //     pasa: true,
+    //     noEval: true,
+    //     mensaje: 'Aún no evaluado'
+    //   }
+    // }
     const resultado = puntajes.forEach(x => {
 
       if (x.test.categoria_id === 1 || x.test.categoria_id === 2) {
@@ -546,7 +555,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     comentario: p.comentario,
     fechaComentario: p.fecha_comentario,
     resultado: p.postulante.puntajes,
-    est: getEstado(p.estado_postulante.nombre, getPuntajeEntrevista(p.postulante.puntajes), devolverPuntajeJurado(p.postulante.puntajes).porcentaje),
+    est: getEstado(p.estado_postulante.nombre, devolverPuntajeEntrevista(p.postulante.puntajes), devolverPuntajeJurado(p.postulante.puntajes)),
     telefono: p.postulante.telefono,
     email: p.postulante.persona.user[0].email,
 
