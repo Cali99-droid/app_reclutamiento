@@ -981,9 +981,9 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                     columns: {
                       columnVisibilityModel: {
                         // Hide columns status and traderName, the other columns will remain visible
-                        telefono: false,
+                        telefono: true,
                         email: false,
-                        edad: false,
+                        edad: true,
                       },
                     },
                   }}
