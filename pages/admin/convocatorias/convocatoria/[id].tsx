@@ -155,6 +155,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const { openClase, handleOpenClase, handleCloseClase } = useContext(PostContext);
 
   const getEstado = (estado: string, puntajeEntr: any, puntajeJur: any) => {
+    console.log(puntajeJur)
     switch (estado) {
       case 'Inscrito':
         return 'Inscrito'
@@ -481,10 +482,11 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
         return '';
       }
     });
-    if (Math.round((puntaje / maximo) * 100) === 0) {
+    if (puntos === 0) {
+
       return {
         puntos,
-        porcentaje: isNaN(Math.round(puntaje * 10)) ? 0 : Math.round((puntaje / maximo) * 100),
+        porcentaje: isNaN(Math.round((puntaje / jurados) * 10)) ? 0 : Math.round((puntaje / maximo) * 100),
         pasa: true,
         noEval: true,
         mensaje: 'Aún no evaluado'
