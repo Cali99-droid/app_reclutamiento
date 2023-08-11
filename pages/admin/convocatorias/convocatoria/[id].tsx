@@ -166,10 +166,10 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
         return 'Apto entrevista'
       case 'Apto evaluación':
 
-        if (puntajeJur < 30 && !puntajeJur.noEval) {
+        if (puntajeJur.porcentaje < 30 && !puntajeJur.noEval) {
           return '% Insuficiente'
         } else {
-          if (puntajeJur >= 30) {
+          if (puntajeJur.porcentaje >= 30) {
             return 'Apto a Contrato'
           } else {
             return 'Apto evaluación'
