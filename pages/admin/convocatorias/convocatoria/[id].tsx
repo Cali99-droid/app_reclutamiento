@@ -155,7 +155,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
   const { openClase, handleOpenClase, handleCloseClase } = useContext(PostContext);
 
   const getEstado = (estado: string, puntajeEntr: any, puntajeJur: any) => {
-    console.log(puntajeJur)
+
     switch (estado) {
       case 'Inscrito':
         return 'Inscrito'
@@ -988,7 +988,10 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                       quickFilterProps: { debounceMs: 500 },
                     },
                   }}
+
                   initialState={{
+
+                    pagination: { paginationModel: { pageSize: 5 } },
                     columns: {
                       columnVisibilityModel: {
                         // Hide columns status and traderName, the other columns will remain visible
@@ -998,7 +1001,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                       },
                     },
                   }}
-
+                  pageSizeOptions={[5, 10, 25]}
                 />
 
 
