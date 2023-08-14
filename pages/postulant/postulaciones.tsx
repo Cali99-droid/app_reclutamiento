@@ -322,7 +322,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
 
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [mensajes])
-
+    const matches = useMediaQuery('(min-width:600px)');
     return (
         <JobsLayout title={"Mis postulaciones"} pageDescription={"Lista de postulacioes"}>
             <Box bgcolor={'#EDF1F7'} paddingBottom={6} height={900} mt={8}>
@@ -372,7 +372,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
                                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                                 >
-                                    <Box padding={1} width={500} overflow={'auto'} height={300}>
+                                    <Box padding={1} width={matches ? 500 : 300} overflow={'auto'} height={300}>
                                         {mensajes.map(m => (
                                             <Box key={m.id}>
                                                 <Box display={'flex'} justifyContent={'space-between'}>
