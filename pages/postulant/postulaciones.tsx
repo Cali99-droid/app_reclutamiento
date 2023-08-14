@@ -28,7 +28,7 @@ moment.locale('es');
 interface Props {
 
     convocatorias: any[],
-    mensajes: mensajes[],
+    // mensajes: mensajes[],
 
 
 }
@@ -193,27 +193,27 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
                 )
             }
         },
-        {
-            field: 'mensajes',
-            headerName: 'Mensaje',
-            width: 200,
-            renderCell: (params) => {
-                return (
-                    params.row.mensajes ? (
-                        <>
-                            <Alert severity="info">
-                                <AlertTitle> Atención</AlertTitle>
-                                {params.row.mensajes}
-                            </Alert>
+        // {
+        //     field: 'mensajes',
+        //     headerName: 'Mensaje',
+        //     width: 200,
+        //     renderCell: (params) => {
+        //         return (
+        //             params.row.mensajes ? (
+        //                 <>
+        //                     <Alert severity="info">
+        //                         <AlertTitle> Atención</AlertTitle>
+        //                         {params.row.mensajes}
+        //                     </Alert>
 
-                        </>
-                    ) : (
+        //                 </>
+        //             ) : (
 
-                        <p>No tiene mensajes </p>
-                    )
-                )
-            }
-        },
+        //                 <p>No tiene mensajes </p>
+        //             )
+        //         )
+        //     }
+        // },
 
 
     ];
