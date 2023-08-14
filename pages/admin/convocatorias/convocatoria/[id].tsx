@@ -12,7 +12,7 @@ import FactCheckIcon from '@mui/icons-material/FactCheck';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { cyan, green, yellow } from '@mui/material/colors';
-import { useState, useEffect, useContext, ChangeEvent } from 'react';
+import { useState, useEffect, useContext, ChangeEvent, useRef } from 'react';
 import { useRouter } from 'next/router';
 
 import { IJob, IUser } from '@/interfaces';
@@ -369,7 +369,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
           key={params.row.id}
           icon={<WhatsAppIcon />}
           label="Mensaje"
-          onClick={() => { handleOpenMessage(params.row.idCp, params.row.comentario, params.row.fechaComentario, params.row.telefono) }}
+          onClick={() => { handleOpenMessage(params.row.idCp, params.row.comentario, params.row.fechaComentario, params.row.telefono, params.row.messages) }}
         />,
         <GridActionsCellItem
           disabled={params.row.estadoId !== 2 || params.row.puntajeEntr > 0}
@@ -395,12 +395,21 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
 
   ];
-  function handleOpenMessage(id: any, comentario: string, fecha: string, phone: number) {
+  const [mgs, setMgs] = useState<any[]>([])
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const scrollToBottom = () => {
+    if (contentRef.current) {
+      contentRef.current.scrollTop = contentRef.current.scrollHeight;
+    }
+  };
+  function handleOpenMessage(id: any, comentario: string, fecha: string, phone: number, mesagges: string[]) {
     setMessageModal(true)
     setIdPosConv(id)
     setLastMessage(comentario)
     setFechaComennt(fecha)
     setPhone(phone);
+    setMgs(mesagges);
+
   }
   const devolverPuntajeEntrevista = (puntajes: any[]) => {
 
@@ -560,6 +569,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
     est: getEstado(p.estado_postulante.nombre, devolverPuntajeEntrevista(p.postulante.puntajes), devolverPuntajeJurado(p.postulante.puntajes)),
     telefono: p.postulante.telefono,
     email: p.postulante.persona.user[0].email,
+    messages: p.postulante.mensajes
 
 
   }))
@@ -763,9 +773,10 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       //   }
       // };
       const { data } = await reclutApi.post(`/admin/postulantes/1`, { idPosConv, message });
-      setLastMessage(data.p.comentario)
-      setFechaComennt(data.p.fecha_comentario)
-
+      // setLastMessage(data.msg.contenido)
+      // setFechaComennt(data.msg.fecha)
+      mgs.unshift(data.msg)
+      // setMgs([...mgs, ])
 
       const url = `https://api.whatsapp.com/send?phone=+51${encodeURIComponent(phone!)}&text=${encodeURIComponent(message)}`;
       const newTab = window.open(url, '_blank');
@@ -1023,8 +1034,6 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
                   <TableCell align="right">Puntaje</TableCell>
                   <TableCell align="right">Tipo</TableCell>
                   <TableCell align="right">Comentario</TableCell>
-
-
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -1082,15 +1091,15 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
       </ModalEntrevista> */}
 
 
-      <Modal title={'Agregar comentario'} open={messageModal} handleClose={() => setMessageModal(false)} handleConfirm={() => setMessageModal(false)}>
-        <Box mt={1} >
+      <Modal title={'Enviar mensaje'} open={messageModal} handleClose={() => setMessageModal(false)} handleConfirm={() => setMessageModal(false)}>
+        <Box mt={1}>
 
           <TextField onChange={(e) => setMessage(e.target.value)} value={message} multiline rows={3} fullWidth id="outlined-basic" label="Agregar Mensaje" variant="outlined" sx={{ mb: 2 }} />
           <Box display={'flex'} justifyContent={'end'}>
             <Button sx={{ mb: 1 }} variant='contained' endIcon={<Send />} onClick={sendMessage} >Enviar</Button>
           </Box>
           <Divider />
-          <Box mt={2}>
+          <Box mt={1}>
             <Typography variant='body1' fontWeight={'bold'}>Último mensaje</Typography>
             <Paper>
               <Box padding={1} mt={1}>
@@ -1099,6 +1108,22 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
               </Box>
             </Paper>
           </Box>
+          <Box mt={2} mb={2}>
+            <Typography variant='body1' fontWeight={'bold'}>Últimos mensajes:</Typography>
+            <Box height={280} overflow={'auto'} padding={1} bgcolor={'#FAFAFA'} ref={contentRef}>
+              {mgs.map((m) => (
+                <Paper key={m.id}>
+                  <Box padding={2} mt={1} >
+                    <Typography >{m.contenido}</Typography>
+                    <Typography variant='body2' color={'gray'}>{m.fecha ? (moment(m.fecha).fromNow()) : 'No hay mensajes'}</Typography>
+                  </Box>
+                </Paper>
+              ))
+              }
+            </Box>
+
+          </Box>
+
         </Box>
       </Modal>
       <Modal title={'Asignar jurados'} open={juradoModal} handleClose={() => setJuradoModal(false)} handleConfirm={() => asignarJurado()}>

@@ -101,7 +101,12 @@ const getPostulantes = async(req: NextApiRequest, res: NextApiResponse<Data>) =>
               capacitacion:true,
               aficion:true,
               reconocimiento:true,
-              tics:true
+              tics:true,
+              mensajes:{
+                orderBy:{
+                  id:'desc'
+                }
+              }
               
             }
             
@@ -189,19 +194,44 @@ async function sendMessage(req: NextApiRequest, res: NextApiResponse<any>) {
   let fecha =  moment().tz('America/Lima').format('YYYY-MM-DD HH:mm:ss');
 
   try {
-    const  p = await prisma.postulante_x_convocatoria.update({
+    const  p = await prisma.postulante_x_convocatoria.findFirst({
       where: {
         id:idPosConv
-      },
+       },
+      // data: {       
+      //     comentario:  message,
+      //     fecha_comentario:  moment().tz('America/Lima').format('YYYY-MM-DD HH:mm:ss')
+      // },
+    })
+    if(p === null){
+     return res.status(404).json({ message: 'No existe dato' });
+    }
+    const session:any = await getServerSession(req, res, NextAuth);
+  if(!session){
+    return  res.status(403).json({message:'No autorizado'});
+  }
+   const email = session.user.email;
+   const user = await prisma.user.findFirst({
+      where:{
+          email
+      }
+   })
+   if(!user){
+      return  res.status(403).json({message:'No autorizado'});
+    }
+    const  msg = await prisma.mensajes.create({
+      
       data: {       
-          comentario:  message,
-          fecha_comentario:  moment().tz('America/Lima').format('YYYY-MM-DD HH:mm:ss')
+          contenido:  message,
+          fecha:  new Date(),
+          postulante_id:p.postulante_id,
+          user_id: user.id
       },
     })
 
     
     await prisma.$disconnect()
-    res.status(201).json({p});
+    res.status(201).json({msg});
   } catch (error) {
     console.log(error);
     await prisma.$disconnect()

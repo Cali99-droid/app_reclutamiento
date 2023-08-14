@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import NextLink from 'next/link';
 import { Router, useRouter } from 'next/router';
 
-import { AppBar, Avatar, Box, Button, Divider, IconButton, Input, InputAdornment, Link, ListItemIcon, Menu, MenuItem, MenuProps, Slide, Toolbar, Tooltip, Typography, alpha, styled, useMediaQuery, useScrollTrigger } from '@mui/material';
+import { AppBar, Avatar, Badge, Box, Button, Divider, IconButton, Input, InputAdornment, Link, ListItemIcon, Menu, MenuItem, MenuProps, Slide, Toolbar, Tooltip, Typography, alpha, styled, useMediaQuery, useScrollTrigger } from '@mui/material';
 import { ArticleOutlined, BorderColor, Checklist, ClearOutlined, ConfirmationNumberOutlined, Logout, SearchOutlined } from '@mui/icons-material';
 
 import { AuthContext, UiContext } from '@/context';
@@ -14,6 +14,7 @@ import ContactPageIcon from '@mui/icons-material/ContactPage';
 import Image from 'next/image';
 import { postulante } from '@prisma/client';
 import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
+import MailIcon from '@mui/icons-material/Mail';
 interface Props {
     /**
      * Injected by the documentation to work in an iframe.
@@ -331,6 +332,7 @@ export const NavBar = () => {
 
                                 </Link>
                             </NextLink>
+
                             {isLoggedIn && user?.rol.name === 'jurado1' || user?.rol.name === 'jurado2' ? (
                                 <NextLink href='/jurado' passHref legacyBehavior>
                                     <Link alignItems='end'>

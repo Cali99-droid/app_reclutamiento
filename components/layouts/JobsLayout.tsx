@@ -8,6 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Box } from '@mui/material';
 import { AuthContext } from '@/context';
 import { inactivity } from '@/helpers';
+import { useMsg } from '@/hooks';
+import { useRouter } from 'next/router';
 
 interface Props extends PropsWithChildren {
     title: string;
@@ -25,8 +27,46 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
         children: React
     }
     const { user } = useContext(AuthContext);
+    const { push } = useRouter()
+
+    const { mensajes } = useMsg(`/msg/1`)
+    // const noLeidos = mensajes.filter(m => m.status !== 1);
+    useEffect(() => {
+        if (user) {
+            const noLeidos = mensajes.filter(m => m.status !== 1);
+            if (noLeidos.length > 0) {
+
+                if (Notification.permission !== 'granted') {
+                    requestNotificationPermission()
+                }
+                showNotification()
+            }
+        }
 
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mensajes])
+    const requestNotificationPermission = async () => {
+        try {
+            const permissionResult = await Notification.requestPermission();
+            console.log('Permission:', permissionResult);
+        } catch (error) {
+            console.error('Error requesting permission:', error);
+        }
+    };
+    const showNotification = () => {
+        if (Notification.permission === 'granted') {
+            const notification = new Notification('Tienes un nuevo mensaje', {
+                body: '¡Hola, tienes un nuevo mensaje del la oficina de talento humano del Colegio Albert Einstein!',
+                icon: '/img/logo.png', // Ruta a tu icono de notificación
+            });
+
+            notification.onclick = () => {
+                push('/postulant/postulaciones');
+
+            };
+        }
+    };
     // if (user) {
 
     //     inactivity.inactivityTime()
