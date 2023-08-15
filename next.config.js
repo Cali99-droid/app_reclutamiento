@@ -1,5 +1,19 @@
-// next.config.js
-module.exports = {
+// // next.config.js
+// module.exports = {
+//   images: {
+//     remotePatterns: [
+//       {
+//         protocol: "https",
+//         hostname: "caebucket.s3.us-west-2.amazonaws.com",
+//         port: "",
+//       },
+//     ],
+//   },
+// };
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  /* config options here */
   images: {
     remotePatterns: [
       {
@@ -10,3 +24,5 @@ module.exports = {
     ],
   },
 };
+
+export default nextConfig;

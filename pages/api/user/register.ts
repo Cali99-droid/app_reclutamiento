@@ -140,14 +140,14 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
      // ** API mautic 
 
-     const apellidos =  apellidoPat + ' '+apellidoMat;
-     crearContacto(nombre, email, tokenEmail,apellidos)
-     .then(() => {
-       console.log('Contacto creado exitosamente');
-     })
-     .catch((error) => {
-       console.error('Error al crear el contacto:', error);
-     });
+    //  const apellidos =  apellidoPat + ' '+apellidoMat;
+    //  crearContacto(nombre, email, tokenEmail,apellidos)
+    //  .then(() => {
+    //    console.log('Contacto creado exitosamente');
+    //  })
+    //  .catch((error) => {
+    //    console.error('Error al crear el contacto:', error);
+    //  });
     // //  console.log(tokenEmail)
     await prisma.$disconnect()
     const newUser = persona.user[0];

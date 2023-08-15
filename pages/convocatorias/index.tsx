@@ -35,7 +35,7 @@ export default function ConvocatoriasPage() {
           </Box>
 
 
-          <Typography fontSize={18} color={grey[700]} variant='h2' sx={{ mt: 2 }}>Oportunidades laborales en Huaraz, Únete a un equipo comprometido con la excelencia educativa en nuestra academia preuniversitaria. Descubre cómo puedes formar parte de nuestro legado. </Typography>
+          <Typography fontSize={18} color={grey[700]} variant='h2' sx={{ mt: 2 }}>Oportunidades laborales en Huaraz, Únete a un equipo comprometido con la excelencia educativa en nuestras instituciones. Descubre cómo puedes formar parte de nuestro legado. </Typography>
         </Box>
         <Divider />
         <Box >

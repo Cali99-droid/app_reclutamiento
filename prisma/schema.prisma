@@ -212,7 +212,7 @@ model postulante {
   investigacion             investigacion[]
   mensajes                  mensajes[]
   grado                     grado                       @relation(fields: [gradoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_grado1")
-  persona                   persona                     @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_persona1")
+  persona                   persona                     @relation(fields: [persona_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_postulante_persona1")
   tipo_documento            tipo_documento              @relation(fields: [tipoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_postulante_tipo_documento1")
   postulante_x_convocatoria postulante_x_convocatoria[]
   puntajes                  puntajes[]
@@ -348,7 +348,7 @@ model user {
   convocatoria_x_user   convocatoria_x_user[]
   mensajes              mensajes[]
   puntajes              puntajes[]
-  persona               persona                 @relation(fields: [persona_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_persona1")
+  persona               persona                 @relation(fields: [persona_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user_persona1")
   rol                   rol                     @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_rol")
 
   @@index([persona_id], map: "fk_user_persona1_idx")
