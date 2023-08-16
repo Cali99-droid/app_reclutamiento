@@ -9,7 +9,7 @@ export const Hero = () => {
     const matches = useMediaQuery('(min-width:600px)');
     const { isLoggedIn } = useContext(AuthContext);
     return (
-        <Box sx={{ background: 'linear-gradient(to right, #0045aa 0%,#4565d0 31%,#7087f7 64%,#7db9e8 100%);' }} padding={8}>
+        <Box sx={{ background: 'linear-gradient(to right, #0045aa 0%,#4565d0 31%,#7087f7 64%,#7db9e8 100%);' }} paddingTop={18}>
             <Box maxWidth={1200} sx={{ margin: 'auto' }} display={"flex"} gap={matches ? 20 : 10} flexDirection={matches ? 'row' : 'column'} padding={5} justifyContent={'center'} alignItems={'center'}>
                 <Box >
                     <Typography variant='h1' component='h1' fontSize={matches ? 50 : 40} color={'#FFF'} fontWeight={'bold'} >Nuestra Visión</Typography>
