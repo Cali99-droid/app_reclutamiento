@@ -34,6 +34,10 @@ async function cleanupUnconfirmedUsers() {
         in: personIds,
       },
     },
+  }).then(()=>
+    console.log('Completed Unconfirmed users cleaned up.')
+  ,(r)=>{
+    console.log('error' + r)
   });
 
   console.log('Unconfirmed users cleaned up.');
