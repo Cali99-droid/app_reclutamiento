@@ -50,5 +50,5 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // Iniciar la ejecución del script
-console.log('Cleanup script started. gg');
+console.log('Cleanup script started.');
 // cleanupUnconfirmedUsers();
