@@ -60,7 +60,11 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
             message: 'El apellido debe de ser de 2 caracteres'
         });
     }
-    
+    if ( !fechaNac  ) {
+        return res.status(400).json({
+            message: 'Se requiere una fecha de nacimiento'
+        });
+    }
     if ( !validations.isValidEmail( email ) ) {
         return res.status(400).json({
             message: 'El correo no tiene formato de correo'
@@ -139,15 +143,22 @@ const registerUser = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     // await sendConfirmationEmail(email, tokenEmail)
 
      // ** API mautic 
-
-    //  const apellidos =  apellidoPat + ' '+apellidoMat;
-    //  crearContacto(nombre, email, tokenEmail,apellidos)
-    //  .then(() => {
-    //    console.log('Contacto creado exitosamente');
-    //  })
-    //  .catch((error) => {
-    //    console.error('Error al crear el contacto:', error);
-    //  });
+     try {
+        const apellidos =  apellidoPat + ' '+apellidoMat;
+     crearContacto(nombre, email, tokenEmail,apellidos)
+     .then(() => {
+       console.log('Contacto creado exitosamente');
+     })
+     .catch((error) => {
+       console.error('Error al crear el contacto:', error);
+       
+     });
+     } catch (error) {
+        return res.status(400).json({
+        message:'Hubo un error al crear contacto'
+            })
+     }
+     
     // //  console.log(tokenEmail)
     await prisma.$disconnect()
     const newUser = persona.user[0];

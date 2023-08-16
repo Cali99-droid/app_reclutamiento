@@ -1,5 +1,5 @@
 
-import { Box, Button, Grid, TextField, Link, Chip, Divider, useMediaQuery, CircularProgress } from '@mui/material';
+import { Box, Button, Grid, TextField, Link, Chip, Divider, useMediaQuery, CircularProgress, createSvgIcon } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { AuthLayout } from "@/components/layouts/AuthLayout";
 import NextLink from 'next/link';
@@ -63,7 +63,11 @@ const LoginPage = (error: string) => {
         }
     }
 
-
+    const GoogleIconS = createSvgIcon(
+        // credit: plus icon from https://heroicons.com/
+        <svg xmlns="http://www.w3.org/2000/svg" width="2443" height="2500" preserveAspectRatio="xMidYMid" viewBox="0 0 256 262" id="google"><path fill="#4285F4" d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"></path><path fill="#34A853" d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"></path><path fill="#FBBC05" d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782"></path><path fill="#EB4335" d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"></path></svg>,
+        'google',
+    );
 
     return (
         <AuthLayout title={"Iniciar Sesion "} pageDescription={'Iniciar sesión en la plataforma de empleos de la institución educativa Albert Einstein'} >
@@ -87,6 +91,28 @@ const LoginPage = (error: string) => {
                 <form onSubmit={handleSubmit(onLoginUser)} noValidate>
                     <Box >
                         <Grid container spacing={2}>
+                            <Grid item xs={12} display='flex' justifyContent='end' flexDirection={'column'}>
+
+                                {
+                                    Object.values(providers).map((provider: any) => {
+                                        if (provider.id === 'credentials') return (<div key={'credentials'}></div>)
+                                        return (
+                                            <Button
+                                                key={provider.id}
+                                                variant='outlined'
+                                                fullWidth
+                                                size='large'
+
+                                                startIcon={<GoogleIconS />}
+                                                onClick={() => signIn(provider.id)}
+                                            >{`Entrar con ${provider.name}`}
+                                            </Button>
+                                        )
+                                    })
+                                }
+                                <Divider sx={{ marginTop: 3, marginBottom: 2 }}><Typography fontSize={15}>O continua con tu email y contraseña</Typography>
+                                </Divider>
+                            </Grid>
                             <Grid item xs={12}>
                                 <TextField
                                     type="email"
@@ -121,12 +147,14 @@ const LoginPage = (error: string) => {
 
                             <Grid item xs={12}>
                                 <Button
+
                                     type="submit"
                                     color="secondary"
                                     disabled={loading}
                                     size='large'
                                     fullWidth>
-                                    Ingresar{loading && (
+                                    Ingresar
+                                    {loading && (
                                         <CircularProgress
                                             size={24}
                                             sx={{
@@ -151,12 +179,11 @@ const LoginPage = (error: string) => {
                                         href={router.query.p ? `/auth/register?p=${router.query.p}` : '/auth/register'}
 
                                     >
-                                        <Link sx={{ fontWeight: 'bold', textDecoration: 'underline' }} color="secondary">Regístrate</Link>
+                                        <Link sx={{ textDecoration: 'underline' }} color="secondary">Regístrate</Link>
                                     </NextLink>
 
 
                                 </Box>
-
                                 <Box textAlign={'end'}>
                                     <NextLink
                                         type="submit"
@@ -164,32 +191,13 @@ const LoginPage = (error: string) => {
                                         href={"/auth/forgot-password"}
                                         passHref
                                         legacyBehavior>
-                                        <Link sx={{ fontWeight: 'bold', textDecoration: 'underline' }} color="secondary">Olvidé mi contraseña</Link>
+                                        <Link sx={{ textDecoration: 'underline' }} color="secondary">Olvidé mi contraseña</Link>
                                     </NextLink>
 
                                 </Box>
 
                             </Grid>
-                            <Grid item xs={12} display='flex' justifyContent='end' flexDirection={'column'}>
-                                <Divider sx={{ width: '100%', mb: 2 }} />
-                                {
-                                    Object.values(providers).map((provider: any) => {
-                                        if (provider.id === 'credentials') return (<div key={'credentials'}></div>)
-                                        return (
-                                            <Button
-                                                key={provider.id}
-                                                variant='outlined'
-                                                fullWidth
-                                                size='medium'
-                                                startIcon={<GoogleIcon />}
-                                                onClick={() => signIn(provider.id)}
-                                            >{`Entrar con ${provider.name}`}
-                                            </Button>
-                                        )
-                                    })
-                                }
 
-                            </Grid>
                         </Grid>
                     </Box>
                 </form>

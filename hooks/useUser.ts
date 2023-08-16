@@ -9,7 +9,7 @@ export const useUser = (url: string, config: SWRConfiguration = {} ) => {
 
     // const { data, error } = useSWR<IProduct[]>(`/api${ url }`, fetcher, config );
     const { data, error } = useSWR<any[]>(`/api${ url }`, config );
-   console.log('llegooooo')
+   
     return {
         users: data || [],
         isLoading: !error && !data,

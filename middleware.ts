@@ -80,7 +80,7 @@ export async function middleware(req: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher:['/admin/:path*','/postulant/:path*','/jurado/:path*', '/api/postulants/:path*'],
+  matcher:['/api/admin/:path*','/api/jurado/:path*', '/admin/:path*','/postulant/:path*','/jurado/:path*', '/api/postulants/:path*'],
 }
 
 //'/api/admin/:path*','/api/jurado/:path*', 

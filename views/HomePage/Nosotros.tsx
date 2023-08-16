@@ -30,7 +30,7 @@ const images = [
 export const Nosotros = () => {
     const matches = useMediaQuery('(min-width:600px)');
     const { users, isLoading } = useUser('/users');
-    console.log(users)
+
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
     const maxSteps = images.length;

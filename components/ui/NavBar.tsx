@@ -3,7 +3,7 @@ import NextLink from 'next/link';
 import { Router, useRouter } from 'next/router';
 
 import { AppBar, Avatar, Badge, Box, Button, Divider, IconButton, Input, InputAdornment, Link, ListItemIcon, Menu, MenuItem, MenuProps, Slide, Toolbar, Tooltip, Typography, alpha, styled, useMediaQuery, useScrollTrigger } from '@mui/material';
-import { ArticleOutlined, BorderColor, Checklist, ClearOutlined, ConfirmationNumberOutlined, Logout, SearchOutlined } from '@mui/icons-material';
+import { ArticleOutlined, BorderColor, Checklist, ClearOutlined, ConfirmationNumberOutlined, Face2Sharp, Face6Outlined, Key, LoginOutlined, Logout, SearchOutlined } from '@mui/icons-material';
 
 import { AuthContext, UiContext } from '@/context';
 import EditIcon from '@mui/icons-material/Edit';
@@ -160,10 +160,16 @@ export const NavBar = () => {
 
 
                     {/* Pantallas pantallas grandes */}
-
+                    {user?.rol.name === 'admin' || user?.rol.name === 'jefe' || user?.rol.name === 'asistente' ? (
+                        <Box>
+                            <Button size={matches ? 'medium' : 'small'} variant='contained' sx={{ background: 'linear-gradient(to right, #0045aa 0%,#4565d0 31%,#7087f7 64%,#7db9e8 100%);' }} onClick={() => push('/admin/convocatorias')}>Administrar</Button>
+                        </Box>
+                    ) : (
+                        <></>
+                    )}
                     {!isLoggedIn && (
                         <Box sx={{ padding: 1 }}>
-                            <Button href='/auth/login'>Acceder</Button>
+                            <Button size={matches ? 'medium' : 'small'} variant='contained' sx={{ background: 'linear-gradient(to right, #0045aa 0%,#4565d0 31%,#7087f7 64%,#7db9e8 100%);' }} endIcon={<Key />} href='/auth/login'>Acceder</Button>
                         </Box>
                     )}
 
@@ -184,7 +190,7 @@ export const NavBar = () => {
                                             aria-haspopup="true"
                                             aria-expanded={open ? 'true' : undefined}
                                         >
-                                            <Avatar alt='avatar usuario' sx={{ bgcolor: '#0045AA', width: 56, height: 56 }} src={user?.persona.postulante[0].image ? `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${user?.persona.postulante[0].image}` : '/avatar.jpg'} />
+                                            <Avatar alt='avatar usuario' sx={{ bgcolor: '#0045AA', width: 50, height: 50 }} src={user?.persona.postulante[0].image ? `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${user?.persona.postulante[0].image}` : '/avatar.jpg'} />
 
                                         </IconButton>
                                     </Tooltip>
@@ -278,13 +284,7 @@ export const NavBar = () => {
 
 
                                 </Box>
-                                {user?.rol.name === 'admin' || user?.rol.name === 'jefe' || user?.rol.name === 'asistente' ? (
-                                    <Box>
-                                        <Button variant='outlined' onClick={() => push('/admin/convocatorias')}>Administrar</Button>
-                                    </Box>
-                                ) : (
-                                    <></>
-                                )}
+
 
                             </Box>
 

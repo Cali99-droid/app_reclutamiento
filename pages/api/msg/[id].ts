@@ -28,7 +28,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 const getMsg = async(req: NextApiRequest, res: NextApiResponse<Data>) => { 
     const session:any = await getServerSession(req, res, NextAuth);
     if(!session){
-      return  res.status(403).json({message:'No autorizado'});
+      return  res.status(204 ).json({message:'inicie sesión para ver los mensajes'});
     }
      const email = session.user.email;
      const user = await prisma.user.findFirst({
@@ -41,7 +41,7 @@ const getMsg = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
       }
       const pos = await prisma.postulante.findFirst({
         where:{
-            persona_id:user.persona_id
+            persona_id:user?.persona_id
         }
       })
 
@@ -53,7 +53,7 @@ try{
     const { id=''  } = req.query;
     const msg = await prisma.mensajes.findMany({
         where: {
-            postulante_id:pos.id
+            postulante_id:pos?.id
         }, orderBy: {
             id: 'desc'
         }

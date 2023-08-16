@@ -1,5 +1,5 @@
 
-import { Box, Button, Grid, TextField, Link, Chip, FormControl, InputLabel, Select, MenuItem, FormHelperText, useMediaQuery, Divider, CircularProgress } from '@mui/material';
+import { Box, Button, Grid, TextField, Link, Chip, FormControl, InputLabel, Select, MenuItem, FormHelperText, useMediaQuery, Divider, CircularProgress, createSvgIcon } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { AuthLayout } from "@/components/layouts/AuthLayout";
 import NextLink from 'next/link';
@@ -10,8 +10,10 @@ import { AuthContext } from '@/context/';
 import { ErrorOutline } from '@mui/icons-material';
 import { getProviders, signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import GoogleIcon from '@mui/icons-material/Google';
+
 import { blue, green } from '@mui/material/colors';
+import { DateField } from '@mui/x-date-pickers';
+import { toast } from 'react-toastify';
 
 
 type FormData = {
@@ -36,7 +38,7 @@ export default function RegisterPage() {
 
   const router = useRouter();
   const { registerUser } = useContext(AuthContext);
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const { register, handleSubmit, formState: { errors }, getValues, setValue } = useForm<FormData>();
 
 
 
@@ -54,6 +56,10 @@ export default function RegisterPage() {
 
   }, [router, status])
   const onRegisterForm = async ({ nombre, apellidoPat, apellidoMat, email, password, fechaNac, tipoId, numeroDocumento }: FormData,) => {
+    if (!getValues('fechaNac')) {
+      toast.error('Ingrese una fecha de nacimiento')
+      return;
+    }
     setLoading(true)
     setShowError(false);
     const { hasError, message } = await registerUser(nombre, apellidoPat, apellidoMat, email, password, fechaNac, tipoId, numeroDocumento);
@@ -103,24 +109,17 @@ export default function RegisterPage() {
       }, 2000);
     }
   };
-  const styles = {
-    // Define los estilos para el tamaño "pequeño"
-    smallTextField: {
-      fontSize: '12px',
-      padding: '2px 4px',
-    },
-    // Define los estilos para el tamaño "mediano"
-    mediumTextField: {
-      fontSize: '14px',
-      padding: '8px 12px',
-    },
-    // Define los estilos para el tamaño "grande"
-    largeTextField: {
-      fontSize: '18px',
-      padding: '12px 16px',
-    },
-  };
+  const GoogleIconS = createSvgIcon(
+    // credit: plus icon from https://heroicons.com/
+    <svg xmlns="http://www.w3.org/2000/svg" width="2443" height="2500" preserveAspectRatio="xMidYMid" viewBox="0 0 256 262" id="google"><path fill="#4285F4" d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"></path><path fill="#34A853" d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"></path><path fill="#FBBC05" d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782"></path><path fill="#EB4335" d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"></path></svg>,
+    'google',
+  );
   const matches = useMediaQuery('(min-width:1000px)');
+  const matchesH = useMediaQuery('(min-height:1000px)');
+  const handleChengeDate = (val: any) => {
+    setValue('fechaNac', val);
+
+  }
   return (
     <AuthLayout title={"Registrate y Postula "} pageDescription={'Registrate y llena tu ficha para poder postular a los emplemos disponibles en  la institución educativa Albert Einstein'} >
       <Box bgcolor={'#FFF'} padding={4} className={'fadeIn'} mt={1}>
@@ -134,9 +133,31 @@ export default function RegisterPage() {
 
           />
           <Grid container spacing={2}>
+            <Grid item xs={12} display='flex' justifyContent='end' flexDirection={'column'}>
+
+              {
+                Object.values(providers).map((provider: any) => {
+                  if (provider.id === 'credentials') return (<div key={'credentials'}></div>)
+                  return (
+                    <Button
+                      key={provider.id}
+                      variant='outlined'
+                      fullWidth
+                      size='large'
+
+                      startIcon={<GoogleIconS />}
+                      onClick={() => signIn(provider.id)}
+                    >{`Entrar con ${provider.name}`}
+                    </Button>
+                  )
+                })
+              }
+              <Divider sx={{ marginTop: 1, marginBottom: 1 }}><Typography fontSize={15}>O regístrate</Typography>
+              </Divider>
+            </Grid>
             <Grid item xs={12}>
               <TextField
-                size={matches ? 'small' : 'medium'}
+                // size={matches ? 'small' : 'medium'}
                 type="text"
                 label="Nombres"
                 variant="outlined"
@@ -153,7 +174,7 @@ export default function RegisterPage() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                size={matches ? 'small' : 'medium'}
+                // size={matches ? 'small' : 'medium'}
                 type="text"
                 label="Apellido Paterno"
                 variant="outlined"
@@ -170,7 +191,7 @@ export default function RegisterPage() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                size={matches ? 'small' : 'medium'}
+                // size={matches ? 'small' : 'medium'}
                 type="text"
                 label="Apellido Materno"
                 variant="outlined"
@@ -185,43 +206,7 @@ export default function RegisterPage() {
               />
 
             </Grid>
-            <Grid item xs={12}>
-
-              <TextField
-                size={matches ? 'small' : 'medium'}
-                type="date"
-                label='Fecha de nacimiento'
-                variant="outlined"
-                defaultValue={'1980-01-01'}
-                fullWidth
-                required
-                {...register('fechaNac', {
-                  required: 'Este campo es requerido',
-                  minLength: { value: 2, message: 'Mínimo 2 caracteres' }
-                })}
-                error={!!errors.fechaNac}
-                helperText={errors.fechaNac?.message}
-              />
-
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                size={matches ? 'small' : 'medium'}
-                type="email"
-                label="Correo"
-                variant="outlined"
-                required
-                fullWidth
-                {...register('email', {
-                  required: 'Este campo es requerido',
-                  validate: validations.isEmail
-                })}
-                error={!!errors.email}
-                helperText={errors.email?.message}
-              />
-
-
-            </Grid> <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={12}>
               <FormControl fullWidth >
                 <InputLabel id="tipoId">Tipo de Documento </InputLabel>
                 <Select
@@ -258,7 +243,7 @@ export default function RegisterPage() {
               <TextField
                 label="Numero de documento"
                 type="number"
-                size={matches ? 'small' : 'medium'}
+                // size={matches ? 'small' : 'medium'}
                 variant="outlined"
                 fullWidth
                 required
@@ -273,8 +258,46 @@ export default function RegisterPage() {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
+              <DateField label="Fecha de nacimiento" fullWidth onChange={(newValue) => handleChengeDate(newValue)} />
+              {/* <TextField
                 size={matches ? 'small' : 'medium'}
+                type="date"
+                label='Fecha de nacimiento'
+                variant="outlined"
+
+                fullWidth
+                required
+                {...register('fechaNac', {
+                  required: 'Este campo es requerido',
+                  minLength: { value: 2, message: 'Mínimo 2 caracteres' }
+                })}
+                error={!!errors.fechaNac}
+                helperText={errors.fechaNac?.message}
+              /> */}
+
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                // size={matches ? 'small' : 'medium'}
+                type="email"
+                label="Correo"
+                variant="outlined"
+                required
+                fullWidth
+                {...register('email', {
+                  required: 'Este campo es requerido',
+                  validate: validations.isEmail
+                })}
+                error={!!errors.email}
+                helperText={errors.email?.message}
+              />
+
+
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                // size={matches ? 'small' : 'medium'}
                 required
                 label="Contraseña"
                 type='password'
@@ -348,26 +371,7 @@ export default function RegisterPage() {
             </Grid>
           </Grid>
         </form>
-        <Grid item xs={12} display='flex' justifyContent='end' flexDirection={'column'}>
-          <Divider sx={{ width: '100%', mb: 2 }} />
-          {
-            Object.values(providers).map((provider: any) => {
-              if (provider.id === 'credentials') return (<div key={'credentials'}></div>)
-              return (
-                <Button
-                  key={provider.id}
-                  variant='outlined'
-                  fullWidth
-                  size='medium'
-                  startIcon={<GoogleIcon />}
-                  onClick={() => signIn(provider.id)}
-                >{`Entrar con ${provider.name}`}
-                </Button>
-              )
-            })
-          }
 
-        </Grid>
       </Box>
     </AuthLayout >
   )

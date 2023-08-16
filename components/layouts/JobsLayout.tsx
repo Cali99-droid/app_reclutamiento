@@ -26,13 +26,13 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
         window: undefined,
         children: React
     }
-    const { user } = useContext(AuthContext);
+    const { isLoggedIn, user } = useContext(AuthContext);
     const { push } = useRouter()
 
     const { mensajes } = useMsg(`/msg/1`)
     // const noLeidos = mensajes.filter(m => m.status !== 1);
     useEffect(() => {
-        if (user) {
+        if (isLoggedIn) {
             const noLeidos = mensajes.filter(m => m.status !== 1);
             if (noLeidos.length > 0) {
 

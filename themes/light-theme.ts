@@ -40,9 +40,9 @@ export let lightTheme = createTheme({
       },
       styleOverrides: {
         root: {
-          background:'#FFF' ,
-          height: 90,
-          justifyContent:'center'        
+          background:'#F8F8FF' ,
+          
+          justifyContent:'space-around'        
         },
       }
     },
@@ -80,7 +80,7 @@ export let lightTheme = createTheme({
        
         variant: 'contained',
         size: 'small',
-        disableElevation: true,
+        // disableElevation: true,
         color: 'secondary'
       },
       styleOverrides: {
@@ -90,12 +90,12 @@ export let lightTheme = createTheme({
           borderRadius: 10,
          
         },
-        contained: {
-          boxShadow: 'none',
-          '&:active': {
-              boxShadow: 'none',
-          },
-      },
+      //   contained: {
+      //     boxShadow: 'none',
+      //     '&:active': {
+      //         boxShadow: 'none',
+      //     },
+      // },
       }
     },
 
@@ -106,7 +106,7 @@ export let lightTheme = createTheme({
       },
       styleOverrides: {
         root: {
-          boxShadow: '0px 5px 5px rgba(0,0,0,0.05)',
+          boxShadow: '0px 15px 15px rgba(0,0,0,0.05)',
           borderRadius: '10px',
         }
       }

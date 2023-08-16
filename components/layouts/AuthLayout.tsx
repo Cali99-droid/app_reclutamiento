@@ -4,7 +4,8 @@ import { Box, Grid, Link, Typography, useMediaQuery } from '@mui/material';
 import NextLink from 'next/link';
 import { InView } from 'react-intersection-observer';
 import { FullScreenLoading } from '../ui';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 interface Props extends PropsWithChildren {
@@ -35,7 +36,7 @@ export const AuthLayout: FC<Props> = ({ children, title, pageDescription }) => {
             {showLoadingMessage && <FullScreenLoading />}  <InView onChange={handleIntersection}>
                 <main>
 
-
+                    <ToastContainer />
                     <Grid container direction="row"
                         justifyContent="center"
                         alignItems="center" bgcolor={'#f1F1F1'} height={matches ? '100vh' : ''} spacing={0}>

@@ -29,9 +29,9 @@ export default function Home() {
 
       {showLoadingMessage && <FullScreenLoading />}
       <InView onChange={handleIntersection}>
-
+        <Hero />
         <Box maxWidth={1200} sx={{ margin: 'auto' }} paddingTop={18} >
-          <Hero />
+
           {/* <Partners /> */}
           <Convocatorias />
           <Beneficios />
