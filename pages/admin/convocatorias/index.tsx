@@ -195,11 +195,17 @@ const ConvocatoriasPage: NextPage<Props> = ({ convos }) => {
 
   ];
 
+  const formatoNombre = (titulo: string) => {
 
+    return titulo.replace(/\w\S*/g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+    });
+
+  }
   const rows = jobs.map((job, index) => ({
     id: index + 1,
     idConv: job.id,
-    titulo: job.titulo,
+    titulo: formatoNombre(job.titulo),
     vacantes: job.vacantes,
     estado: job.estado.nombre,
     jobId: job.id,

@@ -18,6 +18,7 @@ import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import { reclutApi } from '@/apies';
 import { convocatoria, categoria } from '@prisma/client';
+import NextLink from 'next/link';
 interface Props {
     contratados: any[]
     convocatoriasAbiertas: number
@@ -57,11 +58,18 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
 
     const { push, asPath } = useRouter();
     const matches = useMediaQuery('(min-width:600px)');
+    const formatoNombre = (nombres: string, apellidoPat: string, apellidoMat: string) => {
+        const str = apellidoPat + ' ' + apellidoMat + ' ' + nombres;
+        return str.replace(/\w\S*/g, function (txt) {
+            return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+        });
+
+    }
 
     const rows = contratados.map((p, index) => ({
         id: index + 1,
         img: p.postulante.image,
-        nombres: p.postulante.persona.nombres + ' ' + p.postulante.persona.apellido_pat + ' ' + p.postulante.persona.apellido_mat,
+        nombres: formatoNombre(p.postulante.persona.nombres, p.postulante.persona.apellido_pat, p.postulante.persona.apellido_mat),
         puesto: p.convocatoria.titulo,
         idPos: p.postulante.id,
         idCp: p.id,
@@ -105,8 +113,18 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
             field: 'nombres',
             headerName: 'Nombres',
             width: 250,
-
+            renderCell: ({ row }) => {
+                return (
+                    <NextLink href={`/admin/postulante/${row.idPos}`} passHref legacyBehavior>
+                        <Link underline='always'>
+                            {row.nombres}
+                        </Link>
+                    </NextLink>
+                )
+            }
         },
+
+
         {
             field: 'puesto',
             headerName: 'Convocatoria',

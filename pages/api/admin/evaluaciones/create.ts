@@ -32,14 +32,15 @@ const createEvaluacion = async(req: NextApiRequest, res: NextApiResponse<Data>) 
             categoria_id:categoriaId,
         }
     });
-    if(ev){
-        return res.status(404).json({ message: 'No se puede crear mas de una evaluación para esta categoría' });
+    console.log(ev)
+    if(ev.length>0){
+        return res.status(404).json({ message: 'No se puede crear mas de una evaluación para esta categoríass' });
     }
     try {
         const  ev = await prisma.test.create({
            data:{
             nombre:evaluacion,
-            rol_id: rolId,
+           
             categoria_id:categoriaId
            },
            include:{

@@ -334,7 +334,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
                             <Box>
 
                                 <Badge badgeContent={noLeidos.length} onClick={handleClick} color="error">
-                                    <MailIcon color="info" />
+                                    <MailIcon color="info" sx={{ cursor: 'pointer' }} />
                                 </Badge>
 
                                 <Menu

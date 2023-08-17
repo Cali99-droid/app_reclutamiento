@@ -252,7 +252,7 @@ const EvaluacionesPage: NextPage<Props> = ({ evaluaciones }) => {
     nombre: ev.nombre,
     responsable: getResponsable(ev.categoria.nombre),
     items: ev._count.item,
-    rolId: ev.rol.id,
+
     categoriaId: ev.categoria_id,
     categoria: ev.categoria.nombre,
 
