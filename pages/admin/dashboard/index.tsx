@@ -29,7 +29,7 @@ interface Props {
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
-    padding: 1,
+
     textAlign: 'center',
     color: theme.palette.text.secondary,
     borderRadius: 10
@@ -115,7 +115,7 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
             width: 250,
             renderCell: ({ row }) => {
                 return (
-                    <NextLink href={`/admin/postulante/${row.idPos}`} passHref legacyBehavior>
+                    <NextLink href={`/admin/trabajador/${row.idPos}`} passHref legacyBehavior>
                         <Link underline='always'>
                             {row.nombres}
                         </Link>
@@ -251,12 +251,13 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
             {false
                 ? <FullScreenLoading />
                 :
-                <Box sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 350, margin: 'auto', overflow: 'visible' }} className="fadeIn" >
+                <Box sx={matches ? { width: '100%', margin: 'auto' } : { maxWidth: 350, margin: 'auto', }} className="fadeIn" >
 
-                    <Box display={'flex'} gap={3} flexDirection={matches ? 'row' : 'column'}>
+                    <Grid container spacing={2} justifyContent={'center'}>
 
-                        <Grid container spacing={2}>
-                            {/* <Grid item xs={12}>
+                        <Grid item xl={12} lg={10} md={8} sm={12}>
+                            <Grid container spacing={2}>
+                                {/* <Grid item xs={12}>
 
                                 <Box bgcolor={'#FFF'} padding={1.5} borderRadius={1} display={'flex'} justifyContent={'end'}>
 
@@ -265,127 +266,129 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
                                 </Box>
 
                             </Grid> */}
-                            <Grid item xs={12}>
-                                <Item elevation={0}>
-                                    <Typography variant='h6'>Docentes</Typography>
-                                </Item>
-                            </Grid>
-                            <Grid item xs={12} sm={4} >
-                                <Item elevation={4}>
+                                <Grid item xs={12} >
 
-                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                                        <HailIcon sx={{ fontSize: 40 }} color={'primary'} />
-                                        <Box>
+                                    <Typography textAlign={'center'}>Docentes</Typography>
 
-                                            <Typography color={'#454555'} variant="body1" >  Contratados - {new Date().getFullYear()}</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{contratadosDoce.length} </Typography>
+                                </Grid>
+                                <Grid item xl={4} lg={4} md={4} sm={4} xs={12} >
+                                    <Item elevation={4}>
+
+                                        <Box display={'flex'} justifyContent={'space-between'} padding={1} alignItems={'center'}>
+                                            <HailIcon sx={{ fontSize: 40 }} color={'primary'} />
+                                            <Box>
+
+                                                <Typography color={'#454555'} variant="subtitle2" >  Contratados - {new Date().getFullYear()}</Typography>
+                                                <Typography fontWeight={'bold'} color={'#454555'} variant='h5' >{contratadosDoce.length} </Typography>
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                </Item>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
-                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'} >
+                                    </Item>
+                                </Grid>
+                                <Grid item xl={4} lg={4} md={4} sm={4} xs={12}>
+                                    <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
+                                        <Box display={'flex'} justifyContent={'space-between'} padding={1} alignItems={'center'} >
 
-                                        <PeopleIcon sx={{ fontSize: 40 }} color={'primary'} />
-                                        <Box>
-                                            <Typography color={'#454555'} variant="body1" > Postulantes {new Date().getFullYear()}</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{postDocente.length} </Typography>
+                                            <PeopleIcon sx={{ fontSize: 40 }} color={'primary'} />
+                                            <Box>
+                                                <Typography color={'#454555'} variant="subtitle2" > Postulantes {new Date().getFullYear()}</Typography>
+                                                <Typography fontWeight={'bold'} color={'#454555'} variant="h5" >{postDocente.length} </Typography>
 
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                </Item>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
-                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'} >
+                                    </Item>
+                                </Grid>
+                                <Grid item xl={4} lg={4} md={4} sm={4} xs={12}>
+                                    <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
+                                        <Box display={'flex'} justifyContent={'space-between'} padding={1} alignItems={'center'} >
 
-                                        <PersonRemoveAlt1Icon sx={{ fontSize: 40 }} color={'primary'} />
-                                        <Box>
-                                            <Typography color={'#454555'} variant="body1" > Dados de Baja</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{bajasDocentes.length} </Typography>
+                                            <PersonRemoveAlt1Icon sx={{ fontSize: 40 }} color={'primary'} />
+                                            <Box>
+                                                <Typography color={'#454555'} variant="subtitle2" > Dados de Baja</Typography>
+                                                <Typography fontWeight={'bold'} color={'#454555'} variant="h5" >{bajasDocentes.length} </Typography>
 
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                </Item>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Item elevation={0}>
-                                    <Typography variant='h6'>Administrativos</Typography>
-                                </Item>
-                            </Grid>
-                            <Grid item xs={12} sm={4} >
-                                <Item elevation={4}>
+                                    </Item>
+                                </Grid>
+                                <Grid item xs={12}>
 
-                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'}>
-                                        <HailIcon sx={{ fontSize: 40 }} color={'primary'} />
-                                        <Box>
+                                    <Typography textAlign={'center'}>Administrativos</Typography>
 
-                                            <Typography color={'#454555'} variant="body1" >  Contratados - {new Date().getFullYear()}</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{contratadosAdmin.length} </Typography>
+                                </Grid>
+                                <Grid item xl={4} lg={4} md={4} sm={4} xs={12} >
+                                    <Item elevation={4}>
+
+                                        <Box display={'flex'} justifyContent={'space-between'} padding={1} alignItems={'center'}>
+                                            <HailIcon sx={{ fontSize: 40 }} color={'primary'} />
+                                            <Box>
+
+                                                <Typography color={'#454555'} variant="subtitle2" >  Contratados - {new Date().getFullYear()}</Typography>
+                                                <Typography fontWeight={'bold'} color={'#454555'} variant="h5" >{contratadosAdmin.length} </Typography>
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                </Item>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
-                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'} >
+                                    </Item>
+                                </Grid>
+                                <Grid item xl={4} lg={4} md={4} sm={4} xs={12}>
+                                    <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
+                                        <Box display={'flex'} justifyContent={'space-between'} padding={1} alignItems={'center'} >
 
-                                        <PeopleIcon sx={{ fontSize: 40 }} color={'primary'} />
-                                        <Box>
-                                            <Typography color={'#454555'} variant="body1" > Postulantes {new Date().getFullYear()}</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{postAdmin.length} </Typography>
+                                            <PeopleIcon sx={{ fontSize: 40 }} color={'primary'} />
+                                            <Box>
+                                                <Typography color={'#454555'} variant="subtitle2" > Postulantes {new Date().getFullYear()}</Typography>
+                                                <Typography fontWeight={'bold'} color={'#454555'} variant="h5" >{postAdmin.length} </Typography>
 
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                </Item>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
-                                    <Box display={'flex'} justifyContent={'space-around'} padding={1} alignItems={'center'} >
+                                    </Item>
+                                </Grid>
+                                <Grid item xl={4} lg={4} md={4} sm={4} xs={12} >
+                                    <Item elevation={4} onClick={() => push('/admin/convocatorias')} sx={{ cursor: 'pointer' }}>
+                                        <Box display={'flex'} justifyContent={'space-between'} padding={1} alignItems={'center'} >
 
-                                        <PersonRemoveAlt1Icon sx={{ fontSize: 40 }} color={'primary'} />
-                                        <Box>
-                                            <Typography color={'#454555'} variant="body1" > Dados de Baja</Typography>
-                                            <Typography fontWeight={'bold'} color={'#454555'} variant="h4" >{bajasAdmis.length} </Typography>
+                                            <PersonRemoveAlt1Icon sx={{ fontSize: 40 }} color={'primary'} />
+                                            <Box>
+                                                <Typography color={'#454555'} variant="subtitle2" > Dados de Baja</Typography>
+                                                <Typography fontWeight={'bold'} color={'#454555'} variant="h5" >{bajasAdmis.length} </Typography>
 
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                </Item>
+                                    </Item>
+                                </Grid>
+
                             </Grid>
 
                         </Grid>
 
-                    </Box>
-                    <Box mt={4}
-                    >
-                        <Item elevation={4} sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: 500, margin: 'auto', overflow: 'visible' }}>
-                            <Typography>Lista de Contratados</Typography>
-                            <Box
-                                sx={{
-                                    height: 400,
-                                    padding: 1
-                                }} >
 
-                                <DataGrid
-                                    getRowHeight={() => 'auto'}
-                                    getRowId={(row: any) => generateRandom()}
-                                    localeText={esES.components.MuiDataGrid.defaultProps.localeText} columns={columns}
-                                    rows={rows}
-                                    slots={{ toolbar: GridToolbar }}
-                                    slotProps={{
-                                        toolbar: {
-                                            showQuickFilter: true,
-                                            quickFilterProps: { debounceMs: 500 },
-                                        },
-                                    }}
-                                />
+                        <Grid item xl={12} lg={10} md={8} sm={12} xs={12}>
+                            <Item elevation={4} >
+                                <Typography textAlign={'center'}>Lista de Contratados</Typography>
+                                <Box
+                                    sx={{
+                                        height: 400,
+                                        padding: 1
+                                    }} >
+
+                                    <DataGrid
+                                        getRowHeight={() => 'auto'}
+                                        getRowId={(row: any) => generateRandom()}
+                                        localeText={esES.components.MuiDataGrid.defaultProps.localeText} columns={columns}
+                                        rows={rows}
+                                        slots={{ toolbar: GridToolbar }}
+                                        slotProps={{
+                                            toolbar: {
+                                                showQuickFilter: true,
+                                                quickFilterProps: { debounceMs: 500 },
+                                            },
+                                        }}
+                                    />
 
 
-                            </Box>
-                        </Item>
+                                </Box>
+                            </Item>
 
-                    </Box>
+                        </Grid>
+                    </Grid>
                 </Box>
             }
         </Paperbase>

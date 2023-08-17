@@ -230,7 +230,7 @@ export const Paperbase: FC<Props> = ({ children, title, subTitle, icon, navigate
                     >
                         {navigate}
                     </Header>
-                    <Box component="main" sx={{ flex: 1, py: 4, px: 4, bgcolor: '#eaeff1' }}>
+                    <Box component="main" sx={{ flex: 1, py: 2, px: 2, bgcolor: '#eaeff1' }}>
                         {children}
                     </Box>
                     <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>

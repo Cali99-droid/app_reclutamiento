@@ -146,14 +146,14 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
                     </Breadcrumbs>
                 </Box>
 
-                <Box display={'flex'} justifyContent={'space-between'} mb={2}>
+                {/* <Box display={'flex'} justifyContent={'space-between'} mb={2}>
                     <Button variant="outlined" onClick={handlePrevious} disabled={!listaPostulantes[prevId]}>
                         Anterior
                     </Button>
                     <Button variant="outlined" onClick={handleNext} disabled={!listaPostulantes[nextId]}>
                         Siguiente
                     </Button>
-                </Box>
+                </Box> */}
                 <Grid container spacing={2}>
                     <Grid item xs={12} >
                         <Item elevation={1}>
@@ -693,14 +693,14 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
 
 
                 </Grid>
-                <Box display={'flex'} justifyContent={'space-between'} mt={2}>
+                {/* <Box display={'flex'} justifyContent={'space-between'} mt={2}>
                     <Button variant="outlined" onClick={handlePrevious} disabled={!listaPostulantes[prevId]}>
                         Anterior
                     </Button>
                     <Button variant="outlined" onClick={handleNext} disabled={!listaPostulantes[nextId]}>
                         Siguiente
                     </Button>
-                </Box>
+                </Box> */}
 
 
 
@@ -775,19 +775,19 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     const postulante = JSON.parse(JSON.stringify(post))
 
 
-    const listaPostulantes = await prisma.postulante_x_convocatoria.findMany({
-        where: {
-            estado_postulante_id: 7,
+    // const listaPostulantes = await prisma.postulante_x_convocatoria.findMany({
+    //     where: {
+    //         estado_postulante_id: 7,
 
-        },
-        select: {
-            postulante: {
-                select: {
-                    id: true
-                }
-            },
-        }
-    });
+    //     },
+    //     select: {
+    //         postulante: {
+    //             select: {
+    //                 id: true
+    //             }
+    //         },
+    //     }
+    // });
     const pc = await prisma.postulante_x_convocatoria.findMany({
         where: {
             postulante_id: parseInt(id.toString())
@@ -803,14 +803,14 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             estado_postulante: true,
         }
     })
-    const postulantes = JSON.parse(JSON.stringify(listaPostulantes))
+    // const postulantes = JSON.parse(JSON.stringify(listaPostulantes))
     const pxc = JSON.parse(JSON.stringify(pc))
     await prisma.$disconnect();
     return {
         props: {
             postulante,
             estados,
-            listaPostulantes,
+            // listaPostulantes,
             pxc
 
         }
@@ -819,3 +819,4 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 
 export default PostulantePage
+//(10,  12,  17,  26,  28,  30,40,  52,  68,  76,  79,  87,88, 119, 131, 136, 150, 157)
