@@ -419,7 +419,7 @@ const Step4 = () => {
                             <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
                                 <Box >
                                     <InputLabel id="demo-simple-select-label">Vista previa del certificado</InputLabel>
-                                    <object data={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${doc}`} type="application/pdf" width="60%" height="200px">
+                                    <object data={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`} type="application/pdf" width="60%" height="200px">
                                         <p>No se puede previsualizar</p>
                                     </object>
 
@@ -577,7 +577,7 @@ const Step4 = () => {
                             <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
                                 <Box >
                                     <InputLabel id="demo-simple-select-label">Vista previa del certificado</InputLabel>
-                                    <object data={`https://caebucket.s3.us-west-2.amazonaws.com/docs/${docRec}`} type="application/pdf" width="60%" height="200px">
+                                    <object data={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}{docRec}`} type="application/pdf" width="60%" height="200px">
                                         <p>No se puede previsualizar</p>
                                     </object>
 

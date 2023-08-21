@@ -382,7 +382,7 @@ const Step5 = () => {
 
 
 
-                <Modal title={'NUEVA ACTIVIDAD'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
+                <Modal title={'Nueva Actividad'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
                     <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
                         component="form"
 

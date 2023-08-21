@@ -115,6 +115,7 @@ const LoginPage = (error: string) => {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
+                                    autoComplete='username'
                                     type="email"
                                     label="Correo"
                                     variant="outlined"
@@ -131,7 +132,7 @@ const LoginPage = (error: string) => {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-
+                                    autoComplete='current-password'
                                     label="Contraseña"
                                     type='password'
                                     variant="outlined"

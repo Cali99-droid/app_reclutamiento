@@ -40,7 +40,7 @@ moment.locale('es');
 interface Props {
     postulante: any,
     estados: any[]
-    listaPostulantes: any[]
+    // listaPostulantes: any[]
     pxc: any[]
 }
 export const config = {
@@ -75,33 +75,33 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes, pxc }) => {
+const PostulantePage: NextPage<Props> = ({ postulante, estados, pxc }) => {
 
     let index: number = 0;
     const router = useRouter();
     const { id, conv } = router.query;
 
 
-    const nextPos = listaPostulantes.filter((p) => p.postulante.id == id)
-    const prevId = listaPostulantes.indexOf(nextPos[0]) - 1
-    const nextId = listaPostulantes.indexOf(nextPos[0]) + 1
-    // console.log(nextPos)
-    const handlePrevious = () => {
+    // const nextPos = listaPostulantes.filter((p) => p.postulante.id == id)
+    // const prevId = listaPostulantes.indexOf(nextPos[0]) - 1
+    // const nextId = listaPostulantes.indexOf(nextPos[0]) + 1
+    // // console.log(nextPos)
+    // const handlePrevious = () => {
 
 
-        if (listaPostulantes[prevId]) {
-            const id = listaPostulantes[prevId].postulante.id;
-            router.push(`/admin/convocatorias/convocatoria/p/${id}?conv=${conv}`);
-        }
-    };
+    //     if (listaPostulantes[prevId]) {
+    //         const id = listaPostulantes[prevId].postulante.id;
+    //         router.push(`/admin/convocatorias/convocatoria/p/${id}?conv=${conv}`);
+    //     }
+    // };
 
-    const handleNext = () => {
-        // const nextId = listaPostulantes.indexOf(nextPos[0]) + 1
-        if (listaPostulantes[nextId]) {
-            const id = listaPostulantes[nextId].postulante.id;
-            router.push(`/admin/convocatorias/convocatoria/p/${id}?conv=${conv}`);
-        }
-    };
+    // const handleNext = () => {
+    //     // const nextId = listaPostulantes.indexOf(nextPos[0]) + 1
+    //     if (listaPostulantes[nextId]) {
+    //         const id = listaPostulantes[nextId].postulante.id;
+    //         router.push(`/admin/convocatorias/convocatoria/p/${id}?conv=${conv}`);
+    //     }
+    // };
 
     const matches = useMediaQuery('(min-width:600px)');
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

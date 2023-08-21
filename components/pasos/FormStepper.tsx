@@ -6,7 +6,8 @@ import LabelIcon from '@mui/icons-material/Label';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import EastIcon from '@mui/icons-material/East';
 import { useRouter } from 'next/router';
-import { CheckCircle } from '@mui/icons-material';
+import { CheckCircle, DocumentScanner, FileOpen, RestartAlt } from '@mui/icons-material';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 type FormStepperProps = {
     // steps: { label: string; content: JSX.Element, icon: any }[];
     onSubmit: () => void;
@@ -42,9 +43,9 @@ const FormStepper = ({ onSubmit }: FormStepperProps) => {
                             <Alert > Haz Completado todos tus datos</Alert>
                         </Box>
                         <Box display={'flex'} gap={2} alignItems={'center'}>
-                            <Button variant='outlined' color='info' onClick={() => router.push('/postulant/ficha')}>Ver mi ficha</Button>
-                            <Button variant='outlined' onClick={handleReset}>Comenzar de nuevo</Button>
-
+                            <Button startIcon={<PostAddIcon />} onClick={() => router.push('/convocatorias')} variant='contained' >Postular</Button>
+                            <Button startIcon={<FileOpen />} variant='outlined' color='info' onClick={() => router.push('/postulant/ficha')}>Ver mi ficha</Button>
+                            <Button startIcon={<RestartAlt />} variant='outlined' onClick={handleReset}>Actualizar</Button>
                         </Box>
                     </Box>
                 ) : (

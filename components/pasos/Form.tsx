@@ -6,7 +6,8 @@ import { DatosContext } from '@/context';
 import { useEffect } from 'react';
 import { Alert, Box, Button, MobileStepper, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
+import { FileOpen, KeyboardArrowLeft, KeyboardArrowRight, RestartAlt } from '@mui/icons-material';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 
 
 
@@ -38,12 +39,13 @@ const Form = () => {
                     {activeStep !== steps.length && (steps[activeStep].content)}
                     {activeStep === steps.length && (
                         <Box width={'100%'} display={'flex'} flexDirection={'column'} justifyContent={'space-between'} gap={1} mb={5}>
-                            <Box flex={2}>
+                            <Box flex={2} mt={5}>
                                 <Alert > Haz Completado todos tus datos</Alert>
                             </Box>
-                            <Box display={'flex'} gap={2} alignItems={'center'}>
-                                <Button variant='outlined' color='info' onClick={() => router.push('/postulant/ficha')}>Ver mi ficha</Button>
-                                <Button variant='outlined' onClick={handleReset}>Comenzar de nuevo</Button>
+                            <Box display={'flex'} gap={2} flexDirection={'column'} mt={5}>
+                                <Button startIcon={<PostAddIcon />} onClick={() => router.push('/convocatorias')} variant='contained' >Postular</Button>
+                                <Button startIcon={<FileOpen />} variant='outlined' color='info' onClick={() => router.push('/postulant/ficha')}>Ver mi ficha</Button>
+                                <Button startIcon={<RestartAlt />} variant='outlined' onClick={handleReset}>Actualizar</Button>
 
                             </Box>
                         </Box>

@@ -31,7 +31,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect( url );
     };
 
-    if( requestedPage.includes('/api/admin') && session.user.rol.name !== 'admin'  ){
+    if( requestedPage.includes('/api/admin') && !validRoles.includes(session.user.rol.name) ){
  
       return new Response( JSON.stringify({ message: 'No autorizado' }),{
         status: 401,
@@ -80,7 +80,7 @@ export async function middleware(req: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher:[ '/admin/:path*','/postulant/:path*','/jurado/:path*', '/api/postulants/:path*'],
+  matcher:['/api/admin/:path*','/api/jurado/:path*', '/admin/:path*','/postulant/:path*','/jurado/:path*', '/api/postulants/:path*'],
 }
 
 //'/api/admin/:path*','/api/jurado/:path*', '/api/admin/:path*','/api/jurado/:path*',

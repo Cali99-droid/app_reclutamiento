@@ -1,20 +1,18 @@
 import React, { useContext, useState } from 'react';
 import NextLink from 'next/link';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
-import { AppBar, Avatar, Badge, Box, Button, Divider, IconButton, Input, InputAdornment, Link, ListItemIcon, Menu, MenuItem, MenuProps, Slide, Toolbar, Tooltip, Typography, alpha, styled, useMediaQuery, useScrollTrigger } from '@mui/material';
-import { ArticleOutlined, BorderColor, Checklist, ClearOutlined, ConfirmationNumberOutlined, Face2Sharp, Face6Outlined, Key, LoginOutlined, Logout, SearchOutlined } from '@mui/icons-material';
+import { AppBar, Avatar, Box, Button, Divider, IconButton, Link, ListItemIcon, Menu, MenuItem, Toolbar, Tooltip, Typography, useMediaQuery, useScrollTrigger } from '@mui/material';
+import { ArticleOutlined, BorderColor, Checklist, FileCopyOutlined, Key, Logout } from '@mui/icons-material';
 
 import { AuthContext, UiContext } from '@/context';
-import EditIcon from '@mui/icons-material/Edit';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import FilePresentIcon from '@mui/icons-material/FilePresent';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import MenuIcon from '@mui/icons-material/Menu';
-import ContactPageIcon from '@mui/icons-material/ContactPage';
+
 import Image from 'next/image';
-import { postulante } from '@prisma/client';
+
 import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
-import MailIcon from '@mui/icons-material/Mail';
+
 interface Props {
     /**
      * Injected by the documentation to work in an iframe.
@@ -62,7 +60,12 @@ export const NavBar = () => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
-
+    const esJurado = () => {
+        if (user?.rol_id === 3 || user?.rol_id === 4) {
+            return true;
+        }
+        return false;
+    }
     const handleMenuUser = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -70,13 +73,28 @@ export const NavBar = () => {
     const handleCloseUser = () => {
         setAnchorEl(null);
     };
+    const MenuPost = () => {
+
+
+        return (
+            <>
+                <MenuItem onClick={() => push('/postulant/ficha')} >
+                    <ListItemIcon>
+                        <ArticleOutlined fontSize="small" />
+                    </ListItemIcon>
+                    Ver mi ficha
+                </MenuItem>
+
+            </>
+        );
+    };
     const matches = useMediaQuery('(min-width:600px)');
 
     return (
         <ElevationScroll {...props}>
             <AppBar sx={{ height: '140px' }} >
                 <Toolbar  >
-                    <Box flex={1} />
+                    <Box flex={1} sx={{ display: isSearchVisible ? 'none' : { xs: 'none', sm: 'block' } }} />
                     <NextLink href='/' passHref legacyBehavior>
 
                         <Link >
@@ -190,7 +208,7 @@ export const NavBar = () => {
                                             aria-haspopup="true"
                                             aria-expanded={open ? 'true' : undefined}
                                         >
-                                            <Avatar alt='avatar usuario' sx={{ bgcolor: '#0045AA', width: 50, height: 50 }} src={user?.persona.postulante[0].image ? `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${user?.persona.postulante[0].image}` : '/avatar.jpg'} />
+                                            <Avatar alt='avatar usuario' sx={{ bgcolor: '#0045AA', width: 50, height: 50 }} src={user?.persona.postulante[0].image ? `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${user?.persona.postulante[0].image}` : '/avatar.png'} />
 
                                         </IconButton>
                                     </Tooltip>
@@ -233,45 +251,41 @@ export const NavBar = () => {
                                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                                     >
 
-                                        <MenuItem onClick={handleCloseUser}>
+                                        <MenuItem onClick={handleCloseUser} >
                                             <ListItemIcon>
                                                 <Avatar src={user?.oAuthImg ? user?.oAuthImg : user?.img} />
                                             </ListItemIcon>
                                             {user?.persona.nombres}
                                         </MenuItem>
                                         <Divider />
-                                        {isLoggedIn && user?.rol.name === 'jurado1' || user?.rol.name === 'jurado2' ? (
+                                        {esJurado() && (
                                             <MenuItem onClick={() => push('/jurado')}>
                                                 <ListItemIcon>
                                                     <PlaylistAddCheckCircleIcon />
                                                 </ListItemIcon>
                                                 Calificar</MenuItem>
-                                        ) : (
-                                            <></>
                                         )}
-                                        {isLoggedIn && user?.rol.name === 'postulante' || user?.rol.name === 'trabajador' && (
-                                            <Box>
-                                                <MenuItem onClick={() => push('/postulant/ficha')} >
-                                                    <ListItemIcon>
-                                                        <ArticleOutlined fontSize="small" />
-                                                    </ListItemIcon>
-                                                    Ver mi ficha
-                                                </MenuItem>
-                                                <MenuItem onClick={() => push('/postulant')} >
-                                                    <ListItemIcon>
-                                                        <BorderColor fontSize="small" />
-                                                    </ListItemIcon>
-                                                    Actualizar mi ficha
-                                                </MenuItem>
 
-                                                <MenuItem onClick={() => push('/postulant/postulaciones')} disableRipple>
-                                                    <ListItemIcon>
-                                                        <Checklist fontSize="small" />
-                                                    </ListItemIcon>
-                                                    Ver mis postulaciones
-                                                </MenuItem>
-                                            </Box>
-                                        )}
+                                        <MenuItem onClick={() => push('/postulant/ficha')} >
+                                            <ListItemIcon>
+                                                <ArticleOutlined fontSize="small" />
+                                            </ListItemIcon>
+                                            Ver mi ficha
+                                        </MenuItem>
+                                        <MenuItem onClick={() => push('/postulant')} >
+                                            <ListItemIcon>
+                                                <BorderColor fontSize="small" />
+                                            </ListItemIcon>
+                                            Actualizar mi ficha
+                                        </MenuItem>
+
+                                        <MenuItem onClick={() => push('/postulant/postulaciones')} disableRipple>
+                                            <ListItemIcon>
+                                                <Checklist fontSize="small" />
+                                            </ListItemIcon>
+                                            Ver mis postulaciones
+                                        </MenuItem>
+
                                         <MenuItem onClick={logout}>
                                             <ListItemIcon>
                                                 <Logout fontSize="small" />
@@ -302,27 +316,32 @@ export const NavBar = () => {
                     </Box>
 
 
-                    <Box flex={1} />
+                    <Box flex={1} sx={{ display: isSearchVisible ? 'none' : { xs: 'none', sm: 'block' } }} />
 
 
                 </Toolbar>
                 {isLoggedIn && (
                     //bgcolor={'#0045aa'}
-                    <Box sx={{ background: 'linear-gradient(to right, #0045aa 0%,#4565d0 31%,#7087f7 64%,#7db9e8 100%); ' }} display={'flex'} justifyContent={'space-evenly'} alignItems={'center'} padding={1.5} >
+                    <Box sx={{ background: 'linear-gradient(to right, #0045aa 0%,#4565d0 31%,#7087f7 64%,#7db9e8 100%); ' }} display={'flex'} justifyContent={'space-evenly'} alignItems={'center'} padding={1.8} >
                         <Box >
                             <Typography fontSize={23} fontWeight={'bold'} color={'#FFF'}>{`Bienvenido: ${user?.persona.nombres}`} </Typography>
                         </Box>
 
                         <Box display={matches ? 'flex' : 'none'} gap={2}>
-                            <NextLink href='/postulant/ficha' passHref legacyBehavior>
+
+                            <NextLink href='/postulant' passHref legacyBehavior>
                                 <Link alignItems='end'>
-                                    <Typography fontSize={15} color={asPath === '/postulant/ficha' ? '#EECA73' : '#FFF'} fontWeight={asPath === '/postulant/ficha' ? 'bold' : ''} > Mi Ficha </Typography>
+                                    <Box display={'flex'}>
+                                        {/* <InsertDriveFileIcon sx={{ color: asPath === '/postulant' ? '#EECA73' : '#FFF' }} /> */}
+                                        <Typography fontSize={15} color={asPath === '/postulant' ? '#EECA73' : '#FFF'} fontWeight={asPath === '/postulant' ? 'bold' : ''}>Actualizar mi Ficha </Typography>
+                                    </Box>
+
 
                                 </Link>
                             </NextLink>
-                            <NextLink href='/postulant' passHref legacyBehavior>
+                            <NextLink href='/postulant/ficha' passHref legacyBehavior>
                                 <Link alignItems='end'>
-                                    <Typography fontSize={15} color={asPath === '/postulant' ? '#EECA73' : '#FFF'} fontWeight={asPath === '/postulant' ? 'bold' : ''}>Actualizar mi Ficha </Typography>
+                                    <Typography fontSize={15} color={asPath === '/postulant/ficha' ? '#EECA73' : '#FFF'} fontWeight={asPath === '/postulant/ficha' ? 'bold' : ''} > Mi Ficha </Typography>
 
                                 </Link>
                             </NextLink>

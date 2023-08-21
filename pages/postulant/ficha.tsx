@@ -40,10 +40,10 @@ export const config = {
 }
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#FFF',
-    ...theme.typography.body2,
+
     padding: theme.spacing(1),
 
-    color: theme.palette.text.secondary,
+
 
 
 }));
@@ -81,22 +81,19 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
 
 
                 <Box className="fadeIn" sx={matches ? { maxWidth: 1200, margin: 'auto', overflow: 'visible' } : { maxWidth: '95%', margin: 'auto', overflow: 'visible' }} pt={15}  >
-                    <Box paddingTop={2} paddingBottom={2}>
-                        <Typography variant='h2' fontWeight={'bold'}>Mi Ficha</Typography>
-                        <Divider />
-                    </Box>
+
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={10}>
-                            <Item elevation={1} sx={{ bgcolor: '#4565D0', padding: 1 }} >
-                                <Typography fontWeight={'bold'} color={'#FFF'}>Ficha del Postulante</Typography>
+                            <Item elevation={1} sx={{ background: 'linear-gradient(to right, #0045aa 0%,#4565d0 31%,#7087f7 64%,#7db9e8 100%); ', padding: 1 }} >
+                                <Typography fontWeight={'bold'} color={'#FFF'}>Mi Ficha </Typography>
                             </Item>
                         </Grid>
                         <Grid item xs={12} sm={2} >
                             <Button
-                                startIcon={<Edit />}
-                                size='medium'
-                                color='secondary'
-                                sx={{ width: '100%' }}
+                                endIcon={<Edit />}
+                                size='large'
+
+                                sx={{ width: '100%', bgcolor: '#7db9e8', }}
                                 onClick={() => push('/postulant')}>
                                 Actualizar
                             </Button>
@@ -105,11 +102,12 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                             <Item elevation={1}>
                                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                     <Image
-                                        src={(postulante.image === null ? '/avatar.jpg' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulante.image}`)}
+                                        src={(postulante.image === null ? '/avatar.png' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulante.image}`)}
                                         width={150}
                                         height={150}
                                         alt="Imagen postulante"
-                                        style={imageStyle}
+
+                                        priority
                                     />
                                 </Box>
                                 <Box mt={2} textAlign={'center'}>
@@ -118,14 +116,14 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                     <Box ml={1} mt={1} display={'flex'} flexDirection={'column'} alignItems={'start'} gap={1}>
 
                                         <Box display={'flex'} gap={1}>
-                                            <FmdGoodIcon sx={{ color: '#FF7F6A' }} /> <Typography fontSize={12} >  {postulante.direccion.length > 0 ? postulante.direccion : 'Sin datos'}</Typography>
+                                            <FmdGoodIcon color='primary' /> <Typography fontSize={12} >  {postulante.direccion.length > 0 ? postulante.direccion : 'Sin datos'}</Typography>
                                         </Box>
                                         <Box display={'flex'} gap={1}>
-                                            <PhoneIcon sx={{ color: '#FF7F6A' }} /> <Typography fontSize={12}>  {postulante.telefono.length > 0 ? postulante.telefono : 'Sin datos'}</Typography>
+                                            <PhoneIcon color='primary' /> <Typography fontSize={12}>  {postulante.telefono.length > 0 ? postulante.telefono : 'Sin datos'}</Typography>
                                         </Box>
                                         <Box display={'flex'} gap={1}>
 
-                                            <MailIcon sx={{ color: '#FF7F6A' }} /> <Typography fontSize={12}>  {postulante.persona.user[0].email}</Typography>
+                                            <MailIcon color='primary' /> <Typography fontSize={12}>  {postulante.persona.user[0].email}</Typography>
                                         </Box>
                                     </Box>
 
@@ -139,8 +137,8 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                         <Grid item xs={12} sm={9}  >
                             <Item sx={matches ? { height: 'auto' } : { height: 'auto' }} >
                                 {/* <Typography variant='h2'>Mis datos</Typography> */}
-                                <Box display={'flex'} justifyContent={'space-between'} padding={2} flexDirection={matches ? 'row' : 'column'} >
-                                    <Box display={'flex'} flexDirection={'column'} gap={1} >
+                                <Box display={'flex'} justifyContent={'space-between'} padding={1} flexDirection={matches ? 'row' : 'column'} >
+                                    <Box display={'flex'} flexDirection={'column'} gap={4} >
                                         <Box>
                                             <Typography color={'#454555'} fontWeight={'bold'}>Numero de Documento: </Typography>
                                             <Typography color={'#454555'}>{postulante.numeroDocumento}</Typography>
@@ -160,7 +158,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
 
 
                                     </Box>
-                                    <Box display={'flex'} flexDirection={'column'} gap={1} mt={1}>
+                                    <Box display={'flex'} flexDirection={'column'} gap={4} mt={matches ? 0 : 3}>
                                         <Box>
                                             <Typography color={'#454555'} fontWeight={'bold'}>Numero de Hijos: </Typography>
                                             <Typography color={'#454555'}>{postulante.hijos || 'Sin Datos'}</Typography>
@@ -173,7 +171,6 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                             <Typography color={'#454555'} fontWeight={'bold'}>Exalumno: </Typography>
                                             <Typography color={'#454555'}> {postulante.exalumno === 1 ? ' Si ' : 'No'}</Typography>
                                         </Box>
-
 
                                     </Box>
                                     <Box width={200}>
@@ -223,8 +220,8 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                             <Item>
                                 <Box padding={1}>
                                     <Box display={'flex'} alignItems={'center'} gap={1}>
-                                        <SchoolIcon sx={{ color: '#001C75' }} />
-                                        <Typography fontWeight={'bold'} >ESTUDIOS / PROFESIONES</Typography>
+                                        <SchoolIcon color='primary' />
+                                        <Typography fontWeight={'bold'} color={'primary'}>ESTUDIOS / PROFESIONES</Typography>
                                     </Box>
                                     <Divider />
                                     <Box maxWidth={matches ? '100%' : 400} mt={3}>
@@ -280,8 +277,8 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                             <Item>
                                 <Box padding={1}>
                                     <Box display={'flex'} alignItems={'center'} gap={1}>
-                                        <WorkIcon sx={{ color: '#001C75' }} />
-                                        <Typography fontWeight={'bold'} >EXPERIENCIA LABORAL (Relacionada al puesto)</Typography>
+                                        <WorkIcon color={'primary'} />
+                                        <Typography fontWeight={'bold'} color={'primary'} >EXPERIENCIA LABORAL (Relacionada al puesto)</Typography>
                                     </Box>
                                     <Divider />
                                     <Box maxWidth={matches ? '100%' : 400} mt={3}>
@@ -348,8 +345,8 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                             <Item>
                                 <Box padding={1}>
                                     <Box display={'flex'} alignItems={'center'} gap={1}>
-                                        <BiotechIcon sx={{ color: '#001C75' }} />
-                                        <Typography fontWeight={'bold'} >INVESTIGACIONES, PROYECTOS U OTROS TRABAJOS ACADÉMICOS REALIZADOS COMO EXPERIENCIA</Typography>
+                                        <BiotechIcon color={'primary'} />
+                                        <Typography fontWeight={'bold'} color={'primary'}>INVESTIGACIONES, PROYECTOS U OTROS TRABAJOS ACADÉMICOS REALIZADOS COMO EXPERIENCIA</Typography>
                                     </Box>
                                     <Divider />
                                     <Box maxWidth={matches ? '100%' : 400} mt={3}>
@@ -397,8 +394,8 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                             <Item>
                                 <Box padding={1}>
                                     <Box display={'flex'} alignItems={'center'} gap={1}>
-                                        <MilitaryTechIcon sx={{ color: '#001C75' }} />
-                                        <Typography fontWeight={'bold'} textTransform={'uppercase'} >Capacitaciones/Cursos</Typography>
+                                        <MilitaryTechIcon color={'primary'} />
+                                        <Typography fontWeight={'bold'} textTransform={'uppercase'} color={'primary'}>Capacitaciones/Cursos</Typography>
                                     </Box>
                                     <Divider />
                                     <Box maxWidth={matches ? '100%' : 400} mt={3}>
@@ -461,8 +458,8 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
 
                                 <Box padding={1}>
                                     <Box display={'flex'} alignItems={'center'} gap={1}>
-                                        <EmojiEventsIcon sx={{ color: '#001C75' }} />
-                                        <Typography fontWeight={'bold'} textTransform={'uppercase'} >PRINCIPALES RECONOCIMIENTOS, DIPLOMAS, PREMIOS U OTROS RECIBIDOS EN SU VIDA LABORAL</Typography>
+                                        <EmojiEventsIcon color={'primary'} />
+                                        <Typography fontWeight={'bold'} textTransform={'uppercase'} color={'primary'} >PRINCIPALES RECONOCIMIENTOS, DIPLOMAS, PREMIOS U OTROS RECIBIDOS EN SU VIDA LABORAL</Typography>
                                     </Box>
                                     <Divider />
                                     <Box maxWidth={matches ? '100%' : 400} mt={3}>
@@ -519,8 +516,8 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                             <Item>
                                 <Box padding={1}>
                                     <Box display={'flex'} alignItems={'center'} gap={1}>
-                                        <DevicesIcon sx={{ color: '#001C75' }} />
-                                        <Typography fontWeight={'bold'} textTransform={'uppercase'} >USO DE  TECNOLOGÍAS </Typography>
+                                        <DevicesIcon color={'primary'} />
+                                        <Typography fontWeight={'bold'} color={'primary'} textTransform={'uppercase'} >USO DE  TECNOLOGÍAS </Typography>
                                     </Box>
                                     <Divider />
                                     <Box maxWidth={matches ? '100%' : 400} mt={3}>
@@ -572,8 +569,8 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
 
                                 <Box padding={1}>
                                     <Box display={'flex'} alignItems={'center'} gap={1}>
-                                        <NaturePeopleIcon sx={{ color: '#001C75' }} />
-                                        <Typography fontWeight={'bold'} textTransform={'uppercase'} >OTRAS ACTIVIDADES, AFICIONES O HABILIDADES APRENDIDAS Y/O ESTUDIADAS </Typography>
+                                        <NaturePeopleIcon color={'primary'} />
+                                        <Typography fontWeight={'bold'} color={'primary'} textTransform={'uppercase'} >OTRAS ACTIVIDADES, AFICIONES O HABILIDADES APRENDIDAS Y/O ESTUDIADAS </Typography>
                                     </Box>
                                     <Divider />
                                     <Box maxWidth={matches ? '100%' : 400} mt={3}>

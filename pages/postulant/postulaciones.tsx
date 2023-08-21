@@ -275,7 +275,7 @@ const PostulacionesPage: NextPage<Props> = ({ convocatorias }) => {
         sesion: job.session,
         convocatoria: job.convocatoria.titulo,
         estado: getEstado(job.estado_postulante.nombre, getPuntajeEntrevista(job.postulante.puntajes), getPuntajeJurado(job.postulante.puntajes)),
-        estadoPostulante: job.estado_postulante.nombre === 'No interesa' ? 'En proceso' : getEstado(job.estado_postulante.nombre, getPuntajeEntrevista(job.postulante.puntajes), getPuntajeJurado(job.postulante.puntajes)),
+        estadoPostulante: job.estado_postulante.nombre === 'No interesa' ? 'No alcanzó vacante' : getEstado(job.estado_postulante.nombre, getPuntajeEntrevista(job.postulante.puntajes), getPuntajeJurado(job.postulante.puntajes)),
         mensajes: job.comentario,
         categoria: job.convocatoria.categoria.id
 

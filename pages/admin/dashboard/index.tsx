@@ -102,7 +102,7 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
                         component='img'
                         alt={row.title}
                         className='fadeIn'
-                        image={row.img === null ? '/avatar.jpg' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${row.img}`}
+                        image={row.img === null ? '/avatar.png' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${row.img}`}
                     />
 
                 )

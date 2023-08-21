@@ -122,7 +122,7 @@ export default function RegisterPage() {
   }
   return (
     <AuthLayout title={"Registrate y Postula "} pageDescription={'Registrate y llena tu ficha para poder postular a los emplemos disponibles en  la institución educativa Albert Einstein'} >
-      <Box bgcolor={'#FFF'} padding={4} className={'fadeIn'} mt={1}>
+      <Box bgcolor={'#FFF'} padding={matches ? 4 : 2} className={'fadeIn'} mt={1}>
         <form onSubmit={handleSubmit(onRegisterForm)} noValidate>
           <Chip
             label={errorMessage}
@@ -155,9 +155,9 @@ export default function RegisterPage() {
               <Divider sx={{ marginTop: 1, marginBottom: 1 }}><Typography fontSize={15}>O regístrate</Typography>
               </Divider>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6} xl={12}>
               <TextField
-                // size={matches ? 'small' : 'medium'}
+                // size={matches ? 'mdall' : 'medium'}
                 type="text"
                 label="Nombres"
                 variant="outlined"
@@ -172,9 +172,9 @@ export default function RegisterPage() {
               />
 
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6} xl={12}>
               <TextField
-                // size={matches ? 'small' : 'medium'}
+                // size={matches ? 'mdall' : 'medium'}
                 type="text"
                 label="Apellido Paterno"
                 variant="outlined"
@@ -189,9 +189,9 @@ export default function RegisterPage() {
               />
 
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6} xl={12}>
               <TextField
-                // size={matches ? 'small' : 'medium'}
+                // size={matches ? 'mdall' : 'medium'}
                 type="text"
                 label="Apellido Materno"
                 variant="outlined"
@@ -206,7 +206,7 @@ export default function RegisterPage() {
               />
 
             </Grid>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={6} xl={12}>
               <FormControl fullWidth >
                 <InputLabel id="tipoId">Tipo de Documento </InputLabel>
                 <Select
@@ -214,7 +214,7 @@ export default function RegisterPage() {
                   labelId="tipoId"
                   id="tipoId"
                   label="tipo"
-
+                  defaultValue=""
                   required
 
                   {...register('tipoId', {
@@ -224,14 +224,14 @@ export default function RegisterPage() {
                   error={!!errors.tipoId}
                 >
 
-                  <MenuItem value={1} selected={true}>DNI</MenuItem>
+                  <MenuItem value={1}  >DNI</MenuItem>
                   <MenuItem value={2}>Carnet de Extranjeria</MenuItem>
 
                 </Select>
                 {/* <FormHelperText>Tipo de documento</FormHelperText> */}
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} xl={12} md={6}>
               {/* <Chip
                             label={errorMessage}
                             color="error"
@@ -243,7 +243,7 @@ export default function RegisterPage() {
               <TextField
                 label="Numero de documento"
                 type="number"
-                // size={matches ? 'small' : 'medium'}
+                // size={matches ? 'mdall' : 'medium'}
                 variant="outlined"
                 fullWidth
                 required
@@ -257,10 +257,10 @@ export default function RegisterPage() {
                 helperText={errors.numeroDocumento?.message}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6} xl={12}>
               <DateField label="Fecha de nacimiento" fullWidth onChange={(newValue) => handleChengeDate(newValue)} />
               {/* <TextField
-                size={matches ? 'small' : 'medium'}
+                size={matches ? 'mdall' : 'medium'}
                 type="date"
                 label='Fecha de nacimiento'
                 variant="outlined"
@@ -276,9 +276,10 @@ export default function RegisterPage() {
               /> */}
 
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6} xl={12}>
               <TextField
-                // size={matches ? 'small' : 'medium'}
+                // size={matches ? 'mdall' : 'medium'}
+                autoComplete='username'
                 type="email"
                 label="Correo"
                 variant="outlined"
@@ -295,10 +296,11 @@ export default function RegisterPage() {
 
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6} xl={12}>
               <TextField
                 // size={matches ? 'small' : 'medium'}
                 required
+                autoComplete='current-password'
                 label="Contraseña"
                 type='password'
                 variant="outlined"
@@ -312,7 +314,7 @@ export default function RegisterPage() {
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} >
 
               <Button
                 type="submit"
