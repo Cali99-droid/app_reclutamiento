@@ -167,7 +167,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, pxc }) => {
                             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Image
                                     priority
-                                    src={(postulante.image === null ? '/avatar.jpg' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulante.image}`)}
+                                    src={(postulante.image === null ? '/avatar.png' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulante.image}`)}
                                     width={150}
                                     height={150}
                                     alt="Imagen postulante"

@@ -26,26 +26,26 @@ export const JobsLayout: FC<Props> = ({ children, title, pageDescription, imageF
         window: undefined,
         children: React
     }
-    const { isLoggedIn, user } = useContext(AuthContext);
+    // const { isLoggedIn, user } = useContext(AuthContext);
     const { push } = useRouter()
 
-    const { mensajes } = useMsg(`/msg/1`)
+    // const { mensajes } = useMsg(`/msg/1`)
     // const noLeidos = mensajes.filter(m => m.status !== 1);
-    useEffect(() => {
-        if (isLoggedIn) {
-            const noLeidos = mensajes.filter(m => m.status !== 1);
-            if (noLeidos.length > 0) {
+    // useEffect(() => {
+    //     if (isLoggedIn) {
+    //         const noLeidos = mensajes.filter(m => m.status !== 1);
+    //         if (noLeidos.length > 0) {
 
-                if (Notification.permission !== 'granted') {
-                    requestNotificationPermission()
-                }
-                showNotification()
-            }
-        }
+    //             if (Notification.permission !== 'granted') {
+    //                 requestNotificationPermission()
+    //             }
+    //             showNotification()
+    //         }
+    //     }
 
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mensajes])
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [mensajes])
     const requestNotificationPermission = async () => {
         try {
             const permissionResult = await Notification.requestPermission();

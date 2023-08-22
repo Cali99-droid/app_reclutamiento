@@ -142,19 +142,25 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
         }
     }
     const [loadImg, setLoadImg] = useState(false)
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+
         if (!target.files || target.files.length === 0) {
             return;
         }
+
+
         toast.info('Cargando imagen')
         setLoadImg(true)
+
+
 
         try {
 
 
             const { data } = await reclutApi.post<{ message: string, url: string }>('/admin/awsupload', {
                 name: target.files[0].name,
-                type: target.files[0].type
+                type: target.files[0].type,
             });
 
             // console.log(webpBuffer)

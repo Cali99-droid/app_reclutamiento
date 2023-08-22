@@ -203,7 +203,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
                             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Image
                                     priority
-                                    src={(postulante.image === null ? '/avatar.jpg' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulante.image}`)}
+                                    src={(postulante.image === null ? '/avatar.png' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulante.image}`)}
                                     width={150}
                                     height={150}
                                     alt="Imagen postulante"
@@ -302,7 +302,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
                                     <Box>
                                         <Typography color={'#454555'} fontWeight={'bold'}>Historial de postulaciones </Typography>
                                         {pxc.map((e: any, index) => (
-                                            <Box key={e.id} display={'flex'} gap={2}>
+                                            <Box key={index} display={'flex'} gap={2}>
 
                                                 <Typography color={'#454555'} >{index + 1}.{e.convocatoria.titulo}</Typography>
                                                 <Typography color={'primary'} >{e.estado_postulante.nombre} </Typography></Box>
