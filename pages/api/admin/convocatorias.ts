@@ -3,8 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
 import { convocatoria } from '@prisma/client';
 
-import { v2 as cloudinary } from 'cloudinary';
-cloudinary.config( process.env.CLOUDINARY_URL || '' );
+
+
 import aws from 'aws-sdk';
 import AWS from '../../../aws-config';
 

@@ -291,12 +291,12 @@ const Step3 = () => {
                 }
             })
 
-            console.log(data.message)
+
 
 
             setDoc(data.message);
 
-            console.log(data)
+
 
 
         } catch (error) {

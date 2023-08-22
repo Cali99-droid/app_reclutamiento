@@ -107,7 +107,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                 method: form.idPostulante > 0 ? 'PUT' : 'POST',  // si tenemos un _id, entonces actualizar, si no crear
                 data: form
             });
-            console.log(data)
+
             router.push(`/postulant`);
             // router.replace(router.asPath);
             // if (!(form.idPostulante > 0)) {

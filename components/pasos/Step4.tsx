@@ -144,12 +144,11 @@ const Step4 = () => {
                 }
             })
 
-            console.log(data.message)
 
 
             setDoc(data.message);
 
-            console.log(data)
+
 
 
         } catch (error) {
@@ -240,7 +239,6 @@ const Step4 = () => {
                 name: target.files[0].name,
                 type: target.files[0].type
             });
-            console.log(data)
             const url = data.url;
             const res = await reclutApi.put(url, target.files[0], {
                 headers: {

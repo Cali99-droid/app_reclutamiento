@@ -20,6 +20,10 @@ import axios from 'axios';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Swal from 'sweetalert2';
 import RichTextEditor from './RichTextEditor';
+import sharp from 'sharp';
+
+
+
 
 
 interface Props {
@@ -153,6 +157,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                 type: target.files[0].type
             });
 
+            // console.log(webpBuffer)
             const url = data.url;
             const res = await reclutApi.put(url, target.files[0], {
                 headers: {

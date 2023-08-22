@@ -121,7 +121,7 @@ const Step2 = () => {
     }));
 
     function handleEdit(id: number, profesion: string, institucion: string, grado: string, year: string, doc: any): void {
-        console.log(doc)
+
         handleOpen();
         setId(id)
         setProfesion(profesion)

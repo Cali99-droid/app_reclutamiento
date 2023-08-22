@@ -91,23 +91,23 @@ const DashdoardPage: NextPage<Props> = ({ contratados, convocatoriasAbiertas, ba
             width: 50,
 
         },
-        {
-            field: 'img',
-            headerName: 'Foto',
-            filterable: false,
-            renderCell: ({ row }) => {
-                return (
+        // {
+        //     field: 'img',
+        //     headerName: 'Foto',
+        //     filterable: false,
+        //     renderCell: ({ row }) => {
+        //         return (
 
-                    <CardMedia
-                        component='img'
-                        alt={row.title}
-                        className='fadeIn'
-                        image={row.img === null ? '/avatar.png' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${row.img}`}
-                    />
+        //             <CardMedia
+        //                 component='img'
+        //                 alt={row.title}
+        //                 className='fadeIn'
+        //                 image={row.img === null ? '/avatar.png' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${row.img}`}
+        //             />
 
-                )
-            }
-        },
+        //         )
+        //     }
+        // },
 
         {
             field: 'nombres',

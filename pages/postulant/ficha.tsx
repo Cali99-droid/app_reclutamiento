@@ -24,11 +24,9 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DevicesIcon from '@mui/icons-material/Devices';
 import moment from 'moment';
 import { ArrowBack, Edit, Padding } from '@mui/icons-material';
-import { useContext } from 'react';
-import { AuthContext } from '@/context';
-import NextLink from 'next/link';
+
 import FilePresentIcon from '@mui/icons-material/FilePresent';
-import { ModalAlert } from '@/components/modal';
+
 
 interface Props {
     postulante: any
