@@ -1002,7 +1002,7 @@ const AnnouncementPage: NextPage<Props> = ({ convocatoria, jurados, items }) => 
 
                   initialState={{
 
-                    pagination: { paginationModel: { pageSize: 5 } },
+                    pagination: { paginationModel: { pageSize: 25 } },
                     columns: {
                       columnVisibilityModel: {
                         // Hide columns status and traderName, the other columns will remain visible
