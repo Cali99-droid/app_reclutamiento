@@ -7,7 +7,7 @@ import useSWR, { SWRConfiguration } from 'swr';
 export const usePostulantes = (url: string, config: SWRConfiguration = {} ) => {
 
     // const { data, error } = useSWR<IProduct[]>(`/api${ url }`, fetcher, config );
-    const { data, error } = useSWR<any[]>(`/api${ url }`, config );
+    const { data, error } = useSWR<any[]>(`/api${ url }`,  { refreshInterval: 60000 *5} );
 
     return {
         pos: data || [],
