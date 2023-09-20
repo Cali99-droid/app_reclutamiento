@@ -75,6 +75,7 @@ export const ModalEval: FC<ModalProps> = ({ title, children, open, handleClose, 
                 //         handleCloseClase()
                 //   limpiarCriterios()
                 handleClose();
+            router.replace(router.asPath)
         } catch (error) {
 
             console.log(error);

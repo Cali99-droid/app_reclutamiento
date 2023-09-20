@@ -38,14 +38,26 @@ export const PostProvider: FC<Props> = ({ children }) => {
       const [total, setTotal] = useState(0)
       const addNewJurado = async (jurado: string) => {
 
-            const { data } = await reclutApi.post('/admin/asignar/jurado', { id, jurado });
-            // console.log(data)
-            if (!data.message) {
-                  dispatch({ type: '[jurados] Add-Jurado', payload: data.juradoNew })
-                  return;
+            const resp = await reclutApi.post('/admin/asignar/jurado', { id, jurado });
+            const { data } = resp;
+            const info = {
+                  err: false,
+                  message: ''
+            };
+
+            if (resp.status === 200) {
+                  dispatch({ type: '[jurados] Add-Jurado', payload: data.juradoNew });
+                  info.message = 'Asignado con éxito'
+
             }
 
-            return data.message
+            if (resp.status === 201) {
+                  info.message = 'El jurado ya esta asignado'
+                  info.err = true;
+
+            }
+
+            return info
 
 
       }

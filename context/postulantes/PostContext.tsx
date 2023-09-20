@@ -22,7 +22,11 @@ interface ContextProps {
       handleConfirmAptitud: () => Promise<void>
       handleCloseAptitud: () => void
 
-      addNewJurado: (jurado: string) => Promise<void>
+      addNewJurado: (jurado: string) => Promise<{
+            err: boolean;
+            message: string;
+      }>
+
       deleteJurado: (idJurado: number) => Promise<void>
       refreshJurados: () => Promise<void>
 }
