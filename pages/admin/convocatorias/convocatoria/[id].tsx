@@ -427,6 +427,15 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
     },
   })
 
+  if (!resConvocatoria) {
+    return {
+      redirect: {
+        destination: '/admin/convocatorias',
+        permanent: false
+      }
+    }
+  }
+
   const items = await prisma.test.findMany({
     where: {
       categoria_id: 3

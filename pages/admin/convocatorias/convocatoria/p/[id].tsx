@@ -36,6 +36,7 @@ import { useState } from 'react';
 import { reclutApi } from '@/apies';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from 'react';
 moment.locale('es');
 interface Props {
     postulante: any,
@@ -161,6 +162,13 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
             alert('No se pudo actualizar el estado del postulante');
         }
     }
+    useEffect(() => {
+
+        setEstadoPostulante(estado.nombre)
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [postulante])
+
     return (
         <Paperbase title={"Postulante "} subTitle={'ficha'}  >
 
@@ -922,7 +930,11 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     const listaPostulantes = await prisma.postulante_x_convocatoria.findMany({
         where: {
             convocatoria_id: parseInt(conv.toString()),
-
+            AND: {
+                estado_postulante_id: {
+                    not: 4
+                }
+            }
         },
         select: {
             postulante: {
