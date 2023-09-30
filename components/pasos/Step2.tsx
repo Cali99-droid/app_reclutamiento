@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
 
-import { Edit, UploadFile, UploadFileOutlined } from '@mui/icons-material';
+import { Download, Edit, UploadFile, UploadFileOutlined } from '@mui/icons-material';
 import { useRef } from 'react';
 import { reclutApi } from '@/apies';
 import { useRouter } from 'next/router';
@@ -411,13 +411,13 @@ const Step2 = () => {
                     />
 
                     <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
-                    {doc && (
+                    {doc && !matches ? (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
+                        <Download /> Descargar
+                    </IconButton>) : (
 
                         <Box display={'flex'} alignItems={'center'}  >
                             <Box>
-                                {!matches && (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
-                                    <FilePresentIcon />
-                                </IconButton>)}
+
                             </Box>
                             <Box >
                                 <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Cargando...</Typography>
