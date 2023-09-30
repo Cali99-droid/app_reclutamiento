@@ -411,9 +411,11 @@ const Step2 = () => {
                     />
 
                     <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
-                    {doc && !matches ? (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
+                    {!matches && (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
                         <Download /> Descargar
-                    </IconButton>) : (
+                    </IconButton>)}
+                    {doc && matches && (
+
 
                         <Box display={'flex'} alignItems={'center'}  >
                             <Box>
@@ -432,6 +434,7 @@ const Step2 = () => {
                                 Quitar
                             </Button>
                         </Box>
+
 
                     )}
                     <input

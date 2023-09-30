@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormHelperText, IconButton, InputLabel, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses, useMediaQuery } from '@mui/material';
+import { Box, Button, Divider, FormHelperText, IconButton, InputLabel, LinearProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses, useMediaQuery } from '@mui/material';
 import React, { useRef } from 'react';
 import { DatosContext } from '@/context';
 import { useContext, ChangeEvent } from 'react';
@@ -8,7 +8,7 @@ import Modal from '../modal/Modal';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
-import { Edit, UploadFileOutlined } from '@mui/icons-material';
+import { Download, Edit, UploadFileOutlined } from '@mui/icons-material';
 import { reclutApi } from '@/apies';
 import axios from 'axios';
 const Step4 = () => {
@@ -140,12 +140,14 @@ const Step4 = () => {
 
         }
     }
+    const [loadDoc, setLoadDoc] = useState(false)
     const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         if (!target.files || target.files.length === 0) {
             return;
         }
         const selectedFile = target.files[0];
 
+        setLoadDoc(true)
 
         try {
 
@@ -162,7 +164,9 @@ const Step4 = () => {
                     "Access-Control-Allow-Origin": "*"
                 }
             })
+            toast.success('Documento Subido Corretamente')
 
+            setLoadDoc(false)
 
 
             setDoc(data.message);
@@ -173,6 +177,7 @@ const Step4 = () => {
         } catch (error) {
             console.log({ error });
 
+            setLoadDoc(false)
             notificacion('error al subir foto en doc step 4')
             toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
         }
@@ -254,6 +259,7 @@ const Step4 = () => {
         const selectedFile = target.files[0];
 
 
+        setLoadDoc(true)
         try {
 
 
@@ -268,10 +274,13 @@ const Step4 = () => {
                     "Access-Control-Allow-Origin": "*"
                 }
             })
+            toast.success('Documento Subido Corretamente')
             setDocRec(data.message);
 
+            setLoadDoc(false)
         } catch (error) {
             console.log({ error });
+            setLoadDoc(false)
             notificacion('error al subir foto en doc step 4 reco')
             toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
         }
@@ -437,19 +446,31 @@ const Step4 = () => {
                         />
 
                         <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
-                        {doc && (
-                            <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
+                        {!matches && (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
+                            <Download /> Descargar
+                        </IconButton>)}
+                        {doc && matches && (
+
+
+                            <Box display={'flex'} alignItems={'center'}  >
+                                <Box>
+
+                                </Box>
                                 <Box >
-                                    <InputLabel id="demo-simple-select-label">Vista previa del certificado</InputLabel>
-                                    <object data={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`} type="application/pdf" width="60%" height="200px">
+                                    <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Cargando...</Typography>
+                                    <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
+                                    <InputLabel id="demo-simple-label">Vista previa del certificado</InputLabel>
+                                    <object onLoad={() => setLoadDoc(false)} data={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`} type="application/pdf" width="60%" height="200px">
                                         <p>No se puede previsualizar</p>
                                     </object>
 
                                 </Box>
-                                <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFileRec}>
+                                <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
                                     Quitar
                                 </Button>
                             </Box>
+
+
                         )}
                         <input
                             ref={fileInputRef}
@@ -595,19 +616,31 @@ const Step4 = () => {
                             required
                         />
                         <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
-                        {docRec && (
-                            <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
+                        {!matches && (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
+                            <Download /> Descargar
+                        </IconButton>)}
+                        {docRec && matches && (
+
+
+                            <Box display={'flex'} alignItems={'center'}  >
+                                <Box>
+
+                                </Box>
                                 <Box >
-                                    <InputLabel id="demo-simple-select-label">Vista previa del certificado</InputLabel>
-                                    <object data={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}{docRec}`} type="application/pdf" width="60%" height="200px">
+                                    <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Cargando...</Typography>
+                                    <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
+                                    <InputLabel id="demo-simple-label">Vista previa del certificado</InputLabel>
+                                    <object onLoad={() => setLoadDoc(false)} data={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${docRec}`} type="application/pdf" width="60%" height="200px">
                                         <p>No se puede previsualizar</p>
                                     </object>
 
                                 </Box>
-                                <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFileRec}>
+                                <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
                                     Quitar
                                 </Button>
                             </Box>
+
+
                         )}
                         <input
                             ref={fileInputRefRec}
