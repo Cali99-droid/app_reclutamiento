@@ -17,7 +17,7 @@ export const Modal: FC<ModalProps> = ({ title, children, open, handleClose, hand
 
       <DialogTitle >{title}</DialogTitle>
       <DialogContent  >
-        <Box sx={matches ? { width: 500 } : { width: 300 }}>
+        <Box sx={matches ? { width: 500 } : { width: 250 }}>
           {children}
         </Box>
 

@@ -15,6 +15,7 @@ import { reclutApi } from '@/apies';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import Document from '../../pages/_document';
+import FilePresentIcon from '@mui/icons-material/FilePresent';
 const Step2 = () => {
     const router = useRouter()
     const { data }: any = useSession();
@@ -194,7 +195,7 @@ const Step2 = () => {
             })
                 .then((_) => {
                     setUploadState({ ...uploadState, success: true });
-                    toast.success("Documento Subida Corretamente");
+                    toast.success("Documento Subido Corretamente");
                     setLoadDoc(false)
                     // setValue('image', res.data.url, { shouldValidate: true });
                     setDoc(res.data.name);
@@ -248,14 +249,14 @@ const Step2 = () => {
                     "Access-Control-Allow-Origin": "*"
                 }
             })
-
+            toast.success('Documento Subido Corretamente')
             setDoc(data.message);
 
 
 
         } catch (error) {
             setLoadDoc(false)
-            notificacion('error al subir foto en doc')
+            notificacion('error al subir documento step 1')
             toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
             console.log({ error });
         }
@@ -411,7 +412,13 @@ const Step2 = () => {
 
                     <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
                     {doc && (
+
                         <Box display={'flex'} alignItems={'center'}  >
+                            <Box>
+                                {!matches && (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
+                                    <FilePresentIcon />
+                                </IconButton>)}
+                            </Box>
                             <Box >
                                 <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Cargando...</Typography>
                                 <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
@@ -425,6 +432,7 @@ const Step2 = () => {
                                 Quitar
                             </Button>
                         </Box>
+
                     )}
                     <input
                         ref={fileInputRef}
