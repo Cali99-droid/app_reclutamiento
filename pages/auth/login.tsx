@@ -44,6 +44,7 @@ const LoginPage = (error: string) => {
         if (confirmado) {
 
             const resp = await signIn('credentials', { email, password, redirect: false, });
+            // console.log(resp)
             if (resp) {
 
                 setShowError(!resp.ok)

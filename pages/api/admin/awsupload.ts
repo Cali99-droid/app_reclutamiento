@@ -41,7 +41,7 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     //     return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
     // }
     let {name,type} = req.body;
-  
+
     // const webpBuffer = await sharp(name)
     //             .webp({ quality: 80 })
     //             .toBuffer();
@@ -52,7 +52,7 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
        const uniqueFileName = `${uuidv4()}.${name.split('.').pop()}`;
        const folder = process.env.FOLDER_IMG_NAME;
        const fileName = `${folder}${uniqueFileName}`;
-    const s3 = new AWS.S3();
+       const s3 = new AWS.S3();
 //   const params = {
 //                     Bucket: process.env.S3_BUCKET_NAME,
 //                     Key: `${uniqueFileName}.webp`, // Use the provided image name for the key
@@ -81,4 +81,3 @@ const uploadFile = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 
 }
-

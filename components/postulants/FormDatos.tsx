@@ -147,6 +147,92 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
         setEx(true)
     }
     const [file, setFile] = useState<File | null>(null);
+    const uploadInput = useRef(null);
+    const [uploadState, setUploadState] = useState({});
+    const notificacion = async (error: string) => {
+        try {
+            const { data } = await reclutApi.post('/noti', { error });
+
+            return {
+                hasError: false
+            }
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return {
+                    hasError: true,
+                    message: error.response?.data.message
+                }
+            }
+
+
+        }
+    }
+    const handleUpload = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+        if (!target.files || target.files.length === 0) {
+            return;
+        }
+        let file = target.files[0];
+        // Split the filename to get the name and type
+        let fileParts = target.files[0].name.split(".");
+        let fileName = file.name;
+        let fileType = file.type;
+        setLoadImg(true)
+        new Compressor(file, {
+            quality: 0.6,
+            async success(result) {
+                reclutApi.post("/postulants/load", {
+                    fileName: result.name,
+                    fileType: result.type,
+                })
+                    .then((res) => {
+                        const signedRequest = res.data.signedRequest;
+                        const url = res.data.url;
+
+                        setUploadState({
+                            ...uploadState,
+                            url,
+                        });
+
+                        // Perform the actual upload using the signed URL
+                        // const options = {
+                        //     headers: {
+                        //         "Content-type": fileType,
+                        //         "Access-Control-Allow-Origin": "*"
+                        //     }
+                        // };
+                        reclutApi.put(signedRequest, result, {
+                            headers: {
+                                "Content-type": fileType,
+                                "Access-Control-Allow-Origin": "*"
+                            }
+                        })
+                            .then((_) => {
+                                setUploadState({ ...uploadState, success: true });
+                                toast.success("Imagen Subida Corretamente");
+                                setLoadImg(false)
+                                setValue('image', res.data.url, { shouldValidate: true });
+
+                            })
+                            .catch((_) => {
+                                setLoadImg(false)
+                                notificacion('error al subir foto de perfil')
+                                toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                            });
+                    })
+                    .catch((error) => {
+                        notificacion('error al subir foto')
+                        toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                        setLoadImg(false)
+                    });
+            }
+        });
+        // The compression process is asynchronous,
+        // which means you have to access the `result` in the `success` hook function.
+
+        // Post the file information to the server to obtain a signed URL const { data } = await
+
+    };
     const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         if (!target.files || target.files.length === 0) {
             return;
@@ -220,13 +306,14 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
         // }
     }
     const [imgDni, setImgDni] = useState<any>([])
+
     const onFilesSelectedDni = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         if (!target.files || target.files.length === 0 || target.files.length > 2) {
             toast.error('Son solo 2 imagenes')
             return;
         }
+        setLoadImgDni(false)
 
-        setLoadImgDni(true)
         try {
             // setLoadImg(true)
             for (const file of target.files) {
@@ -256,18 +343,52 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                         // The third parameter is required for server
 
 
-                        const { data } = await reclutApi.post<{ message: string, url: string }>('/postulants/awsupload', {
-                            name: result.name,
-                            type: result.type
-                        });
-                        const url = data.url;
-                        const res = await reclutApi.put(url, result, {
-                            headers: {
-                                "Content-type": result.type,
-                                "Access-Control-Allow-Origin": "*"
-                            }
+                        reclutApi.post("/postulants/load", {
+                            fileName: result.name,
+                            fileType: result.type,
                         })
-                        setValue('imgs', [...getValues('imgs'), { id: 0, image: data.message, postulante_id: postulante.id }], { shouldValidate: true });
+                            .then((res) => {
+                                const signedRequest = res.data.signedRequest;
+                                const url = res.data.url;
+
+                                setUploadState({
+                                    ...uploadState,
+                                    url,
+                                });
+
+                                // Perform the actual upload using the signed URL
+                                // const options = {
+                                //     headers: {
+                                //         "Content-type": fileType,
+                                //         "Access-Control-Allow-Origin": "*"
+                                //     }
+                                // };
+                                reclutApi.put(signedRequest, result, {
+                                    headers: {
+                                        "Content-type": result.type,
+                                        "Access-Control-Allow-Origin": "*"
+                                    }
+                                })
+                                    .then((_) => {
+                                        setUploadState({ ...uploadState, success: true });
+                                        toast.success("Imagen Subida Corretamente");
+                                        setLoadImg(false)
+                                        // setValue('image', res.data.url, { shouldValidate: true });
+                                        setValue('imgs', [...getValues('imgs'), { id: 0, image: res.data.url, postulante_id: postulante.id }], { shouldValidate: true });
+
+                                    })
+                                    .catch((_) => {
+                                        setLoadImg(false)
+                                        notificacion('error al subir foto en dni')
+                                        toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                                    });
+                            })
+                            .catch((error) => {
+                                notificacion('error al subir foto')
+                                toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                                setLoadImg(false)
+                            });
+
 
                         //   // Send the compressed image file to server with XMLHttpRequest.
                         //   axios.post('/path/to/upload', formData).then(() => {
@@ -687,7 +808,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
                                 accept='image/png, image/gif, image/jpeg'
                                 style={{ display: 'none' }}
-                                onChange={onFilesSelected}
+                                onChange={handleUpload}
                             />
 
                         </Grid>
@@ -728,7 +849,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                                             <CardMedia
                                                 component='img'
                                                 className='fadeIn'
-                                                image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${getValues('image')}`}
+                                                image={`${getValues('image')}`}
                                                 alt={getValues('image')}
                                                 onLoad={() => setLoadImg(false)}
                                             />
@@ -763,7 +884,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                                                 <CardMedia
                                                     component='img'
                                                     className='fadeIn'
-                                                    image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${img.image || img}`}
+                                                    image={`${img.image || img}`}
                                                     alt={'imagen dni'}
                                                     onLoad={() => setLoadImgDni(false)}
                                                 />

@@ -36,9 +36,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 async function  getProfesion(req: NextApiRequest, res: NextApiResponse<any>) {
   const session: any = await getSession({ req });
 
-  if ( !session ) {
-      return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
-  }
+  // if ( !session ) {
+  //     return res.status(401).json({message: 'Debe de estar autenticado para hacer esto'});
+  // }
 
   idPost =  await prisma.postulante.findFirst({
     where:{

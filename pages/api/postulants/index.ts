@@ -3,12 +3,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
 import { getSession } from 'next-auth/react';
 import aws from 'aws-sdk';
-import { v2 as cloudinary } from 'cloudinary';
+
 import { S3 } from 'aws-sdk';
 import { parse } from 'path';
 import { dni_image } from '@prisma/client';
 import { truncateSync } from 'fs';
-cloudinary.config( process.env.CLOUDINARY_URL || '' );
+
 
 
 type Data = 

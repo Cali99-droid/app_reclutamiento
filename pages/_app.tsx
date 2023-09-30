@@ -10,51 +10,52 @@ import { CssBaseline, ThemeProvider } from '@mui/material'
 import type { AppProps } from 'next/app'
 import { PostProvider } from '../context';
 import { SWRConfig } from 'swr'
-import { useEffect, useRef } from 'react'
-import { inactivity } from '@/helpers'
+import { useEffect } from 'react'
+
 import { useRouter } from 'next/router'
 import 'dayjs/locale/en-gb';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import Swal from 'sweetalert2';
+
 import "dayjs/locale/es";
 import { SweetAlertProvider } from '@/context/sweet/SweetAlertContext'
 export default function App({ Component, pageProps }: AppProps) {
 
-  // const inactivityTimeout = 20 * 60 * 1000; // 20 minutos en milisegundos
-  // const router = useRouter();
-  // let inactivityTimer: number | any;
+  const inactivityTimeout = 20 * 60 * 1000; // 20 minutos en milisegundos
+  const router = useRouter();
+  let inactivityTimer: number | any;
 
-  // const resetTimer = () => {
-  //   if (inactivityTimer) clearTimeout(inactivityTimer);
-  //   inactivityTimer = setTimeout(() => {
-  //     signOut();
-  //     router.push('/'); // Redirigir a la página de inicio de sesión después del cierre de sesión
-  //     alert('Su sesión ha expirado, inicie nuevamente')
-  //   }, inactivityTimeout);
-  // };
+  const resetTimer = () => {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+      signOut();
+      router.push('/'); // Redirigir a la página de inicio de sesión después del cierre de sesión
+      alert('Su sesión ha expirado, inicie nuevamente')
+    }, inactivityTimeout);
+  };
 
-  // const handleInteraction = () => {
-  //   resetTimer();
-  // };
+  const handleInteraction = () => {
+    resetTimer();
+  };
 
-  // useEffect(() => {
-  //   document.addEventListener('mousemove', handleInteraction);
-  //   document.addEventListener('mousedown', handleInteraction);
-  //   document.addEventListener('keydown', handleInteraction);
-  //   document.addEventListener('touchstart', handleInteraction);
+  useEffect(() => {
+    document.addEventListener('mousemove', handleInteraction);
+    document.addEventListener('mousedown', handleInteraction);
+    document.addEventListener('keydown', handleInteraction);
+    document.addEventListener('touchstart', handleInteraction);
 
-  //   resetTimer();
+    resetTimer();
 
-  //   return () => {
-  //     document.removeEventListener('mousemove', handleInteraction);
-  //     document.removeEventListener('mousedown', handleInteraction);
-  //     document.removeEventListener('keydown', handleInteraction);
-  //     document.removeEventListener('touchstart', handleInteraction);
-  //     if (inactivityTimer) clearTimeout(inactivityTimer);
-  //   };
+    return () => {
+      document.removeEventListener('mousemove', handleInteraction);
+      document.removeEventListener('mousedown', handleInteraction);
+      document.removeEventListener('keydown', handleInteraction);
+      document.removeEventListener('touchstart', handleInteraction);
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+    };
 
-  // }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <SessionProvider >
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
