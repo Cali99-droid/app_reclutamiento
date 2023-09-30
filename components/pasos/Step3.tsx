@@ -659,8 +659,8 @@ const Step3 = () => {
                     />
 
                     <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
-                    {!matches && (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
-                        <Download /> Descargar
+                    {doc && !matches && (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
+                        <Download /> Descargar Certificado
                     </IconButton>)}
                     {doc && matches && (
 
