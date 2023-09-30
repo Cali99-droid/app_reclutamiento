@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { validations } from '@/helpers';
 import { Edit, UploadFileOutlined } from '@mui/icons-material';
 import { reclutApi } from '@/apies';
+import axios from 'axios';
 
 const inputProps = {
     max: '50',
@@ -85,7 +86,25 @@ const Step3 = () => {
         setTitulo(event.target.value);
 
     }
+    const notificacion = async (error: string) => {
+        try {
+            const { data } = await reclutApi.post('/noti', { error });
 
+            return {
+                hasError: false
+            }
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return {
+                    hasError: true,
+                    message: error.response?.data.message
+                }
+            }
+
+
+        }
+    }
     const onInstitucionChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.length <= 0) {
             setError(true)
@@ -300,6 +319,9 @@ const Step3 = () => {
 
 
         } catch (error) {
+
+            notificacion('error al subir foto en doc')
+            toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
             console.log({ error });
         }
 

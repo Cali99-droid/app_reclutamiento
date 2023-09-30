@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidv4 } from 'uuid';
 
-import AWS from '../../../aws-config';
+import AWS from '../../../../aws-config';
 import { getSession } from "next-auth/react";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -12,10 +12,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	// Create a new instance of S3
 	const s3 = new AWS.S3();
-	const fileName = req.body.fileName;
-	const fileType = req.body.fileType;
+	const fileName = req.body.name;
+	const fileType = req.body.type;
     const uniqueFileName = `${uuidv4()}.${fileName.split('.').pop()}`;
-    const folder = process.env.FOLDER_IMG_NAME;
+    const folder = process.env.FOLDER_DOCS_NAME;
     const ky = `${folder}${uniqueFileName}`;
 	const s3Params = {
 		Bucket:  process.env.BUCKET_NAME,
@@ -33,7 +33,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			const returnData = {
 				signedRequest: data,
 				url: `https://${process.env.BUCKET_NAME}.s3.amazonaws.com/${ky}`,
-				name:uniqueFileName
+				name:uniqueFileName,
+                tupo:req.body.type
 			};
 
 

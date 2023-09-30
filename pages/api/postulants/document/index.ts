@@ -3,8 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/server/db/client';
 import { getSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
-import { v2 as cloudinary } from 'cloudinary';
-cloudinary.config( process.env.CLOUDINARY_URL || '' );
+
+
 
 
 
@@ -70,9 +70,7 @@ async function  postDoc(req: NextApiRequest, res: NextApiResponse<any>) {
     if(p.doc ){
         if ( p.doc !== doc) {
         // Borrar de cloudinary
-        const [ fileId, extension ] = p.doc.substring( p.doc.lastIndexOf('/') + 1 ).split('.')
-        console.log(fileId)
-            await cloudinary.uploader.destroy( fileId );
+
         }
     }
  

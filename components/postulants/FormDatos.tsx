@@ -99,7 +99,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
     const onRegisterForm = async (form: FormData) => {
         setIsSaving(true);
 
-
+        console.log(form)
         try {
 
             const { data } = await reclutApi({
@@ -211,7 +211,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                                 setUploadState({ ...uploadState, success: true });
                                 toast.success("Imagen Subida Corretamente");
                                 setLoadImg(false)
-                                setValue('image', res.data.url, { shouldValidate: true });
+                                setValue('image', res.data.name, { shouldValidate: true });
 
                             })
                             .catch((_) => {
@@ -374,7 +374,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                                         toast.success("Imagen Subida Corretamente");
                                         setLoadImg(false)
                                         // setValue('image', res.data.url, { shouldValidate: true });
-                                        setValue('imgs', [...getValues('imgs'), { id: 0, image: res.data.url, postulante_id: postulante.id }], { shouldValidate: true });
+                                        setValue('imgs', [...getValues('imgs'), { id: 0, image: res.data.name, postulante_id: postulante.id }], { shouldValidate: true });
 
                                     })
                                     .catch((_) => {
@@ -849,7 +849,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                                             <CardMedia
                                                 component='img'
                                                 className='fadeIn'
-                                                image={`${getValues('image')}`}
+                                                image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${getValues('image')}`}
                                                 alt={getValues('image')}
                                                 onLoad={() => setLoadImg(false)}
                                             />
@@ -884,7 +884,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                                                 <CardMedia
                                                     component='img'
                                                     className='fadeIn'
-                                                    image={`${img.image || img}`}
+                                                    image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${img.image || img}`}
                                                     alt={'imagen dni'}
                                                     onLoad={() => setLoadImgDni(false)}
                                                 />

@@ -104,8 +104,8 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                         width={150}
                                         height={150}
                                         alt="Imagen postulante"
-
                                         priority
+                                        style={imageStyle}
                                     />
                                 </Box>
                                 <Box mt={2} textAlign={'center'}>

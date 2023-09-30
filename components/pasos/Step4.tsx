@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
 import { Edit, UploadFileOutlined } from '@mui/icons-material';
 import { reclutApi } from '@/apies';
+import axios from 'axios';
 const Step4 = () => {
     const { capacitaciones, agregarCapacitacion, editarCapacitacion, quitarCapacitacion, reconocimientos, agregarReconocimiento, editarReconocimiento, quitarReconocimiento } = useContext(DatosContext)
     const { data }: any = useSession();
@@ -120,7 +121,25 @@ const Step4 = () => {
     }
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [file, setFile] = useState<File | null>(null);
+    const notificacion = async (error: string) => {
+        try {
+            const { data } = await reclutApi.post('/noti', { error });
 
+            return {
+                hasError: false
+            }
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return {
+                    hasError: true,
+                    message: error.response?.data.message
+                }
+            }
+
+
+        }
+    }
     const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         if (!target.files || target.files.length === 0) {
             return;
@@ -153,6 +172,9 @@ const Step4 = () => {
 
         } catch (error) {
             console.log({ error });
+
+            notificacion('error al subir foto en doc step 4')
+            toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
         }
 
 
@@ -250,6 +272,8 @@ const Step4 = () => {
 
         } catch (error) {
             console.log({ error });
+            notificacion('error al subir foto en doc step 4 reco')
+            toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
         }
 
 

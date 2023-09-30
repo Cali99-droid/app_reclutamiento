@@ -13,6 +13,8 @@ import { Edit, UploadFile, UploadFileOutlined } from '@mui/icons-material';
 import { useRef } from 'react';
 import { reclutApi } from '@/apies';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import Document from '../../pages/_document';
 const Step2 = () => {
     const router = useRouter()
     const { data }: any = useSession();
@@ -132,7 +134,84 @@ const Step2 = () => {
     }
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [file, setFile] = useState<File | null>(null);
+    const [uploadState, setUploadState] = useState({});
+    const notificacion = async (error: string) => {
+        try {
+            const { data } = await reclutApi.post('/noti', { error });
 
+            return {
+                hasError: false
+            }
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return {
+                    hasError: true,
+                    message: error.response?.data.message
+                }
+            }
+
+
+        }
+    }
+    const [documen, setDocumen] = useState<any>();
+    const submitDoc = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+        if (!target.files || target.files.length === 0) {
+
+            return;
+
+        }
+        let doc = target.files[0];
+        setLoadDoc(true)
+        setDocumen(target.files[0]);
+        console.log(documen)
+        toast.info('Subiendo Documento')
+        reclutApi.post("/postulants/docupload/load", {
+            name: target.files[0].name,
+            type: target.files[0].type
+        }).then((res) => {
+            const signedRequest = res.data.signedRequest;
+            const url = res.data.url;
+            console.log(doc)
+            setUploadState({
+                ...uploadState,
+                url,
+            });
+
+            // Perform the actual upload using the signed URL
+            // const options = {
+            //     headers: {
+            //         "Content-type": fileType,
+            //         "Access-Control-Allow-Origin": "*"
+            //     }
+            // };
+            console.log(documen)
+            reclutApi.put(signedRequest, doc, {
+                headers: {
+                    "Content-type": documen.type,
+                    "Access-Control-Allow-Origin": "*"
+                }
+            })
+                .then((_) => {
+                    setUploadState({ ...uploadState, success: true });
+                    toast.success("Documento Subida Corretamente");
+                    setLoadDoc(false)
+                    // setValue('image', res.data.url, { shouldValidate: true });
+                    setDoc(res.data.name);
+
+                })
+                .catch((_) => {
+                    setLoadDoc(false)
+                    notificacion('error al subir foto en dni')
+                    toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                });
+        })
+            .catch((error) => {
+                notificacion('error al subir foto')
+                toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                setLoadDoc(false)
+            });
+    }
     const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         toast.info('Subiendo Documento')
 
@@ -175,6 +254,9 @@ const Step2 = () => {
 
 
         } catch (error) {
+            setLoadDoc(false)
+            notificacion('error al subir foto en doc')
+            toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
             console.log({ error });
         }
 

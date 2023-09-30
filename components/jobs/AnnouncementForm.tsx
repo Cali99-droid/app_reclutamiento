@@ -264,7 +264,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                 setUploadState({ ...uploadState, success: true });
                                 toast.success("Imagen Subida Corretamente");
                                 setLoadImg(false)
-                                setValue('img', res.data.url, { shouldValidate: true });
+                                setValue('img', res.data.name, { shouldValidate: true });
 
                             })
                             .catch((_) => {
@@ -480,6 +480,9 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                     <MenuItem value={2}>DOCENTE</MenuItem>
 
 
+
+
+
                                 </Select>
 
                             </FormControl>
@@ -512,7 +515,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
                                             <CardMedia
                                                 component='img'
                                                 className='fadeIn'
-                                                image={`${getValues('img')}`}
+                                                image={`${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${getValues('img')}`}
                                                 alt={getValues('img')}
                                                 onLoad={() => setLoadImg(false)}
                                             />
