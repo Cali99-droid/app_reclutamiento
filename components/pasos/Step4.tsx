@@ -146,7 +146,7 @@ const Step4 = () => {
             return;
         }
         const selectedFile = target.files[0];
-
+        toast.info('Cargando Documento')
         setLoadDoc(true)
 
         try {
@@ -257,7 +257,7 @@ const Step4 = () => {
             return;
         }
         const selectedFile = target.files[0];
-
+        toast.info('Cargando Documento')
 
         setLoadDoc(true)
         try {
