@@ -635,7 +635,7 @@ const Step4 = () => {
                                     </object>
 
                                 </Box>
-                                <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
+                                <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFileRec}>
                                     Quitar
                                 </Button>
                             </Box>
