@@ -235,12 +235,12 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
         imgs:dni_image[]
     };
 
-    if ( image.length <= 0 ) {
-      return res.status(400).json({ message: 'Es necesario que suba una imagen !' });
-    }
-    if ( image.length > 0 &&  imgs.length !== 2 ) {
-      return res.status(400).json({ message: 'Agregue la foto del DNI, son dos imagenes !' });
-    }
+    // if ( image.length <= 0 ) {
+    //   return res.status(400).json({ message: 'Es necesario que suba una imagen !' });
+    // }
+    // if ( image.length > 0 &&  imgs.length !== 2 ) {
+    //   return res.status(400).json({ message: 'Agregue la foto del DNI, son dos imagenes !' });
+    // }
     if ( imgs.length > 2 ) {
       return res.status(400).json({ message: 'Solo se permiten  dos imagenes !' });
     }
@@ -258,7 +258,7 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
       if(p === null){
           return;
       }
-      if(p.image ){
+      if(p.image && image){
           if ( p.image !== image) {
             
             const deleteParams: aws.S3.DeleteObjectRequest = {
@@ -273,8 +273,8 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
           // await cloudinary.uploader.destroy( fileId );
       }   
      }
-     
-     const imgDnis = await prisma.dni_image.findMany({where: {postulante_id: parseInt(idPostulante.toString())}})
+     if(imgs){
+  const imgDnis = await prisma.dni_image.findMany({where: {postulante_id: parseInt(idPostulante.toString())}})
   
      imgs.forEach(async(i,index) => {
        if(i.id === 0 && imgDnis.length >0){
@@ -315,6 +315,8 @@ async function updatePostulante(req: NextApiRequest, res: NextApiResponse<Data>)
 
         }
      });
+     }  
+     
      
 
     //  if(imgDnis.length>0 ){

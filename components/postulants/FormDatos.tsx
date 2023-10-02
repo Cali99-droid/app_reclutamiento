@@ -99,7 +99,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
     const onRegisterForm = async (form: FormData) => {
         setIsSaving(true);
 
-        console.log(form)
+
         try {
 
             const { data } = await reclutApi({
@@ -788,7 +788,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
                     </Grid>
                 </Box>
-                <Box mt={2} padding={4} borderRadius={4} bgcolor={'#FFF'}>
+                {/* <Box mt={2} padding={4} borderRadius={4} bgcolor={'#FFF'}>
                     <Grid container spacing={5}>
                         <Grid item xs={12} md={6}>
 
@@ -911,13 +911,13 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
 
                     </Grid>
-                    <Box width={'100%'} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }} >
+                    
+                </Box> */}
 
-                        <Button disabled={isSaving} type='submit' size="large" sx={{ marginTop: 2, textAlign: 'end', width: '100%' }} endIcon={<EastIcon />} >Continuar</Button>
-                    </Box>
+                <Box width={'100%'} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }} >
+
+                    <Button disabled={isSaving} type='submit' size="large" sx={{ marginTop: 2, textAlign: 'end', width: '100%' }} endIcon={<EastIcon />} >Continuar</Button>
                 </Box>
-
-
 
 
 
