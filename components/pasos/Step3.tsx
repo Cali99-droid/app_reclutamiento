@@ -1,4 +1,4 @@
-import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, FormHelperText, useMediaQuery } from '@mui/material';
+import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, FormHelperText, useMediaQuery, LinearProgress } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useContext, ChangeEvent } from 'react';
@@ -10,7 +10,7 @@ import { useSession } from 'next-auth/react';
 import AddIcon from '@mui/icons-material/Add';
 import { toast } from 'react-toastify';
 import { validations } from '@/helpers';
-import { Edit, UploadFileOutlined } from '@mui/icons-material';
+import { Download, Edit, UploadFileOutlined } from '@mui/icons-material';
 import { reclutApi } from '@/apies';
 import axios from 'axios';
 
@@ -286,14 +286,14 @@ const Step3 = () => {
 
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [file, setFile] = useState<File | null>(null);
-
+    const [loadDoc, setLoadDoc] = useState(false)
     const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         if (!target.files || target.files.length === 0) {
             return;
         }
         const selectedFile = target.files[0];
-
-
+        toast.info('Subiendo Documento')
+        setLoadDoc(true)
         try {
 
 
@@ -310,16 +310,16 @@ const Step3 = () => {
                 }
             })
 
+            toast.success('Documento Subido Corretamente')
 
-
-
+            setLoadDoc(false)
             setDoc(data.message);
 
 
 
 
         } catch (error) {
-
+            setLoadDoc(false)
             notificacion('error al subir foto en doc')
             toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
             console.log({ error });
@@ -659,11 +659,21 @@ const Step3 = () => {
                     />
 
                     <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
-                    {doc && (
-                        <Box display={'flex'} alignItems={'center'} gap={4} padding={1}>
+                    {doc && !matches && (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
+                        <Download /> Descargar Certificado
+                    </IconButton>)}
+                    {doc && matches && (
+
+
+                        <Box display={'flex'} alignItems={'center'}  >
+                            <Box>
+
+                            </Box>
                             <Box >
-                                <InputLabel id="demo-simple-select-label">Vista previa del certificado</InputLabel>
-                                <object data={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`} type="application/pdf" width="60%" height="200px">
+                                <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Cargando...</Typography>
+                                <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
+                                <InputLabel id="demo-simple-label">Vista previa del certificado</InputLabel>
+                                <object onLoad={() => setLoadDoc(false)} data={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`} type="application/pdf" width="60%" height="200px">
                                     <p>No se puede previsualizar</p>
                                 </object>
 
@@ -672,6 +682,8 @@ const Step3 = () => {
                                 Quitar
                             </Button>
                         </Box>
+
+
                     )}
                     <input
                         ref={fileInputRef}
