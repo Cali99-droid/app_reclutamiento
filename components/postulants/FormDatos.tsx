@@ -775,6 +775,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                                 >
                                     <MenuItem value={'ninguno'} >Ninguno</MenuItem>
                                     <MenuItem value={'Inicial'}>Inicial</MenuItem>
+                                    <MenuItem value={'Primaria'}>Primaria</MenuItem>
                                     <MenuItem value={'Secundaria'}>Secundaria</MenuItem>
                                     <MenuItem value={'Preuniversitario'}>Preuniversitario</MenuItem>
                                     <MenuItem value={'Universitario'}>Universitario</MenuItem>
