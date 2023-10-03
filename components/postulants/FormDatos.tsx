@@ -788,7 +788,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
                     </Grid>
                 </Box>
-                {/* <Box mt={2} padding={4} borderRadius={4} bgcolor={'#FFF'}>
+                <Box mt={2} padding={4} borderRadius={4} bgcolor={'#FFF'}>
                     <Grid container spacing={5}>
                         <Grid item xs={12} md={6}>
 
@@ -911,8 +911,8 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
 
 
                     </Grid>
-                    
-                </Box> */}
+
+                </Box>
 
                 <Box width={'100%'} sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }} >
 
