@@ -44,6 +44,7 @@ const Step3 = () => {
         setInstitucion('')
         setTitulo('')
         setYear('')
+        setDis(false)
     }
     const handleConfirmInves = () => {
 
@@ -147,6 +148,9 @@ const Step3 = () => {
         setDescripcion('')
         setContacto('')
         setYear('')
+        setPreviewUrl(null);
+        setSelectedFile(null)
+        setDis(false)
     }
     const [doc, setDoc] = useState<string | null>(null);
     const handleConfirmCargo = async () => {
@@ -351,10 +355,10 @@ const Step3 = () => {
         }
     };
     const handleUpload = async () => {
-        // if (!selectedFile) {
-        //   alert("Selecciona un archivo antes de subirlo.");
-        //   return;
-        // }
+        if (!selectedFile) {
+            //   alert("Selecciona un archivo antes de subirlo.");
+            return;
+        }
         setDis(true)
         try {
             const formData = new FormData();
@@ -374,6 +378,10 @@ const Step3 = () => {
             //     alert("Error al subir el archivo a S3.");
             //   }
         } catch (error) {
+            setDis(false)
+            notificacion('error al subir foto en doc step 3')
+            toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+            setLoadDoc(false);
             console.error("Error al subir el archivo:", error);
         }
     };

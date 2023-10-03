@@ -78,6 +78,7 @@ const Step2 = () => {
         setId(null)
         setEstudios()
         setPreviewUrl(null);
+        setDis(false)
     }
     const [doc, setDoc] = useState<string | null>(null);
     const [loadDoc, setLoadDoc] = useState(false)
@@ -181,10 +182,10 @@ const Step2 = () => {
         }
     };
     const handleUpload = async () => {
-        // if (!selectedFile) {
-        //   alert("Selecciona un archivo antes de subirlo.");
-        //   return;
-        // }
+        if (!selectedFile) {
+            //   alert("Selecciona un archivo antes de subirlo.");
+            return;
+        }
         setDis(true)
         try {
             const formData = new FormData();
@@ -204,6 +205,10 @@ const Step2 = () => {
             //     alert("Error al subir el archivo a S3.");
             //   }
         } catch (error) {
+            setDis(false)
+            notificacion('error al subir foto en doc step 2')
+            toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+            setLoadDoc(false);
             console.error("Error al subir el archivo:", error);
         }
     };

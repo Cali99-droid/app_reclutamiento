@@ -33,6 +33,7 @@ const Step4 = () => {
         setDescripcion('');
         setYear('')
         setPreviewUrl(null);
+        setSelectedFile(null);
         setDis(false)
     }
 
@@ -50,10 +51,10 @@ const Step4 = () => {
         }
     }
     const handleUpload = async () => {
-        // if (!selectedFile) {
-        //   alert("Selecciona un archivo antes de subirlo.");
-        //   return;
-        // }
+        if (!selectedFile) {
+            //   alert("Selecciona un archivo antes de subirlo.");
+            return;
+        }
         setLoadDoc(true);
         setDis(true)
         try {
@@ -75,7 +76,7 @@ const Step4 = () => {
             //     alert("Error al subir el archivo a S3.");
             //   }
         } catch (error) {
-
+            setDis(false)
             notificacion('error al subir foto en doc step 4')
             toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
             setLoadDoc(false);
@@ -261,7 +262,7 @@ const Step4 = () => {
     const handleCloseRec = () => {
         setOpenRec(false);
         setReconocimiento('')
-
+        setDis(false)
         setInstitucion('')
         setDescripcion('')
 
@@ -283,10 +284,10 @@ const Step4 = () => {
         }
     }
     const handleUploadR = async () => {
-        // if (!selectedFile) {
-        //   alert("Selecciona un archivo antes de subirlo.");
-        //   return;
-        // }
+        if (!selectedFileR) {
+            // alert("Selecciona un archivo antes de subirlo.");
+            return;
+        }
         setLoadDoc(true);
         setDis(true)
         try {
