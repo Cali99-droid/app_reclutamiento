@@ -1,6 +1,6 @@
 
 import { DatosContext } from '@/context';
-import { Box, Button, Chip, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography, IconButton, TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody, styled, tableCellClasses, SelectChangeEvent, LinearProgress, useMediaQuery, Divider } from '@mui/material';
+import { Box, Button, Chip, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography, IconButton, TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody, styled, tableCellClasses, SelectChangeEvent, LinearProgress, useMediaQuery, Divider, Tooltip } from '@mui/material';
 import { useContext, ChangeEvent, useEffect } from 'react';
 import Modal from '../modal/Modal';
 import { useState } from 'react';
@@ -9,13 +9,14 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
 
-import { Download, Edit, UploadFile, UploadFileOutlined } from '@mui/icons-material';
+import { Download, Edit, RemoveRedEye, UploadFile, UploadFileOutlined } from '@mui/icons-material';
 import { useRef } from 'react';
 import { reclutApi } from '@/apies';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import Document from '../../pages/_document';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
+import { domainToASCII } from 'url';
 const Step2 = () => {
     const router = useRouter()
     const { data }: any = useSession();
@@ -76,12 +77,15 @@ const Step2 = () => {
         setDoc(null)
         setId(null)
         setEstudios()
+        setPreviewUrl(null);
     }
     const [doc, setDoc] = useState<string | null>(null);
     const [loadDoc, setLoadDoc] = useState(false)
-    const handleConfirm = () => {
 
-
+    const handleConfirm = async () => {
+        setLoadDoc(true);
+        const nameDoc = await handleUpload();
+        console.log(nameDoc)
         if (profesion.length === 0 || institucion.length === 0 || grado.length === 0 || year.length <= 0) {
             toast.warning('Complete correctamente  todos los campos')
             setError(true)
@@ -94,10 +98,12 @@ const Step2 = () => {
         }
 
         if (id) {
-            editarEstudio(id, profesion, institucion, grado, year, IdPos, doc)
+            editarEstudio(id, profesion, institucion, grado, year, IdPos, nameDoc)
+            setLoadDoc(false);
             toast.success('Actualizado con éxito')
         } else {
-            agregarEstudio(profesion, institucion, grado, year, IdPos, doc)
+            agregarEstudio(profesion, institucion, grado, year, IdPos, nameDoc)
+            setLoadDoc(false);
             toast.success('Agregado con éxito')
         }
 
@@ -105,6 +111,10 @@ const Step2 = () => {
         setInstitucion('')
         setGrado('')
         setError(false)
+        setDoc(null);
+        setPreviewUrl(null);
+        setSelectedFile(null);
+        setLoadDoc(false);
         handleClose()
     }
     const handleDelete = (id: number) => {
@@ -132,6 +142,7 @@ const Step2 = () => {
         setGrado(grado)
         setyear(year)
         setDoc(doc)
+        setPreviewUrl(process.env.NEXT_PUBLIC_URL_DOCS_BUCKET + doc)
     }
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [file, setFile] = useState<File | null>(null);
@@ -156,15 +167,56 @@ const Step2 = () => {
         }
     }
     const [documen, setDocumen] = useState<any>();
+    const [selectedFile, setSelectedFile] = useState<any>();
+    const [previewUrl, setPreviewUrl] = useState<string | null>();
+    const handleFileChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+        const file = target.files?.[0];
+
+        if (file) {
+            setSelectedFile(file);
+
+            // Crear una URL de objeto para previsualizar el archivo
+            const objectUrl = URL.createObjectURL(file);
+            setPreviewUrl(objectUrl);
+        }
+    };
+    const handleUpload = async () => {
+        // if (!selectedFile) {
+        //   alert("Selecciona un archivo antes de subirlo.");
+        //   return;
+        // }
+
+        try {
+            const formData = new FormData();
+            formData.append("file", selectedFile);
+            formData.append("name", selectedFile.name);
+            formData.append("type", selectedFile.type);
+
+            const { data } = await reclutApi.post("/postulants/docupload/load", formData);
+            console.log(data.message)
+            return data.message;
+            setSelectedFile(null);
+            //   if (response.ok) {
+            //     alert("Archivo subido exitosamente a S3.");
+            //   } else {
+            //     alert("Error al subir el archivo a S3.");
+            //   }
+        } catch (error) {
+            console.error("Error al subir el archivo:", error);
+        }
+    };
+
     const submitDoc = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         if (!target.files || target.files.length === 0) {
 
             return;
 
         }
+
         let doc = target.files[0];
         setLoadDoc(true)
         setDocumen(target.files[0]);
+
         console.log(documen)
         toast.info('Subiendo Documento')
         reclutApi.post("/postulants/docupload/load", {
@@ -266,7 +318,10 @@ const Step2 = () => {
     const handleReplaceFile = () => {
         setFile(null);
         setDoc(null);
+        setPreviewUrl(null);
+        setSelectedFile(null);
     };
+
     const matches = useMediaQuery('(min-width:600px)');
     return (
         <Box padding={matches ? 4 : 0} className="fadeIn">
@@ -409,44 +464,44 @@ const Step2 = () => {
                         }}
 
                     />
-
                     <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
-                    {doc && !matches && (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
-                        <Download /> Descargar Certificado
-                    </IconButton>)}
-                    {doc && matches && (
+                    <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Guardando...</Typography>
+                    <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
+                    {previewUrl && (
+                        <Box>
+
+                            <Box display={'flex'} justifyContent={'space-evenly'}>
+                                <Typography fontSize={20}>Documento:</Typography>
+                                {selectedFile?.name}
+                                <Tooltip title="Ver documento">
+
+                                    <IconButton target='_blank' href={previewUrl} >
+                                        <RemoveRedEye />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Quitar documento"><IconButton color='error' onClick={handleReplaceFile}>
+                                    <DeleteForeverIcon />
+                                </IconButton></Tooltip>
 
 
-                        <Box display={'flex'} alignItems={'center'}  >
-                            <Box>
-
+                                <br />
+                                {/* <img src={previewUrl} alt="Vista previa del archivo" /> */}
                             </Box>
-                            <Box >
-                                <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Cargando...</Typography>
-                                <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
-                                <InputLabel id="demo-simple-label">Vista previa del certificado</InputLabel>
-                                <object onLoad={() => setLoadDoc(false)} data={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`} type="application/pdf" width="60%" height="200px">
-                                    <p>No se puede previsualizar</p>
-                                </object>
-
-                            </Box>
-                            <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
-                                Quitar
-                            </Button>
                         </Box>
 
 
                     )}
+
                     <input
                         ref={fileInputRef}
                         type="file"
 
                         accept='.pdf'
                         style={{ display: 'none' }}
-                        onChange={onFilesSelected}
+                        onChange={handleFileChange}
                     />
                     <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRef.current?.click()} disabled={doc ? true : false}>
-                        Subir Certificado
+                        Seleccionar Documento
                     </Button>
 
 
