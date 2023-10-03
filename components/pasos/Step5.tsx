@@ -65,6 +65,7 @@ const Step5 = () => {
         handleClose()
     }
     const handleDelete = (id: number) => {
+        toast.info('Eliminado Registro ...')
         quitarAficion(id)
     }
 
@@ -156,6 +157,7 @@ const Step5 = () => {
         setNivel(nivel)
     }
     const handleDeleteTics = (id: number) => {
+        toast.info('Eliminado Registro ...')
         quitarTic(id)
     }
 

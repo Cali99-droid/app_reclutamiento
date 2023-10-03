@@ -73,6 +73,7 @@ const Step3 = () => {
 
     }
     const handleDelete = (id: number) => {
+        toast.info('Eliminado Registro ...')
         quitarInvestigacion(id)
     }
     //-------------------------Investigaciones----------------
@@ -187,6 +188,7 @@ const Step3 = () => {
 
     }
     const handleDeleteCargo = (id: number) => {
+        toast.info('Eliminado Registro ...')
         quitarCargo(id)
     }
 

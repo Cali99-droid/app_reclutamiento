@@ -123,6 +123,7 @@ const Step4 = () => {
         handleClose()
     }
     const handleDelete = (id: number) => {
+        toast.info('Eliminado Registro ...')
         quitarCapacitacion(id)
     }
 
@@ -349,6 +350,7 @@ const Step4 = () => {
         handleCloseRec()
     }
     const handleDeleteRec = (id: number) => {
+        toast.info('Eliminado Registro ...')
         quitarReconocimiento(id)
     }
 
