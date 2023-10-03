@@ -181,50 +181,66 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
         new Compressor(file, {
             quality: 0.6,
             async success(result) {
-                reclutApi.post("/postulants/load", {
-                    fileName: result.name,
-                    fileType: result.type,
-                })
-                    .then((res) => {
-                        const signedRequest = res.data.signedRequest;
-                        const url = res.data.url;
+                try {
+                    const formData = new FormData();
+                    formData.append("file", result);
+                    formData.append("name", file.name);
+                    formData.append("type", file.type);
+                    const { data } = await reclutApi.post("/postulants/load", formData);
+                    console.log(data.message)
+                    toast.success("Imagen Subida Corretamente");
+                    setLoadImg(false)
+                    setValue('image', data.message, { shouldValidate: true });
+                } catch (error) {
+                    setLoadImg(false)
+                    console.log(error)
+                    notificacion('error al subir foto de perfil')
+                    toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                }
+                // reclutApi.post("/postulants/load", {
+                //     fileName: result.name,
+                //     fileType: result.type,
+                // })
+                //     .then((res) => {
+                //         const signedRequest = res.data.signedRequest;
+                //         const url = res.data.message;
 
-                        setUploadState({
-                            ...uploadState,
-                            url,
-                        });
+                //         setUploadState({
+                //             ...uploadState,
+                //             url,
+                //         });
 
-                        // Perform the actual upload using the signed URL
-                        // const options = {
-                        //     headers: {
-                        //         "Content-type": fileType,
-                        //         "Access-Control-Allow-Origin": "*"
-                        //     }
-                        // };
-                        reclutApi.put(signedRequest, result, {
-                            headers: {
-                                "Content-type": fileType,
-                                "Access-Control-Allow-Origin": "*"
-                            }
-                        })
-                            .then((_) => {
-                                setUploadState({ ...uploadState, success: true });
-                                toast.success("Imagen Subida Corretamente");
-                                setLoadImg(false)
-                                setValue('image', res.data.name, { shouldValidate: true });
+                //         // Perform the actual upload using the signed URL
+                //         // const options = {
+                //         //     headers: {
+                //         //         "Content-type": fileType,
+                //         //         "Access-Control-Allow-Origin": "*"
+                //         //     }
+                //         // };
+                //         reclutApi.put(signedRequest, result, {
+                //             headers: {
+                //                 "Content-type": fileType,
+                //                 "Access-Control-Allow-Origin": "*"
+                //             }
+                //         })
+                //             .then((_) => {
+                //                 setUploadState({ ...uploadState, success: true });
+                //                 toast.success("Imagen Subida Corretamente");
+                //                 setLoadImg(false)
+                //                 setValue('image', res.data.name, { shouldValidate: true });
 
-                            })
-                            .catch((_) => {
-                                setLoadImg(false)
-                                notificacion('error al subir foto de perfil')
-                                toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
-                            });
-                    })
-                    .catch((error) => {
-                        notificacion('error al subir foto')
-                        toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
-                        setLoadImg(false)
-                    });
+                //             })
+                //             .catch((_) => {
+                //                 setLoadImg(false)
+                //                 notificacion('error al subir foto de perfil')
+                //                 toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                //             });
+                //     })
+                //     .catch((error) => {
+                //         notificacion('error al subir foto')
+                //         toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                //         setLoadImg(false)
+                //     });
             }
         });
         // The compression process is asynchronous,
@@ -312,7 +328,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
             toast.error('Son solo 2 imagenes')
             return;
         }
-        setLoadImgDni(false)
+        setLoadImgDni(true)
 
         try {
             // setLoadImg(true)
@@ -339,55 +355,67 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                     // which means you have to access the `result` in the `success` hook function.
                     async success(result) {
 
-
+                        try {
+                            const formData = new FormData();
+                            formData.append("file", result);
+                            formData.append("name", file.name);
+                            formData.append("type", file.type);
+                            const { data } = await reclutApi.post("/postulants/load", formData);
+                            console.log(data.message)
+                            toast.success("Imagen Subida Corretamente");
+                            setLoadImgDni(false)
+                            setValue('imgs', [...getValues('imgs'), { id: 0, image: data.message, postulante_id: postulante.id }], { shouldValidate: true });
+                        } catch (error) {
+                            setLoadImgDni(false)
+                            console.log(error)
+                            notificacion('error al subir foto de dni')
+                            toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                        }
                         // The third parameter is required for server
 
 
-                        reclutApi.post("/postulants/load", {
-                            fileName: result.name,
-                            fileType: result.type,
-                        })
-                            .then((res) => {
-                                const signedRequest = res.data.signedRequest;
-                                const url = res.data.url;
+                        // reclutApi.post("/postulants/load", formData)
+                        //     .then((res) => {
+                        //         const signedRequest = res.data.signedRequest;
+                        //         const url = res.data.url;
 
-                                setUploadState({
-                                    ...uploadState,
-                                    url,
-                                });
+                        //         setUploadState({
+                        //             ...uploadState,
+                        //             url,
+                        //         });
 
-                                // Perform the actual upload using the signed URL
-                                // const options = {
-                                //     headers: {
-                                //         "Content-type": fileType,
-                                //         "Access-Control-Allow-Origin": "*"
-                                //     }
-                                // };
-                                reclutApi.put(signedRequest, result, {
-                                    headers: {
-                                        "Content-type": result.type,
-                                        "Access-Control-Allow-Origin": "*"
-                                    }
-                                })
-                                    .then((_) => {
-                                        setUploadState({ ...uploadState, success: true });
-                                        toast.success("Imagen Subida Corretamente");
-                                        setLoadImg(false)
-                                        // setValue('image', res.data.url, { shouldValidate: true });
-                                        setValue('imgs', [...getValues('imgs'), { id: 0, image: res.data.name, postulante_id: postulante.id }], { shouldValidate: true });
+                        //         // Perform the actual upload using the signed URL
+                        //         // const options = {
+                        //         //     headers: {
+                        //         //         "Content-type": fileType,
+                        //         //         "Access-Control-Allow-Origin": "*"
+                        //         //     }
+                        //         // };
+                        //         reclutApi.put(signedRequest, result, {
+                        //             headers: {
+                        //                 "Content-type": result.type,
+                        //                 "Access-Control-Allow-Origin": "*"
+                        //             }
+                        //         })
+                        //             .then((_) => {
+                        //                 setUploadState({ ...uploadState, success: true });
+                        //                 toast.success("Imagen Subida Corretamente");
+                        //                 setLoadImg(false)
+                        //                 // setValue('image', res.data.url, { shouldValidate: true });
+                        //                 setValue('imgs', [...getValues('imgs'), { id: 0, image: res.data.message, postulante_id: postulante.id }], { shouldValidate: true });
 
-                                    })
-                                    .catch((_) => {
-                                        setLoadImg(false)
-                                        notificacion('error al subir foto en dni')
-                                        toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
-                                    });
-                            })
-                            .catch((error) => {
-                                notificacion('error al subir foto')
-                                toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
-                                setLoadImg(false)
-                            });
+                        //             })
+                        //             .catch((_) => {
+                        //                 setLoadImg(false)
+                        //                 notificacion('error al subir foto en dni')
+                        //                 toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                        //             });
+                        //     })
+                        //     .catch((error) => {
+                        //         notificacion('error al subir foto')
+                        //         toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                        //         setLoadImg(false)
+                        //     });
 
 
                         //   // Send the compressed image file to server with XMLHttpRequest.
@@ -844,9 +872,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
                             {
                                 getValues('image') && (
                                     <Box width={150} >
-
                                         <Card>
-
                                             <CardMedia
                                                 component='img'
                                                 className='fadeIn'

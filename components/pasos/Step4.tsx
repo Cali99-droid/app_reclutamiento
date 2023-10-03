@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormHelperText, IconButton, InputLabel, LinearProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, styled, tableCellClasses, useMediaQuery } from '@mui/material';
+import { Box, Button, Divider, FormHelperText, IconButton, InputLabel, LinearProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography, styled, tableCellClasses, useMediaQuery } from '@mui/material';
 import React, { useRef } from 'react';
 import { DatosContext } from '@/context';
 import { useContext, ChangeEvent } from 'react';
@@ -8,7 +8,7 @@ import Modal from '../modal/Modal';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import AddIcon from '@mui/icons-material/Add';
-import { Download, Edit, UploadFileOutlined } from '@mui/icons-material';
+import { Download, Edit, RemoveRedEye, UploadFileOutlined } from '@mui/icons-material';
 import { reclutApi } from '@/apies';
 import axios from 'axios';
 const Step4 = () => {
@@ -32,25 +32,85 @@ const Step4 = () => {
         setHoras('')
         setDescripcion('');
         setYear('')
+        setPreviewUrl(null);
+        setDis(false)
     }
+
+    const [selectedFile, setSelectedFile] = useState<any>();
+    const [previewUrl, setPreviewUrl] = useState<string | null>();
+    const handleFileChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+        const file = target.files?.[0];
+
+        if (file) {
+            setSelectedFile(file);
+
+            // Crear una URL de objeto para previsualizar el archivo
+            const objectUrl = URL.createObjectURL(file);
+            setPreviewUrl(objectUrl);
+        }
+    }
+    const handleUpload = async () => {
+        // if (!selectedFile) {
+        //   alert("Selecciona un archivo antes de subirlo.");
+        //   return;
+        // }
+        setLoadDoc(true);
+        setDis(true)
+        try {
+            const formData = new FormData();
+            formData.append("file", selectedFile);
+            formData.append("name", selectedFile.name);
+            formData.append("type", selectedFile.type);
+
+            const { data } = await reclutApi.post("/postulants/docupload/load", formData);
+            console.log(data.message);
+            setSelectedFile(null);
+            setLoadDoc(false);
+            setDis(false)
+            return data.message;
+
+            //   if (response.ok) {
+            //     alert("Archivo subido exitosamente a S3.");
+            //   } else {
+            //     alert("Error al subir el archivo a S3.");
+            //   }
+        } catch (error) {
+
+            notificacion('error al subir foto en doc step 4')
+            toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+            setLoadDoc(false);
+            console.error("Error al subir el archivo:", error);
+        }
+    };
+
     const [doc, setDoc] = useState<string | null>(null);
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         if (titulo.length === 0 || horas.length === 0 || year.length === 0 || institucion.length === 0 || descripcion.length === 0 || IdPos.length === 0) {
             toast.warning('¡Complete los campos requeridos!')
             setError(true)
+            setLoadDoc(false);
             return
         };
         if (year.toString().length !== 4) {
             toast.warning('Ingrese un año válido')
             setError(true)
+            setLoadDoc(false);
             return
         }
+
+        setDis(true)
+        const nameDoc = await handleUpload();
+
         if (idCapacitacion) {
-            editarCapacitacion(idCapacitacion, titulo, horas, year, institucion, descripcion, IdPos, doc)
+            editarCapacitacion(idCapacitacion, titulo, horas, year, institucion, descripcion, IdPos, nameDoc)
             toast.success('Actualizado con éxito')
+            setLoadDoc(false);
+            setDis(false)
         } else {
-            agregarCapacitacion(titulo, horas, year, institucion, descripcion, IdPos, doc)
+            agregarCapacitacion(titulo, horas, year, institucion, descripcion, IdPos, nameDoc)
             toast.success('Agregado con éxito')
+            setLoadDoc(false);
+            setDis(false)
         }
 
         setTitulo('')
@@ -65,7 +125,7 @@ const Step4 = () => {
         quitarCapacitacion(id)
     }
 
-
+    const [dis, setDis] = useState(false)
     //--------------Capacitaciones------------------
 
     const [titulo, setTitulo] = useState('')
@@ -118,6 +178,7 @@ const Step4 = () => {
         setDescripcion(descripcion);
         setYear(year)
         setDoc(doc)
+        setPreviewUrl(process.env.NEXT_PUBLIC_URL_DOCS_BUCKET + doc)
     }
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [file, setFile] = useState<File | null>(null);
@@ -187,6 +248,8 @@ const Step4 = () => {
     const handleReplaceFile = () => {
         setFile(null);
         setDoc(null);
+        setPreviewUrl(null);
+        setSelectedFile(null);
     };
 
     //------------------reconociemirteos Modal----------------
@@ -197,9 +260,62 @@ const Step4 = () => {
     }
     const handleCloseRec = () => {
         setOpenRec(false);
+        setReconocimiento('')
+
+        setInstitucion('')
+        setDescripcion('')
+
         setError(false)
+        setPreviewUrlR(null),
+            setSelectedFileR(null)
     }
-    const handleConfirmRec = () => {
+    const [selectedFileR, setSelectedFileR] = useState<any>();
+    const [previewUrlR, setPreviewUrlR] = useState<string | null>();
+    const handleFileChangeR = ({ target }: ChangeEvent<HTMLInputElement>) => {
+        const file = target.files?.[0];
+
+        if (file) {
+            setSelectedFileR(file);
+
+            // Crear una URL de objeto para previsualizar el archivo
+            const objectUrl = URL.createObjectURL(file);
+            setPreviewUrlR(objectUrl);
+        }
+    }
+    const handleUploadR = async () => {
+        // if (!selectedFile) {
+        //   alert("Selecciona un archivo antes de subirlo.");
+        //   return;
+        // }
+        setLoadDoc(true);
+        setDis(true)
+        try {
+            const formData = new FormData();
+            formData.append("file", selectedFileR);
+            formData.append("name", selectedFileR.name);
+            formData.append("type", selectedFileR.type);
+
+            const { data } = await reclutApi.post("/postulants/docupload/load", formData);
+            console.log(data.message);
+            setSelectedFile(null);
+            setLoadDoc(false);
+            setDis(false)
+            return data.message;
+
+            //   if (response.ok) {
+            //     alert("Archivo subido exitosamente a S3.");
+            //   } else {
+            //     alert("Error al subir el archivo a S3.");
+            //   }
+        } catch (error) {
+
+            notificacion('error al subir foto en doc step 4')
+            toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+            setLoadDoc(false);
+            console.error("Error al subir el archivo:", error);
+        }
+    };
+    const handleConfirmRec = async () => {
 
         if (reconocimiento.length === 0 || year.length === 0 || institucion.length === 0 || descripcion.length === 0 || IdPos.length === 0) {
             toast.warning('¡Complete los campos requeridos!')
@@ -212,11 +328,15 @@ const Step4 = () => {
             return
         }
 
+        const nameDoc = await handleUploadR();
         if (idRec) {
-            editarReconocimiento(idRec, reconocimiento, year, institucion, descripcion, IdPos, docRec)
+            editarReconocimiento(idRec, reconocimiento, year, institucion, descripcion, IdPos, nameDoc)
+            setLoadDoc(false);
             toast.success('Actualizado con éxito')
+
         } else {
-            agregarReconocimiento(reconocimiento, year, institucion, descripcion, IdPos, docRec)
+            agregarReconocimiento(reconocimiento, year, institucion, descripcion, IdPos, nameDoc)
+            setLoadDoc(false);
             toast.success('Agregado con éxito')
         }
 
@@ -246,6 +366,7 @@ const Step4 = () => {
         setDescripcion(descripcion);
         setYear(year)
         setDocRec(doc)
+        setPreviewUrlR(process.env.NEXT_PUBLIC_URL_DOCS_BUCKET + doc)
     }
 
     //---FILES RECONOCIMIENTOS
@@ -290,6 +411,8 @@ const Step4 = () => {
     const handleReplaceFileRec = () => {
         setFileRec(null);
         setDocRec(null);
+        setPreviewUrlR(null);
+        setSelectedFileR(null);
     };
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -368,7 +491,7 @@ const Step4 = () => {
 
 
 
-                <Modal title={'Nuevo Capacitación/Curso'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
+                <Modal title={'Nuevo Capacitación/Curso'} open={open} handleClose={handleClose} dis={dis} handleConfirm={handleConfirm}>
                     <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
                         component="form"
                         sx={{
@@ -449,7 +572,7 @@ const Step4 = () => {
                         {doc && !matches && (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
                             <Download /> Descargar Certificado
                         </IconButton>)}
-                        {doc && matches && (
+                        {/* {doc && matches && (
 
 
                             <Box display={'flex'} alignItems={'center'}  >
@@ -471,6 +594,32 @@ const Step4 = () => {
                             </Box>
 
 
+                        )} */}
+                        <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Guardando...</Typography>
+                        <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
+                        {previewUrl && (
+                            <Box>
+
+                                <Box display={'flex'} justifyContent={'space-evenly'}>
+                                    <Typography fontSize={20}>Documento:</Typography>
+                                    {selectedFile?.name}
+                                    <Tooltip title="Ver documento">
+
+                                        <IconButton target='_blank' href={previewUrl} >
+                                            <RemoveRedEye />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Quitar documento"><IconButton color='error' onClick={handleReplaceFile}>
+                                        <DeleteForeverIcon />
+                                    </IconButton></Tooltip>
+
+
+                                    <br />
+                                    {/* <img src={previewUrl} alt="Vista previa del archivo" /> */}
+                                </Box>
+                            </Box>
+
+
                         )}
                         <input
                             ref={fileInputRef}
@@ -478,9 +627,9 @@ const Step4 = () => {
 
                             accept='.pdf'
                             style={{ display: 'none' }}
-                            onChange={onFilesSelected}
+                            onChange={handleFileChange}
                         />
-                        <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRef.current?.click()} disabled={doc ? true : false}>
+                        <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRef.current?.click()} disabled={previewUrl ? true : false}>
                             Subir Certificado
                         </Button>
                         {/* <input accept='.pdf' type="file" onChange={onFilesSelected} /> */}
@@ -555,7 +704,7 @@ const Step4 = () => {
 
 
 
-                <Modal title={'Nuevo Reconocimiento'} open={openRec} handleClose={handleCloseRec} handleConfirm={handleConfirmRec}>
+                <Modal title={'Nuevo Reconocimiento'} open={openRec} handleClose={handleCloseRec} handleConfirm={handleConfirmRec} dis={dis}>
                     <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
                         component="form"
                         sx={{
@@ -565,6 +714,8 @@ const Step4 = () => {
                         autoComplete="on"
 
                     >
+                        <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Guardando...</Typography>
+                        <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
                         <TextField
                             autoFocus
                             multiline
@@ -581,7 +732,7 @@ const Step4 = () => {
 
                             id="institucion"
                             label="Institución"
-                            placeholder='Intitucion donde llevo el curso'
+                            placeholder='Intitución '
                             variant="outlined"
                             error={error && institucion.length <= 0}
                             value={institucion}
@@ -619,7 +770,7 @@ const Step4 = () => {
                         {docRec && !matches && (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
                             <Download /> Descargar Certificado
                         </IconButton>)}
-                        {docRec && matches && (
+                        {/* {docRec && matches && (
 
 
                             <Box display={'flex'} alignItems={'center'}  >
@@ -641,6 +792,31 @@ const Step4 = () => {
                             </Box>
 
 
+                        )} */}
+
+                        {previewUrlR && (
+                            <Box>
+
+                                <Box display={'flex'} justifyContent={'space-evenly'}>
+                                    <Typography fontSize={20}>Documento:</Typography>
+                                    {selectedFileR?.name}
+                                    <Tooltip title="Ver documento">
+
+                                        <IconButton target='_blank' href={previewUrlR} >
+                                            <RemoveRedEye />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Quitar documento"><IconButton color='error' onClick={handleReplaceFileRec}>
+                                        <DeleteForeverIcon />
+                                    </IconButton></Tooltip>
+
+
+                                    <br />
+                                    {/* <img src={previewUrl} alt="Vista previa del archivo" /> */}
+                                </Box>
+                            </Box>
+
+
                         )}
                         <input
                             ref={fileInputRefRec}
@@ -648,9 +824,9 @@ const Step4 = () => {
 
                             accept='.pdf'
                             style={{ display: 'none' }}
-                            onChange={onFilesSelectedRec}
+                            onChange={handleFileChangeR}
                         />
-                        <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRefRec.current?.click()} disabled={docRec ? true : false}>
+                        <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRefRec.current?.click()} disabled={previewUrlR ? true : false}>
                             Subir Certificado
                         </Button>
 

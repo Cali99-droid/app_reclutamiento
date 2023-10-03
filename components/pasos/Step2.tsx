@@ -85,7 +85,7 @@ const Step2 = () => {
     const handleConfirm = async () => {
         setLoadDoc(true);
         const nameDoc = await handleUpload();
-        console.log(nameDoc)
+
         if (profesion.length === 0 || institucion.length === 0 || grado.length === 0 || year.length <= 0) {
             toast.warning('Complete correctamente  todos los campos')
             setError(true)
@@ -121,7 +121,7 @@ const Step2 = () => {
         toast.info('Eliminado Registro ...')
         quitarEstudio(id)
     }
-
+    const [dis, setDis] = useState(false)
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
             backgroundColor: '#0045aa',
@@ -185,7 +185,7 @@ const Step2 = () => {
         //   alert("Selecciona un archivo antes de subirlo.");
         //   return;
         // }
-
+        setDis(true)
         try {
             const formData = new FormData();
             formData.append("file", selectedFile);
@@ -193,9 +193,11 @@ const Step2 = () => {
             formData.append("type", selectedFile.type);
 
             const { data } = await reclutApi.post("/postulants/docupload/load", formData);
-            console.log(data.message)
-            return data.message;
+            console.log(data.message);
             setSelectedFile(null);
+            setDis(false)
+            return data.message;
+
             //   if (response.ok) {
             //     alert("Archivo subido exitosamente a S3.");
             //   } else {
@@ -389,7 +391,7 @@ const Step2 = () => {
             </Box>
 
 
-            <Modal title={'AGREGAR ESTUDIO / PROFESION'} open={open} handleClose={handleClose} handleConfirm={handleConfirm}>
+            <Modal title={'AGREGAR ESTUDIO / PROFESION'} open={open} handleClose={handleClose} handleConfirm={handleConfirm} dis={dis}>
                 <Box display={'flex'} flexDirection={'column'} gap={2} mt={2}
                     component="form"
                     sx={{
@@ -464,7 +466,7 @@ const Step2 = () => {
                         }}
 
                     />
-                    <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
+
                     <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Guardando...</Typography>
                     <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
                     {previewUrl && (
@@ -500,10 +502,10 @@ const Step2 = () => {
                         style={{ display: 'none' }}
                         onChange={handleFileChange}
                     />
-                    <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRef.current?.click()} disabled={doc ? true : false}>
+                    <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRef.current?.click()} disabled={previewUrl ? true : false}>
                         Seleccionar Documento
                     </Button>
-
+                    <FormHelperText>* Subir su certificado es opcional, solo se le pedirá en caso sea seleccionado</FormHelperText>
 
                 </Box>
 

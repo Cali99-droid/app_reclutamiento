@@ -5,11 +5,12 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Box, useMedi
 interface ModalProps extends PropsWithChildren {
   title: string;
   open: boolean;
+  dis?: boolean;
   handleClose: () => void;
   handleConfirm: () => void;
 }
 
-export const Modal: FC<ModalProps> = ({ title, children, open, handleClose, handleConfirm }) => {
+export const Modal: FC<ModalProps> = ({ title, children, open, handleClose, handleConfirm, dis }) => {
   const matches = useMediaQuery('(min-width:600px)');
   return (
 
@@ -24,10 +25,10 @@ export const Modal: FC<ModalProps> = ({ title, children, open, handleClose, hand
 
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}  >
+        <Button onClick={handleClose} disabled={dis} >
           Cancelar
         </Button>
-        <Button onClick={handleConfirm} >
+        <Button onClick={handleConfirm} disabled={dis}>
           Aceptar
         </Button>
       </DialogActions>

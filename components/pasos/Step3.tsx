@@ -1,4 +1,4 @@
-import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, FormHelperText, useMediaQuery, LinearProgress } from '@mui/material';
+import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, tableCellClasses, styled, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, FormHelperText, useMediaQuery, LinearProgress, Tooltip } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useContext, ChangeEvent } from 'react';
@@ -10,7 +10,7 @@ import { useSession } from 'next-auth/react';
 import AddIcon from '@mui/icons-material/Add';
 import { toast } from 'react-toastify';
 import { validations } from '@/helpers';
-import { Download, Edit, UploadFileOutlined } from '@mui/icons-material';
+import { Download, Edit, RemoveRedEye, UploadFileOutlined } from '@mui/icons-material';
 import { reclutApi } from '@/apies';
 import axios from 'axios';
 
@@ -149,8 +149,9 @@ const Step3 = () => {
         setYear('')
     }
     const [doc, setDoc] = useState<string | null>(null);
-    const handleConfirmCargo = () => {
-
+    const handleConfirmCargo = async () => {
+        setLoadDoc(true);
+        const nameDoc = await handleUpload();
 
         if (nivel.length === 0 || year.length === 0 || institucion.length === 0 || remuneracion.length === 0 || descripcion.length === 0 || IdPos.length === 0 || error === true) {
             toast.warning('Complete todos los campos obligatorios')
@@ -163,10 +164,12 @@ const Step3 = () => {
             return
         }
         if (idCargo) {
-            editarCargo(idCargo, referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos, doc)
+            editarCargo(idCargo, referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos, nameDoc)
+            setLoadDoc(false)
             toast.success('Actualizado con éxito')
         } else {
-            agregarCargo(referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos, doc)
+            setLoadDoc(false)
+            agregarCargo(referencia, contacto, nivel, cantidad, year, institucion, remuneracion, descripcion, IdPos, nameDoc)
             toast.success('Agregado con éxito')
         }
 
@@ -280,10 +283,11 @@ const Step3 = () => {
         setYear(year)
         setNivel(nivel);
         setCantidad(cantidadCargo)
-        setDoc(doc)
+        setDoc(doc);
+        setPreviewUrl(process.env.NEXT_PUBLIC_URL_DOCS_BUCKET + doc)
 
     }
-
+    const [dis, setDis] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [file, setFile] = useState<File | null>(null);
     const [loadDoc, setLoadDoc] = useState(false)
@@ -330,6 +334,48 @@ const Step3 = () => {
     const handleReplaceFile = () => {
         setFile(null);
         setDoc(null);
+        setPreviewUrl(null);
+        setSelectedFile(null);
+    };
+    const [selectedFile, setSelectedFile] = useState<any>();
+    const [previewUrl, setPreviewUrl] = useState<string | null>();
+    const handleFileChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+        const file = target.files?.[0];
+
+        if (file) {
+            setSelectedFile(file);
+
+            // Crear una URL de objeto para previsualizar el archivo
+            const objectUrl = URL.createObjectURL(file);
+            setPreviewUrl(objectUrl);
+        }
+    };
+    const handleUpload = async () => {
+        // if (!selectedFile) {
+        //   alert("Selecciona un archivo antes de subirlo.");
+        //   return;
+        // }
+        setDis(true)
+        try {
+            const formData = new FormData();
+            formData.append("file", selectedFile);
+            formData.append("name", selectedFile.name);
+            formData.append("type", selectedFile.type);
+
+            const { data } = await reclutApi.post("/postulants/docupload/load", formData);
+            console.log(data.message);
+            setSelectedFile(null);
+            setDis(false)
+            return data.message;
+
+            //   if (response.ok) {
+            //     alert("Archivo subido exitosamente a S3.");
+            //   } else {
+            //     alert("Error al subir el archivo a S3.");
+            //   }
+        } catch (error) {
+            console.error("Error al subir el archivo:", error);
+        }
     };
     const matches = useMediaQuery('(min-width:600px)');
     return (
@@ -528,6 +574,7 @@ const Step3 = () => {
                 open={openCargo}
                 handleClose={handleCloseCargo}
                 handleConfirm={handleConfirmCargo}
+                dis={dis}
             >
                 <Box display={'flex'} flexDirection={'column'} gap={1} mt={1}
                     component="form"
@@ -662,25 +709,28 @@ const Step3 = () => {
                     {doc && !matches && (<IconButton target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`}>
                         <Download /> Descargar Certificado
                     </IconButton>)}
-                    {doc && matches && (
+                    <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Guardando...</Typography>
+                    <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
+                    {previewUrl && (
+                        <Box>
+
+                            <Box display={'flex'} justifyContent={'space-evenly'}>
+                                <Typography fontSize={20}>Documento:</Typography>
+                                {selectedFile?.name}
+                                <Tooltip title="Ver documento">
+
+                                    <IconButton target='_blank' href={previewUrl} >
+                                        <RemoveRedEye />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Quitar documento"><IconButton color='error' onClick={handleReplaceFile}>
+                                    <DeleteForeverIcon />
+                                </IconButton></Tooltip>
 
 
-                        <Box display={'flex'} alignItems={'center'}  >
-                            <Box>
-
+                                <br />
+                                {/* <img src={previewUrl} alt="Vista previa del archivo" /> */}
                             </Box>
-                            <Box >
-                                <Typography sx={{ display: loadDoc ? 'block' : 'none' }} >Cargando...</Typography>
-                                <LinearProgress sx={{ display: loadDoc ? 'block' : 'none' }} />
-                                <InputLabel id="demo-simple-label">Vista previa del certificado</InputLabel>
-                                <object onLoad={() => setLoadDoc(false)} data={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${doc}`} type="application/pdf" width="60%" height="200px">
-                                    <p>No se puede previsualizar</p>
-                                </object>
-
-                            </Box>
-                            <Button startIcon={<DeleteForeverIcon />} color='error' onClick={handleReplaceFile}>
-                                Quitar
-                            </Button>
                         </Box>
 
 
@@ -691,10 +741,10 @@ const Step3 = () => {
 
                         accept='.pdf'
                         style={{ display: 'none' }}
-                        onChange={onFilesSelected}
+                        onChange={handleFileChange}
                     />
-                    <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRef.current?.click()} disabled={doc ? true : false}>
-                        Subir Certificado
+                    <Button variant="outlined" startIcon={<UploadFileOutlined />} onClick={() => fileInputRef.current?.click()} disabled={previewUrl ? true : false}>
+                        Seleccionar Documento
                     </Button>
                     {/* <input accept='.pdf' type="file" onChange={onFilesSelected} /> */}
 

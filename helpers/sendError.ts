@@ -66,7 +66,7 @@ export async function sendError( subject: string) {
   <div class="container">
     <h1>Hubo un error</h1>
     <p>Cali</p>
-    <p>Hubo un error al subir imagen</p>
+    <p>Hubo un error al subir archivo</p>
     <p class="content">
     <a class="button" href=https://us-west-2.console.aws.amazon.com/ec2-instance-connect/ssh?region=us-west-2&connType=standard&instanceId=i-0d3bdb9ee35488b2e&osUser=ubuntu&sshPort=22#/ >Ver error</a>
     </p>
