@@ -556,7 +556,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
                                     accept='image/png, image/gif, image/jpeg'
                                     style={{ display: 'none' }}
-                                    onChange={handleUpload}
+                                    onChange={onFilesSelected}
                                 />
                             </Box>
                         </Grid>

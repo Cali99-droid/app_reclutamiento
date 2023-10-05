@@ -174,9 +174,7 @@ export const FormDatos: NextPage<Props> = ({ postulante }) => {
         }
         let file = target.files[0];
         // Split the filename to get the name and type
-        let fileParts = target.files[0].name.split(".");
-        let fileName = file.name;
-        let fileType = file.type;
+
         setLoadImg(true)
         new Compressor(file, {
             quality: 0.6,
