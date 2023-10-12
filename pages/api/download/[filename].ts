@@ -35,7 +35,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const download = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     const{filename}:any = req.query ;
-    const dir = 'test/' + filename
+    const dir = process.env.FOLDER_DOCS_NAME + filename
     console.log(dir)
     const command = new GetObjectCommand({
         Bucket: "caebucket",

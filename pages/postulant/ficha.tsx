@@ -463,7 +463,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                     <TableCell align="right">{e.descripcion}</TableCell>
                                                                     <TableCell align="right">
 
-                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
+                                                                        <IconButton disabled={e.doc ? false : true} onClick={() => download(e.doc)}>
                                                                             <FilePresentIcon />
                                                                         </IconButton>
                                                                     </TableCell>
