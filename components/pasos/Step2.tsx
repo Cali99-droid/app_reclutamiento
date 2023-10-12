@@ -17,6 +17,8 @@ import axios from 'axios';
 import Document from '../../pages/_document';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
 import { domainToASCII } from 'url';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
+import client from '@/aws3-config';
 const Step2 = () => {
     const router = useRouter()
     const { data }: any = useSession();
@@ -328,7 +330,28 @@ const Step2 = () => {
         setPreviewUrl(null);
         setSelectedFile(null);
     };
+    const download = async (filename: string) => {
+        const dir = filename
+        const command = new GetObjectCommand({
+            Bucket: "caebucket",
+            Key: "hello-s3.txt"
+        });
 
+        try {
+            const response = await client.send(command);
+            // The Body object also has 'transformToByteArray' and 'transformToWebStream' methods.
+            if (response.Body) {
+                const str = await response.Body.transformToString();
+                console.log(str);
+            } else {
+                console.log('nada')
+            }
+
+
+        } catch (err) {
+            console.error(err);
+        }
+    };
     const matches = useMediaQuery('(min-width:600px)');
     return (
         <Box padding={matches ? 4 : 0} className="fadeIn">

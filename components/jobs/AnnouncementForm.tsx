@@ -201,6 +201,85 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
         //     console.log({ error });
         // }
     }
+    const handleUpload = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+        if (!target.files || target.files.length === 0) {
+            return;
+        }
+        let file = target.files[0];
+        // Split the filename to get the name and type
+
+        setLoadImg(true)
+        new Compressor(file, {
+            quality: 0.2,
+            async success(result) {
+                try {
+                    const formData = new FormData();
+                    formData.append("file", result);
+                    formData.append("name", file.name);
+                    formData.append("type", file.type);
+                    const { data } = await reclutApi.post("/postulants/load", formData);
+                    console.log(data.message)
+                    toast.success("Imagen Subida Corretamente");
+                    setLoadImg(false)
+                    setValue('img', data.message, { shouldValidate: true });
+                } catch (error) {
+                    setLoadImg(false)
+                    console.log(error)
+                    notificacion('error al subir imagen')
+                    toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                }
+                // reclutApi.post("/postulants/load", {
+                //     fileName: result.name,
+                //     fileType: result.type,
+                // })
+                //     .then((res) => {
+                //         const signedRequest = res.data.signedRequest;
+                //         const url = res.data.message;
+
+                //         setUploadState({
+                //             ...uploadState,
+                //             url,
+                //         });
+
+                //         // Perform the actual upload using the signed URL
+                //         // const options = {
+                //         //     headers: {
+                //         //         "Content-type": fileType,
+                //         //         "Access-Control-Allow-Origin": "*"
+                //         //     }
+                //         // };
+                //         reclutApi.put(signedRequest, result, {
+                //             headers: {
+                //                 "Content-type": fileType,
+                //                 "Access-Control-Allow-Origin": "*"
+                //             }
+                //         })
+                //             .then((_) => {
+                //                 setUploadState({ ...uploadState, success: true });
+                //                 toast.success("Imagen Subida Corretamente");
+                //                 setLoadImg(false)
+                //                 setValue('image', res.data.name, { shouldValidate: true });
+
+                //             })
+                //             .catch((_) => {
+                //                 setLoadImg(false)
+                //                 notificacion('error al subir foto de perfil')
+                //                 toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                //             });
+                //     })
+                //     .catch((error) => {
+                //         notificacion('error al subir foto')
+                //         toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
+                //         setLoadImg(false)
+                //     });
+            }
+        });
+        // The compression process is asynchronous,
+        // which means you have to access the `result` in the `success` hook function.
+
+        // Post the file information to the server to obtain a signed URL const { data } = await
+
+    };
     const [uploadState, setUploadState] = useState({});
     const notificacion = async (error: string) => {
         try {
@@ -221,66 +300,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
         }
     }
-    const handleUpload = async ({ target }: ChangeEvent<HTMLInputElement>) => {
-        if (!target.files || target.files.length === 0) {
-            return;
-        }
-        let file = target.files[0];
-        // Split the filename to get the name and type
-        let fileParts = target.files[0].name.split(".");
-        let fileName = file.name;
-        let fileType = file.type;
-        setLoadImg(true)
-        new Compressor(file, {
-            quality: 0.2,
-            async success(result) {
-                reclutApi.post("/postulants/load", {
-                    fileName: result.name,
-                    fileType: result.type,
-                })
-                    .then((res) => {
-                        const signedRequest = res.data.signedRequest;
-                        const url = res.data.url;
 
-                        setUploadState({
-                            ...uploadState,
-                            url,
-                        });
-
-                        // Perform the actual upload using the signed URL
-                        // const options = {
-                        //     headers: {
-                        //         "Content-type": fileType,
-                        //         "Access-Control-Allow-Origin": "*"
-                        //     }
-                        // };
-                        reclutApi.put(signedRequest, result, {
-                            headers: {
-                                "Content-type": fileType,
-                                "Access-Control-Allow-Origin": "*"
-                            }
-                        })
-                            .then((_) => {
-                                setUploadState({ ...uploadState, success: true });
-                                toast.success("Imagen Subida Corretamente");
-                                setLoadImg(false)
-                                setValue('img', res.data.name, { shouldValidate: true });
-
-                            })
-                            .catch((_) => {
-                                setLoadImg(false)
-                                notificacion('error al subir foto')
-                                toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
-                            });
-                    })
-                    .catch((error) => {
-                        notificacion('error al subir foto')
-                        toast.error("Hubo un error, por favor intentelo de nuevo en unos minutos");
-                        setLoadImg(false)
-                    });
-            }
-        });
-    }
     const onChangeFecha = (dat: any) => {
         setFecha(dat)
 
@@ -556,7 +576,7 @@ const AnnouncementForm: NextPage<Props> = ({ grados, job }) => {
 
                                     accept='image/png, image/gif, image/jpeg'
                                     style={{ display: 'none' }}
-                                    onChange={onFilesSelected}
+                                    onChange={handleUpload}
                                 />
                             </Box>
                         </Grid>

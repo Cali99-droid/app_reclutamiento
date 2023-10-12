@@ -37,6 +37,7 @@ import { reclutApi } from '@/apies';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from 'react';
+import { ModalPDF } from '@/components/modal';
 moment.locale('es');
 interface Props {
     postulante: any,
@@ -168,7 +169,32 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [postulante])
+    const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+    const [modPdf, setModPdf] = useState(false);
+    const handleClosePdf = () => {
+        setModPdf(false)
+        setPdfUrl(null);
+    }
+    const download = async (filename: any) => {
 
+        console.log(filename)
+
+
+        try {
+            const response = await reclutApi.get(`download/${filename}`)
+            console.log(response.data.str)
+            if (response.data.str) {
+                const dataUri = `data:application/pdf;base64,${response.data.str}`;
+                setModPdf(true);
+                setPdfUrl(dataUri);
+            } else {
+                console.error('Archivo no encontrado.');
+                toast.error('Archivo no encontrado');
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
     return (
         <Paperbase title={"Postulante "} subTitle={'ficha'}  >
 
@@ -396,7 +422,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
                                                         <TableCell align="right">{e.grado}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} onClick={() => download(e.doc)}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -460,7 +486,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
                                                         <TableCell align="right">{e.remuneracion}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} onClick={() => download(e.doc)}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -564,7 +590,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
                                                         <TableCell align="right">{e.descripcion}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} onClick={() => download(e.doc)}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -616,7 +642,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
                                                         <TableCell align="right">{e.descripcion}</TableCell>
                                                         <TableCell align="right">
 
-                                                            <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
+                                                            <IconButton disabled={e.doc ? false : true} onClick={() => download(e.doc)}>
                                                                 <FilePresentIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -830,7 +856,19 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
                 </Menu>
 
 
+                {pdfUrl && (
+                    <ModalPDF title={'Mostrando'} open={modPdf} handleClose={handleClosePdf} handleConfirm={handleClosePdf}>
+                        <Box width={800}>
+                            <p>PDF descargado:</p>
+                            <iframe
+                                src={pdfUrl}
+                                width="100%"
+                                height="600"
+                            />
+                        </Box>
+                    </ModalPDF>
 
+                )}
 
             </Box >
 

@@ -4,7 +4,7 @@ import { prisma } from '@/server/db/client';
 import { JobsLayout } from "@/components/layouts";
 
 import { IAficion, ICapacitacion, ICargo, IEstudio, IInvestigacion, IReconocimiento, ITics } from "@/interfaces";
-import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, useMediaQuery, Link, colors, Divider, IconButton, Card, CardMedia, CardActions } from '@mui/material';
+import { Box, Button, Typography, Grid, styled, Paper, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, tableCellClasses, useMediaQuery, Link, colors, Divider, IconButton, Card, CardMedia, CardActions, Modal } from '@mui/material';
 
 import { GetServerSideProps, NextPage } from "next";
 import { getSession } from 'next-auth/react';
@@ -26,6 +26,12 @@ import moment from 'moment';
 import { ArrowBack, Edit, Padding } from '@mui/icons-material';
 
 import FilePresentIcon from '@mui/icons-material/FilePresent';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
+import client from '@/aws3-config';
+import { reclutApi } from '@/apies';
+import { useState } from 'react';
+import { ModalAlert, ModalPDF } from '@/components/modal';
+import { toast } from 'react-toastify';
 
 
 interface Props {
@@ -68,10 +74,34 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const FichaPage: NextPage<Props> = ({ postulante }) => {
 
     const { push } = useRouter()
-
+    const [pdfUrl, setPdfUrl] = useState<string | null>(null);
     const matches = useMediaQuery('(min-width:600px)');
     // const { isLoggedIn, user } = useContext(AuthContext);
+    const [modPdf, setModPdf] = useState(false);
+    const handleClose = () => {
+        setModPdf(false)
+        setPdfUrl(null);
+    }
+    const download = async (filename: any) => {
 
+        console.log(filename)
+
+
+        try {
+            const response = await reclutApi.get(`download/${filename}`)
+            console.log(response.data.str)
+            if (response.data.str) {
+                const dataUri = `data:application/pdf;base64,${response.data.str}`;
+                setModPdf(true);
+                setPdfUrl(dataUri);
+            } else {
+                console.error('Archivo no encontrado.');
+                toast.error('Archivo no encontrado');
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
     return (
         <JobsLayout title={"Postulante "} pageDescription={'Ficha'} >
 
@@ -254,7 +284,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                     <TableCell align="right">{e.year}</TableCell>
                                                                     <TableCell align="right">
 
-                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
+                                                                        <IconButton disabled={e.doc ? false : true} onClick={() => download(e.doc)}>
                                                                             <FilePresentIcon />
                                                                         </IconButton>
                                                                     </TableCell>
@@ -319,7 +349,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                     <TableCell align="right">{e.remuneracion}</TableCell>
                                                                     <TableCell align="right">
 
-                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
+                                                                        <IconButton disabled={e.doc ? false : true} onClick={() => download(e.doc)}>
                                                                             <FilePresentIcon />
                                                                         </IconButton>
                                                                     </TableCell>
@@ -495,7 +525,7 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
                                                                     <TableCell align="right">{e.descripcion}</TableCell>
                                                                     <TableCell align="right">
 
-                                                                        <IconButton disabled={e.doc ? false : true} target='_blank' href={`${process.env.NEXT_PUBLIC_URL_DOCS_BUCKET}${e.doc}`}>
+                                                                        <IconButton disabled={e.doc ? false : true} onClick={() => download(e.doc)}>
                                                                             <FilePresentIcon />
                                                                         </IconButton>
                                                                     </TableCell>
@@ -627,7 +657,19 @@ const FichaPage: NextPage<Props> = ({ postulante }) => {
 
 
                 </Box>
+                {pdfUrl && (
+                    <ModalPDF title={'Mostrando'} open={modPdf} handleClose={handleClose} handleConfirm={handleClose}>
+                        <Box width={800}>
+                            <p>PDF descargado:</p>
+                            <iframe
+                                src={pdfUrl}
+                                width="100%"
+                                height="600"
+                            />
+                        </Box>
+                    </ModalPDF>
 
+                )}
             </Box>
 
         </JobsLayout>
