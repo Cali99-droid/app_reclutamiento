@@ -23,7 +23,7 @@ export default function Home() {
   };
 
   return (
-    <JobsLayout title={"AE | Empleos "} pageDescription={"Oportunidades laborales en Huaraz - Ancash. Únete a una institución educativa líder, impulsa tu carrera en un entorno inspirador y desafiante, contribuye al crecimiento de jóvenes talentos mientras desarrollas tu propia trayectoria. "} imageFullUrl={''} >
+    <JobsLayout title={"AE | Empleos "} pageDescription={"Oportunidades laborales en Huaraz - Ancash. Únete a una institución educativa líder, impulsa tu carrera en un entorno inspirador y desafiante, contribuye al crecimiento de jóvenes talentos mientras desarrollas tu propia trayectoria. "} imageFullUrl={'/img-5'} >
 
 
 
