@@ -234,7 +234,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
 
                     <Grid item xs={12} sm={3}>
                         <Item elevation={1} >
-                            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                                 <Image
                                     priority
                                     src={(postulante.image === null ? '/avatar.png' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulante.image}`)}
@@ -243,7 +243,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
                                     alt="Imagen postulante"
                                     style={imageStyle}
                                 />
-                                <a href={(postulante.image === null ? '/avatar.png' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulante.image}`)}>Dowload</a>
+                                <a href={(postulante.image === null ? '/avatar.png' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulante.image}`)}>Download</a>
                             </Box>
                             <Box mt={2} textAlign={'center'} padding={2}>
 

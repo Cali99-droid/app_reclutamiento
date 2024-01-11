@@ -35,7 +35,9 @@ const saveFile = async (file: formidable.File): Promise<string> => {
   // fs.unlinkSync( file.filepath ); // elimina
   // return;
   // const { secure_url } = await cloudinary.uploader.upload( file.filepath );
-  const uniqueFileName = `${uuidv4()}.${file.originalFilename!.split(".")[1]}`;
+  console.log(file.mimetype?.split("/")[0]);
+  const uniqueFileName = `${uuidv4()}.${file.mimetype?.split("/")[1]}`;
+  console.log(uniqueFileName);
   try {
     const folder = process.env.FOLDER_IMG_NAME;
     const fileName = `${folder}${uniqueFileName}`;
@@ -43,6 +45,8 @@ const saveFile = async (file: formidable.File): Promise<string> => {
       Bucket: process.env.BUCKET_NAME!,
       Key: fileName, // Utiliza el nombre único
       Body: data, // El contenido del archivo
+      ContentType: "image/jpeg",
+      ACL: "public-read",
     };
     const uploadResponse = await client.send(new PutObjectCommand(params));
     console.log("Objeto subido exitosamente a S3:", uploadResponse);
