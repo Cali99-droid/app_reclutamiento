@@ -243,6 +243,7 @@ const PostulantePage: NextPage<Props> = ({ postulante, estados, listaPostulantes
                                     alt="Imagen postulante"
                                     style={imageStyle}
                                 />
+                                <a href={(postulante.image === null ? '/avatar.png' : `${process.env.NEXT_PUBLIC_URL_IMG_BUCKET}${postulante.image}`)}>Dowload</a>
                             </Box>
                             <Box mt={2} textAlign={'center'} padding={2}>
 
